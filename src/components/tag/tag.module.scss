@@ -15,7 +15,9 @@
 	}
 
 	.icon {
+		display: inline-flex;
 		flex-shrink: 0;
+		font-size: var(--tag-icon-size, 1em);
 		margin-inline-start: calc(-1 * var(--sys-unit-1));
 	}
 }

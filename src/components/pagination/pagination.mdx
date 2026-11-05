@@ -20,7 +20,19 @@ import * as PaginationStories from "./pagination.stories.tsx";
 	pageSizes={[10, 20, 50]}
 	onPageIndexChange={setPageIndex}
 	onPageSizeChange={setPageSize}>
-	<Pagination.PageSize label="Rows per page" />
+	<Pagination.PageSize>
+		<Select.Label>Rows per page</Select.Label>
+		<Select.Trigger />
+		<Select.Portal>
+			<Select.Positioner>
+				<Select.Popup>
+					<Select.List>
+						<Select.Items />
+					</Select.List>
+				</Select.Popup>
+			</Select.Positioner>
+		</Select.Portal>
+	</Pagination.PageSize>
 	<Pagination.Index
 		label={({ pageIndex, pageCount }) =>
 			`Page ${pageIndex + 1} of ${pageCount}`
@@ -31,13 +43,27 @@ import * as PaginationStories from "./pagination.stories.tsx";
 		previousLabel="Previous page"
 		nextLabel="Next page"
 		lastLabel="Last page"
+		firstIcon={<FirstPageIcon />}
+		previousIcon={<ChevronLeftIcon />}
+		nextIcon={<ChevronRightIcon />}
+		lastIcon={<LastPageIcon />}
 	/>
 </Pagination.Root>
 ```
 
 ### Compose only the parts the list has room for
 
-`PageSize`, `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes.
+`PageSize`, `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes. `Controls` is `First`, `Previous`, `Next` and `Last` in a row; compose those four directly where the list needs only some of them, or another order. Each takes its glyph as its children.
+
+```tsx
+<Pagination.Previous label="Previous page">
+	<ChevronLeftIcon />
+</Pagination.Previous>
+<Pagination.Index label={indexLabel} />
+<Pagination.Next label="Next page">
+	<ChevronRightIcon />
+</Pagination.Next>
+```
 
 ### The page size in effect is always on offer
 

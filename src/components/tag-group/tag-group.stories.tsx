@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactElement, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -10,6 +11,7 @@ import {
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import type { Tone } from "../../lib/tone.ts";
+import { Icon } from "../icon/icon.tsx";
 import { Tag } from "../tag/tag.tsx";
 import {
 	TagGroup,
@@ -61,7 +63,9 @@ const RemovableTags = ({
 						tone={filter.tone}>
 						<Tag.Dot />
 						{filter.label}
-						<TagGroup.Remove label={REMOVE} />
+						<TagGroup.Remove label={REMOVE}>
+							<Icon svg={CloseIcon} label="" />
+						</TagGroup.Remove>
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>

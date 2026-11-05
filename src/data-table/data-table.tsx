@@ -3,10 +3,29 @@ import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import {
 	Pagination,
-	type PaginationIndexProps,
+	type PaginationRootProps,
 } from "../components/pagination/pagination.tsx";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
 import { DataTableContent } from "./data-table-content.tsx";
+import {
+	Body,
+	Cell,
+	ErrorMessage,
+	Frame,
+	Head,
+	HeaderCell,
+	HeaderRow,
+	LoadingCaption,
+	PlaceholderRows,
+	RefreshFailed,
+	Row,
+	Scroller,
+	SortButton,
+	StaleOverlay,
+	StateRow,
+	SubRow,
+	Table,
+} from "./data-table-parts.tsx";
 import {
 	DataTableContext,
 	useDataTable,
@@ -42,6 +61,7 @@ export type DataTableRootProps<
 	className?: string;
 }>;
 
+/** Holds the table instance and the injected query state for the parts inside it. */
 const Root = <TData extends Record<string, unknown>>({
 	table,
 	selection,
@@ -80,41 +100,36 @@ const Toolbar = ({
 	</div>
 );
 
-export type DataTablePaginationProps = Readonly<{
-	/** The page-size select's label, such as "Rows per page". */
-	pageSizeLabel: string;
-	/** What the index says, such as `Page 3 of 12`, from where the table stands. */
-	indexLabel: PaginationIndexProps["label"];
-	/** The first-page button's name, such as "First page". */
-	firstLabel: string;
-	/** The previous-page button's name, such as "Previous page". */
-	previousLabel: string;
-	/** The next-page button's name, such as "Next page". */
-	nextLabel: string;
-	/** The last-page button's name, such as "Last page". */
-	lastLabel: string;
-	className?: string;
-}>;
+export type DataTablePaginationProps = Omit<
+	PaginationRootProps,
+	| "pageIndex"
+	| "pageCount"
+	| "pageSize"
+	| "pageSizes"
+	| "onPageIndexChange"
+	| "onPageSizeChange"
+> &
+	Readonly<{
+		/** The `Pagination` parts, such as `Pagination.PageSize`, `Pagination.Index` and `Pagination.Controls`. */
+		children: ReactNode;
+	}>;
 
 /**
- * The kit's `Pagination`, driven by the instance's pagination API (built with
- * `manualPagination` + server `rowCount`). The page sizes come from the
- * table's `meta.pageSizeOptions`, and picking one returns to the first page.
+ * A `Pagination.Root` driven by the instance's pagination API (built with
+ * `manualPagination` + server `rowCount`), holding the `Pagination` parts it
+ * is given. The page sizes come from the table's `meta.pageSizeOptions`, and
+ * picking one returns to the first page.
  */
 const DataTablePagination = ({
-	pageSizeLabel,
-	indexLabel,
-	firstLabel,
-	previousLabel,
-	nextLabel,
-	lastLabel,
 	className,
+	...props
 }: DataTablePaginationProps): ReactNode => {
 	const { table } = useDataTable();
 	const { pageIndex, pageSize } = table.state.pagination;
 
 	return (
 		<Pagination.Root
+			{...props}
 			className={clsx(style.pagination, className)}
 			pageIndex={pageIndex}
 			pageCount={Math.max(table.getPageCount(), 1)}
@@ -131,16 +146,8 @@ const DataTablePagination = ({
 					pageIndex: 0,
 					pageSize: next,
 				});
-			}}>
-			<Pagination.PageSize label={pageSizeLabel} />
-			<Pagination.Index label={indexLabel} />
-			<Pagination.Controls
-				firstLabel={firstLabel}
-				previousLabel={previousLabel}
-				nextLabel={nextLabel}
-				lastLabel={lastLabel}
-			/>
-		</Pagination.Root>
+			}}
+		/>
 	);
 };
 
@@ -150,13 +157,34 @@ type DataTableParts = Readonly<{
 	Content: typeof DataTableContent;
 	Pagination: typeof DataTablePagination;
 	SelectionBar: typeof DataTableSelectionBar;
+	RefreshFailed: typeof RefreshFailed;
+	Frame: typeof Frame;
+	Scroller: typeof Scroller;
+	StaleOverlay: typeof StaleOverlay;
+	Table: typeof Table;
+	LoadingCaption: typeof LoadingCaption;
+	Head: typeof Head;
+	HeaderRow: typeof HeaderRow;
+	HeaderCell: typeof HeaderCell;
+	SortButton: typeof SortButton;
+	Body: typeof Body;
+	Row: typeof Row;
+	Cell: typeof Cell;
+	SubRow: typeof SubRow;
+	PlaceholderRows: typeof PlaceholderRows;
+	StateRow: typeof StateRow;
+	ErrorMessage: typeof ErrorMessage;
 }>;
 
 /**
  * Composite data table over a TanStack Table instance. `Root` holds the
  * instance and the injected query state in context; the parts lay it out:
- * `Toolbar`, `SelectionBar`, `Content` and `Pagination`. A nested sub-table
- * gets its own `DataTable.Root`, with its own instance and context.
+ * `Toolbar`, `SelectionBar`, `Content` and `Pagination`. `Content` is the
+ * whole table; where a table needs other markup, compose its parts instead:
+ * `RefreshFailed`, then a `Frame` holding a `Scroller` and a `StaleOverlay`,
+ * the `Scroller` holding the `Table` and its rows and cells, with
+ * `useDataTableView` to pick the body. A nested sub-table gets its own
+ * `DataTable.Root`, with its own instance and context.
  *
  * @example
  * <DataTable.Root table={table} status={query.status} isFetching={query.isFetching}>
@@ -169,15 +197,14 @@ type DataTableParts = Readonly<{
  * 		loadingLabel="Loading declarations"
  * 		slowLabel="This is taking longer than usual."
  * 		retryLabel="Try again"
+ * 		sortAscendingIcon={<ArrowUpwardIcon />}
+ * 		sortDescendingIcon={<ArrowDownwardIcon />}
  * 	/>
- * 	<DataTable.Pagination
- * 		pageSizeLabel="Rows per page"
- * 		indexLabel={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`}
- * 		firstLabel="First page"
- * 		previousLabel="Previous page"
- * 		nextLabel="Next page"
- * 		lastLabel="Last page"
- * 	/>
+ * 	<DataTable.Pagination>
+ * 		<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
+ * 		<Pagination.Previous label="Previous page"><ChevronLeftIcon /></Pagination.Previous>
+ * 		<Pagination.Next label="Next page"><ChevronRightIcon /></Pagination.Next>
+ * 	</DataTable.Pagination>
  * </DataTable.Root>
  */
 export const DataTable: DataTableParts = {
@@ -186,4 +213,21 @@ export const DataTable: DataTableParts = {
 	Content: DataTableContent,
 	Pagination: DataTablePagination,
 	SelectionBar: DataTableSelectionBar,
+	RefreshFailed,
+	Frame,
+	Scroller,
+	StaleOverlay,
+	Table,
+	LoadingCaption,
+	Head,
+	HeaderRow,
+	HeaderCell,
+	SortButton,
+	Body,
+	Row,
+	Cell,
+	SubRow,
+	PlaceholderRows,
+	StateRow,
+	ErrorMessage,
 };

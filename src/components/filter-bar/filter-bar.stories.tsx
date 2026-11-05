@@ -1,3 +1,8 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import FilterIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
+import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.svg?react";
+import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	expect,
@@ -19,9 +24,14 @@ import {
 } from "../../lib/table-storage.ts";
 import { describeValue } from "../active-filters/active-filter-describers.ts";
 import { ActiveFilters } from "../active-filters/active-filters.tsx";
+import { Drawer } from "../drawer/drawer.tsx";
+import { Icon } from "../icon/icon.tsx";
 import { SelectField } from "../select-field/select-field.tsx";
 import { FilterBar } from "./filter-bar.tsx";
-import { useFilterView } from "./use-filter-view.ts";
+import {
+	type FilterView,
+	useFilterView,
+} from "./use-filter-view.ts";
 
 const CLIENT_LABEL = "Client";
 const ALL_CLIENTS = "All clients";
@@ -65,6 +75,30 @@ const CLIENT_OPTIONS = [
 	})),
 ];
 
+type ClientFieldProps = Readonly<{
+	filters: FilterView<ClientFilters>;
+}>;
+
+const ClientField = ({ filters }: ClientFieldProps) => (
+	<SelectField
+		label={CLIENT_LABEL}
+		optionalLabel="optional"
+		options={CLIENT_OPTIONS}
+		value={filters.draft.client ?? ""}
+		loadingLabel="Loading clients…"
+		loadFailedLabel="Clients could not be loaded."
+		loadBrokenLabel="Clients could not be loaded, and trying again won't help."
+		retryLabel="Try again"
+		noOptionsLabel="No clients."
+		onValueChange={next => {
+			filters.setDraft(
+				"client",
+				next === "" ? undefined : next,
+			);
+		}}
+	/>
+);
+
 type ClientFilterBarProps = Readonly<{
 	stored?: StoredValue<ClientFilters>;
 }>;
@@ -82,34 +116,39 @@ const ClientFilterBar = ({
 			<FilterBar.Search
 				label={SEARCH_LABEL}
 				clearLabel={CLEAR_SEARCH_LABEL}
+				clearIcon={<Icon svg={CloseIcon} label="" />}
 				optionalLabel="optional"
 			/>
-			<FilterBar.Drawer
-				swipeDirection="right"
-				triggerLabel={FILTERS_LABEL}
-				title={FILTERS_TITLE}
-				closeLabel={CLOSE_LABEL}
-				resetLabel={RESET_LABEL}
-				applyLabel={APPLY_LABEL}>
-				<SelectField
-					label={CLIENT_LABEL}
-					optionalLabel="optional"
-					options={CLIENT_OPTIONS}
-					value={filters.draft.client ?? ""}
-					loadingLabel="Loading clients…"
-					loadFailedLabel="Clients could not be loaded."
-					loadBrokenLabel="Clients could not be loaded, and trying again won't help."
-					retryLabel="Try again"
-					noOptionsLabel="No clients."
-					onValueChange={next => {
-						filters.setDraft(
-							"client",
-							next === "" ? undefined : next,
-						);
-					}}
-				/>
+			<FilterBar.Drawer swipeDirection="right">
+				<FilterBar.Trigger
+					icon={<Icon svg={FilterIcon} label="" />}>
+					{FILTERS_LABEL}
+					<FilterBar.Badge />
+				</FilterBar.Trigger>
+				<FilterBar.Content>
+					<Drawer.Header>
+						<Drawer.Title>{FILTERS_TITLE}</Drawer.Title>
+						<Drawer.CloseButton
+							closeLabel={CLOSE_LABEL}
+							icon={<Icon svg={CloseIcon} label="" />}
+						/>
+					</Drawer.Header>
+					<FilterBar.Fields>
+						<ClientField filters={filters} />
+					</FilterBar.Fields>
+					<FilterBar.Footer>
+						<FilterBar.Reset
+							icon={<Icon svg={RestoreIcon} label="" />}>
+							{RESET_LABEL}
+						</FilterBar.Reset>
+						<FilterBar.Apply
+							icon={<Icon svg={CheckIcon} label="" />}>
+							{APPLY_LABEL}
+						</FilterBar.Apply>
+					</FilterBar.Footer>
+				</FilterBar.Content>
 			</FilterBar.Drawer>
-			<FilterBar.Active clearAllLabel={CLEAR_ALL_LABEL}>
+			<FilterBar.Active>
 				<ActiveFilters
 					filters={filters}
 					describe={{
@@ -119,7 +158,12 @@ const ClientFilterBar = ({
 					}}
 					label={ACTIVE_LABEL}
 					removeLabel={REMOVE_LABEL}
+					removeIcon={<Icon svg={CloseIcon} label="" />}
 				/>
+				<FilterBar.ClearAll
+					icon={<Icon svg={FilterOffIcon} label="" />}>
+					{CLEAR_ALL_LABEL}
+				</FilterBar.ClearAll>
 			</FilterBar.Active>
 		</FilterBar.Root>
 	);
