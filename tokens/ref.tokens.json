@@ -5,156 +5,156 @@
 			"0": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [1, 0, 170.81]
+					"components": [1, 0, 150]
 				}
 			},
 			"10": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.992, 0.0024, 170.81]
+					"components": [0.992, 0.0024, 150]
 				}
 			},
 			"25": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.9801, 0.006, 170.81]
+					"components": [0.9801, 0.0059, 150]
 				}
 			},
 			"50": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.9602, 0.0119, 170.81]
+					"components": [0.9602, 0.0118, 150]
 				}
 			},
 			"100": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.9204, 0.0237, 170.81]
+					"components": [0.9204, 0.0236, 150]
 				}
 			},
 			"150": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.8806, 0.0355, 170.81]
+					"components": [0.8806, 0.0354, 150]
 				}
 			},
 			"200": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.8408, 0.0473, 170.81]
+					"components": [0.8408, 0.0472, 150]
 				}
 			},
 			"250": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.801, 0.0591, 170.81]
+					"components": [0.801, 0.059, 150]
 				}
 			},
 			"300": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.7612, 0.0709, 170.81]
+					"components": [0.7612, 0.0709, 150]
 				}
 			},
 			"350": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.7214, 0.0827, 170.81]
+					"components": [0.7214, 0.0827, 150]
 				}
 			},
 			"400": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.6816, 0.0945, 170.81]
+					"components": [0.6816, 0.0945, 150]
 				}
 			},
 			"450": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.6418, 0.1063, 170.81]
+					"components": [0.6418, 0.1063, 150]
 				}
 			},
 			"500": {
 				"$value": {
 					"colorSpace": "srgb",
-					"components": [0, 0.592157, 0.466667],
-					"hex": "#009777"
+					"components": [0.270588, 0.580392, 0.352941],
+					"hex": "#45945a"
 				}
 			},
 			"550": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.5418, 0.1063, 170.81]
+					"components": [0.5418, 0.1063, 150]
 				}
 			},
 			"600": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.4816, 0.0945, 170.81]
+					"components": [0.4816, 0.0945, 150]
 				}
 			},
 			"650": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.4214, 0.0827, 170.81]
+					"components": [0.4214, 0.0827, 150]
 				}
 			},
 			"700": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.3612, 0.0709, 170.81]
+					"components": [0.3612, 0.0709, 150]
 				}
 			},
 			"750": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.301, 0.0591, 170.81]
+					"components": [0.301, 0.059, 150]
 				}
 			},
 			"800": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.2408, 0.0472, 170.81]
+					"components": [0.2408, 0.0472, 150]
 				}
 			},
 			"850": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.1806, 0.0354, 170.81]
+					"components": [0.1806, 0.0354, 150]
 				}
 			},
 			"900": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.1204, 0.0236, 170.81]
+					"components": [0.1204, 0.0236, 150]
 				}
 			},
 			"950": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.0602, 0.0118, 170.81]
+					"components": [0.0602, 0.0118, 150]
 				}
 			},
 			"975": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.0301, 0.0059, 170.81]
+					"components": [0.0301, 0.0059, 150]
 				}
 			},
 			"990": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0.012, 0.0024, 170.81]
+					"components": [0.012, 0.0024, 150]
 				}
 			},
 			"1000": {
 				"$value": {
 					"colorSpace": "oklch",
-					"components": [0, 0, 170.81]
+					"components": [0, 0, 150]
 				}
 			},
 			"$type": "color",
-			"$description": "Brand, and success"
+			"$description": "Success"
 		},
 		"blue": {
 			"0": {
@@ -929,7 +929,7 @@
 				}
 			},
 			"$type": "color",
-			"$description": "Cool neutral: text, and the dark theme's surfaces"
+			"$description": "Neutral: text, surfaces and lines"
 		},
 		"font": {
 			"heading": {

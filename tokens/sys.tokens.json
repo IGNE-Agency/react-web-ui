@@ -5,7 +5,7 @@
 			"primary": {
 				"$description": "Primary buttons and links",
 				"$type": "color",
-				"$value": "{ref.green.550}"
+				"$value": "{ref.neutral.750}"
 			},
 			"on-primary": {
 				"$type": "color",
@@ -14,14 +14,13 @@
 			"primary-container": {
 				"$description": "Avatar fallbacks, mention pills, brand tints",
 				"$type": "color",
-				"$value": "{ref.green.50}"
+				"$value": "{ref.neutral.50}"
 			},
 			"on-primary-container": {
 				"$type": "color",
-				"$value": "{ref.green.800}"
+				"$value": "{ref.neutral.800}"
 			},
 			"identity": {
-				"$description": "The brand container, turned to a hue of its own",
 				"1": {
 					"bg": {
 						"$type": "color",
@@ -141,7 +140,8 @@
 							}
 						}
 					}
-				}
+				},
+				"$description": "The brand container, turned to a hue of its own"
 			},
 			"success": {
 				"$description": "Done, approved",
@@ -232,6 +232,11 @@
 				"$type": "color",
 				"$value": "{ref.neutral.400}"
 			},
+			"text-placeholder": {
+				"$description": "The hint text an empty field shows",
+				"$type": "color",
+				"$value": "{ref.neutral.400}"
+			},
 			"text-inverse": {
 				"$type": "color",
 				"$value": "{ref.neutral.0}"
@@ -240,22 +245,22 @@
 				"$description": "Selected text",
 				"bg": {
 					"$type": "color",
-					"$value": "{ref.green.100}"
+					"$value": "{ref.neutral.100}"
 				},
 				"fg": {
 					"$type": "color",
-					"$value": "{ref.green.800}"
+					"$value": "{ref.neutral.800}"
 				}
 			},
 			"bg": {
 				"$description": "The page behind everything",
 				"$type": "color",
-				"$value": "{ref.sand.25}"
+				"$value": "{ref.neutral.25}"
 			},
 			"surface-lowest": {
 				"$description": "The dimmest card: a table's sub-rows",
 				"$type": "color",
-				"$value": "{ref.sand.10}"
+				"$value": "{ref.neutral.10}"
 			},
 			"surface": {
 				"$description": "The default card",
@@ -265,12 +270,12 @@
 			"surface-high": {
 				"$description": "A fill nested in a card",
 				"$type": "color",
-				"$value": "{ref.sand.50}"
+				"$value": "{ref.neutral.50}"
 			},
 			"surface-highest": {
 				"$description": "The deepest recess: fields, placeholders",
 				"$type": "color",
-				"$value": "{ref.sand.100}"
+				"$value": "{ref.neutral.100}"
 			},
 			"surface-overlay": {
 				"$description": "Popups and tooltips",
@@ -285,17 +290,29 @@
 			"border": {
 				"$description": "The quiet hairline that separation rations",
 				"$type": "color",
-				"$value": "{ref.sand.150}"
+				"$value": "{ref.neutral.150}"
 			},
 			"outline": {
 				"$description": "A mark that has to be found: grab bars, scroll thumbs, control outlines",
 				"$type": "color",
-				"$value": "{ref.sand.250}"
+				"$value": "{ref.neutral.200}"
 			},
 			"focus-ring": {
 				"$description": "Keyboard focus, on every focusable element",
 				"$type": "color",
 				"$value": "{sys.color.primary}"
+			},
+			"disabled": {
+				"bg": {
+					"$description": "The fill of a control or button that cannot be used",
+					"$type": "color",
+					"$value": "{ref.neutral.100}"
+				},
+				"fg": {
+					"$description": "The ink of a control that cannot be used: its text, icons and the marks of its choice",
+					"$type": "color",
+					"$value": "{ref.neutral.300}"
+				}
 			}
 		},
 		"state": {
