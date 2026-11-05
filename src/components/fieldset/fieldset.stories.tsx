@@ -287,6 +287,64 @@ export const WrappingLabel: Story = {
 	),
 };
 
+const NarrowAddressForm = (
+	args: FieldGroupProps,
+): ReactElement => (
+	<div className={style.phone}>
+		<AddressForm group={args} />
+	</div>
+);
+
+const NARROW_LABELS = [
+	POSTAL_CODE_LABEL,
+	HOUSE_NUMBER_LABEL,
+	ADDITION_LABEL,
+];
+
+const rightEdges = (control: HTMLElement) =>
+	[
+		control.closest("[data-field-group-member]"),
+		control.parentElement,
+		control,
+	].map(element => element?.getBoundingClientRect().right);
+
+export const NarrowRow: Story = {
+	render: NarrowAddressForm,
+	play: async ({ canvas }) => {
+		const controls = NARROW_LABELS.map(label =>
+			textbox(canvas, label),
+		);
+		const row = controls[0]?.closest(
+			"[data-field-group-member]",
+		)?.parentElement;
+		const limits = [
+			...controls
+				.slice(1)
+				.map(
+					control =>
+						control
+							.closest("[data-field-group-member]")
+							?.getBoundingClientRect().left,
+				),
+			row?.getBoundingClientRect().right,
+		];
+
+		await expect(row).toBeDefined();
+		await expect(
+			controls.flatMap((control, index) =>
+				rightEdges(control).map(right => {
+					const limit = limits[index];
+					return (
+						right !== undefined &&
+						limit !== undefined &&
+						right <= limit
+					);
+				}),
+			),
+		).not.toContain(false);
+	},
+};
+
 export const HiddenLabel: Story = {
 	render: args => (
 		<AddressForm
