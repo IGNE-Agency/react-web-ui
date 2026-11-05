@@ -60,7 +60,11 @@ const exportsMap = manifest.exports ?? {};
 /** Runs a command from the repository root and returns its output, or the failure as a problem. */
 const run = (
 	command: readonly string[],
-): Readonly<{ ok: boolean; output: string }> => {
+): Readonly<{
+	ok: boolean;
+	stdout: string;
+	output: string;
+}> => {
 	const result = Bun.spawnSync([...command], {
 		cwd: root,
 		stdout: "pipe",
@@ -68,6 +72,7 @@ const run = (
 	});
 	return {
 		ok: result.exitCode === 0,
+		stdout: result.stdout.toString(),
 		output: `${result.stdout.toString()}${result.stderr.toString()}`,
 	};
 };
@@ -207,7 +212,7 @@ const dryRun = run([
 ]);
 const packed: readonly Readonly<{
 	files: readonly PackedFile[];
-}>[] = dryRun.ok ? JSON.parse(dryRun.output) : [];
+}>[] = dryRun.ok ? JSON.parse(dryRun.stdout) : [];
 const packedFiles = packed.flatMap(({ files }) =>
 	files.map(({ path }) => path),
 );
@@ -410,7 +415,7 @@ const checkConsumer = (): readonly string[] => {
 	}
 	const tarballs: readonly Readonly<{
 		filename: string;
-	}>[] = JSON.parse(pack.output);
+	}>[] = JSON.parse(pack.stdout);
 	const tarball = tarballs[0]?.filename;
 	if (tarball === undefined) {
 		return ["npm pack: no tarball"];
