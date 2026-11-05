@@ -3,7 +3,6 @@ import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import FilterAltIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import LogoIcon from "./logo.svg?react";
 import RequiredIcon from "../../src/assets/required.svg?react";
 import SpinnerIcon from "../../src/assets/spinner.svg?react";
 import type { SvgComponent } from "../../src/components/icon/index.ts";
@@ -29,7 +28,6 @@ const GROUPS: readonly Readonly<{
 	{
 		title: "Our own",
 		glyphs: [
-			{ name: "logo", svg: LogoIcon },
 			{ name: "required", svg: RequiredIcon },
 			{ name: "spinner", svg: SpinnerIcon },
 		],

@@ -79,7 +79,7 @@ export const isTokenId = (id: string): id is TokenId =>
  * A token as one theme resolves it.
  *
  * @example
- * tokenOf("sys.color.primary", "dark").aliasOf; // "ref.green.200"
+ * tokenOf("sys.color.primary", "dark").aliasOf; // "ref.neutral.50"
  */
 export const tokenOf = (id: TokenId, theme: Theme) =>
 	resolver.apply({ theme })[id];
@@ -290,7 +290,7 @@ export const numberOf = (id: TokenId, theme: Theme) => {
  * at, which no theme changes, or else its value in that theme.
  *
  * @example
- * colourIn("sys.color.primary", "dark"); // "var(--ref-green-200)"
+ * colourIn("sys.color.primary", "dark"); // "var(--ref-neutral-50)"
  */
 export const colourIn = (id: TokenId, theme: Theme) => {
 	const token = tokenOf(id, theme);
@@ -339,7 +339,7 @@ export const shadowIn = (id: TokenId, theme: Theme) => {
  * role, or the hue it turns its role to.
  *
  * @example
- * sourceOf("sys.color.primary", "light"); // "green-550"
+ * sourceOf("sys.color.primary", "light"); // "neutral-750"
  * sourceOf("sys.color.focus-ring", "light"); // "primary"
  * sourceOf("sys.color.identity.1.bg", "light"); // "hue 84°"
  */
@@ -366,7 +366,7 @@ export const sourceOf = (id: TokenId, theme: Theme) => {
  * at one.
  *
  * @example
- * referenceOf("sys.color.primary", "light"); // "ref.green.550"
+ * referenceOf("sys.color.primary", "light"); // "ref.neutral.750"
  */
 export const referenceOf = (id: TokenId, theme: Theme) => {
 	const target = tokenOf(id, theme).aliasChain?.[0];

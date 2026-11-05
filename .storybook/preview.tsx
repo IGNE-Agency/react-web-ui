@@ -72,7 +72,6 @@ const preview: Preview = {
 					[
 						"Introduction",
 						"Getting started",
-						"Brand",
 						"Foundation",
 						[
 							"Token architecture",
