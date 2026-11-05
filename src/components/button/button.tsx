@@ -1,5 +1,4 @@
 import { useRender } from "@base-ui/react/use-render";
-import { clsx } from "clsx";
 import type {
 	ComponentPropsWithRef,
 	ReactElement,
@@ -7,7 +6,7 @@ import type {
 } from "react";
 import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
-import style from "./button.module.scss";
+import { buttonAttributes } from "./button-attributes.ts";
 
 /** A button's visual tier. */
 export type ButtonVariant =
@@ -79,9 +78,9 @@ export type ButtonProps =
 export const Button = (props: ButtonProps): ReactNode => {
 	if (props.iconOnly) {
 		const {
-			variant = "secondary",
-			size = "md",
-			tone = "brand",
+			variant,
+			size,
+			tone,
 			className,
 			iconOnly,
 			icon,
@@ -95,11 +94,13 @@ export const Button = (props: ButtonProps): ReactNode => {
 					render={render}
 					type="button"
 					aria-label={label}
-					data-variant={variant}
-					data-size={size}
-					data-tone={tone}
+					{...buttonAttributes({
+						variant,
+						size,
+						tone,
+						className,
+					})}
 					data-icon-only={iconOnly}
-					className={clsx(style.button, className)}
 					{...nativeProps}>
 					<Icon svg={icon} label="" />
 				</ButtonElement>
@@ -108,9 +109,9 @@ export const Button = (props: ButtonProps): ReactNode => {
 	}
 
 	const {
-		variant = "secondary",
-		size = "md",
-		tone = "brand",
+		variant,
+		size,
+		tone,
 		className,
 		iconOnly: _iconOnly,
 		icon,
@@ -122,10 +123,12 @@ export const Button = (props: ButtonProps): ReactNode => {
 		<ButtonElement
 			render={render}
 			type="button"
-			data-variant={variant}
-			data-size={size}
-			data-tone={tone}
-			className={clsx(style.button, className)}
+			{...buttonAttributes({
+				variant,
+				size,
+				tone,
+				className,
+			})}
 			{...nativeProps}>
 			{icon ? <Icon svg={icon} label="" /> : null}
 			{children}

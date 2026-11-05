@@ -1,4 +1,3 @@
-import { clsx } from "clsx";
 import type {
 	ComponentPropsWithRef,
 	ReactNode,
@@ -8,7 +7,7 @@ import type {
 	ButtonTone,
 	ButtonVariant,
 } from "../button/button.tsx";
-import style from "../button/button.module.scss";
+import { buttonAttributes } from "../button/button-attributes.ts";
 import { Icon, type SvgComponent } from "../icon/icon.tsx";
 
 export type LinkButtonProps = ComponentPropsWithRef<"a"> &
@@ -33,19 +32,21 @@ export type LinkButtonProps = ComponentPropsWithRef<"a"> &
  * <RouterLinkButton to="/" variant="primary">Go to home page</RouterLinkButton>
  */
 export const LinkButton = ({
-	variant = "secondary",
-	size = "md",
-	tone = "brand",
+	variant,
+	size,
+	tone,
 	icon,
 	className,
 	children,
 	...anchorProps
 }: LinkButtonProps): ReactNode => (
 	<a
-		data-variant={variant}
-		data-size={size}
-		data-tone={tone}
-		className={clsx(style.button, className)}
+		{...buttonAttributes({
+			variant,
+			size,
+			tone,
+			className,
+		})}
 		{...anchorProps}>
 		{icon ? <Icon svg={icon} label="" /> : null}
 		{children}
