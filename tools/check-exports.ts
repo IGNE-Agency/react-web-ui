@@ -406,7 +406,6 @@ const fixtureEntries: readonly Readonly<{
 		entry: "button",
 		sheets: [
 			"button/button",
-			"icon/icon",
 			"tooltip/tooltip",
 		],
 	},
@@ -418,7 +417,6 @@ const fixtureEntries: readonly Readonly<{
 		entry: "root",
 		sheets: [
 			"button/button",
-			"icon/icon",
 			"tooltip/tooltip",
 		],
 	},
@@ -428,7 +426,6 @@ const fixtureEntries: readonly Readonly<{
 			"button/button",
 			"error-text/error-text",
 			"field/field",
-			"icon/icon",
 			"spinner/spinner",
 			"text-field/text-field",
 			"tooltip/tooltip",

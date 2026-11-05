@@ -1,35 +1,37 @@
 {
-	"accordion": ["accordion/accordion", "icon/icon"],
+	"accordion": [
+		"accordion/accordion"
+	],
 	"active-filters": [
-		"icon/icon",
 		"tag-group/tag-group",
 		"tooltip/tooltip"
 	],
 	"attachment-tile": [
 		"attachment-tile/attachment-tile",
 		"button/button",
-		"icon/icon",
 		"skeleton/skeleton",
 		"tooltip/tooltip"
 	],
-	"avatar": ["avatar/avatar"],
+	"avatar": [
+		"avatar/avatar"
+	],
 	"avatar-group": [
 		"avatar-group/avatar-group",
 		"avatar/avatar",
 		"popover/popover",
 		"skeleton/skeleton"
 	],
-	"badge": ["badge/badge"],
+	"badge": [
+		"badge/badge"
+	],
 	"breadcrumbs": [
 		"breadcrumbs/breadcrumbs",
 		"button/button",
-		"icon/icon",
 		"menu/menu",
 		"tooltip/tooltip"
 	],
 	"button": [
 		"button/button",
-		"icon/icon",
 		"tooltip/tooltip"
 	],
 	"checkbox-field": [
@@ -45,14 +47,15 @@
 		"field/field",
 		"spinner/spinner"
 	],
-	"collapsible": ["collapsible/collapsible", "icon/icon"],
+	"collapsible": [
+		"collapsible/collapsible"
+	],
 	"combobox-field": [
 		"button/button",
 		"combobox-field/combobox",
 		"combobox-field/value-state-view",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
@@ -63,14 +66,12 @@
 		"composer/composer",
 		"composer/composer-editor",
 		"composer/mention-text",
-		"icon/icon",
 		"skeleton/skeleton",
 		"tooltip/tooltip"
 	],
 	"confirm-dialog": [
 		"button/button",
 		"confirm-dialog/confirm-dialog",
-		"icon/icon",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
@@ -78,7 +79,6 @@
 		"avatar/avatar",
 		"button/button",
 		"conversation/conversation",
-		"icon/icon",
 		"tooltip/tooltip"
 	],
 	"data-table": [
@@ -87,7 +87,6 @@
 		"data-table/data-table",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"pagination/pagination",
 		"select-field/select",
 		"skeleton/skeleton",
@@ -100,7 +99,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"lib/calendar/temporal",
 		"spinner/spinner",
 		"tooltip/tooltip"
@@ -109,49 +107,48 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"lib/calendar/temporal",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"detail-list": ["detail-list/detail-list", "icon/icon"],
+	"detail-list": [
+		"detail-list/detail-list"
+	],
 	"dialog": [
 		"button/button",
 		"dialog/dialog",
-		"icon/icon",
 		"tooltip/tooltip"
 	],
-	"divider": ["divider/divider"],
+	"divider": [
+		"divider/divider"
+	],
 	"drawer": [
 		"button/button",
 		"drawer/drawer",
-		"icon/icon",
 		"tooltip/tooltip"
 	],
 	"email-field": [
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"tooltip/tooltip"
 	],
 	"empty-message": [
-		"icon/icon",
 		"status-message/status-message"
 	],
 	"error-boundary": [
 		"button/button",
-		"icon/icon",
 		"status-message/status-message",
 		"tooltip/tooltip"
 	],
 	"error-message": [
-		"icon/icon",
 		"status-message/status-message"
 	],
-	"error-text": ["error-text/error-text"],
+	"error-text": [
+		"error-text/error-text"
+	],
 	"field": [
 		"error-text/error-text",
 		"field/field",
@@ -173,7 +170,6 @@
 		"error-text/error-text",
 		"field/field",
 		"file-field/file-field",
-		"icon/icon",
 		"skeleton/skeleton",
 		"spinner/spinner",
 		"tooltip/tooltip"
@@ -185,7 +181,6 @@
 		"error-text/error-text",
 		"field/field",
 		"filter-bar/filter-bar",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"tooltip/tooltip"
@@ -194,30 +189,32 @@
 		"button/button",
 		"error-text/error-text",
 		"form/form",
-		"icon/icon",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
 	"forms": [],
 	"hooks": [],
-	"icon": ["icon/icon"],
-	"link": ["link/link"],
-	"link-button": ["button/button", "icon/icon"],
+	"icon": [
+		"icon/icon"
+	],
+	"link": [
+		"link/link"
+	],
+	"link-button": [
+		"button/button"
+	],
 	"loading-message": [
-		"icon/icon",
 		"spinner/spinner",
 		"status-message/status-message"
 	],
 	"locale-provider": [],
 	"menu": [
 		"button/button",
-		"icon/icon",
 		"menu/menu",
 		"tooltip/tooltip"
 	],
 	"nav": [
 		"button/button",
-		"icon/icon",
 		"nav/nav",
 		"tooltip/tooltip"
 	],
@@ -225,7 +222,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"number-field/number-field",
 		"spinner/spinner",
 		"tooltip/tooltip"
@@ -240,7 +236,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"pagination/pagination",
 		"select-field/select",
 		"spinner/spinner",
@@ -250,7 +245,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"password-field/password-field",
 		"spinner/spinner",
 		"text-field/text-field",
@@ -260,7 +254,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"tooltip/tooltip"
@@ -269,12 +262,14 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"photo-field/photo-input",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"popover": ["popover/popover", "skeleton/skeleton"],
+	"popover": [
+		"popover/popover",
+		"skeleton/skeleton"
+	],
 	"radio-group-field": [
 		"error-text/error-text",
 		"field/field",
@@ -285,7 +280,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"tooltip/tooltip"
@@ -300,22 +294,23 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"select-field/select",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"skeleton": ["skeleton/skeleton"],
-	"spinner": ["spinner/spinner"],
+	"skeleton": [
+		"skeleton/skeleton"
+	],
+	"spinner": [
+		"spinner/spinner"
+	],
 	"stale": [
 		"button/button",
-		"icon/icon",
 		"spinner/spinner",
 		"stale/stale",
 		"tooltip/tooltip"
 	],
 	"status-message": [
-		"icon/icon",
 		"status-message/status-message"
 	],
 	"storage": [],
@@ -326,10 +321,14 @@
 		"switch-field/switch"
 	],
 	"table-storage": [],
-	"tabs": ["badge/badge", "tabs/tabs"],
-	"tag": ["icon/icon", "tag/tag"],
+	"tabs": [
+		"badge/badge",
+		"tabs/tabs"
+	],
+	"tag": [
+		"tag/tag"
+	],
 	"tag-group": [
-		"icon/icon",
 		"tag-group/tag-group",
 		"tooltip/tooltip"
 	],
@@ -337,7 +336,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"tooltip/tooltip"
@@ -346,7 +344,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"spinner/spinner",
 		"text-field/text-field",
 		"textarea-field/textarea-field",
@@ -356,7 +353,6 @@
 		"button/button",
 		"error-text/error-text",
 		"field/field",
-		"icon/icon",
 		"lib/calendar/temporal",
 		"spinner/spinner",
 		"tooltip/tooltip"
@@ -364,7 +360,6 @@
 	"time-zone-provider": [],
 	"toast": [
 		"button/button",
-		"icon/icon",
 		"toast/toast-provider",
 		"tooltip/tooltip"
 	],
@@ -375,18 +370,18 @@
 		"toggle-group-field/toggle-group"
 	],
 	"tone": [],
-	"tooltip": ["tooltip/tooltip"],
+	"tooltip": [
+		"tooltip/tooltip"
+	],
 	"unsaved-changes": [
 		"button/button",
 		"confirm-dialog/confirm-dialog",
-		"icon/icon",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
 	"unsaved-changes/tanstack-router": [
 		"button/button",
 		"confirm-dialog/confirm-dialog",
-		"icon/icon",
 		"spinner/spinner",
 		"tooltip/tooltip"
 	]
