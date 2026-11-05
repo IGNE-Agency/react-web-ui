@@ -20,7 +20,6 @@ import { themeOf } from "./theme-global.ts";
 import { ThemedDocsContainer } from "./themed-docs-container.tsx";
 import "../src/style/tokens.gen.css";
 import "../src/style/base.scss";
-import "./fonts.scss";
 import "./docs.scss";
 
 configure({ asyncUtilTimeout: 30_000 });

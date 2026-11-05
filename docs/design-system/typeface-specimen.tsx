@@ -1,19 +1,14 @@
+import { fontFamilyPropertyOf } from "../../src/terrazzo/index";
 import styles from "./typeface-specimen.module.scss";
 import {
 	type Group,
 	groupOf,
 	pixelsOf,
-	type TypographyValue,
 	typographyOf,
 } from "./tokens";
 
 const CHARACTERS =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 € & @ ( ) . , : ;";
-
-const familyNameOf = ({ fontFamily }: TypographyValue) =>
-	Array.isArray(fontFamily)
-		? (fontFamily[0] ?? "")
-		: fontFamily;
 
 const scaleOf = (group: Group) =>
 	group.tokens.flatMap(id => {
@@ -40,10 +35,8 @@ const FamilyCard = ({
 			: scaleOf(lightest.weight).map(step =>
 					Math.round(pixelsOf(step.fontSize)),
 				);
-	const fontFamily =
-		lightest === undefined
-			? undefined
-			: familyNameOf(lightest.value);
+	const property = fontFamilyPropertyOf(family.id);
+	const fontFamily = `var(${property})`;
 
 	return (
 		<div className={styles.family}>
@@ -58,7 +51,7 @@ const FamilyCard = ({
 				</span>
 			</div>
 			<div className={styles.about}>
-				<span className={styles.name}>{fontFamily}</span>
+				<span className={styles.name}>{property}</span>
 				<span className={styles.use}>
 					{family.description}
 				</span>
@@ -88,8 +81,9 @@ const FamilyCard = ({
 };
 
 /**
- * Each type family of the type scale at display size, with what it sets, the
- * weights and sizes the scale gives it and its character set.
+ * Each family of the type scale at display size, in the typeface its custom
+ * property names, with what it sets, the weights and sizes the scale gives it
+ * and its character set.
  *
  * @example
  * <TypefaceSpecimen />

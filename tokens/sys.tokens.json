@@ -355,7 +355,6 @@
 				"small": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 0.917,
 							"unit": "rem"
@@ -401,7 +400,6 @@
 				"small": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 0.917,
 							"unit": "rem"
@@ -417,7 +415,6 @@
 				"medium": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 1,
 							"unit": "rem"
@@ -433,7 +430,6 @@
 				"large": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 1.167,
 							"unit": "rem"
@@ -449,7 +445,6 @@
 				"small-strong": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 0.917,
 							"unit": "rem"
@@ -465,7 +460,6 @@
 				"medium-strong": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 1,
 							"unit": "rem"
@@ -481,7 +475,6 @@
 				"large-strong": {
 					"$type": "typography",
 					"$value": {
-						"fontFamily": ["Roboto", "sans-serif"],
 						"fontSize": {
 							"value": 1.167,
 							"unit": "rem"

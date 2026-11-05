@@ -1,4 +1,7 @@
-import { variableNameOf } from "../../src/terrazzo/index";
+import {
+	fontFamilyPropertyOf,
+	variableNameOf,
+} from "../../src/terrazzo/index";
 import styles from "./type-role-specimen.module.scss";
 import {
 	groupOf,
@@ -18,15 +21,11 @@ type Group = Readonly<{
 	roles?: readonly string[];
 }>;
 
-const specOf = ({
-	fontFamily,
-	fontSize,
-	fontWeight,
-	lineHeight,
-}: TypographyValue) => {
-	const family = Array.isArray(fontFamily)
-		? (fontFamily[0] ?? "")
-		: fontFamily;
+const specOf = (
+	id: string,
+	{ fontSize, fontWeight, lineHeight }: TypographyValue,
+) => {
+	const family = fontFamilyPropertyOf(id);
 	const pixels = pixelsOf(fontSize);
 	const leading = Math.round(
 		typeof lineHeight === "number"
@@ -65,7 +64,7 @@ export const TypeRoleSpecimen = ({
 						const value = typographyOf(id);
 						return value === undefined
 							? []
-							: [{ id, spec: specOf(value) }];
+							: [{ id, spec: specOf(id, value) }];
 					})
 					.toSorted(
 						(a, b) =>

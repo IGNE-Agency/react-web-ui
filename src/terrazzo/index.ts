@@ -1,4 +1,5 @@
 import type {
+	ConfigInit,
 	DimensionValue,
 	Plugin,
 	TokenNormalized,
@@ -17,6 +18,22 @@ export type KitTokensOptions = Readonly<{
 }>;
 
 type Transform = NonNullable<CSSPluginOptions["transform"]>;
+
+/**
+ * The typography properties the kit's tokens set. `fontFamily` is left out:
+ * every role takes its family from a custom property the app sets.
+ */
+const TYPOGRAPHY_PROPERTIES = [
+	"fontSize",
+	"fontWeight",
+	"lineHeight",
+] as const;
+
+const VALID_TYPOGRAPHY = "core/valid-typography";
+
+const BODY_FAMILY = "--sys-font-family-body";
+
+const HEADING_FAMILY = "--sys-font-family-heading";
 
 const isRecord = (
 	value: unknown,
@@ -56,6 +73,87 @@ export const variableNameOf = (id: string): string =>
 const variableName = (token: TokenNormalized): string =>
 	variableNameOf(token.id);
 
+/**
+ * The custom property a typography token takes its family from:
+ * `--sys-font-family-heading` for a heading, `--sys-font-family-body` for
+ * everything else.
+ *
+ * @example
+ *   fontFamilyPropertyOf("sys.font.heading.large"); // "--sys-font-family-heading"
+ */
+export const fontFamilyPropertyOf = (id: string): string =>
+	id.split(".").includes("heading")
+		? HEADING_FAMILY
+		: BODY_FAMILY;
+
+const families = `\t${BODY_FAMILY}: system-ui, sans-serif;\n\t${HEADING_FAMILY}: var(${BODY_FAMILY});\n`;
+
+const literal = (value: unknown): string =>
+	isRecord(value) && "value" in value && "unit" in value
+		? `${String(value["value"])}${String(value["unit"])}`
+		: String(value);
+
+const typography: Transform = (token, { tokensSet }) => {
+	if (token.$type !== "typography") {
+		return undefined;
+	}
+	const alias = token.aliasChain?.[0];
+	const partials: unknown = token.partialAliasOf;
+	const subValue = (property: string, value: unknown) => {
+		const partial = isRecord(partials)
+			? partials[property]
+			: undefined;
+		if (alias !== undefined) {
+			return `var(${variableNameOf(`${alias}-${property}`)})`;
+		}
+		if (typeof partial === "string") {
+			return tokensSet[partial]?.$type === "typography"
+				? `var(${variableNameOf(`${partial}-${property}`)})`
+				: `var(${variableNameOf(partial)})`;
+		}
+		return literal(value);
+	};
+	return Object.fromEntries([
+		[
+			"font-family",
+			`var(${fontFamilyPropertyOf(token.id)})`,
+		],
+		...Object.entries(token.$value).flatMap(
+			([property, value]) =>
+				property === "fontFamily"
+					? []
+					: [
+							[
+								variableNameOf(property).slice(2),
+								subValue(property, value),
+							],
+						],
+		),
+	]);
+};
+
+/** Narrows the recommended typography rule to the properties a kit token sets, unless the project chose its own list. */
+const narrowTypographyRule = (config: ConfigInit): void => {
+	const rule = config.lint.rules[VALID_TYPOGRAPHY];
+	if (rule === undefined) {
+		return;
+	}
+	const [severity, options]: readonly [
+		(typeof rule)[0],
+		unknown,
+	] = rule;
+	const set = isRecord(options) ? options : {};
+	if (!("requiredProperties" in set)) {
+		config.lint.rules[VALID_TYPOGRAPHY] = [
+			severity,
+			{
+				...set,
+				requiredProperties: [...TYPOGRAPHY_PROPERTIES],
+			},
+		];
+	}
+};
+
 const dropShadows: Transform = (
 	token,
 	{ tokensSet, transformAlias },
@@ -88,7 +186,7 @@ const dropShadows: Transform = (
 };
 
 const light = (contents: string): string =>
-	`:root {\n\tcolor-scheme: light;\n${contents}\n}`;
+	`:root {\n\tcolor-scheme: light;\n${families}${contents}\n}`;
 
 const LAYER_ORDER =
 	"@layer kit.reset, kit.base, kit.components;";
@@ -108,6 +206,13 @@ const dark = (contents: string): string =>
  * tagged `$extensions["nl.igne.css"].property: "filter"` is written as
  * `drop-shadow()` filters.
  *
+ * Typography tokens name no family. A heading role's `font` takes
+ * `--sys-font-family-heading` and every other role `--sys-font-family-body`,
+ * which defaults to the system stack; the heading family follows the body
+ * family unless set. The plugin narrows Terrazzo's `core/valid-typography` rule
+ * to `fontSize`, `fontWeight` and `lineHeight` unless the config sets that
+ * rule's `requiredProperties` itself.
+ *
  * @example
  *   // terrazzo.config.ts
  *   import { defineConfig } from "@terrazzo/cli";
@@ -125,7 +230,9 @@ const kitTokens = (
 	const plugin = css({
 		filename: options.filename ?? "tokens.css",
 		variableName,
-		transform: dropShadows,
+		transform: (token, transformOptions) =>
+			typography(token, transformOptions) ??
+			dropShadows(token, transformOptions),
 		permutations: [
 			{ input: { theme: "light" }, prepare: light },
 			{
@@ -137,6 +244,10 @@ const kitTokens = (
 	});
 	return {
 		...plugin,
+		config: (config, context) => {
+			narrowTypographyRule(config);
+			return plugin.config?.(config, context);
+		},
 		build: hook =>
 			plugin.build?.({
 				...hook,

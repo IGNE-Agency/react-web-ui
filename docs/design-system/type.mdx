@@ -57,17 +57,29 @@ The scale is raw material, though. What a screen asks for is a role, named after
 
 ## Two families
 
-This product sets type in two families. The heading family gives titles their character; the body family carries everything that is read or acted on.
+Type is set in two families. The heading family gives titles their character; the body family carries everything that is read or acted on.
 
-<Specimen caption="Satoshi gives titles their character; Roboto carries everything that is read or acted on.">
+The kit names no typeface and loads no font. Each family is a custom property, `--sys-font-family-heading` and `--sys-font-family-body`, and every role's `font` reads one of them. Both default to the system's own interface font, so a screen looks native until the app chooses otherwise, and the heading family follows the body family until it is given a face of its own.
+
+<Specimen caption="Each family in the typeface its custom property names: the system's interface font, until an app sets one.">
 	<TypefaceSpecimen />
 </Specimen>
+
+An app that has a typeface loads it itself, through `@font-face` or its font service, and names it on `:root`. One property swaps every role in that family.
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+	--sys-font-family-heading:
+		"Satoshi", system-ui, sans-serif;
+}
+```
 
 ## Roles
 
 There are three groups of roles. Headings title dialogs and pages. Labels name the things you act on: buttons, tabs, nav items, field labels and chips. Body roles carry copy. A few of them are set in themselves below, with the family, weight, size and line height each resolves to.
 
-<Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in Satoshi; the full set is in the tokens file.">
+<Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in the heading family; the full set is in the tokens file.">
 	<TypeRoleSpecimen
 		groups={[
 			{
@@ -296,6 +308,33 @@ Each role is a complete `font` shorthand, so a component sets it in one declarat
 <Details title="Only headings are set in the heading family">
 
 Everything that is read or acted on, labels and body text alike, is set in the body family. Shown in [Two families](#two-families).
+
+</Details>
+
+<Details title="An app sets its typeface through the family properties on the root, and loads the font itself">
+
+The token files name no family, and the kit loads no font. `--sys-font-family-body` defaults to `system-ui, sans-serif`, and `--sys-font-family-heading` follows it. Set either on `:root`, outside the kit's layers, where the roles resolve. Explained in [Two families](#two-families).
+
+<DoDont>
+<Example kind="do" caption="One property per family swaps every role in it.">
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A family set on a component leaves every other role in the old face.">
+
+```css
+.page-title {
+	font-family: "Satoshi";
+}
+```
+
+</Example>
+</DoDont>
 
 </Details>
 

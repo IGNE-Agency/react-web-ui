@@ -100,7 +100,21 @@ export default defineConfig({
 });
 ```
 
-The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters.
+The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters. Typography tokens name no family, so the preset narrows Terrazzo's `core/valid-typography` rule to `fontSize`, `fontWeight` and `lineHeight`.
+
+### Typeface
+
+The kit names no typeface and loads no font. Every type role reads its family from one of two custom properties: `--sys-font-family-heading` for headings and `--sys-font-family-body` for everything else. The body family defaults to `system-ui, sans-serif`, and the heading family follows the body family. To use a typeface, load it the way the app loads any font, then name it on `:root` in unlayered CSS:
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+	--sys-font-family-heading:
+		"Satoshi", system-ui, sans-serif;
+}
+```
+
+This works the same over the kit's `tokens.css` and over a theme the preset builds.
 
 The kit owns no breakpoints and no gutters; those are the app's layout.
 
