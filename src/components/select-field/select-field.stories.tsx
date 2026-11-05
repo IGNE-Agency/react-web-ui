@@ -1,3 +1,5 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -18,6 +20,7 @@ import {
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
+import { Icon } from "../icon/index.ts";
 import {
 	SelectField,
 	type SelectFieldProps,
@@ -97,6 +100,8 @@ const meta = {
 		optionalLabel: OPTIONAL_LABEL,
 		placeholder: "Choose a status",
 		options: STATUS_OPTIONS,
+		icon: <Icon svg={ExpandMoreIcon} label="" />,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
 		value: null,
 		load: mappedArg(OPTIONS_LOADS, "loaded"),
 		...OPTIONS_LOAD_LABELS,

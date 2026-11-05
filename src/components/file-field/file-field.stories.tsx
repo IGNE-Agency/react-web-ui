@@ -1,3 +1,6 @@
+import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -12,6 +15,7 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { Icon } from "../icon/index.ts";
 import {
 	FileField,
 	type FileFieldProps,
@@ -88,9 +92,12 @@ const meta = {
 		optionalLabel: "optional",
 		dropTargetLabel: DROP_TARGET,
 		dropHint: "Drag files here",
+		dropIcon: <Icon svg={UploadFileIcon} label="" />,
 		chooseLabel: CHOOSE,
+		chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 		filesLabel: "Files for attachments",
 		removeLabel: REMOVE,
+		removeIcon: <Icon svg={CloseIcon} label="" />,
 		fileHint: (name, size) => `${name} (${size})`,
 		tooLargeError: tooLarge,
 		wrongTypeError: wrongType,

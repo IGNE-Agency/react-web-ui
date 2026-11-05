@@ -1,3 +1,5 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -12,6 +14,7 @@ import {
 	PendingToggle,
 	pendingOnPress,
 } from "../../lib/storybook/pending.tsx";
+import { Icon } from "../icon/index.ts";
 import {
 	CheckboxField,
 	type CheckboxFieldProps,
@@ -59,6 +62,8 @@ const meta = {
 	args: {
 		label: LABEL,
 		optionalLabel: OPTIONAL_LABEL,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
+		indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},

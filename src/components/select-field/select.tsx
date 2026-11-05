@@ -1,6 +1,4 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { clsx } from "clsx";
 import { type ReactNode, useRef } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
@@ -18,7 +16,6 @@ import {
 	optionsLoadMessage,
 } from "../field/options-load.ts";
 import { withFieldFocus } from "../field/use-field-focus.ts";
-import { Icon } from "../icon/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import {
 	SelectContext,
@@ -39,6 +36,7 @@ export type SelectRootProps<T extends string> = Omit<
 		onValueChange?: (value: T) => void;
 	}>;
 
+/** The select's state, holding the options every part below it reads. */
 const SelectRoot = <T extends string>({
 	options,
 	onValueChange,
@@ -57,6 +55,7 @@ const SelectRoot = <T extends string>({
 	</SelectContext>
 );
 
+/** The label that names the trigger. */
 const SelectLabel = ({
 	className,
 	...props
@@ -73,13 +72,33 @@ export type SelectTriggerProps = BaseSelect.Trigger.Props &
 		placeholder?: string;
 		/** The states projected onto the trigger as `data-*` attributes. */
 		state?: FieldState;
+		/** The chevron after the value, such as an expand icon. */
+		icon?: ReactNode;
 	}>;
 
 const NO_STATE: FieldState = {};
 
+/** The chevron after the trigger's value. Its children are the icon; without them it renders nothing. */
+const SelectIcon = ({
+	className,
+	children,
+	...props
+}: BaseSelect.Icon.Props): ReactNode =>
+	children === undefined ||
+	children === null ||
+	children === false ? null : (
+		<BaseSelect.Icon
+			className={clsx(style.icon, className)}
+			{...props}>
+			{children}
+		</BaseSelect.Icon>
+	);
+
+/** The button that opens the list. Without children it shows the value, the pending mark and `icon`. */
 const SelectTrigger = ({
 	placeholder,
 	state = NO_STATE,
+	icon,
 	className,
 	children,
 	...props
@@ -103,15 +122,14 @@ const SelectTrigger = ({
 						placeholder={placeholder}
 					/>
 					{state.pending === true && <Field.Pending />}
-					<BaseSelect.Icon className={style.icon}>
-						<Icon svg={ExpandMoreIcon} label="" />
-					</BaseSelect.Icon>
+					<SelectIcon>{icon}</SelectIcon>
 				</>
 			)}
 		</BaseSelect.Trigger>
 	);
 };
 
+/** Places the popup against the trigger. */
 const SelectPositioner = ({
 	className,
 	sideOffset = 4,
@@ -127,6 +145,7 @@ const SelectPositioner = ({
 	/>
 );
 
+/** The shared popup surface the list sits on. */
 const SelectPopup = ({
 	className,
 	...props
@@ -139,37 +158,63 @@ const SelectPopup = ({
 
 export type SelectItemProps = BaseSelect.Item.Props;
 
+/** One option's row, holding its `ItemText` and `ItemIndicator`. */
 const SelectItem = ({
 	className,
-	children,
 	...props
 }: SelectItemProps): ReactNode => (
 	<BaseSelect.Item
 		className={clsx(style.item, className)}
-		{...props}>
-		<BaseSelect.ItemText className={style.itemText}>
-			{children}
-		</BaseSelect.ItemText>
-		<BaseSelect.ItemIndicator className={style.indicator}>
-			<Icon svg={CheckIcon} label="" />
-		</BaseSelect.ItemIndicator>
-	</BaseSelect.Item>
+		{...props}
+	/>
 );
+
+/** An option's text, which the trigger shows once it is chosen. */
+const SelectItemText = ({
+	className,
+	...props
+}: BaseSelect.ItemText.Props): ReactNode => (
+	<BaseSelect.ItemText
+		className={clsx(style.itemText, className)}
+		{...props}
+	/>
+);
+
+/** The mark beside the chosen option. Its children are the mark, such as a tick. */
+const SelectItemIndicator = ({
+	className,
+	...props
+}: BaseSelect.ItemIndicator.Props): ReactNode => (
+	<BaseSelect.ItemIndicator
+		className={clsx(style.indicator, className)}
+		{...props}
+	/>
+);
+
+export type SelectItemsProps = Readonly<{
+	/** The mark beside the chosen option, such as a tick. */
+	checkIcon: ReactNode;
+}>;
 
 /**
  * Every option of the enclosing `Select.Root`, in the order it was given them.
  * Compose the parts directly instead where a row is more than its label.
  */
-const SelectItems = (): ReactNode => {
+const SelectItems = ({
+	checkIcon,
+}: SelectItemsProps): ReactNode => {
 	const { options } = useSelectContext();
 	return options.map(option => (
 		<SelectItem key={option.value} value={option.value}>
-			{option.label}
-			{option.detail !== undefined && (
-				<span className={style.itemDetail}>
-					{option.detail}
-				</span>
-			)}
+			<SelectItemText>
+				{option.label}
+				{option.detail !== undefined && (
+					<span className={style.itemDetail}>
+						{option.detail}
+					</span>
+				)}
+			</SelectItemText>
+			<SelectItemIndicator>{checkIcon}</SelectItemIndicator>
 		</SelectItem>
 	));
 };
@@ -220,6 +265,7 @@ export type SelectControlProps = Omit<
 	"children"
 > &
 	OptionsLoadLabels &
+	SelectItemsProps &
 	Readonly<{
 		/** How far the options have loaded, when they come from a query. */
 		load?: OptionsLoad;
@@ -236,6 +282,7 @@ const SelectControl = ({
 	loadBrokenLabel,
 	retryLabel,
 	noOptionsLabel,
+	checkIcon,
 	...props
 }: SelectControlProps): ReactNode => {
 	const popupRef = useRef<HTMLDivElement>(null);
@@ -258,7 +305,7 @@ const SelectControl = ({
 							}}
 						/>
 						<BaseSelect.List>
-							<SelectItems />
+							<SelectItems checkIcon={checkIcon} />
 						</BaseSelect.List>
 					</SelectPopup>
 				</SelectPositioner>
@@ -273,12 +320,14 @@ export type SelectParts = Readonly<{
 	Label: typeof SelectLabel;
 	Trigger: typeof SelectTrigger;
 	Value: typeof BaseSelect.Value;
-	Icon: typeof BaseSelect.Icon;
+	Icon: typeof SelectIcon;
 	Portal: typeof BaseSelect.Portal;
 	Positioner: typeof SelectPositioner;
 	Popup: typeof SelectPopup;
 	List: typeof BaseSelect.List;
 	Item: typeof SelectItem;
+	ItemText: typeof SelectItemText;
+	ItemIndicator: typeof SelectItemIndicator;
 	Items: typeof SelectItems;
 	Group: typeof BaseSelect.Group;
 	GroupLabel: typeof BaseSelect.GroupLabel;
@@ -300,6 +349,8 @@ export type SelectParts = Readonly<{
  * <Select.Root options={options} value={value} onValueChange={setValue}>
  * 	<Select.Label>Status</Select.Label>
  * 	<Select.Control
+ * 		icon={<ExpandMoreIcon />}
+ * 		checkIcon={<CheckIcon />}
  * 		loadingLabel="Loading options…"
  * 		loadFailedLabel="Options could not be loaded."
  * 		loadBrokenLabel="Options could not be loaded, and trying again won't help."
@@ -313,12 +364,14 @@ export const Select: SelectParts = {
 	Label: SelectLabel,
 	Trigger: SelectTrigger,
 	Value: BaseSelect.Value,
-	Icon: BaseSelect.Icon,
+	Icon: SelectIcon,
 	Portal: BaseSelect.Portal,
 	Positioner: SelectPositioner,
 	Popup: SelectPopup,
 	List: BaseSelect.List,
 	Item: SelectItem,
+	ItemText: SelectItemText,
+	ItemIndicator: SelectItemIndicator,
 	Items: SelectItems,
 	Group: BaseSelect.Group,
 	GroupLabel: BaseSelect.GroupLabel,

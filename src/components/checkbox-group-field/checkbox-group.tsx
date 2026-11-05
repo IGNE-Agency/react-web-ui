@@ -13,6 +13,7 @@ import style from "./checkbox-group.module.scss";
 
 export type CheckboxGroupRootProps = FieldsetRootProps;
 
+/** The group of boxes, which holds the array of ticked values. */
 const CheckboxGroupGroup = ({
 	className,
 	...props
@@ -23,6 +24,7 @@ const CheckboxGroupGroup = ({
 	/>
 );
 
+/** One box's row: a label wrapping its `Control` and its text. */
 const CheckboxGroupItem = ({
 	className,
 	...props
@@ -44,7 +46,8 @@ export type CheckboxGroupParts = Readonly<{
 	Legend: typeof FieldsetLegend;
 	Group: typeof CheckboxGroupGroup;
 	Item: typeof CheckboxGroupItem;
-	Checkbox: typeof Checkbox;
+	Control: typeof Checkbox.Control;
+	Indicator: typeof Checkbox.Indicator;
 	Description: typeof Field.Description;
 	Error: typeof Field.Error;
 	useIds: typeof Field.useIds;
@@ -60,7 +63,9 @@ export type CheckboxGroupParts = Readonly<{
  * 	<CheckboxGroup.Legend optionalLabel="optional">Statuses</CheckboxGroup.Legend>
  * 	<CheckboxGroup.Group value={values} onValueChange={setValues}>
  * 		<CheckboxGroup.Item>
- * 			<CheckboxGroup.Checkbox value="open" />
+ * 			<CheckboxGroup.Control value="open">
+ * 				<CheckboxGroup.Indicator><CheckIcon /></CheckboxGroup.Indicator>
+ * 			</CheckboxGroup.Control>
  * 			Open
  * 		</CheckboxGroup.Item>
  * 	</CheckboxGroup.Group>
@@ -71,7 +76,8 @@ export const CheckboxGroup: CheckboxGroupParts = {
 	Legend: FieldsetLegend,
 	Group: CheckboxGroupGroup,
 	Item: CheckboxGroupItem,
-	Checkbox,
+	Control: Checkbox.Control,
+	Indicator: Checkbox.Indicator,
 	Description: Field.Description,
 	Error: Field.Error,
 	useIds: Field.useIds,

@@ -20,6 +20,10 @@ export type SelectFieldProps<T extends string> =
 		Readonly<{
 			/** Shown on the trigger while nothing is selected. */
 			placeholder?: string;
+			/** The chevron after the trigger's value, such as an expand icon. */
+			icon?: ReactNode;
+			/** The mark beside the chosen option, such as a tick. */
+			checkIcon: ReactNode;
 			/** How far the options have loaded, when they come from a query. */
 			load?: OptionsLoad;
 			/** Called once focus has left the field, its popup included. */
@@ -37,6 +41,8 @@ export type SelectFieldProps<T extends string> =
  * 	label="Status"
  * 	optionalLabel="optional"
  * 	options={statusOptions}
+ * 	icon={<ExpandMoreIcon />}
+ * 	checkIcon={<CheckIcon />}
  * 	value={status}
  * 	onValueChange={setStatus}
  * 	loadingLabel="Loading options…"
@@ -56,6 +62,8 @@ export const SelectField = <T extends string>({
 	touched,
 	pending = false,
 	placeholder,
+	icon,
+	checkIcon,
 	load = OPTIONS_LOADED,
 	loadingLabel,
 	loadFailedLabel,
@@ -140,6 +148,8 @@ export const SelectField = <T extends string>({
 				</Select.Label>
 				<Select.Control
 					placeholder={placeholder}
+					icon={icon}
+					checkIcon={checkIcon}
 					load={load}
 					loadingLabel={loadingLabel}
 					loadFailedLabel={loadFailedLabel}

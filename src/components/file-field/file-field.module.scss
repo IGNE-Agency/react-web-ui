@@ -53,6 +53,11 @@
 		hyphens: auto;
 	}
 
+	.hintIcon {
+		display: inline-flex;
+		font-size: var(--file-field-hint-icon-size, 1.5em);
+	}
+
 	.list {
 		display: flex;
 		flex-direction: row;

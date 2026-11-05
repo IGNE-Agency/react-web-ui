@@ -21,6 +21,8 @@ export type CheckboxGroupFieldProps = FieldProps &
 	Readonly<{
 		/** The boxes, in the order they read. */
 		items: readonly CheckboxGroupItem[];
+		/** The mark a ticked box shows, such as a tick. */
+		checkIcon: ReactNode;
 		readOnly?: boolean;
 		/** Prefixes each box's id, so ids stay stable across renders. */
 		name?: string;
@@ -39,6 +41,7 @@ export type CheckboxGroupFieldProps = FieldProps &
  * 	label="Statuses"
  * 	optionalLabel="optional"
  * 	items={[{ label: "Open", value: "open" }]}
+ * 	checkIcon={<CheckIcon />}
  * 	value={statuses}
  * 	onValueChange={setStatuses}
  * />
@@ -53,6 +56,7 @@ export const CheckboxGroupField = ({
 	touched,
 	pending,
 	items,
+	checkIcon,
 	readOnly,
 	name,
 	onBlur,
@@ -90,14 +94,17 @@ export const CheckboxGroupField = ({
 				disabled={disabled}>
 				{items.map(item => (
 					<CheckboxGroup.Item key={item.value}>
-						<CheckboxGroup.Checkbox
+						<CheckboxGroup.Control
 							id={`${prefix}-${item.value}`}
 							name={prefix}
 							inputRef={detachHiddenInput}
 							value={item.value}
 							onBlur={onBlur}
-							readOnly={readOnly}
-						/>
+							readOnly={readOnly}>
+							<CheckboxGroup.Indicator>
+								{checkIcon}
+							</CheckboxGroup.Indicator>
+						</CheckboxGroup.Control>
 						{item.label}
 					</CheckboxGroup.Item>
 				))}

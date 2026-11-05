@@ -5,7 +5,6 @@ export type {
 	ItemQuery,
 	PagedQuery,
 } from "./combobox-items.ts";
-export type { ComboboxPopupLabels } from "./combobox-popup-body.tsx";
 export type {
 	ComboboxMode,
 	ComboboxMultipleLabels,

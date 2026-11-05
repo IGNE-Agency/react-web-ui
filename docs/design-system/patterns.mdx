@@ -4,6 +4,7 @@ import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.sv
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Button } from "../../src/components/button/index.ts";
@@ -38,6 +39,19 @@ export const Live = ({ children }) => (
 );
 
 export const ignore = () => undefined;
+
+export const checkMarks = {
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
+};
+
+export const Box = props => (
+	<Checkbox.Control {...props}>
+		<Checkbox.Indicator>
+			{checkMarks.checkIcon}
+		</Checkbox.Indicator>
+	</Checkbox.Control>
+);
 
 export const dateLabels = {
 	optionalLabel: "optional",
@@ -404,6 +418,7 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 							{ label: "Paid", value: "paid" },
 						]}
 						defaultValue={["submitted"]}
+						checkIcon={checkMarks.checkIcon}
 					/>
 				</div>
 			</div>
@@ -417,13 +432,13 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<label className={componentStyles.check}>
-						<Checkbox /> Draft
+						<Box /> Draft
 					</label>
 					<label className={componentStyles.check}>
-						<Checkbox defaultChecked /> Submitted
+						<Box defaultChecked /> Submitted
 					</label>
 					<label className={componentStyles.check}>
-						<Checkbox /> Paid
+						<Box /> Paid
 					</label>
 				</div>
 			</div>
@@ -446,6 +461,7 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 							optionalLabel="optional"
 							label="Send me a copy by email"
 							requiredness="optional"
+							{...checkMarks}
 						/>
 						<SwitchField
 							optionalLabel="optional"
@@ -468,6 +484,7 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 						<CheckboxField
 							optionalLabel="optional"
 							label="Send me a copy by email (optional)"
+							{...checkMarks}
 						/>
 					</div>
 				</Live>
@@ -559,6 +576,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 							optionalLabel="optional"
 							label="Treatment completed"
 							readOnly
+							{...checkMarks}
 						/>
 						<SwitchField
 							optionalLabel="optional"
@@ -579,7 +597,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<div className={componentStyles.card}>
 					<label className={componentStyles.check}>
 						<span className={componentStyles.secondEdge}>
-							<Checkbox />
+							<Box />
 						</span>
 						Treatment completed
 					</label>
@@ -1471,6 +1489,7 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 <CheckboxGroupField
 	label={m.declarations_status_label()}
 	items={items}
+	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1478,11 +1497,18 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 <Example kind="dont" caption="Three labelled boxes and no way to know the answer can be left empty.">
 
 ```tsx
-<CheckboxGroup>
+<CheckboxGroup.Group>
 	{items.map(item => (
-		<Checkbox key={item.value} {...item} />
+		<CheckboxGroup.Item key={item.value}>
+			<CheckboxGroup.Control value={item.value}>
+				<CheckboxGroup.Indicator>
+					<CheckIcon />
+				</CheckboxGroup.Indicator>
+			</CheckboxGroup.Control>
+			{item.label}
+		</CheckboxGroup.Item>
 	))}
-</CheckboxGroup>
+</CheckboxGroup.Group>
 ```
 
 </Example>
@@ -1501,6 +1527,8 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 <CheckboxField
 	label={m.declaration_send_copy()}
 	requiredness="optional"
+	checkIcon={<CheckIcon />}
+	indeterminateIcon={<RemoveIcon />}
 />
 ```
 
@@ -1510,6 +1538,8 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 ```tsx
 <CheckboxField
 	label={`${m.declaration_send_copy()} (${m.forms_optional()})`}
+	checkIcon={<CheckIcon />}
+	indeterminateIcon={<RemoveIcon />}
 />
 ```
 
