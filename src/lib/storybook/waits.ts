@@ -43,3 +43,20 @@ export const optionHighlighted = (name: string) =>
 			screen.getByRole("option", { name }),
 		).toHaveAttribute("data-highlighted"),
 	);
+
+/**
+ * Waits until the option named `name` is highlighted and holds focus, such
+ * as the first option once a select's popup has taken focus from its trigger.
+ *
+ * @example
+ * await userEvent.keyboard("{Enter}");
+ * await optionFocused("Open");
+ */
+export const optionFocused = (name: string) =>
+	waitFor(async () => {
+		const option = screen.getByRole("option", { name });
+		await expect(option).toHaveAttribute(
+			"data-highlighted",
+		);
+		await expect(option).toHaveFocus();
+	});

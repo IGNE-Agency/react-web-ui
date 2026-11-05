@@ -8,7 +8,11 @@ import {
 } from "storybook/test";
 import { z } from "zod";
 import { memoryStorage } from "../../lib/storybook/memory-storage.ts";
-import { roleGone } from "../../lib/storybook/waits.ts";
+import {
+	optionFocused,
+	optionHighlighted,
+	roleGone,
+} from "../../lib/storybook/waits.ts";
 import {
 	type StoredValue,
 	tableStoredValue,
@@ -287,10 +291,10 @@ export const FilterKeyboard: Story = {
 		});
 		await expect(client).toHaveFocus();
 		await userEvent.keyboard("{ArrowDown}");
-		await screen.findByRole("listbox");
-		await userEvent.keyboard(
-			"{ArrowDown}{ArrowDown}{Enter}",
-		);
+		await optionFocused(ALL_CLIENTS);
+		await userEvent.keyboard("{ArrowDown}{ArrowDown}");
+		await optionHighlighted(ANNE);
+		await userEvent.keyboard("{Enter}");
 		await roleGone("listbox");
 		await expect(client).toHaveTextContent(ANNE);
 
