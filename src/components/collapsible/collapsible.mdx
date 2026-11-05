@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as CollapsibleStories from "./collapsible.stories.tsx";
+
+<Meta of={CollapsibleStories} />
+
+<DocsPage>
+
+## Rules
+
+### The trigger names what folds away, and the chevron says which way
+
+The trigger's label is what the panel holds, such as "Advanced settings", never "Show more", so it still makes sense read out on its own. Its chevron points down while the panel is shut and turns over while it is open; the state reaches a screen reader as the trigger's expanded state.
+
+### A panel folds along its height, and only for those who want motion
+
+The panel grows from nothing to its measured height and shrinks back, in the short duration. Under reduced motion it opens and shuts at once.
+
+### Fold away what most people skip, not what they need
+
+A collapsible holds secondary detail that most readers pass over. Anything a task depends on stays in view; hiding it behind a trigger is one more click for everyone.
+
+</DocsPage>

@@ -1,0 +1,64 @@
+@use "./specimen";
+
+$narrow: "(width < 40rem)";
+
+.groups {
+	display: grid;
+	gap: var(--sys-unit-32);
+}
+
+.group {
+	display: grid;
+	grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+	column-gap: var(--sys-unit-16);
+
+	@media #{$narrow} {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.heading {
+	display: grid;
+	grid-column: 1 / -1;
+	gap: var(--sys-unit-1);
+	margin-block-end: var(--sys-unit-8);
+}
+
+.title {
+	color: var(--sys-color-text);
+	font: var(--sys-font-heading-small);
+}
+
+.role {
+	display: grid;
+	grid-template-columns: subgrid;
+	grid-column: 1 / -1;
+	row-gap: var(--sys-unit-2);
+	align-items: baseline;
+	padding-block: var(--sys-unit-8);
+
+	@include specimen.construction(block-end);
+}
+
+.about {
+	display: grid;
+	gap: var(--sys-unit-1);
+}
+
+.name {
+	@include specimen.name;
+}
+
+.meta {
+	@include specimen.meta;
+}
+
+.sample {
+	color: var(--sys-color-text);
+	overflow-wrap: break-word;
+	min-inline-size: 0;
+
+	@media #{$narrow} {
+		grid-row: 1;
+	}
+}

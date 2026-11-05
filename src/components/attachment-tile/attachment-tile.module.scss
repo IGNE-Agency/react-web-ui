@@ -1,0 +1,112 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.tile {
+		--_tile-size: var(--attachment-tile-size, 5rem);
+		--_tile-border-width: 1px;
+		--_tile-radius: var(
+			--attachment-tile-radius,
+			var(--sys-radius-sm)
+		);
+		--_tile-inner-radius: calc(
+			var(--_tile-radius) - var(--_tile-border-width)
+		);
+
+		position: relative;
+		box-sizing: border-box;
+		inline-size: var(--_tile-size);
+		block-size: var(--_tile-size);
+		border: var(--_tile-border-width) solid transparent;
+		border-radius: var(--_tile-radius);
+		background: var(
+			--attachment-tile-bg,
+			var(--sys-color-surface-highest)
+		);
+		color: var(
+			--attachment-tile-fg,
+			var(--sys-color-text-muted)
+		);
+		cursor: default;
+
+		@include focus.ring;
+
+		&[data-focus-visible] {
+			@include focus.ring-shown;
+		}
+
+		&[data-invalid] {
+			border-color: var(--sys-color-error-border);
+			background: var(--sys-color-error-bg);
+			color: var(--sys-color-error-fg);
+		}
+	}
+
+	.link {
+		display: block;
+		color: var(
+			--attachment-tile-fg,
+			var(--sys-color-text-muted)
+		);
+		text-decoration: none;
+		cursor: pointer;
+
+		&:hover {
+			border-color: var(
+				--attachment-tile-hover-border,
+				var(--sys-color-primary)
+			);
+			color: var(
+				--attachment-tile-fg,
+				var(--sys-color-text-muted)
+			);
+		}
+	}
+
+	.preview {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sys-unit-2);
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		border-radius: var(--_tile-inner-radius);
+	}
+
+	.image {
+		inline-size: 100%;
+		block-size: 100%;
+		object-fit: cover;
+	}
+
+	.imageSkeleton {
+		--skeleton-bg: var(--sys-color-outline);
+
+		position: absolute;
+		inset: 0;
+		border-radius: var(--_tile-inner-radius);
+		block-size: auto;
+	}
+
+	.extension {
+		font: var(--sys-font-label-small);
+		text-transform: uppercase;
+	}
+
+	.name {
+		@include a11y.visually-hidden;
+	}
+
+	.remove {
+		display: grid;
+		place-items: center;
+		position: absolute;
+		inset-block-start: calc(-1 * var(--sys-unit-2));
+		inset-inline-end: calc(-1 * var(--sys-unit-2));
+		border-radius: var(--sys-radius-circle);
+		background: var(--sys-color-surface);
+	}
+}

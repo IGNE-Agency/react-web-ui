@@ -1,0 +1,34 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--pagination-gap, var(--sys-unit-8));
+	}
+
+	.pageSize {
+		display: flex;
+		align-items: center;
+		gap: var(--pagination-page-size-gap, var(--sys-unit-4));
+	}
+
+	.index {
+		color: var(
+			--pagination-index-fg,
+			var(--sys-color-text)
+		);
+		font: var(
+			--pagination-index-font,
+			var(--sys-font-body-medium)
+		);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--pagination-controls-gap, var(--sys-unit-2));
+	}
+}

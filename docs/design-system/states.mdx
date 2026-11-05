@@ -1,0 +1,96 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Details, DetailsList } from "./details";
+import { FocusRingSpecimen } from "./focus-ring-specimen";
+import { Illustration } from "./illustration";
+import { Specimen } from "./specimen";
+import { StateLayerSpecimen } from "./state-layer-specimen";
+import { StatesDrawing } from "./states-drawing";
+import { AnswersDrawing } from "./states-figures";
+
+<Meta title="Design system/Foundation/States" />
+
+# States
+
+A control on a screen has no weight, no click and no give under your finger. All it can do to show it heard you is change how it looks. States are those small changes, and they are how a flat screen keeps up its half of the conversation.
+
+<Illustration caption="Up close, the keyboard is on one control at a time, and the focus ring says which.">
+	<StatesDrawing />
+</Illustration>
+
+## A control that answers back
+
+Every state answers a question the user is silently asking. Hover says "yes, you can use this". Press says "got it". Focus says "you are here", to someone moving with the keyboard. Selected says "this is the one you picked", and disabled says "not now".
+
+The answers have to be quick, quiet and the same everywhere. Quick, because a control that responds late feels broken. Quiet, because a state is a passing remark, not a new design: the control is still recognisably itself. And the same everywhere, because a user learns what hover looks like once, on one control, and expects it on all the rest.
+
+<Illustration caption="A press answers in the control's own ink, deepest where the finger lands and fading out from there. The control keeps its shape; only the wash over it changes.">
+	<AnswersDrawing />
+</Illustration>
+
+## The state layer
+
+The easiest way to keep a state quiet is to leave the control's colours alone and lay something thin over them. A translucent wash of the control's own text colour, a little stronger the more is happening, reads as the same control, just more awake. Because it's made from the colour already there, it works on any fill, in any theme, without anyone choosing a hover colour.
+
+That's how this product draws hover and press. The layer gets a little stronger with each state: 8% for hover, 10% for focus, 12% for press and 16% for drag. Every state works a little harder in the dark theme, where a faint tint over a dark fill is easier to miss.
+
+<Specimen caption="The layer's opacity for each state, over a surface in each theme. Every state works a little harder on the dark one.">
+	<StateLayerSpecimen />
+</Specimen>
+
+Which controls carry the layer, and when a row tints instead, is decided under [hover and press come from the shared state layer](?path=/docs/design-system-principles-interaction--docs#hover-and-press-come-from-the-shared-state-layer).
+
+## The focus ring
+
+For someone who moves with the keyboard, focus is the cursor. Lose sight of it and they're lost on the page, with no way of knowing what the next key press will do. So focus has to be visible on everything, against every background, and it has to look the same wherever it lands, so it's recognised at a glance.
+
+This product draws one ring for all of it: in the brand colour, three pixels wide, two pixels outside the element's edge, following the element's own corners. It never changes shape or colour from one control to the next.
+
+<Specimen caption="One ring for every shape: it follows the element's own corners, a fixed gap outside its edge, in the brand colour.">
+	<FocusRingSpecimen />
+</Specimen>
+
+Which elements wear it, and the few places it's inset or left off, is decided under [everything you can reach with the keyboard shows the focus ring](?path=/docs/design-system-principles-interaction--docs#everything-you-can-reach-with-the-keyboard-shows-the-focus-ring).
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="A state changes how a control looks, never what it is">
+
+Hover, press, focus, selected and disabled each show on the control itself, quietly, and the same way on every control. Explained in [A control that answers back](#a-control-that-answers-back).
+
+</Details>
+
+<Details title="Hover and press never get colours of their own">
+
+They come from the state layer, so a new variant needs no new hover colours. Explained in [The state layer](#the-state-layer).
+
+</Details>
+
+<Details title="The state layer is the control's own text colour, laid over its fill">
+
+Its opacity rises with each state: 8% for hover, 10% for focus, 12% for press and 16% for drag. Shown in [The state layer](#the-state-layer).
+
+</Details>
+
+<Details title="Every state works a little harder in the dark theme">
+
+In the dark theme the layer is 10% for hover, 12% for focus, 16% for press and 20% for drag, because a faint tint over a dark fill is easier to miss. Shown in [The state layer](#the-state-layer).
+
+</Details>
+
+<Details title="Keyboard focus is shown by one ring, the same everywhere">
+
+It never changes shape or colour from one control to the next, so it is recognised at a glance. Explained in [The focus ring](#the-focus-ring).
+
+</Details>
+
+<Details title="The focus ring is the brand colour, outside the edge, following the element's corners">
+
+Three pixels wide and two pixels outside the element's edge. It is drawn as an outline, which follows the element's border radius by itself. Shown in [The focus ring](#the-focus-ring).
+
+</Details>
+
+</DetailsList>

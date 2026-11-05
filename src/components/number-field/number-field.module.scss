@@ -1,0 +1,45 @@
+@use "../../style/layers.scss";
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.root {
+		min-inline-size: 0;
+	}
+
+	.wrapper {
+		display: contents;
+	}
+
+	.group {
+		@include form.group;
+
+		inline-size: 100%;
+	}
+
+	.input {
+		flex: 1;
+		min-inline-size: 0;
+		border: none;
+		background: none;
+		padding: 0;
+		color: inherit;
+		font: inherit;
+		font-variant-numeric: tabular-nums;
+		text-align: var(--number-field-text-align, end);
+		cursor: text;
+
+		@include form.field-text-metrics;
+
+		&::placeholder {
+			color: var(--field-muted-fg);
+		}
+	}
+
+	.inlay {
+		@include form.inlay;
+	}
+
+	.action {
+		@include form.inlay-action;
+	}
+}

@@ -1,0 +1,15 @@
+@use "../../style/layers.scss";
+@use "../../style/checkbox.scss" as checkbox;
+
+@layer kit.components {
+	.group {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--checkbox-group-gap, var(--sys-unit-6));
+	}
+
+	.label {
+		@include checkbox.inline-label('[role="checkbox"]');
+	}
+}

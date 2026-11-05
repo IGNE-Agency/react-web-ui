@@ -1,0 +1,26 @@
+@use "../../style/layers.scss";
+@use "../../style/tag.scss" as tag;
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--tag-group-gap, var(--sys-unit-4));
+	}
+
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--tag-group-gap, var(--sys-unit-4));
+	}
+
+	.tag {
+		@include tag.shell("tag");
+	}
+
+	.remove {
+		@include tag.remove;
+	}
+}

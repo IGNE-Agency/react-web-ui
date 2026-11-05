@@ -1,0 +1,42 @@
+// See `docs/design-system/motion.mdx`.
+
+/// Emits the error entry keyframes. Include once at the root of any module that
+/// uses `pop-in`.
+///
+/// @example
+///   @use "../../style/error-motion.scss" as error;
+///
+///   @include error.pop-in-keyframes;
+@mixin pop-in-keyframes {
+	@keyframes error-pop-in {
+		from {
+			translate: 0 calc(-1 * var(--sys-unit-4));
+			opacity: 0;
+		}
+	}
+}
+
+/// A message dropping into place as it arrives, held back by `$step` for every
+/// error message ahead of it on the page: `--error-index` counts the ones in
+/// earlier blocks, `sibling-index()` the ones in this block.
+///
+/// @example
+///   .message {
+///       @include error.pop-in;
+///   }
+@mixin pop-in($step: 20ms) {
+	@media not (prefers-reduced-motion) {
+		animation: error-pop-in var(--sys-motion-short)
+			var(--sys-motion-emphasized) both;
+		animation-delay: calc(var(--error-index, 0) * #{$step});
+
+		@supports (
+			animation-delay: calc(sibling-index() * 1ms)
+		) {
+			animation-delay: calc(
+				(var(--error-index, 0) + sibling-index() - 1) *
+					#{$step}
+			);
+		}
+	}
+}

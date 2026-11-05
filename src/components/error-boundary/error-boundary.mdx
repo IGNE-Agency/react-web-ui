@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as ErrorBoundaryStories from "./error-boundary.stories.tsx";
+
+<Meta of={ErrorBoundaryStories} />
+
+<DocsPage>
+
+## Rules
+
+### A boundary goes around the part that can fail, not around the page
+
+A boundary catches a failure in what it wraps and puts its fallback in that one place, so everything around it keeps working. Wrap each region that can fail on its own; one boundary around the whole app turns any failure into a blank page.
+
+### The fallback is an error message, with a retry only where it can help
+
+The fallback is an `ErrorMessage` with the boundary's title and description. It offers a retry only when given a `retryLabel`, and only where trying again can help. A part that needs a different fallback passes `fallbackRender`.
+
+</DocsPage>

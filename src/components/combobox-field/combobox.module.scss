@@ -1,0 +1,167 @@
+@use "../../style/layers.scss";
+@use "../../style/checkbox.scss" as checkbox;
+@use "../../style/form.scss" as form;
+@use "../../style/popup.scss" as popup;
+@use "../../style/tag.scss" as tag;
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.control {
+		@include form.control;
+
+		position: relative;
+		gap: var(--combobox-gap, var(--sys-unit-6));
+		justify-content: space-between;
+		inline-size: 100%;
+		min-inline-size: 0;
+		cursor: pointer;
+
+		&[data-readonly] {
+			cursor: default;
+		}
+	}
+
+	.content {
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--sys-unit-2);
+		min-block-size: var(--sys-unit-14);
+		min-inline-size: 0;
+		overflow-wrap: normal;
+		hyphens: auto;
+
+		@include form.field-text-metrics;
+
+		.control[data-placeholder] & {
+			color: var(--field-muted-fg);
+		}
+	}
+
+	.trigger {
+		display: inline-flex;
+		flex: 1;
+		align-items: center;
+		gap: var(--combobox-gap, var(--sys-unit-6));
+		min-inline-size: 0;
+		text-align: start;
+
+		.content + & {
+			flex: none;
+		}
+	}
+
+	.spokenValue {
+		@include a11y.visually-hidden;
+	}
+
+	.icon {
+		display: inline-flex;
+		color: var(--field-muted-fg);
+	}
+
+	.tags {
+		display: contents;
+	}
+
+	.tagList {
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--sys-unit-2);
+		min-inline-size: 0;
+	}
+
+	.tag {
+		@include tag.shell("combobox-tag");
+
+		max-inline-size: 100%;
+	}
+
+	.tagRemove {
+		@include tag.remove;
+	}
+
+	.positioner {
+		@include popup.edge-padding;
+
+		outline: none;
+	}
+
+	.popup {
+		@include popup.surface;
+
+		display: flex;
+		flex-direction: column;
+		min-inline-size: var(--anchor-width);
+		max-inline-size: var(--available-width);
+		max-block-size: min(
+			var(--available-height, 22rem),
+			var(--combobox-popup-max-block-size, 22rem)
+		);
+	}
+
+	.search {
+		@include form.control;
+
+		flex-shrink: 0;
+		margin-block-end: var(--sys-unit-4);
+		inline-size: 100%;
+		min-inline-size: 0;
+	}
+
+	.statusArea {
+		@include popup.status-area;
+	}
+
+	.status,
+	.empty {
+		@include popup.note;
+	}
+
+	.list {
+		min-block-size: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scroll-padding-block: var(--sys-unit-4);
+
+		@include popup.thin-scrollbar;
+	}
+
+	.option {
+		@include popup.item;
+	}
+
+	.indicator {
+		display: inline-flex;
+		flex-shrink: 0;
+		color: var(
+			--combobox-indicator-fg,
+			var(--sys-color-primary)
+		);
+	}
+
+	.checkbox {
+		@include checkbox.box;
+
+		.option[data-selected] & {
+			@include checkbox.box-checked;
+		}
+	}
+
+	.checkboxIndicator {
+		@include checkbox.indicator;
+		@include checkbox.indicator-hidden;
+
+		&[data-selected] {
+			@include checkbox.indicator-shown;
+		}
+	}
+
+	.optionText {
+		flex: 1;
+		min-inline-size: 0;
+	}
+}

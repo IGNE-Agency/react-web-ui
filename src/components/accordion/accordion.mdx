@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as AccordionStories from "./accordion.stories.tsx";
+
+<Meta of={AccordionStories} />
+
+<DocsPage>
+
+## Rules
+
+### Each item is a heading, at the level the page needs
+
+Every item's trigger sits in a heading, so a screen reader can list the items and jump to one by name. The heading is an `h3` unless the page's outline needs another level; only the page knows its own outline, so the call site sets it.
+
+### One item open at a time, unless the reader compares them
+
+An accordion opens one item and shuts the one before it, so the stack stays short. Let several stay open only where the reader reads two side by side.
+
+### Items fold the way a collapsible does
+
+An item's trigger and panel are a collapsible's: a label that names what the panel holds, a chevron that turns over, and a panel that grows along its height for those who want motion.
+
+</DocsPage>

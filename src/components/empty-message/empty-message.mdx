@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as EmptyMessageStories from "./empty-message.stories.tsx";
+
+<Meta of={EmptyMessageStories} />
+
+<DocsPage>
+
+## Rules
+
+### An empty region says so in one sentence, where its content would be
+
+An empty message takes the place of the rows and keeps the headers and filters above it, so the reader can change what they asked for. Its title says in one sentence that nothing is there, and the description says what would put something there. It is announced politely as a status.
+
+### A way on only where one exists
+
+An empty message offers an action only when the reader can follow it through, such as adding the first item. It never offers one that leads nowhere.
+
+</DocsPage>

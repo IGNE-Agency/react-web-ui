@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as AvatarGroupStories from "./avatar-group.stories.tsx";
+
+<Meta of={AvatarGroupStories} />
+
+<DocsPage>
+
+## Rules
+
+### A group shows a few faces and counts the rest
+
+The stack shows up to four avatars and folds everyone after them into a count, so a long list of people takes the same room as a short one. The count is a number with its sign, such as "+3", in the reader's own number format.
+
+### Everyone in the group can be found by name
+
+The avatars say nothing to a screen reader, so the group itself carries a name for what the people are, such as "Invitees", and opens a list of everyone by name on hover, on a tap or from the keyboard. The person viewing is marked in that list, in their own words, such as "(you)".
+
+</DocsPage>

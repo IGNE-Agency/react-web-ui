@@ -1,0 +1,127 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { SelectField } from "./select-field.tsx";
+import * as SelectFieldStories from "./select-field.stories.tsx";
+
+<Meta of={SelectFieldStories} />
+
+<DocsPage>
+
+## Rules
+
+### There is no native select
+
+There is no native select in an app built on the kit. Its dropdown list is drawn by the user agent in the platform's own palette: it cannot take [our surface, ink, radius or highlight](?path=/docs/design-system-patterns--docs#every-popup-that-lists-things-shares-one-surface-and-one-row), and it stays stubbornly light under a dark theme. Explicit colours on an option do not reliably reach it.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The status picker is the design-system select."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.card}>
+        <SelectField
+          label="Status"
+          optionalLabel="optional"
+          options={[
+            { label: "Draft", value: "draft" },
+            { label: "Submitted", value: "submitted" },
+            { label: "Paid", value: "paid" },
+          ]}
+          defaultValue="submitted"
+          loadingLabel="Loading options…"
+          loadFailedLabel="Options could not be loaded."
+          loadBrokenLabel="Options could not be loaded, and trying again won't help."
+          retryLabel="Try again"
+          noOptionsLabel="No options available."
+        />
+      </div>
+    </div>
+  }>
+
+```tsx
+<SelectField
+	label="Status"
+	optionalLabel="optional"
+	options={statusOptions}
+	value={status}
+	onValueChange={setStatus}
+	{...selectLabels}
+/>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="An unthemeable dropdown, and a third select treatment in the app."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.card}>
+        <label className={styles.native}>
+          Status
+          <select className={styles.nativeControl} defaultValue="submitted">
+            <option value="draft">Draft</option>
+            <option value="submitted">Submitted</option>
+            <option value="paid">Paid</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  }>
+
+```tsx
+<select
+	value={status}
+	onChange={e => setStatus(e.target.value)}>
+	{statusOptions.map(o => (
+		<option key={o.value} value={o.value}>
+			{o.label}
+		</option>
+	))}
+</select>
+```
+
+</Example>
+</DoDont>
+
+### A select is labelled through the field's label prop
+
+Label it with the field's own `label` prop rather than a `for` attribute: [the field ties its label to the trigger itself](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism), and an `id` given to the field never reaches the trigger, so a `for` pointed at it names nothing.
+
+<DoDont>
+<Example kind="do" caption="The component ties its label to its own trigger.">
+
+```tsx
+<SelectField
+	label="Status"
+	optionalLabel="optional"
+	options={statusOptions}
+	value={status}
+	onValueChange={setStatus}
+	{...selectLabels}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="A label pointed at an id that stops at the field.">
+
+```tsx
+<label htmlFor={id}>Status</label>
+<SelectField
+	id={id}
+	label=""
+	optionalLabel="optional"
+	options={statusOptions}
+	value={status}
+	onValueChange={setStatus}
+	{...selectLabels}
+/>
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

@@ -1,0 +1,184 @@
+@use "../../style/layers.scss";
+@use "../../style/overlay.scss" as overlay;
+@use "../../style/theme.scss" as theme;
+
+@layer kit.components {
+	.backdrop {
+		@include overlay.backdrop;
+
+		--overlay-dim: 0.22;
+		--overlay-opacity: calc(
+			1 - var(--drawer-swipe-progress)
+		);
+
+		@media not (prefers-reduced-motion) {
+			transition-timing-function: var(
+				--sys-motion-emphasized
+			);
+		}
+
+		@supports (-webkit-touch-callout: none) {
+			position: absolute;
+		}
+
+		@include theme.dark {
+			--overlay-dim: 0.4;
+		}
+
+		&[data-swiping] {
+			transition-duration: 0ms;
+		}
+
+		&[data-ending-style] {
+			transition-duration: calc(
+				var(--drawer-swipe-strength) * 0.2s
+			);
+		}
+	}
+
+	.viewport {
+		--drawer-viewport-padding: 0px;
+
+		position: fixed;
+		inset: 0;
+		display: flex;
+		justify-content: flex-end;
+		padding: var(--drawer-viewport-padding);
+
+		@supports (-webkit-touch-callout: none) {
+			--drawer-viewport-padding: var(--sys-unit-8);
+		}
+	}
+
+	.popup {
+		--drawer-bleed: 3rem;
+		--drawer-inset: var(--sys-unit-16);
+
+		position: relative;
+		box-sizing: border-box;
+		inline-size: calc(33dvw + var(--drawer-bleed));
+		min-inline-size: 24rem;
+		block-size: 100%;
+		background: var(
+			--drawer-surface,
+			var(--sys-color-surface)
+		);
+		padding: var(--drawer-inset);
+		padding-right: calc(
+			var(--drawer-inset) + var(--drawer-bleed)
+		);
+		margin-right: calc(-1 * var(--drawer-bleed));
+		color: var(--sys-color-text);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		touch-action: auto;
+		transform: translateX(var(--drawer-swipe-movement-x));
+
+		@media not (prefers-reduced-motion) {
+			transition: transform var(--sys-motion-short)
+				var(--sys-motion-emphasized);
+			will-change: transform;
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset-inline-start: var(--sys-unit-3);
+			inset-block-start: 50%;
+			inline-size: var(--sys-unit-2);
+			block-size: var(--sys-unit-16);
+			border-radius: var(--sys-radius-full);
+			background: var(--sys-color-outline);
+			translate: 0 -50%;
+		}
+
+		&[data-swiping] {
+			user-select: none;
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			transform: translateX(
+				calc(
+					100% - var(--drawer-bleed) +
+						var(--drawer-viewport-padding) + 2px
+				)
+			);
+		}
+
+		&[data-ending-style] {
+			transition-duration: calc(
+				var(--drawer-swipe-strength) * 0.2s
+			);
+		}
+
+		@supports (-webkit-touch-callout: none) {
+			--drawer-bleed: 0px;
+
+			margin-right: 0;
+			border-radius: var(--sys-radius-lg);
+		}
+
+		&[data-swipe-direction="down"] {
+			align-self: flex-end;
+			inline-size: 100%;
+			min-inline-size: 0;
+			block-size: var(--drawer-sheet-block-size, auto);
+			max-block-size: var(--drawer-sheet-max, 85dvh);
+			border-radius: var(--sys-radius-xl)
+				var(--sys-radius-xl) 0 0;
+			margin-right: 0;
+			margin-bottom: calc(-1 * var(--drawer-bleed));
+			padding-top: var(--sys-unit-6);
+			padding-right: var(--drawer-inset);
+			padding-bottom: calc(
+				var(--drawer-inset) + var(--drawer-bleed) + 1.75rem
+			);
+			transform: translateY(var(--drawer-swipe-movement-y));
+
+			&::before {
+				position: static;
+				display: block;
+				flex-shrink: 0;
+				inline-size: var(--sys-unit-16);
+				block-size: var(--sys-unit-2);
+				margin-inline: auto;
+				margin-block-end: var(--sys-unit-6);
+				translate: none;
+			}
+
+			&[data-starting-style],
+			&[data-ending-style] {
+				transform: translateY(
+					calc(
+						100% - var(--drawer-bleed) +
+							var(--drawer-viewport-padding) + 2px
+					)
+				);
+			}
+		}
+	}
+
+	.filled {
+		--drawer-sheet-block-size: var(
+			--drawer-sheet-max,
+			85dvh
+		);
+
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sys-unit-8);
+	}
+
+	.title {
+		color: var(--sys-color-text);
+		font: var(--sys-font-heading-small);
+	}
+}

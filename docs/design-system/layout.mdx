@@ -1,0 +1,388 @@
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
+import SettingsIcon from "@material-design-icons/svg/outlined/settings.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./layout.module.scss";
+import { Illustration } from "./illustration";
+import { LayoutDrawing } from "./layout-drawing";
+import { GridDrawing } from "./layout-figures";
+
+<Meta title="Design system/Principles/Layout" />
+
+# Layout
+
+Layout decides where things go on a screen and how much room each part gets. Done well, a screen reads at a glance: what belongs together lines up, nothing is pushed off the edge, and every part keeps the room it needs. [Responsiveness](?path=/docs/design-system-principles-responsiveness--docs) takes it from there, and decides how that arrangement adapts when the room changes.
+
+<Illustration caption="A screen is a few regions, a rail, a header, a main area and a side column, and each is given its own room.">
+	<LayoutDrawing />
+</Illustration>
+
+## Sharing one grid
+
+A grid is a set of invisible tracks that everything on a screen agrees to stand on. Blocks of different sizes still start and end on the same lines, so the screen reads as one arrangement instead of a pile of parts. The eye follows those shared edges without being told to, and finds the next thing where it expects it.
+
+<Illustration caption="Tiles one, two and three cells across, and every edge still lands on the same tracks. Big or small, each sits on one grid.">
+	<GridDrawing />
+</Illustration>
+
+The same holds inside a row of repeated items. When cards or tiles repeat the same parts, those parts line up across them, so the eye can compare one value with the next at a glance. They line up because they share the grid, not because every part was given the same fixed size: a fixed size only holds until the first label wraps or a translation runs longer.
+
+Reading text has a comfortable width of its own, too. Lines much longer than about seventy characters lose the eye on its way back, so spare width goes to margins and neighbouring regions, not to longer lines.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="One item's taller label moves that row for all of them, and the rest stay in register."
+		visual={
+			<div
+				className={`${styles.cards} ${styles.cardsShared}`}>
+				<div
+					className={`${styles.card} ${styles.cardShared}`}>
+					<span className={styles.label}>Declared</span>
+					<span className={styles.value}>€ 1,240</span>
+				</div>
+				<div
+					className={`${styles.card} ${styles.cardShared}`}>
+					<span className={styles.label}>
+						Reimbursed this calendar year
+					</span>
+					<span className={styles.value}>€ 860</span>
+				</div>
+				<div
+					className={`${styles.card} ${styles.cardShared}`}>
+					<span className={styles.label}>Pending</span>
+					<span className={styles.value}>3</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The first line is only level while every label stays one line."
+		visual={
+			<div className={styles.cards}>
+				<div className={styles.card}>
+					<span
+						className={`${styles.label} ${styles.labelFixed}`}>
+						Declared
+					</span>
+					<span className={styles.value}>€ 1,240</span>
+				</div>
+				<div className={styles.card}>
+					<span
+						className={`${styles.label} ${styles.labelFixed}`}>
+						Reimbursed this calendar year
+					</span>
+					<span className={styles.value}>€ 860</span>
+				</div>
+				<div className={styles.card}>
+					<span
+						className={`${styles.label} ${styles.labelFixed}`}>
+						Pending
+					</span>
+					<span className={styles.value}>3</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Giving way gracefully
+
+A narrow window has to take room from somewhere, and something always gives. The question is only whether anyone decided what. Content that can scroll or wrap is the natural thing to give way, like a strip of tabs or a long table. Content that has to stay whole keeps its room, like a total or [an unbreakable word](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled). <Pull>Left undecided, the widest thing on screen wins and pushes its neighbour off the edge, and nothing looks wrong until the window is narrow.</Pull>
+
+So each region of a screen says up front what it will give up. How the whole arrangement then changes with the width of the window is up to Responsiveness, which keeps [one responsive system to each file](?path=/docs/design-system-principles-responsiveness--docs#one-responsive-system-per-file) and [sizes a full-height screen to the small viewport first](?path=/docs/design-system-principles-responsiveness--docs#full-height-uses-svh-then-dvh).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The total must not break, so it claims its width first; the region divides the rest and its strip scrolls."
+		visual={
+			<div
+				className={`${styles.viewport} ${styles.viewportFloored}`}>
+				<div className={styles.region}>
+					<div
+						className={`${styles.strip} ${styles.stripScrolls}`}>
+						<span>Overview</span>
+						<span>Declarations</span>
+						<span>Attachments</span>
+						<span>History</span>
+					</div>
+					<div className={styles.content} />
+				</div>
+				<div className={styles.details}>
+					Total
+					<span className={styles.total}>€ 1,240.00</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The strip's width silently becomes the region's minimum, and the total is pushed off-screen."
+		visual={
+			<div className={styles.viewport}>
+				<div className={styles.region}>
+					<div className={styles.strip}>
+						<span>Overview</span>
+						<span>Declarations</span>
+						<span>Attachments</span>
+						<span>History</span>
+					</div>
+					<div className={styles.content} />
+				</div>
+				<div className={styles.details}>
+					Total
+					<span className={styles.total}>€ 1,240.00</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Made to measure
+
+A panel that opens wider, like [the navigation rail](?path=/docs/components-nav--docs#an-expanded-rail-is-wide-enough-for-its-labels), opens exactly as wide as its longest label needs, in every language. A guessed width either clips a long translation or leaves a gap, and it has to be guessed again every time a label changes. Measured from its content, it is right the first time and stays right.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The rail animates to the width its labels need, and the labels never fold."
+		visual={
+			<div className={styles.railFrame}>
+				<div
+					className={`${styles.rail} ${styles.railFits}`}>
+					<span
+						className={`${styles.railItem} ${styles.railItemActive}`}>
+						<HomeIcon aria-hidden />
+						Home
+					</span>
+					<span className={styles.railItem}>
+						<DescriptionIcon aria-hidden />
+						Outstanding declarations
+					</span>
+					<span className={styles.railItem}>
+						<SettingsIcon aria-hidden />
+						Settings
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The guessed width clips a long translation, and the labels re-wrap on every frame of the transition."
+		visual={
+			<div className={styles.railFrame}>
+				<div
+					className={`${styles.rail} ${styles.railGuessed}`}>
+					<span
+						className={`${styles.railItem} ${styles.railItemActive}`}>
+						<HomeIcon aria-hidden />
+						Home
+					</span>
+					<span className={styles.railItem}>
+						<DescriptionIcon aria-hidden />
+						Outstanding declarations
+					</span>
+					<span className={styles.railItem}>
+						<SettingsIcon aria-hidden />
+						Settings
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Things that belong together line up">
+
+Repeated items share one grid, so their matching parts line up even when one runs longer. Give each item the parent's rows with `subgrid`, so one item's taller part moves that row for all of them. Shown in [Sharing one grid](#sharing-one-grid).
+
+<DoDont>
+<Example kind="do" caption="One item's taller label moves that row for all of them, and the rest stay in register.">
+
+```scss
+.row {
+	display: grid;
+	grid-template-rows: auto auto;
+}
+
+.cell {
+	display: grid;
+	grid-row: span 2;
+	grid-template-rows: subgrid;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The first line is only level while every label stays one line.">
+
+```scss
+.cell__label {
+	block-size: 1.5rem;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Spare width goes to margins and neighbouring regions, never to longer lines of text">
+
+Reading text keeps a measure of about seventy characters at most. Explained in [Sharing one grid](#sharing-one-grid).
+
+</Details>
+
+<Details title="When space runs out, each region knows what to give up">
+
+A grid or flex item never shrinks below its own content unless you say so, so state the floor. `minmax(0, 1fr)` is for content that copes with less room, and `minmax(min-content, 1fr)` for content that must not break. A bare `1fr` is neither. Explained in [Giving way gracefully](#giving-way-gracefully).
+
+<DoDont>
+<Example kind="do" caption="The total must not break, so it claims its width first; the region divides the rest and its strip scrolls.">
+
+```scss
+.page {
+	grid-template-columns:
+		minmax(0, 2fr)
+		minmax(min-content, 1fr);
+}
+
+.strip {
+	overflow-x: auto;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The strip's width silently becomes the region's minimum, and the total is pushed off-screen.">
+
+```scss
+.page {
+	grid-template-columns: 2fr 1fr;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A panel opens to fit its content, not to a guess">
+
+A transition can't animate into an intrinsic size like `max-content` on its own. Opting in with `interpolate-size` fixes that where it's supported, so keep a length as the fallback everywhere else. Clip the panel while it moves, and stop its labels from folding: [a label folds when its box might be too small for it](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled), and a box measured from the label never is. Explained in [Made to measure](#made-to-measure).
+
+<DoDont>
+<Example kind="do" caption="The rail animates to the width its labels need, and the labels never fold.">
+
+```scss
+.rail {
+	--rail-width: 18rem;
+
+	inline-size: var(--rail-width);
+	overflow: hidden;
+
+	@media not (prefers-reduced-motion) {
+		transition: inline-size var(--motion-medium)
+			var(--motion-standard);
+	}
+}
+
+.rail[data-collapsed="true"] {
+	--rail-width: 4.5rem;
+}
+
+@supports (interpolate-size: allow-keywords) {
+	.rail {
+		--nav-label-wrap: nowrap;
+
+		interpolate-size: allow-keywords;
+
+		&:not([data-collapsed="true"]) {
+			--rail-width: max-content;
+		}
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="The guessed width clips a long translation, and the labels re-wrap on every frame of the transition.">
+
+```scss
+.rail {
+	inline-size: 18rem;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Containment never sits on the app shell, the root element or the body">
+
+A container on the app shell, the root element or the body breaks everything that floats above the page: `position: fixed` and every portalled overlay, from drawers and popovers to tooltips and menus. Container queries belong on leaf wrappers with nothing portalled inside them. To change the shell's layout at the breakpoint, [read the media query in script](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares) instead.
+
+<DoDont>
+<Example kind="do" caption="A leaf wrapper with nothing portaled inside it.">
+
+```scss
+.stat-grid {
+	container-type: inline-size;
+}
+```
+
+</Example>
+<Example kind="dont" caption="Containment on the app shell breaks every fixed and portaled overlay inside it.">
+
+```scss
+.app-shell {
+	container-type: inline-size;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Sizes and spacing use logical properties">
+
+Write `inline-size` and `padding-inline` rather than `width` and `padding-left`, so the layout follows the reading direction rather than the screen's left and right.
+
+<DoDont>
+<Example kind="do" caption="The panel is sized and padded in logical properties.">
+
+```scss
+.panel {
+	max-inline-size: 32rem;
+	padding-inline: var(--unit-12);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The panel is sized and padded in physical properties.">
+
+```scss
+.panel {
+	max-width: 32rem;
+	padding-left: var(--unit-12);
+	padding-right: var(--unit-12);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

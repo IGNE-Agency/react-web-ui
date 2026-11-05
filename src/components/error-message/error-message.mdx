@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as ErrorMessageStories from "./error-message.stories.tsx";
+
+<Meta of={ErrorMessageStories} />
+
+<DocsPage>
+
+## Rules
+
+### A failure takes the region's place only when there is nothing to keep
+
+An error message is for a region that has nothing to show because its content failed to arrive. A region that already shows data keeps it, and reports a failed refresh above it instead. The message is announced at once, as an alert.
+
+### It says what happened and what to do next
+
+The title says what happened; the description says what to do about it, or who can help.
+
+### A retry only where trying again can help
+
+A failure that can pass by itself, such as a timeout or a lost connection, offers a retry. Any other failure would fail the same way twice, so it offers none and says who can help instead.
+
+</DocsPage>

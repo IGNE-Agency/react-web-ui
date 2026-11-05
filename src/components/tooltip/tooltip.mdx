@@ -1,0 +1,63 @@
+import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { Icon } from "../icon/icon.tsx";
+import * as TooltipStories from "./tooltip.stories.tsx";
+
+<Meta of={TooltipStories} />
+
+<DocsPage>
+
+## Rules
+
+### A tooltip is dark ink on a light surface
+
+A tooltip is dark ink on a light surface, [like every other popup](?path=/docs/design-system-patterns--docs#every-popup-floats-on-the-overlay-surface-at-the-first-level-with-no-outline), not an inverted black chip. An inverted tooltip is a second, contradictory visual language for "floating thing", and it has to be [re-inverted by hand for a dark theme](?path=/docs/design-system-foundation-colour--docs#a-theme-re-points-the-roles-and-touches-nothing-else).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The tooltip is the same floating surface as every other popup."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.anchored}>
+        <span className={styles.tooltip}>Export</span>
+        <span className={styles.iconButton}><Icon svg={DownloadIcon} label="" /></span>
+      </div>
+    </div>
+  }>
+
+```scss
+.tooltip {
+	background: var(--sys-color-surface-overlay);
+	color: var(--sys-color-text);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="An inverted chip, a second language for the same floating thing."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.anchored}>
+        <span className={`${styles.tooltip} ${styles.tooltipInverted}`}>Export</span>
+        <span className={styles.iconButton}><Icon svg={DownloadIcon} label="" /></span>
+      </div>
+    </div>
+  }>
+
+```scss
+.tooltip {
+	background: var(--sys-color-text);
+	color: var(--sys-color-text-inverse);
+}
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

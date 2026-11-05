@@ -1,0 +1,96 @@
+@use "./focus.scss" as focus;
+@use "./state-layer.scss" as state;
+
+// See `docs/design-system/motion.mdx`.
+
+/// The row that folds a panel open and shut: its label at the start, a chevron
+/// at the end. Reads its knobs under `$prefix`.
+///
+/// @example
+///   @use "../../style/disclosure.scss" as disclosure;
+///
+///   .trigger {
+///       @include disclosure.trigger("collapsible");
+///   }
+@mixin trigger($prefix) {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--#{$prefix}-trigger-gap, var(--sys-unit-4));
+	box-sizing: border-box;
+	inline-size: 100%;
+	border: none;
+	border-radius: var(
+		--#{$prefix}-trigger-radius,
+		var(--sys-radius-sm)
+	);
+	background: var(--#{$prefix}-trigger-bg, transparent);
+	padding: var(
+			--#{$prefix}-trigger-pad-y,
+			var(--sys-unit-4)
+		)
+		var(--#{$prefix}-trigger-pad-x, var(--sys-unit-6));
+	color: var(
+		--#{$prefix}-trigger-fg,
+		var(--sys-color-text)
+	);
+	font: var(
+		--#{$prefix}-trigger-font,
+		var(--sys-font-label-large)
+	);
+	text-align: start;
+	cursor: pointer;
+
+	@include focus.ring;
+	@include state.layer;
+
+	&[data-disabled] {
+		color: var(--sys-color-text-muted);
+		cursor: not-allowed;
+	}
+}
+
+/// The trigger's chevron, turned over while its panel is open.
+///
+/// @example
+///   .chevron {
+///       @include disclosure.chevron;
+///   }
+@mixin chevron {
+	flex-shrink: 0;
+
+	@media not (prefers-reduced-motion) {
+		transition: rotate var(--sys-motion-short)
+			var(--sys-motion-standard);
+	}
+
+	[data-panel-open] > & {
+		rotate: 180deg;
+	}
+}
+
+/// The panel that folds: it grows from and shrinks to nothing along the block
+/// axis, reading base-ui's measured height from `$height-var`.
+///
+/// @example
+///   .panel {
+///       @include disclosure.panel("--collapsible-panel-height");
+///   }
+@mixin panel($height-var) {
+	overflow: hidden;
+
+	&[hidden]:not([hidden="until-found"]) {
+		display: none;
+	}
+
+	@media not (prefers-reduced-motion) {
+		block-size: var(#{$height-var});
+		transition: block-size var(--sys-motion-short)
+			var(--sys-motion-standard);
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			block-size: 0;
+		}
+	}
+}

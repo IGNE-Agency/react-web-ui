@@ -1,0 +1,343 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { WritingARuleDrawing } from "./writing-a-rule-drawing";
+
+<Meta title="Design system/Working on the system/Writing a rule" />
+
+# Writing a rule
+
+A design guide is read in two ways. Someone new reads a page from top to bottom to learn how the product thinks. Someone in the middle of a task, person or agent, comes looking for one rule and leaves again. A good page serves both: prose that makes the case, and every rule stated once, in a sentence that can be found.
+
+<Illustration caption="A section, part by part: a heading that introduces it, the prose that makes the case and a visual that shows it. The rule itself, in one sentence, waits folded at the foot of the page.">
+	<WritingARuleDrawing />
+</Illustration>
+
+## What belongs here
+
+Design decisions that hold for the whole product. A decision about a single component goes on [that component's page](#component-pages).
+
+Most rules here are one of two kinds:
+
+- **A choice that should look the same everywhere.** For example, [a link carries the brand colour and is underlined](?path=/docs/design-system-principles-interaction--docs#a-link-carries-the-brand-colour-and-is-underlined).
+- **A principle that settles an argument before it starts.** For example, [the order of separation tools](?path=/docs/design-system-principles-separation--docs#work-down-space-surface-elevation-and-line-and-stop-at-the-first-that-works): try space first, then a surface, then elevation, and only then a line.
+
+Each rule is written once, on the page it belongs to. Everywhere else that depends on it links to it.
+
+## The shape of a page
+
+Every page runs from the general to the particular. It opens with a short lede and a drawing that say what the topic is about. Then it explains the idea the way it would hold for any product: what it's for, why it matters, the theory behind it. Only after that does it say how this product does it, with its own scale, its own levels, its own roles. A reader who knows the theory can skip ahead, and one who doesn't is never handed a product's choices before the reasons for them.
+
+Headings are few. A reader scans them first, and a long contents list hides the shape of the page. A heading introduces its section in plain words, like "The anatomy of a shadow", rather than cramming a whole rule into one line. The rule lives in the prose below it, where there is room to say why.
+
+At the foot of every page sits its rule index, under Technical rules: every rule the page makes, one sentence each, folded so it can be found without being read. That is also where the code goes, and nowhere else.
+
+## Writing for people
+
+Write it the way you'd explain it to a colleague: plain words, the purpose before the mechanics, and why the choice beat the alternative, in a sentence or two. If a pull request or a discussion settled it, link to that at the end.
+
+A choice this product made is told as a choice, not as a law of nature. Reserving contrast for what matters is a decision another product might not take. The guide describes this product and never names another one.
+
+Each topic has one home. When something moves to the page it belongs on, the old place keeps a sentence pointing to it. What is stale, or only describes how something happens to be built today, comes out everywhere it appears.
+
+Names from our code stay out of it: tokens, props, hooks, file names. <Pull>A rule that names today's code is out of date as soon as that code is renamed.</Pull> Say "the surface role", not the token's name. The real names live in the tokens files, and each token says there what it's for.
+
+## Pictures that earn their place
+
+A page needs pictures for two reasons: to show what a sentence claims, and to give the eye somewhere to rest. Put one wherever it does either. That isn't one per section by habit, but when a section needs one, it gets one.
+
+An illustration is editorial, not a screenshot: one idea, drawn big and cropped boldly, often laid out on the page's own grid. It is never a mock-up of the interface, because a mock-up invites the reader to check details that don't matter. Its background stands apart from the page in both themes, and in the light theme it is never lighter than the page itself. It is a picture, so its text can't be selected.
+
+A section about an idea may borrow the drawing accents, colours turned off the brand green, because it isn't showing the product. Anything about the product itself, like its brand or its colours, uses only the product's real colours, so the page never shows a colour the product doesn't have.
+
+A specimen samples the real thing: a handful of steps or roles rather than the full set, on the product's own surfaces, outlined so each sample holds its edge. The full set lives in the tokens files.
+
+## Linking
+
+A reader rarely starts at the top of a page. They arrive from [a component's Follows line](#follows), from search or from another page, so a page says what it depends on, right where it depends on it.
+
+A link sends the reader to the exact thing a sentence relies on. If it relies on a rule, the link goes to that rule in the index. If it relies on an explanation, the link goes to the section. Either way the reader lands on what they came for, rather than on a page they then have to search.
+
+The link text says where it goes. A screen reader can list a page's links on their own, before any of the text around them, so each link has to make sense out of its sentence. Lead with the words that matter: "the four cases that justify a line", not "separation", and never "see here". Where the link is simply a title, in an index or a list of pages, the page's own short name is enough.
+
+Link the first mention, in the sentence that needs it, once. A list of related links at the end says things are related without saying how. If the connection matters, a sentence says how, and carries the link.
+
+## Component pages
+
+Every component's docs page follows one outline, in this order. A section with nothing to say is left out.
+
+1. **The name**, and under it what the component is and the job it does, in one or two sentences. No history, and no comparison with what came before.
+2. **When to use:** the situations it is for, as a short list.
+3. **When not to use:** the situations it looks right for but isn't. Each one names the component to use instead.
+4. **Examples:** the component's stories. Each story says in one line when to reach for that variant. A story never shows a don't; those live on the design-system pages.
+5. **Rules:** the decisions specific to this component, each under a `###` heading.
+6. **Accessibility**, in three parts, one for each reader.
+7. **Follows.**
+8. **Known issues.**
+
+### Rules
+
+Each rule's heading states it, so the headings read as a checklist: "A dismissable surface says so on its title's line", where "Close button" would only name the topic. Under the heading come the decision in a sentence or two, a visual, and a code note only when it earns one. Most rules fit in 30 to 150 words. A longer one is usually two rules, or it is carrying wiring that belongs in the code.
+
+A rule that holds for several components goes on a [pattern page](#pattern-pages) instead, and the component links to it under Follows.
+
+### Accessibility
+
+- **What it handles:** what the component already does, such as focus, roles and keyboard support, so nobody adds it a second time.
+- **What the design must do:** what is still a design decision, such as the wording of a label or the order of actions.
+- **What the code must do:** what a screen using the component still has to provide, such as an accessible name.
+
+### Follows
+
+The [pattern pages](#pattern-pages) and foundation sections the component follows, as links. The list comes from the stories' metadata, so it is never written by hand.
+
+### Known issues
+
+What is known to be wrong or still undecided: a gap in behaviour, a browser or screen-reader bug, an open question. An entry is deleted when it is fixed.
+
+## Pattern pages
+
+A pattern holds rules that apply across a group of components, like every popup sharing one surface, or every region of data that waits, finds nothing or fails. Each rule is written once, on its pattern page, and the components link to it. A rule about one property of every screen, like colour or spacing, belongs on a foundation page instead.
+
+A pattern page has [the same shape as every other page](#the-shape-of-a-page), with two lists that only patterns need:
+
+1. **The name** is the group or the moments the pattern governs, like "Popups" or "Patterns". Under it, a short lede and a drawing on the problem it solves, the way it holds for any product.
+2. **Applies to:** every component the pattern covers, each one linked. They are listed in text, so that someone working on one of them, person or agent, finds out the pattern applies without having to recognise it in a picture. Each of those components lists the pattern under [Follows](#follows).
+3. **Sections** under plain headings that introduce them, general first and this product's answer after, with their do and don't specimens. Anything that holds for only one of the components goes on that component's page.
+4. **Exceptions:** a component in Applies to that deliberately breaks one of the rules, which rule, and why. Without the entry, the next person to notice will fix it.
+5. **Known issues**, [as on a component page](#known-issues).
+6. **Technical rules:** every rule the pattern makes, [one block each](#every-rule-a-page-makes-is-one-block-in-its-technical-rules), with its code.
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="A rule here is a design decision that holds for the whole product">
+
+A decision about one component goes on that component's page, and one about a group of components on a pattern page. Explained in [What belongs here](#what-belongs-here).
+
+</Details>
+
+<Details title="Each rule is written once, on the page it belongs to">
+
+Every other page that depends on it links to it rather than repeating it. Explained in [What belongs here](#what-belongs-here).
+
+</Details>
+
+<Details title="A page runs from the general idea to this product's specifics">
+
+The lede and opening drawing, then the idea as it holds for any product, then how this product does it, then the rule index. Explained in [The shape of a page](#the-shape-of-a-page).
+
+</Details>
+
+<Details title="A heading introduces its section and doesn't state the rule">
+
+Few headings, in plain words. The rule is stated in the prose below the heading, and again in the rule index. Explained in [The shape of a page](#the-shape-of-a-page).
+
+</Details>
+
+<Details title="Every rule a page makes is one block in its Technical rules">
+
+The block's title states the rule as one sentence, and its anchor is that sentence's slug. The body is a sentence or two on how, the code if there is any, and a closing line linking up to the section that explains it. Blocks follow the order of the page, and none holds a specimen. Explained in [The shape of a page](#the-shape-of-a-page).
+
+```mdx
+<Details title="A control never carries a shadow">
+
+Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
+
+</Details>
+```
+
+</Details>
+
+<Details title="Code appears only in the rule index">
+
+The sections above it are for reading. A code example, or a do and don't pair told through code, goes in the block of the rule it belongs to. Explained in [The shape of a page](#the-shape-of-a-page).
+
+</Details>
+
+<Details title="A code note traces back to a decision and says what the code can't">
+
+A workaround with no design decision behind it doesn't belong in the guide, and most code explains itself. A negative outline offset doesn't, until you know it [keeps the focus ring inside a list that scrolls](?path=/docs/design-system-principles-interaction--docs#everything-you-can-reach-with-the-keyboard-shows-the-focus-ring). A code note uses the platform's terms, like CSS properties, HTML elements and browser behaviour.
+
+<DoDont>
+<Example kind="do" caption="The decision first, then a code note for the trap.">
+
+```md
+### An icon-only button has a tooltip and an accessible name
+
+<DoDont>…</DoDont>
+
+In code: the `title` attribute does neither job. Give the button an accessible name, and show the tooltip with the tooltip component.
+```
+
+</Example>
+<Example kind="dont" caption="A code note with no decision behind it.">
+
+```md
+In code: the panel sets `min-width: 0` so the ResizeObserver doesn't report its old width.
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A rule says why the choice beat the alternative">
+
+A sentence or two is enough. If a pull request or a discussion settled it, the rule links to that at the end. Explained in [Writing for people](#writing-for-people).
+
+</Details>
+
+<Details title="A product's choice is told as a choice, and no other product is named">
+
+Explained in [Writing for people](#writing-for-people).
+
+</Details>
+
+<Details title="A topic that moves leaves a pointer behind">
+
+The page it left keeps a sentence that links to its new home. Explained in [Writing for people](#writing-for-people).
+
+</Details>
+
+<Details title="A rule uses generic role names, never names from our code">
+
+Tokens, props, hooks and file names go stale on the first rename. Examples use generic role names, like `--sys-color-surface`; the real names are in `src/style/`. Explained in [Writing for people](#writing-for-people).
+
+<DoDont>
+<Example kind="do" caption="The decision, in words that still hold after a rename.">
+
+```md
+Set a region apart from its neighbour with a surface tier before reaching for a line.
+```
+
+</Example>
+<Example kind="dont" caption="The same decision, told through the code that carries it today.">
+
+```md
+The sidebar has no `border-inline-end`, because `--sys-color-surface` in `sidebar.module.scss` already sets it apart.
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An example shows the rule and nothing else">
+
+<DoDont>
+<Example kind="do" caption="The rule in its smallest form, in a generic role name.">
+
+```scss
+.card {
+	background: var(--sys-color-surface);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A copy of the real file. The rule is lost among lines that have nothing to do with it.">
+
+```scss
+.card {
+	position: relative;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+	container-type: inline-size;
+
+	&[data-dense] {
+		padding: var(--sys-unit-8);
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A picture goes where it shows a claim or rests the eye">
+
+Not one per section by habit, and not held back from a section that needs one. Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+
+</Details>
+
+<Details title="An illustration is editorial: one idea, drawn bold, never a mock-up">
+
+Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+
+</Details>
+
+<Details title="An illustration stands apart from the page in both themes">
+
+In the light theme it is never lighter than the page. The illustration frame makes it inert, so its text can't be selected. Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+
+</Details>
+
+<Details title="Only a section about an idea borrows the drawing accents">
+
+A drawing about the product, like its brand or its colours, uses only the product's own ramps. Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+
+</Details>
+
+<Details title="A specimen shows a handful, on the product's own surfaces, outlined">
+
+Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+
+</Details>
+
+<Details title="A link that relies on a rule points at the rule, and one that relies on an explanation points at the section">
+
+A rule's anchor is the slug of its title in the rule index. After a heading or a rule is renamed, every link to it, including the stories' metadata, is pointed at the new anchor. `bun run docs:links`, run while Storybook is up, lists every link whose page or rule no longer exists, the links that stop at a page, and the rules nothing links to or from. Explained in [Linking](#linking).
+
+</Details>
+
+<Details title="Link text says where it goes and makes sense on its own">
+
+The words that matter come first. A page or section title is enough in an index or a list of pages. Explained in [Linking](#linking).
+
+<DoDont>
+<Example kind="do" caption="The link names the rule it leads to, in the sentence that depends on it.">
+
+```md
+A button whose handler awaits carries a moving indicator until it settles, per [every wait has an indicator, and that indicator keeps changing](?path=/docs/design-system-foundation-motion--docs#every-wait-has-an-indicator-and-that-indicator-keeps-changing).
+```
+
+</Example>
+<Example kind="dont" caption="A page to search, behind words that say nothing about it.">
+
+```md
+A button whose handler awaits carries a moving indicator until it settles. See [Motion](?path=/docs/design-system-foundation-motion--docs) for more.
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A link sits at the first mention, in the sentence that needs it, and never in a see-also list">
+
+Explained in [Linking](#linking).
+
+</Details>
+
+<Details title="A component page follows the component outline">
+
+Shown in [Component pages](#component-pages).
+
+</Details>
+
+<Details title="A pattern page follows the pattern outline">
+
+Shown in [Pattern pages](#pattern-pages).
+
+</Details>
+
+</DetailsList>

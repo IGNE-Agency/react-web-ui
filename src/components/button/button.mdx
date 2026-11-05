@@ -1,0 +1,372 @@
+import InsightsIcon from "@material-design-icons/svg/outlined/insights.svg?react";
+import BubbleChartIcon from "@material-design-icons/svg/outlined/bubble_chart.svg?react";
+import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
+import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
+import FilterListIcon from "@material-design-icons/svg/outlined/filter_list.svg?react";
+import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { Beside } from "../../../docs/design-system/beside";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { Icon } from "../icon/icon.tsx";
+import { Spinner } from "../spinner/spinner.tsx";
+import { Button } from "./button.tsx";
+import * as ButtonStories from "./button.stories.tsx";
+
+<Meta of={ButtonStories} />
+
+<DocsPage>
+
+## Rules
+
+### A button is one of three tiers, and destructive is a tone on them
+
+Three tiers: a solid brand fill, a tonal container, and a transparent one. Pill radius, padding-driven height, no border, [no shadow](?path=/docs/design-system-foundation-elevation--docs#a-control-never-carries-a-shadow). Three sizes. A tone that re-points the two colour tokens each tier reads, so a destructive button is the same three tiers in an error role rather than a fourth tier.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Destructive is the same three tiers in the error role."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.row}>
+        <Button variant="primary" tone="danger" icon={DeleteIcon}>Delete</Button>
+        <Button tone="danger" icon={DeleteIcon}>Delete</Button>
+        <Button variant="tertiary" tone="danger" icon={DeleteIcon}>Delete</Button>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Button variant="primary" tone="danger" icon={DeleteIcon}>
+	Delete
+</Button>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A fourth tier, with a border and a corner no other button has."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.row}>
+        <Button variant="primary" icon={DownloadIcon}>Export</Button>
+        <button type="button" className={styles.dangerTier}>Delete</button>
+      </div>
+    </div>
+  }>
+
+```scss
+.danger {
+	border: 1px solid var(--sys-color-error-fg);
+	border-radius: var(--radius-xs);
+	background: none;
+	color: var(--sys-color-error-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+### An icon-only button is a circle, with an accessible label
+
+Icon-only collapses to a circle on a square aspect ratio, never a pill, so a single glyph is never sitting in a stadium of dead space. It [requires an accessible label](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="One glyph, one circle."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+        <div className={styles.row}>
+          <Button iconOnly icon={FilterListIcon} label="Filters" />
+          <Button iconOnly icon={DownloadIcon} label="Export" />
+          <Button iconOnly icon={MoreVertIcon} label="More actions" />
+        </div>
+    </div>
+  }>
+
+```tsx
+<Button iconOnly icon={DownloadIcon} label="Export" />
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A glyph in a stadium of dead space."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.row}>
+        <Button icon={FilterListIcon} aria-label="Filters">{null}</Button>
+        <Button icon={DownloadIcon} aria-label="Export">{null}</Button>
+        <Button icon={MoreVertIcon} aria-label="More actions">{null}</Button>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Button icon={DownloadIcon} aria-label="Export">
+	{null}
+</Button>
+```
+
+</Example>
+</DoDont>
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The icon-only button carries an accessible label."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+        <div className={styles.stack}>
+          <Button variant="tertiary" iconOnly icon={ChevronLeftIcon} label="Previous page" />
+          <span className={styles.announce}>
+            Screen reader says: <span className={styles.spoken}>“Previous page”</span>
+          </span>
+        </div>
+    </div>
+  }>
+
+```tsx
+<Button
+	variant="tertiary"
+	iconOnly
+	icon={ChevronLeft}
+	label="Previous page"
+/>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A screen reader announces nothing."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.stack}>
+        <span className={styles.iconButton}>
+          <Icon svg={ChevronLeftIcon} label="" />
+        </span>
+        <span className={styles.announce}>
+          Screen reader says: <span className={styles.spoken}>nothing</span>
+        </span>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Button variant="tertiary" iconOnly icon={ChevronLeft} />
+```
+
+</Example>
+</DoDont>
+
+### A button is a pill or a circle, wherever it sits
+
+A button has two shapes: a pill with text, a circle when icon-only. Both are strongly rounded, and a button never takes another shape from what it sits in. A padded, rounded bar keeps its own radius, and the buttons in it stay pills.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The bar has its radius, and the buttons in it keep theirs."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+        <div className={styles.actionBar}>
+          <span className={styles.actionBarText}>3 selected</span>
+          <Button size="sm" icon={DownloadIcon}>Export</Button>
+          <Button size="sm" iconOnly icon={CloseIcon} label="Clear selection" />
+        </div>
+    </div>
+  }>
+
+```scss
+.bar {
+	border-radius: var(--radius-md);
+	padding: var(--unit-2);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The buttons take the bar's corner and stop being a pill and a circle."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+        <div className={styles.actionBar}>
+          <span className={styles.actionBarText}>3 selected</span>
+          <Button size="sm" icon={DownloadIcon} className={styles.barCornered}>Export</Button>
+          <Button size="sm" iconOnly icon={CloseIcon} label="Clear selection" className={styles.barCornered} />
+        </div>
+    </div>
+  }>
+
+```scss
+.bar button {
+	border-radius: calc(var(--radius-md) - var(--unit-2));
+}
+```
+
+</Example>
+</DoDont>
+
+### A labelled button carries an icon as well
+
+Default to an icon on every button, not only the icon-only ones. A glyph and a word together are found faster on a dense screen than a word alone, and they tell two adjacent buttons apart before either is read.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="A glyph beside each word tells adjacent buttons apart before either is read."
+  visual={
+    <div className={styles.row}>
+      <Button variant="primary" icon={CheckIcon}>Apply</Button>
+      <Button icon={RestartIcon}>Reset</Button>
+      <Button icon={DownloadIcon}>Export</Button>
+    </div>
+  }>
+
+```tsx
+<Button variant="primary" icon={CheckIcon} onClick={apply}>
+	Apply
+</Button>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A row of same-shaped word-buttons, scanned one label at a time."
+  visual={
+    <div className={styles.row}>
+      <Button variant="primary">Apply</Button>
+      <Button>Reset</Button>
+      <Button>Export</Button>
+    </div>
+  }>
+
+```tsx
+<Button variant="primary" onClick={apply}>
+	Apply
+</Button>
+```
+
+</Example>
+</DoDont>
+
+<Beside>
+
+Leave the icon off where it costs more than it gives: when no glyph means the action and an invented one is left to decode, when nothing competes for the eye anyway, as in a confirmation dialog with a single button, or when the extra inline size wraps the row.
+
+<Example
+	kind="caution"
+	caption="Where no glyph means the action, an invented one is one more thing to decode."
+	visual={
+		<div className={styles.row}>
+			<Button icon={BubbleChartIcon}>Reconcile</Button>
+			<Button icon={InsightsIcon}>Allocate</Button>
+		</div>
+	}
+/>
+
+</Beside>
+
+Density argues for adding the icon. It never argues for dropping the label: that is [the icon-only form, which comes with its own tooltip and accessible name](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name).
+
+### A disabled button is a neutral fill with muted ink
+
+Disabled is a neutral fill with muted ink and [a not-allowed cursor](?path=/docs/design-system-principles-interaction--docs#the-cursor-says-what-happens-on-click).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Every tier goes to the same neutral, so nothing disabled still reads as the main action."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.row}>
+        <Button variant="primary" icon={DownloadIcon} disabled>Export</Button>
+        <Button icon={DownloadIcon} disabled>Export</Button>
+      </div>
+    </div>
+  }>
+
+```scss
+.button:disabled {
+	--btn-bg: var(--sys-color-neutral-bg);
+	--btn-fg: var(--sys-color-text-muted);
+
+	cursor: not-allowed;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A faded brand fill still reads as the primary action, only a weak one."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.row}>
+        <Button variant="primary" icon={DownloadIcon} className={styles.faded}>Export</Button>
+        <Button icon={DownloadIcon} className={styles.faded}>Export</Button>
+      </div>
+    </div>
+  }>
+
+```scss
+.button:disabled {
+	opacity: 0.38;
+}
+```
+
+</Example>
+</DoDont>
+
+### A button whose handler awaits carries a moving indicator
+
+A button whose handler awaits carries a moving indicator until it settles, per [every wait has an indicator, and that indicator keeps changing](?path=/docs/design-system-foundation-motion--docs#every-wait-has-an-indicator-and-that-indicator-keeps-changing). Disabling it is not that indicator, and neither is swapping its label to a present participle: both are static, so a slow request and a click that never registered look the same, and the user clicks again or gives up. The exception is a button whose [wait is already drawn somewhere the user is looking](?path=/docs/design-system-patterns--docs#a-wait-is-drawn-in-the-region-that-waits) — a row that goes stale, a placeholder that replaces the view it submitted from.
+
+Set `aria-busy` alongside it, so the wait reaches a screen reader as a property of the control rather than as a glyph it cannot see.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The button carries a moving indicator until it settles, and tells a screen reader it is busy."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <Button aria-busy disabled>
+        <Spinner size={1} />
+        Save
+      </Button>
+    </div>
+  }>
+
+```tsx
+<Button
+	onClick={save}
+	aria-busy={saving || undefined}
+	disabled={saving}>
+	{saving ? <Spinner size={1} /> : null}
+	Save
+</Button>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A dead-looking control either way."
+  visual={<div className={`sb-unstyled ${styles.visual}`}><Button disabled>Saving…</Button></div>}>
+
+```tsx
+<Button onClick={save} disabled={saving}>
+	{saving ? "Saving…" : "Save"}
+</Button>
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

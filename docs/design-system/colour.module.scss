@@ -1,0 +1,630 @@
+.row {
+	display: flex;
+	align-items: center;
+	gap: var(--sys-unit-12);
+}
+
+.avatar {
+	display: grid;
+	place-items: center;
+	border-radius: var(--sys-radius-circle);
+	inline-size: 2.5rem;
+	block-size: 2.25rem;
+	font: var(--sys-font-label-medium);
+}
+
+.pill {
+	border-radius: var(--sys-radius-full);
+	padding: var(--sys-unit-2) var(--sys-unit-8);
+	font: var(--sys-font-label-medium);
+}
+
+.brand {
+	background: var(--sys-color-primary-container);
+	color: var(--sys-color-on-primary-container);
+}
+
+.info {
+	background: var(--sys-color-info-bg);
+	color: var(--sys-color-info-fg);
+}
+
+.success {
+	background: var(--sys-color-success-bg);
+	color: var(--sys-color-success-fg);
+}
+
+.warning {
+	background: var(--sys-color-warning-bg);
+	color: var(--sys-color-warning-fg);
+}
+
+.warningUnpaired {
+	background: var(--sys-color-warning-bg);
+	color: var(--sys-color-text);
+}
+
+.skeletonCard {
+	display: grid;
+	gap: var(--sys-unit-8);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-16);
+	inline-size: 12rem;
+}
+
+.skeletonLine {
+	border-radius: var(--sys-radius-xs);
+	block-size: var(--sys-unit-8);
+
+	&:last-child {
+		inline-size: 60%;
+	}
+}
+
+.skeletonLoud {
+	background-color: var(--sys-color-outline);
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--sys-color-surface),
+		transparent
+	);
+	background-repeat: no-repeat;
+	background-size: 50% 100%;
+
+	@media not (prefers-reduced-motion) {
+		animation: skeleton-sheen 1.4s linear infinite;
+	}
+}
+
+@keyframes skeleton-sheen {
+	from {
+		background-position: -100% 0;
+	}
+
+	to {
+		background-position: 200% 0;
+	}
+}
+
+.page {
+	display: grid;
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-16);
+	inline-size: 16rem;
+}
+
+.pageCanvas {
+	background: var(--sys-color-bg);
+}
+
+.pageFilled {
+	background: var(--sys-color-surface);
+}
+
+.sheet {
+	display: grid;
+	gap: var(--sys-unit-6);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+}
+
+.sheetTitle {
+	font: var(--sys-font-label-medium);
+}
+
+.sheetRow {
+	display: flex;
+	gap: var(--sys-unit-12);
+	justify-content: space-between;
+	white-space: nowrap;
+}
+
+.darkSurface {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-8);
+	justify-content: center;
+	border-radius: var(--sys-radius-md);
+	background: var(--ref-neutral-700);
+	padding: var(--sys-unit-16);
+}
+
+.darkChip {
+	border-radius: var(--sys-radius-full);
+	padding: var(--sys-unit-2) var(--sys-unit-8);
+	font: var(--sys-font-label-small);
+}
+
+.darkSuccess {
+	background: var(--ref-green-750);
+	color: var(--ref-green-150);
+}
+
+.darkInfo {
+	background: var(--ref-blue-700);
+	color: var(--ref-blue-100);
+}
+
+.darkInfoTidied {
+	background: var(--ref-blue-750);
+	color: var(--ref-blue-100);
+}
+
+.darkWarning {
+	background: var(--ref-orange-750);
+	color: var(--ref-orange-150);
+}
+
+.wells {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-12);
+	justify-content: center;
+}
+
+.well {
+	border-radius: var(--sys-radius-md);
+	padding: var(--sys-unit-16);
+}
+
+.wellCard {
+	--field-border: var(--sys-color-border);
+
+	background: var(--sys-color-surface);
+}
+
+.wellRecess {
+	--field-border: var(--sys-color-surface-highest);
+
+	background: var(--sys-color-surface-highest);
+}
+
+.field {
+	border: 1px solid var(--field-border);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+	inline-size: 12rem;
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-medium);
+}
+
+.stripePair {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-12);
+	justify-content: center;
+}
+
+.stripeTable {
+	--tint: var(--ref-green-700);
+
+	overflow: hidden;
+	border-radius: var(--sys-radius-sm);
+	background: var(--neutral);
+	inline-size: 8rem;
+
+	> * {
+		block-size: var(--sys-unit-12);
+	}
+
+	> :first-child {
+		background: var(--tint);
+	}
+}
+
+.stripeOnWhite {
+	--neutral: white;
+}
+
+.stripeOnCharcoal {
+	--neutral: var(--ref-neutral-700);
+}
+
+.stripeOklab > :nth-child(odd):not(:first-child) {
+	background: color-mix(
+		in oklab,
+		var(--tint) 45%,
+		var(--neutral)
+	);
+}
+
+.stripeOklch > :nth-child(odd):not(:first-child) {
+	background: color-mix(
+		in oklch,
+		var(--tint) 45%,
+		var(--neutral)
+	);
+}
+
+.ramp {
+	display: grid;
+	grid-template-columns: repeat(5, 2.25rem);
+	gap: var(--sys-unit-4);
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-label-small);
+	text-align: center;
+}
+
+.swatch {
+	display: grid;
+	gap: var(--sys-unit-4);
+
+	&::before {
+		content: "";
+		border: 1px solid var(--sys-color-border);
+		border-radius: var(--sys-radius-sm);
+		background: var(--step);
+		block-size: 2.25rem;
+	}
+}
+
+.step0 {
+	--step: var(--ref-green-0);
+}
+
+.step150 {
+	--step: var(--ref-green-150);
+}
+
+.step500 {
+	--step: var(--ref-green-500);
+}
+
+.step750 {
+	--step: var(--ref-green-750);
+}
+
+.step1000 {
+	--step: var(--ref-green-1000);
+}
+
+.sheetSample {
+	display: grid;
+	gap: var(--sys-unit-8);
+	border-radius: var(--sys-radius-lg);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-8) var(--sys-unit-16)
+		var(--sys-unit-16);
+	inline-size: 13rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+}
+
+.grabBar {
+	justify-self: center;
+	border-radius: var(--sys-radius-full);
+	background: var(--grab-bar);
+	inline-size: var(--sys-unit-32);
+	block-size: var(--sys-unit-4);
+}
+
+.sheetHeading {
+	border-block-end: 1px solid var(--divider);
+	padding-block-end: var(--sys-unit-6);
+	font: var(--sys-font-label-medium);
+}
+
+.linesRight {
+	--grab-bar: var(--sys-color-outline);
+	--divider: var(--sys-color-border);
+}
+
+.linesWrong {
+	--grab-bar: var(--sys-color-border);
+	--divider: var(--sys-color-text-muted);
+}
+
+.stack {
+	display: grid;
+	inline-size: 14rem;
+}
+
+.stackCard {
+	display: grid;
+	grid-area: 1 / 1;
+	gap: var(--sys-unit-6);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+}
+
+.cardTitle {
+	font: var(--sys-font-label-medium);
+}
+
+.nested {
+	display: grid;
+	gap: var(--sys-unit-4);
+	border-radius: var(--sys-radius-sm);
+	background: var(--nested, var(--sys-color-surface-high));
+	padding: var(--sys-unit-8);
+}
+
+.recess {
+	border-radius: var(--sys-radius-xs);
+	background: var(
+		--recess,
+		var(--sys-color-surface-highest)
+	);
+	padding: var(--sys-unit-4) var(--sys-unit-8);
+}
+
+.collapsed {
+	--nested: var(--sys-color-surface);
+	--recess: var(--sys-color-surface);
+}
+
+.floatingMenu {
+	display: grid;
+	grid-area: 1 / 1;
+	align-self: end;
+	justify-self: end;
+	gap: var(--sys-unit-2);
+	margin-inline-end: var(--sys-unit-8);
+	margin-block-end: var(--sys-unit-8);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-6) var(--sys-unit-12);
+	inline-size: 7rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+	box-shadow: var(--sys-elevation-1);
+}
+
+.menuOverlay {
+	background: var(--sys-color-surface-overlay);
+}
+
+.menuHighest {
+	background: var(--sys-color-surface-highest);
+}
+
+.groupsSpaced {
+	display: grid;
+	gap: var(--sys-unit-12);
+}
+
+.groupsFilled {
+	display: grid;
+	gap: var(--sys-unit-4);
+
+	> * {
+		border-radius: var(--sys-radius-xs);
+		background: color-mix(
+			in oklab,
+			var(--sys-color-surface-high),
+			var(--sys-color-surface-highest)
+		);
+		padding: var(--sys-unit-4) var(--sys-unit-6);
+	}
+}
+
+.group {
+	display: grid;
+	gap: var(--sys-unit-2);
+}
+
+.groupHeading {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-label-small);
+}
+
+.themes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-12);
+	justify-content: center;
+}
+
+.stage {
+	display: grid;
+	border-radius: var(--sys-radius-md);
+	background: var(--stage-bg);
+	padding: var(--sys-unit-12);
+}
+
+.stageLight {
+	--stage-bg: var(--ref-sand-25);
+	--stage-overlay: var(--ref-neutral-0);
+	--stage-card: var(--ref-neutral-0);
+	--stage-ink: var(--ref-neutral-500);
+}
+
+.stageDark {
+	--stage-bg: var(--ref-neutral-800);
+	--stage-overlay: var(--ref-neutral-550);
+	--stage-card: var(--ref-neutral-700);
+	--stage-ink: var(--ref-neutral-50);
+}
+
+.tip {
+	display: grid;
+	justify-items: center;
+	filter: var(--sys-elevation-1-filter);
+}
+
+.tipBody {
+	border-radius: var(--sys-radius-sm);
+	background: var(--stage-overlay);
+	padding: var(--sys-unit-6) var(--sys-unit-12);
+	color: var(--stage-ink);
+	font: var(--sys-font-body-small);
+	white-space: nowrap;
+}
+
+.tipArrow {
+	background: var(--tip-arrow);
+	inline-size: var(--sys-unit-20);
+	block-size: var(--sys-unit-10);
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.arrowOverlay {
+	--tip-arrow: var(--stage-overlay);
+}
+
+.arrowCard {
+	--tip-arrow: var(--stage-card);
+}
+
+.tipAnchor {
+	justify-self: center;
+	margin-block-start: var(--sys-unit-4);
+	border-radius: var(--sys-radius-xs);
+	background: var(--stage-ink);
+	inline-size: var(--sys-unit-24);
+	block-size: var(--sys-unit-6);
+	opacity: 0.4;
+}
+
+.canvas {
+	display: grid;
+	border-radius: var(--sys-radius-sm);
+	background: var(--canvas);
+	padding: var(--sys-unit-16);
+	inline-size: 14rem;
+}
+
+.canvasCard {
+	display: grid;
+	gap: var(--sys-unit-6);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+}
+
+.canvasApart {
+	--canvas: var(--sys-color-bg);
+}
+
+.canvasClose {
+	--canvas: var(--sys-color-surface-lowest);
+}
+
+.darkLadder {
+	display: grid;
+	border-radius: var(--sys-radius-sm);
+	background: var(--ladder-0);
+	padding: var(--sys-unit-12);
+	inline-size: 14rem;
+}
+
+.ladderCard {
+	display: grid;
+	gap: var(--sys-unit-8);
+	border-radius: var(--sys-radius-md);
+	background: var(--ladder-1);
+	padding: var(--sys-unit-12);
+	color: var(--ref-neutral-50);
+	font: var(--sys-font-body-small);
+}
+
+.ladderNested {
+	border-radius: var(--sys-radius-sm);
+	background: var(--ladder-2);
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+}
+
+.ladderAccent {
+	justify-self: start;
+	border-radius: var(--sys-radius-full);
+	background: var(--ref-green-200);
+	padding: var(--sys-unit-4) var(--sys-unit-12);
+	color: var(--ref-green-900);
+	font: var(--sys-font-label-medium);
+}
+
+.ladderBand {
+	--ladder-0: var(--ref-neutral-800);
+	--ladder-1: var(--ref-neutral-700);
+	--ladder-2: var(--ref-neutral-650);
+}
+
+.ladderBottom {
+	--ladder-0: var(--ref-neutral-975);
+	--ladder-1: var(--ref-neutral-950);
+	--ladder-2: var(--ref-neutral-900);
+}
+
+.darkText {
+	display: grid;
+	gap: var(--sys-unit-4);
+	border-radius: var(--sys-radius-md);
+	background: var(--ref-neutral-700);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+	inline-size: 14rem;
+	font: var(--sys-font-body-medium);
+}
+
+.darkBody {
+	color: var(--body);
+	font: var(--sys-font-label-large);
+}
+
+.darkMuted {
+	color: var(--muted);
+}
+
+.inkGrey {
+	--body: var(--ref-neutral-50);
+	--muted: var(--ref-neutral-200);
+}
+
+.inkWhite {
+	--body: var(--ref-neutral-0);
+	--muted: var(--ref-neutral-10);
+}
+
+.darkFieldStage {
+	border-radius: var(--sys-radius-md);
+	background: var(--ref-neutral-700);
+	padding: var(--sys-unit-16);
+}
+
+.darkField {
+	border: 1px solid var(--dark-border);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+	inline-size: 10rem;
+	color: var(--ref-neutral-50);
+	font: var(--sys-font-body-medium);
+}
+
+.borderSeparated {
+	--dark-border: var(--ref-neutral-500);
+}
+
+.borderHairline {
+	--dark-border: var(--ref-neutral-650);
+}
+
+.scroller {
+	overflow-y: scroll;
+	border-radius: var(--sys-radius-md);
+	background: var(--ref-neutral-700);
+	padding: var(--sys-unit-8) var(--sys-unit-12);
+	inline-size: 13rem;
+	block-size: 6rem;
+	color: var(--ref-neutral-50);
+	font: var(--sys-font-body-small);
+
+	p {
+		margin-block: 0 var(--sys-unit-6);
+	}
+}
+
+.schemeDark {
+	color-scheme: dark;
+}
+
+.schemeLight {
+	color-scheme: light;
+}

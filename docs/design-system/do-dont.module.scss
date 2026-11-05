@@ -1,0 +1,15 @@
+.pair.pair {
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(min(100%, var(--pair-min, 22rem)), 1fr)
+	);
+	gap: var(--sys-unit-16);
+	align-items: stretch;
+	margin-block: var(--sys-unit-12) var(--sys-unit-24);
+
+	> * {
+		min-inline-size: 0;
+		margin-block: 0;
+	}
+}

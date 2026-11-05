@@ -1,0 +1,172 @@
+// See `docs/design-system/components.mdx`.
+
+/// The edge of a checkbox or radio box, overridable through `--checkbox-size`
+/// from anywhere above it.
+$size: var(--sys-unit-16);
+
+/// The square box a checkbox draws, shared by the real control and by any
+/// purely visual stand-in. Pair with `box-checked` for the selected state.
+///
+/// @example
+///   @use "../../style/checkbox.scss" as checkbox;
+///
+///   .box {
+///       @include checkbox.box;
+///   }
+@mixin box {
+	--box-border: var(--sys-color-border);
+	--box-bg: var(--sys-color-surface);
+	--box-fg: var(--sys-color-on-primary);
+	--box-checked-bg: var(--sys-color-primary);
+
+	display: grid;
+	flex: 0 0 auto;
+	place-items: center;
+	box-sizing: border-box;
+	inline-size: var(--checkbox-size, #{$size});
+	block-size: var(--checkbox-size, #{$size});
+	border: 1px solid var(--box-border);
+	border-radius: var(--sys-radius-sm);
+	background: var(--box-bg);
+	color: var(--box-fg);
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			background var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			border-color var(--sys-motion-instant)
+				var(--sys-motion-standard);
+	}
+}
+
+/// Warms a focusable `box`'s rim for the keyboard, beside the ring.
+@mixin box-focus {
+	&:focus-visible {
+		border-color: var(--sys-color-primary);
+	}
+}
+
+/// Fills a `box` to read as checked.
+@mixin box-checked {
+	--box-border: var(--box-checked-bg);
+	--box-bg: var(--box-checked-bg);
+}
+
+/// Re-points a `box`'s fill knobs to the error palette.
+@mixin box-invalid {
+	--box-border: var(--sys-color-error-fg);
+	--box-bg: var(--sys-color-error-bg);
+	--box-checked-bg: var(--sys-color-error-fg);
+	--box-fg: var(--sys-color-error-bg);
+}
+
+/// Re-points a `box`'s fill knobs to the read-only palette, dashed rim included.
+@mixin box-readonly {
+	--box-border: var(--sys-color-outline);
+	--box-bg: var(--sys-color-surface-high);
+	--box-checked-bg: var(--sys-color-primary-container);
+	--box-fg: var(--sys-color-on-primary-container);
+
+	border-style: dashed;
+}
+
+/// The affordances a clickable wrapper gives the `$box` inside it, dropped once
+/// an enclosing state makes the field inert.
+///
+/// @example
+///   .item {
+///       @include checkbox.box-affordance(".radio");
+///   }
+@mixin box-affordance($box) {
+	cursor: pointer;
+
+	&:hover #{$box} {
+		border-color: var(--sys-color-primary);
+	}
+
+	:where([data-readonly], [data-disabled]) & {
+		cursor: default;
+
+		&:hover #{$box}:not([data-checked]) {
+			border-color: var(
+				--box-border,
+				var(--sys-color-border)
+			);
+		}
+	}
+}
+
+/// A label that sits beside the `$box` it names, dropping to a second row for an
+/// `optional` suffix.
+///
+/// @example
+///   .label {
+///       @include checkbox.inline-label(".control");
+///   }
+@mixin inline-label($box) {
+	@include box-affordance($box);
+
+	display: inline-grid;
+	grid-template-columns: auto 1fr;
+	grid-template-areas: "control text";
+	align-items: center;
+	gap: var(--sys-unit-1) var(--sys-unit-6);
+
+	&:has(> [data-optional-suffix]) {
+		grid-template-areas:
+			"control text"
+			"control optional";
+	}
+}
+
+/// The glyph inside a `box`, with the motion that pops it in and out. Its host
+/// stays mounted, so pair this with `indicator-hidden` and reveal it from
+/// whichever attribute names the host's on state.
+///
+/// @example
+///   .indicator {
+///       @include checkbox.indicator;
+///       @include checkbox.indicator-hidden;
+///
+///       &[data-checked] {
+///           @include checkbox.indicator-shown;
+///       }
+///   }
+@mixin indicator {
+	display: grid;
+	place-items: center;
+
+	svg {
+		inline-size: calc(var(--checkbox-size, #{$size}) * 0.7);
+		block-size: calc(var(--checkbox-size, #{$size}) * 0.7);
+	}
+}
+
+/// Collapses an `indicator` out of view, on a curve that settles rather than
+/// overshoots.
+@mixin indicator-hidden {
+	opacity: 0;
+	scale: 0;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			opacity var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			scale var(--sys-motion-instant)
+				var(--sys-motion-standard);
+	}
+}
+
+/// Pops an `indicator` into view.
+@mixin indicator-shown {
+	opacity: 1;
+	scale: 1;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			opacity var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			scale var(--sys-motion-short)
+				var(--sys-motion-overshoot);
+	}
+}

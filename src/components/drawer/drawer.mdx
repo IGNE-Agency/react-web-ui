@@ -1,0 +1,110 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { Beside } from "../../../docs/design-system/beside";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import * as DrawerStories from "./drawer.stories.tsx";
+
+<Meta of={DrawerStories} />
+
+<DocsPage>
+
+## Rules
+
+<Beside>
+
+### A drawer swiped down is a bottom sheet
+
+A drawer whose `swipeDirection` is `"down"` is a bottom sheet: full width, a maximum height short of the viewport, and swipe-to-dismiss vertical rather than horizontal. The drawer never looks at the viewport itself; the app picks the direction, usually `"down"` below its own narrow breakpoint. On iOS the backdrop has to be absolutely positioned, because Safari pins a fixed backdrop to the layout viewport rather than the visible one.
+
+<Example
+  kind="caution"
+  caption="Safari pins a fixed backdrop to the layout viewport, so once the toolbar moves a strip of undimmed page shows below it."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.phone}>
+        <div className={`${styles.stagePage} ${styles.phonePage}`}>
+          <span className={styles.stageTitle}>Declarations</span>
+          <span className={styles.stageRow}><span>A. de Vries</span><span>112,50</span></span>
+          <span className={styles.stageRow}><span>J. Bakker</span><span>45,00</span></span>
+          <span className={styles.stageRow}><span>M. Jansen</span><span>19,28</span></span>
+          <span className={styles.stageRow}><span>S. Visser</span><span>7,05</span></span>
+          <span className={styles.stageRow}><span>R. Smit</span><span>64,00</span></span>
+          <span className={styles.stageRow}><span>L. Mulder</span><span>38,40</span></span>
+        </div>
+        <div className={`${styles.stageScrim} ${styles.stageScrimShort}`} />
+        <div className={styles.phoneSheet}>
+          <span className={`${styles.grabBar}`} />
+          <span className={styles.sheetTitle}>Filters</span>
+        </div>
+      </div>
+    </div>
+  }>
+
+```scss
+.backdrop {
+	position: absolute;
+	inset: 0;
+}
+```
+
+</Example>
+
+</Beside>
+
+### A swipeable surface shows a grab bar
+
+Swipe-to-dismiss is invisible. Draw the affordance: a short rounded bar on the edge the gesture starts from, centred along it. A bottom sheet gets a horizontal bar at the top, a side panel a vertical one on its inner edge. Same bar, rotated.
+
+Colour it with [the outline role](?path=/docs/design-system-foundation-colour--docs#a-mark-that-has-to-be-found-takes-the-outline-role-and-a-separating-line-takes-the-border-role), not with muted ink and not with a surface tier. Ink is too heavy for something nobody reads, and a surface tier is the trap: in a light theme several tiers resolve to the same white as the sheet, so the bar disappears and the obvious next move is to try another tier, which also resolves to white.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="One role that stays visible against the sheet in both themes."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.bottomSheet}>
+        <span className={styles.grabBar} />
+        <span className={styles.sheetTitle}>Filters</span>
+        <span className={styles.line} />
+      </div>
+    </div>
+  }>
+
+```scss
+.sheet::before {
+	content: "";
+	inline-size: var(--unit-16);
+	block-size: var(--unit-2);
+	margin-inline: auto;
+	border-radius: var(--radius-full);
+	background: var(--sys-color-outline);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Invisible on a white sheet in light mode."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.bottomSheet}>
+        <span className={`${styles.grabBar} ${styles.grabBarLost}`} />
+        <span className={styles.sheetTitle}>Filters</span>
+        <span className={styles.line} />
+      </div>
+    </div>
+  }>
+
+```scss
+.sheet::before {
+	background: var(--sys-color-surface-lowest);
+}
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

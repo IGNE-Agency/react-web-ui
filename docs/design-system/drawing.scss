@@ -1,0 +1,172 @@
+@use "sass:map";
+@use "../../src/style/theme.scss" as theme;
+
+$-families: (
+	"saturated": (
+		"light": (
+			"field": "green-500",
+			"deep": "green-750",
+			"mid": "green-650",
+			"pale": "green-200",
+			"ink": "green-900",
+			"shade": "green-900",
+		),
+		"dark": (
+			"field": "green-550",
+		),
+	),
+	"pale": (
+		"light": (
+			"field": "green-200",
+			"deep": "green-700",
+			"mid": "green-450",
+			"pale": "green-100",
+			"ink": "green-900",
+			"shade": "green-900",
+		),
+		"dark": (
+			"field": "green-300",
+			"deep": "green-750",
+		),
+	),
+	"sand": (
+		"light": (
+			"field": "sand-200",
+			"deep": "green-700",
+			"mid": "green-450",
+			"pale": "green-150",
+			"ink": "sand-850",
+			"shade": "sand-900",
+		),
+		"dark": (
+			"field": "sand-300",
+			"deep": "green-750",
+		),
+	),
+	"inverted": (
+		"light": (
+			"field": "green-750",
+			"deep": "green-650",
+			"mid": "green-400",
+			"pale": "green-200",
+			"ink": "green-100",
+			"shade": "green-950",
+		),
+		"dark": (
+			"field": "green-750",
+		),
+	),
+	"neutral": (
+		"light": (
+			"field": "neutral-150",
+			"deep": "green-700",
+			"mid": "green-450",
+			"pale": "green-100",
+			"ink": "neutral-850",
+			"shade": "neutral-900",
+		),
+		"dark": (
+			"field": "neutral-250",
+			"deep": "green-750",
+		),
+	),
+);
+
+$-accents: (
+	"neighbour": (
+		"turn": -45,
+		"vivid": 91% 0.19,
+		"muted": 42% 0.09,
+	),
+	"warm": (
+		"turn": -75,
+		"vivid": 92% 0.16,
+		"muted": 46% 0.09,
+	),
+	"hot": (
+		"turn": -135,
+		"vivid": 70% 0.17,
+		"muted": 40% 0.12,
+	),
+	"cool": (
+		"turn": 115,
+		"vivid": 78% 0.12,
+		"muted": 38% 0.11,
+	),
+	"opposite": (
+		"turn": 180,
+		"vivid": 82% 0.12,
+		"muted": 40% 0.11,
+	),
+);
+
+@mixin -roles($roles) {
+	@each $role, $step in $roles {
+		--drawing-#{$role}: var(--ref-#{$step});
+	}
+}
+
+@mixin -accents {
+	@each $name, $accent in $-accents {
+		$turn: map.get($accent, "turn");
+
+		@each $tone in ("vivid", "muted") {
+			--drawing-#{$name}-#{$tone}: #{"oklch(from var(--ref-green-500) #{map.get($accent, $tone)} calc(h + #{$turn}))"};
+		}
+	}
+}
+
+/// The illustrations' spot-colour palette, set on a drawing: one field family
+/// (`saturated`, `pale`, `sand`, `inverted` or `neutral`) as the roles field,
+/// deep, mid, pale, paper, ink and shade, read from the green, sand and
+/// neutral ramps, with a counterpart for the dark theme. Beside them, five
+/// accents turned from the brand's hue, each as a vivid and a muted tone:
+/// `neighbour` (a lime), `warm` (a butter yellow), `hot` (a coral), `cool` (a
+/// lilac) and `opposite` (a pink), as `--drawing-cool-vivid` and so on.
+///
+/// @example
+///   .drawing {
+///       @include drawing.palette("sand");
+///   }
+@mixin palette($family) {
+	$steps: map.get($-families, $family);
+
+	--drawing-paper: var(--ref-sand-10);
+
+	@include -accents;
+	@include -roles(map.get($steps, "light"));
+
+	@include theme.dark {
+		@include -roles(map.get($steps, "dark"));
+	}
+}
+
+/// A construction line: a thin dashed rule that measures the subject without
+/// competing with it.
+///
+/// @example
+///   .rule {
+///       @include drawing.rule;
+///   }
+@mixin rule {
+	fill: none;
+	stroke: var(--drawing-ink);
+	stroke-dasharray: 12 10;
+	stroke-opacity: 0.45;
+	stroke-width: 3;
+}
+
+/// An outline drawn around a subject's shape, at the drawings' one stroke
+/// weight, in the drawing's deep tone unless given another.
+///
+/// @example
+///   .outline {
+///       @include drawing.outline(var(--drawing-field));
+///   }
+@mixin outline($colour: var(--drawing-deep)) {
+	fill: none;
+	stroke: $colour;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 3;
+}

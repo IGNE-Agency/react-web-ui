@@ -1,0 +1,64 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+
+@layer kit.components {
+	.root {
+		position: relative;
+		min-inline-size: 0;
+	}
+
+	.list {
+		display: grid;
+		grid-auto-columns: minmax(0, max-content) max-content;
+		grid-auto-flow: column;
+		align-items: center;
+		list-style: none;
+	}
+
+	.item {
+		display: flex;
+		align-items: center;
+		min-inline-size: 0;
+	}
+
+	.crumb {
+		min-inline-size: 0;
+		overflow: hidden;
+		border-radius: var(--sys-radius-xs);
+		font: var(
+			--breadcrumbs-font,
+			var(--sys-font-label-medium)
+		);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		@include focus.ring;
+	}
+
+	.separator {
+		display: flex;
+		align-items: center;
+		padding-inline: var(--sys-unit-4);
+	}
+
+	.gauge {
+		position: absolute;
+		visibility: hidden;
+		inset: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.gaugeList {
+		display: flex;
+		align-items: center;
+		inline-size: max-content;
+		list-style: none;
+	}
+
+	.popup {
+		max-inline-size: var(--available-width);
+		max-block-size: var(--available-height);
+		overflow-y: auto;
+	}
+}

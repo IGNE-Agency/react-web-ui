@@ -1,0 +1,17 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-neighbour-vivid);
+}
+
+.tile {
+	fill: var(--drawing-neighbour-muted);
+}
+
+.picked {
+	fill: var(--drawing-paper);
+}

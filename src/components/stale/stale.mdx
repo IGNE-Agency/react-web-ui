@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as StaleStories from "./stale.stories.tsx";
+
+<Meta of={StaleStories} />
+
+<DocsPage>
+
+## Rules
+
+### Stale content stays on screen while it refreshes
+
+A region that already shows content keeps it while a refresh runs in the background, rather than swapping it for a loading message. A refresh that finishes quickly shows nothing at all.
+
+### The longer the wait, the more it says
+
+The content dims once the refresh has taken a moment, and is marked busy. Once the refresh is slow, an overlay covers it with a moving indicator and a line of copy, announced as a status, and the content goes inert rather than disabled. Once it looks stuck, the overlay offers a retry.
+
+### The indicator may be the app's own mark
+
+The overlay's indicator is a spinner unless the app passes its own, such as its animated logo, through `illustration`.
+
+</DocsPage>

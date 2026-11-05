@@ -1,0 +1,290 @@
+@use "./focus.scss" as focus;
+
+// See `docs/design-system/components.mdx`.
+
+$field-border: 1px;
+$field-padding: var(--sys-unit-6);
+$field-block-size: calc(
+	1lh + 2 * #{$field-padding} + 2 * #{$field-border}
+);
+$field-touch-target: var(--sys-unit-22);
+
+/// The label above a form control.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .label {
+///       @include form.label;
+///   }
+@mixin label {
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+	cursor: default;
+}
+
+/// The disabled treatment for any form control.
+///
+/// @example
+///   .my-control:disabled {
+///       @include form.disabled;
+///   }
+@mixin disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/// The "optional" suffix a label trails, beside it or below it.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .optional {
+///       @include form.optional-suffix;
+///   }
+@mixin optional-suffix {
+	vertical-align: middle;
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-small);
+	font-size: 0.75rem;
+}
+
+/// The ink a field's parts read: the control's own text, and the muted ink its
+/// placeholder, affixes, separators, chevrons and inlays take.
+///
+/// @example
+///   .separator {
+///       color: var(--field-muted-fg);
+///   }
+@mixin ink {
+	--field-fg: var(--sys-color-text);
+	--field-muted-fg: var(--sys-color-text-muted);
+}
+
+/// The invalid treatment for any form control.
+///
+/// @example
+///   .my-control[aria-invalid="true"] {
+///       @include form.invalid;
+///   }
+@mixin invalid {
+	--field-fg: var(--sys-color-error-fg);
+	--field-muted-fg: var(--sys-color-error-fg);
+
+	border-color: var(--sys-color-error-fg);
+	background-color: var(--sys-color-error-bg);
+	color: var(--field-fg);
+}
+
+/// Suppresses the user agent's own affordances inside a text entry, so the only
+/// clear button in a `type="search"` field is the one the field renders.
+///
+/// @example
+///   .input {
+///       @include form.bare-native-entry;
+///   }
+@mixin bare-native-entry {
+	&::-webkit-search-cancel-button {
+		display: none;
+		appearance: none;
+	}
+
+	&::-webkit-search-decoration {
+		display: none;
+		appearance: none;
+	}
+}
+
+/// The chrome every field wears: a hairline on the page surface that warms to
+/// the brand colour while the pointer, the focus or an open popup is on it, and
+/// every state treatment behind it. States are keyed off the projected `data-*`
+/// attributes, so the host has to carry `fieldStateAttributes`. Reach for
+/// `control` or `group` rather than this.
+@mixin field-chrome {
+	@include ink;
+
+	align-items: center;
+	box-sizing: border-box;
+	min-block-size: $field-block-size;
+	border: $field-border solid var(--sys-color-border);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: $field-padding;
+	color: var(--field-fg);
+	font: var(--sys-font-body-medium);
+
+	@include focus.ring-projected;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			border-color var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			background var(--sys-motion-instant)
+				var(--sys-motion-standard);
+	}
+
+	&:hover:not([data-disabled], [data-readonly]),
+	&[data-focused],
+	&[data-popup-open] {
+		border-color: var(--sys-color-primary);
+	}
+
+	&[data-readonly] {
+		@include readonly;
+	}
+
+	&[data-pending] {
+		@include pending;
+	}
+
+	&[data-invalid] {
+		@include invalid;
+	}
+
+	&[data-disabled] {
+		@include disabled;
+	}
+}
+
+/// The text-entry control: `field-chrome` on the element that takes the value.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .input {
+///       @include form.control;
+///   }
+@mixin control {
+	@include field-chrome;
+	@include bare-native-entry;
+
+	& {
+		display: inline-flex;
+	}
+
+	&::placeholder {
+		color: var(--field-muted-fg);
+	}
+}
+
+/// The read-only treatment: legible and selectable, but no longer inviting
+/// entry. Its border is dashed — that dash is the app's read-only signal, and
+/// every control that can be read-only wears it. The cursor is left to the
+/// control, because text that can still be selected still takes a caret.
+///
+/// @example
+///   .my-control[data-readonly] {
+///       @include form.readonly;
+///   }
+@mixin readonly {
+	--field-fg: var(--sys-color-text);
+
+	border-style: dashed;
+	border-color: var(--sys-color-outline);
+	background: var(--sys-color-surface-high);
+	color: var(--field-fg);
+}
+
+/// The pending treatment for a control waiting on background work.
+///
+/// @example
+///   .my-control[data-pending] {
+///       @include form.pending;
+///   }
+@mixin pending {
+	cursor: progress;
+	caret-color: var(--sys-color-text-muted);
+}
+
+/// The shell around a control that shares its box with inlays: `field-chrome` on
+/// a flex wrapper, so the control inside stays bare. Its block size is its own,
+/// at the height of a bare `control`, so an inlay appearing beside the control
+/// never resizes the field.
+///
+/// Focus is projected in two flags rather than one: `[data-focused]` warms the
+/// border whenever focus is here however it arrived, and `[data-focus-visible]`
+/// adds the ring only for the keyboard. `useFieldFocus` reports both.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .group {
+///       @include form.group;
+///   }
+@mixin group {
+	@include field-chrome;
+
+	& {
+		position: relative;
+		display: flex;
+		gap: var(--sys-unit-4);
+	}
+}
+
+/// Text on one line inside a field hugs the font rather than the field's
+/// line-height. A native entry lays its value out from the top of its box and
+/// leaves the leading below it, so a box the height of the line box reads as
+/// text with a gap under it. A box the height of the font, centred by the
+/// group, reads as centred — and every text part in the row has to agree, or
+/// the unit sits a pixel off the value beside it.
+///
+/// @example
+///   .input {
+///       @include form.field-text-metrics;
+///   }
+@mixin field-text-metrics {
+	line-height: normal;
+}
+
+/// A slot beside the control inside a `group`: an icon, a unit, a spinner. It
+/// takes no pointer events, so a click on it reaches the group and lands on the
+/// control. An inlay that acts is an `inlay-action` instead.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .suffix {
+///       @include form.inlay;
+///   }
+@mixin inlay {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: var(--sys-unit-2);
+	color: var(--field-muted-fg);
+	font: var(--sys-font-body-medium);
+	cursor: default;
+	pointer-events: none;
+
+	@include field-text-metrics;
+}
+
+/// An inlay that acts: the design-system button rendered into a `group`. It
+/// occupies the group's padding rather than adding to it, and takes its finger
+/// target from a hit area that sits outside its box.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .action {
+///       @include form.inlay-action;
+///   }
+@mixin inlay-action {
+	& {
+		position: relative;
+		flex: none;
+		margin-block: calc(-1 * #{$field-padding});
+		cursor: pointer;
+	}
+
+	@media (any-pointer: coarse) {
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 50%;
+			translate: -50% -50%;
+			inline-size: max(100%, #{$field-touch-target});
+			block-size: $field-touch-target;
+		}
+	}
+}

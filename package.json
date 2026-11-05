@@ -1,0 +1,413 @@
+{
+	"name": "@maanlamp/react-web-ui",
+	"version": "0.1.0",
+	"description": "IGNE's React web component kit: primitives and the presets over them, form controls in three tiers with a TanStack Form bridge, and DTCG tokens themed per app.",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/IGNE-Agency/react-web-ui.git"
+	},
+	"files": [
+		"dist",
+		"tokens"
+	],
+	"type": "module",
+	"sideEffects": [
+		"**/*.css"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./accordion": {
+			"types": "./dist/components/accordion/index.d.ts",
+			"default": "./dist/components/accordion/index.js"
+		},
+		"./active-filters": {
+			"types": "./dist/components/active-filters/index.d.ts",
+			"default": "./dist/components/active-filters/index.js"
+		},
+		"./attachment-tile": {
+			"types": "./dist/components/attachment-tile/index.d.ts",
+			"default": "./dist/components/attachment-tile/index.js"
+		},
+		"./avatar": {
+			"types": "./dist/components/avatar/index.d.ts",
+			"default": "./dist/components/avatar/index.js"
+		},
+		"./avatar-group": {
+			"types": "./dist/components/avatar-group/index.d.ts",
+			"default": "./dist/components/avatar-group/index.js"
+		},
+		"./badge": {
+			"types": "./dist/components/badge/index.d.ts",
+			"default": "./dist/components/badge/index.js"
+		},
+		"./base.css": "./dist/base.css",
+		"./breadcrumbs": {
+			"types": "./dist/components/breadcrumbs/index.d.ts",
+			"default": "./dist/components/breadcrumbs/index.js"
+		},
+		"./button": {
+			"types": "./dist/components/button/index.d.ts",
+			"default": "./dist/components/button/index.js"
+		},
+		"./checkbox-field": {
+			"types": "./dist/components/checkbox-field/index.d.ts",
+			"default": "./dist/components/checkbox-field/index.js"
+		},
+		"./checkbox-group-field": {
+			"types": "./dist/components/checkbox-group-field/index.d.ts",
+			"default": "./dist/components/checkbox-group-field/index.js"
+		},
+		"./collapsible": {
+			"types": "./dist/components/collapsible/index.d.ts",
+			"default": "./dist/components/collapsible/index.js"
+		},
+		"./combobox-field": {
+			"types": "./dist/components/combobox-field/index.d.ts",
+			"default": "./dist/components/combobox-field/index.js"
+		},
+		"./combobox-field/react-query": {
+			"types": "./dist/components/combobox-field/react-query.d.ts",
+			"default": "./dist/components/combobox-field/react-query.js"
+		},
+		"./composer": {
+			"types": "./dist/components/composer/index.d.ts",
+			"default": "./dist/components/composer/index.js"
+		},
+		"./confirm-dialog": {
+			"types": "./dist/components/confirm-dialog/index.d.ts",
+			"default": "./dist/components/confirm-dialog/index.js"
+		},
+		"./conversation": {
+			"types": "./dist/components/conversation/index.d.ts",
+			"default": "./dist/components/conversation/index.js"
+		},
+		"./data-table": {
+			"types": "./dist/data-table/index.d.ts",
+			"default": "./dist/data-table/index.js"
+		},
+		"./data-view": {
+			"types": "./dist/data-view/index.d.ts",
+			"default": "./dist/data-view/index.js"
+		},
+		"./date-field": {
+			"types": "./dist/components/date-field/index.d.ts",
+			"default": "./dist/components/date-field/index.js"
+		},
+		"./date-range-field": {
+			"types": "./dist/components/date-range-field/index.d.ts",
+			"default": "./dist/components/date-range-field/index.js"
+		},
+		"./detail-list": {
+			"types": "./dist/components/detail-list/index.d.ts",
+			"default": "./dist/components/detail-list/index.js"
+		},
+		"./dialog": {
+			"types": "./dist/components/dialog/index.d.ts",
+			"default": "./dist/components/dialog/index.js"
+		},
+		"./divider": {
+			"types": "./dist/components/divider/index.d.ts",
+			"default": "./dist/components/divider/index.js"
+		},
+		"./drawer": {
+			"types": "./dist/components/drawer/index.d.ts",
+			"default": "./dist/components/drawer/index.js"
+		},
+		"./email-field": {
+			"types": "./dist/components/email-field/index.d.ts",
+			"default": "./dist/components/email-field/index.js"
+		},
+		"./empty-message": {
+			"types": "./dist/components/empty-message/index.d.ts",
+			"default": "./dist/components/empty-message/index.js"
+		},
+		"./error-boundary": {
+			"types": "./dist/components/error-boundary/index.d.ts",
+			"default": "./dist/components/error-boundary/index.js"
+		},
+		"./error-message": {
+			"types": "./dist/components/error-message/index.d.ts",
+			"default": "./dist/components/error-message/index.js"
+		},
+		"./error-text": {
+			"types": "./dist/components/error-text/index.d.ts",
+			"default": "./dist/components/error-text/index.js"
+		},
+		"./field": {
+			"types": "./dist/components/field/index.d.ts",
+			"default": "./dist/components/field/index.js"
+		},
+		"./field-placeholder": {
+			"types": "./dist/components/field-placeholder/index.d.ts",
+			"default": "./dist/components/field-placeholder/index.js"
+		},
+		"./file-field": {
+			"types": "./dist/components/file-field/index.d.ts",
+			"default": "./dist/components/file-field/index.js"
+		},
+		"./filter-bar": {
+			"types": "./dist/components/filter-bar/index.d.ts",
+			"default": "./dist/components/filter-bar/index.js"
+		},
+		"./form": {
+			"types": "./dist/components/form/index.d.ts",
+			"default": "./dist/components/form/index.js"
+		},
+		"./icon": {
+			"types": "./dist/components/icon/index.d.ts",
+			"default": "./dist/components/icon/index.js"
+		},
+		"./link": {
+			"types": "./dist/components/link/index.d.ts",
+			"default": "./dist/components/link/index.js"
+		},
+		"./link-button": {
+			"types": "./dist/components/link-button/index.d.ts",
+			"default": "./dist/components/link-button/index.js"
+		},
+		"./loading-message": {
+			"types": "./dist/components/loading-message/index.d.ts",
+			"default": "./dist/components/loading-message/index.js"
+		},
+		"./locale-provider": {
+			"types": "./dist/components/locale-provider/index.d.ts",
+			"default": "./dist/components/locale-provider/index.js"
+		},
+		"./menu": {
+			"types": "./dist/components/menu/index.d.ts",
+			"default": "./dist/components/menu/index.js"
+		},
+		"./nav": {
+			"types": "./dist/components/nav/index.d.ts",
+			"default": "./dist/components/nav/index.js"
+		},
+		"./number-field": {
+			"types": "./dist/components/number-field/index.d.ts",
+			"default": "./dist/components/number-field/index.js"
+		},
+		"./otp-field": {
+			"types": "./dist/components/otp-field/index.d.ts",
+			"default": "./dist/components/otp-field/index.js"
+		},
+		"./pagination": {
+			"types": "./dist/components/pagination/index.d.ts",
+			"default": "./dist/components/pagination/index.js"
+		},
+		"./password-field": {
+			"types": "./dist/components/password-field/index.d.ts",
+			"default": "./dist/components/password-field/index.js"
+		},
+		"./phone-field": {
+			"types": "./dist/components/phone-field/index.d.ts",
+			"default": "./dist/components/phone-field/index.js"
+		},
+		"./photo-field": {
+			"types": "./dist/components/photo-field/index.d.ts",
+			"default": "./dist/components/photo-field/index.js"
+		},
+		"./popover": {
+			"types": "./dist/components/popover/index.d.ts",
+			"default": "./dist/components/popover/index.js"
+		},
+		"./radio-group-field": {
+			"types": "./dist/components/radio-group-field/index.d.ts",
+			"default": "./dist/components/radio-group-field/index.js"
+		},
+		"./search-field": {
+			"types": "./dist/components/search-field/index.d.ts",
+			"default": "./dist/components/search-field/index.js"
+		},
+		"./segmented-control-field": {
+			"types": "./dist/components/segmented-control-field/index.d.ts",
+			"default": "./dist/components/segmented-control-field/index.js"
+		},
+		"./select-field": {
+			"types": "./dist/components/select-field/index.d.ts",
+			"default": "./dist/components/select-field/index.js"
+		},
+		"./skeleton": {
+			"types": "./dist/components/skeleton/index.d.ts",
+			"default": "./dist/components/skeleton/index.js"
+		},
+		"./spinner": {
+			"types": "./dist/components/spinner/index.d.ts",
+			"default": "./dist/components/spinner/index.js"
+		},
+		"./stale": {
+			"types": "./dist/components/stale/index.d.ts",
+			"default": "./dist/components/stale/index.js"
+		},
+		"./status-message": {
+			"types": "./dist/components/status-message/index.d.ts",
+			"default": "./dist/components/status-message/index.js"
+		},
+		"./switch-field": {
+			"types": "./dist/components/switch-field/index.d.ts",
+			"default": "./dist/components/switch-field/index.js"
+		},
+		"./tabs": {
+			"types": "./dist/components/tabs/index.d.ts",
+			"default": "./dist/components/tabs/index.js"
+		},
+		"./tag": {
+			"types": "./dist/components/tag/index.d.ts",
+			"default": "./dist/components/tag/index.js"
+		},
+		"./tag-group": {
+			"types": "./dist/components/tag-group/index.d.ts",
+			"default": "./dist/components/tag-group/index.js"
+		},
+		"./terrazzo": {
+			"types": "./dist/terrazzo/index.d.ts",
+			"default": "./dist/terrazzo/index.js"
+		},
+		"./text-field": {
+			"types": "./dist/components/text-field/index.d.ts",
+			"default": "./dist/components/text-field/index.js"
+		},
+		"./textarea-field": {
+			"types": "./dist/components/textarea-field/index.d.ts",
+			"default": "./dist/components/textarea-field/index.js"
+		},
+		"./time-field": {
+			"types": "./dist/components/time-field/index.d.ts",
+			"default": "./dist/components/time-field/index.js"
+		},
+		"./time-zone-provider": {
+			"types": "./dist/components/time-zone-provider/index.d.ts",
+			"default": "./dist/components/time-zone-provider/index.js"
+		},
+		"./toast": {
+			"types": "./dist/components/toast/index.d.ts",
+			"default": "./dist/components/toast/index.js"
+		},
+		"./toggle-group-field": {
+			"types": "./dist/components/toggle-group-field/index.d.ts",
+			"default": "./dist/components/toggle-group-field/index.js"
+		},
+		"./tokens.css": "./dist/tokens.css",
+		"./tokens/*": "./tokens/*",
+		"./tooltip": {
+			"types": "./dist/components/tooltip/index.d.ts",
+			"default": "./dist/components/tooltip/index.js"
+		},
+		"./unsaved-changes/tanstack-router": {
+			"types": "./dist/lib/unsaved-changes/tanstack-router.d.ts",
+			"default": "./dist/lib/unsaved-changes/tanstack-router.js"
+		}
+	},
+	"scripts": {
+		"fix": "bun run tokens && oxfmt . && oxlint --fix .",
+		"check": "bun run tokens && oxfmt --check . && oxlint .",
+		"tokens": "tz build",
+		"build": "bun run tokens && vite build && tsc -p tsconfig.build.json && tsc -p tsconfig.terrazzo.json",
+		"check:exports": "bun tools/check-exports.ts",
+		"prepack": "bun run build",
+		"test": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 vitest run",
+		"storybook": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
+		"storybook:build": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
+		"docs:links": "bun .storybook/docs-links/report.ts"
+	},
+	"dependencies": {
+		"@lexical/history": "^0.53.0",
+		"@lexical/plain-text": "^0.53.0",
+		"@lexical/react": "^0.53.0",
+		"@material-design-icons/svg": "^0.14.15",
+		"@tanstack/react-virtual": "^3.14.26",
+		"@zxcvbn-ts/core": "^4.2.0",
+		"@zxcvbn-ts/language-common": "^4.1.3",
+		"@zxcvbn-ts/language-en": "^4.1.1",
+		"@zxcvbn-ts/language-nl-be": "^4.1.1",
+		"clsx": "^2.1.1",
+		"lexical": "^0.53.0",
+		"react-error-boundary": "^6.1.6"
+	},
+	"devDependencies": {
+		"@base-ui/react": "^1.9.0",
+		"@internationalized/date": "^3.12.4",
+		"@shikijs/rehype": "^4.6.0",
+		"@storybook/addon-a11y": "^10.6.5",
+		"@storybook/addon-docs": "^10.6.5",
+		"@storybook/addon-themes": "^10.6.5",
+		"@storybook/addon-vitest": "^10.6.5",
+		"@storybook/react-vite": "^10.6.5",
+		"@svgr/plugin-jsx": "^8.1.0",
+		"@svgr/plugin-svgo": "^8.1.0",
+		"@tanstack/react-form": "^1.33.5",
+		"@tanstack/react-query": "^5.105.3",
+		"@tanstack/react-router": "^1.170.46",
+		"@tanstack/react-table": "^9.3.1",
+		"@terrazzo/cli": "^2.10.0",
+		"@terrazzo/parser": "^2.10.0",
+		"@terrazzo/plugin-css": "^2.10.0",
+		"@terrazzo/plugin-js": "^2.10.0",
+		"@terrazzo/token-types": "^2.10.0",
+		"@types/bun": "^1.4.4",
+		"@types/react": "^19.3.0",
+		"@types/react-dom": "^19.3.0",
+		"@vitejs/plugin-react": "^6.2.1",
+		"@vitest/browser-playwright": "^5.1.0",
+		"apca-check": "^0.1.1",
+		"axe-core": "^4.14.0",
+		"eslint-plugin-compat": "^7.0.2",
+		"github-slugger": "^2.0.0",
+		"oxc-transform-react": "^0.157.0",
+		"oxfmt": "^0.76.0",
+		"oxlint": "^1.91.0",
+		"oxlint-tsgolint": "^7.0.2005",
+		"playwright": "^1.64.1",
+		"react": "^19.3.1",
+		"react-aria-components": "^1.22.1",
+		"react-dom": "^19.3.1",
+		"remark-gfm": "^4.0.1",
+		"remark-mdx": "^3.1.1",
+		"remark-parse": "^11.0.0",
+		"sass-embedded": "^1.107.1",
+		"shiki": "^4.6.0",
+		"storybook": "^10.6.5",
+		"temporal-polyfill": "^1.0.7",
+		"the-new-css-reset": "^1.11.3",
+		"typescript": "^7.0.2",
+		"unified": "^11.0.5",
+		"vite": "^8.3.5",
+		"vite-plugin-lib-inject-css": "^2.2.2",
+		"vite-plugin-svgr": "^5.2.0",
+		"vitest": "^5.1.0",
+		"vitest-browser-react": "^2.3.0",
+		"zod": "^4.6.7"
+	},
+	"peerDependencies": {
+		"@base-ui/react": "^1.9.0",
+		"@internationalized/date": "^3.12.4",
+		"@tanstack/react-form": "^1.33.5",
+		"@tanstack/react-query": "^5.105.3",
+		"@tanstack/react-router": "^1.170.46",
+		"@tanstack/react-table": "^9.3.1",
+		"@terrazzo/plugin-css": "^2.10.0",
+		"react": "^19.3.1",
+		"react-aria-components": "^1.22.1",
+		"react-dom": "^19.3.1",
+		"temporal-polyfill": "^1.0.7"
+	},
+	"peerDependenciesMeta": {
+		"@tanstack/react-query": {
+			"optional": true
+		},
+		"@tanstack/react-router": {
+			"optional": true
+		},
+		"@tanstack/react-table": {
+			"optional": true
+		},
+		"@terrazzo/plugin-css": {
+			"optional": true
+		}
+	},
+	"browserslist": [
+		"baseline widely available"
+	]
+}

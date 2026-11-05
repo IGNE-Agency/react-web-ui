@@ -1,0 +1,1098 @@
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import FilterListIcon from "@material-design-icons/svg/outlined/filter_list.svg?react";
+import MouseIcon from "@material-design-icons/svg/outlined/mouse.svg?react";
+import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../.storybook/docs-page";
+import styles from "../../docs/design-system/components.module.scss";
+import { Beside } from "../../docs/design-system/beside";
+import { DoDont } from "../../docs/design-system/do-dont";
+import { Example } from "../../docs/design-system/example";
+import { StoryProviders } from "../lib/storybook/story-providers.tsx";
+import { Button } from "../components/button/button.tsx";
+import { Tag } from "../components/tag/tag.tsx";
+import { Checkbox } from "../components/checkbox-field/checkbox.tsx";
+import { Icon } from "../components/icon/icon.tsx";
+import { Spinner } from "../components/spinner/spinner.tsx";
+import { Skeleton } from "../components/skeleton/skeleton.tsx";
+import * as DataTableStories from "./data-table.stories.tsx";
+
+export const Live = ({ children }) => (
+	<StoryProviders>{children}</StoryProviders>
+);
+
+<Meta of={DataTableStories} />
+
+<DocsPage>
+
+## Rules
+
+### A table is a card, part of the page
+
+A table is a card: the card surface at a card radius, no outline and [no shadow, because it is part of the page](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow). The header is a tonal band. A nested sub-table sits on [the nested-fill tier](?path=/docs/design-system-foundation-colour--docs#surfaces-on-surfaces) so it reads as a recessed shelf under its parent row.
+
+### Cell content is vertically centred
+
+Cell padding is tighter vertically than horizontally, and the header gets the larger value on both axes. Cell content is vertically centred: a row's height is set by its tallest cell, and top-aligning the rest leaves chips and icon buttons floating above the text they belong to. Header cells too — a control in a header, like the page checkbox, otherwise sits on the header text's baseline. The reset unsets `vertical-align`, so every cell says `middle` for itself.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Text, chip and button share the row's centre line."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <Live>
+        <div className={styles.tableCard}>
+          <table className={`${styles.table} ${styles.tableContent}`}>
+            <thead>
+              <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
+            </thead>
+            <tbody>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </Live>
+    </div>
+  }>
+
+```scss
+.th,
+.td {
+	vertical-align: middle;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The text and the chip float above the button they belong with."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <Live>
+        <div className={styles.tableCard}>
+          <table className={`${styles.table} ${styles.tableContent} ${styles.tableTop}`}>
+            <thead>
+              <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
+            </thead>
+            <tbody>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </Live>
+    </div>
+  }>
+
+```scss
+.td {
+	vertical-align: top;
+}
+```
+
+</Example>
+</DoDont>
+
+### A cell grows instead of folding
+
+A cell is not folded. This is not an exception to [text that does not fit](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled): the box grows instead, because the table is sized to its content and scrolls inside its card. Folding would let one long description drag its whole row taller than its neighbours, in a grid people read by scanning down a column. A table that needs less than the card still fills it.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The table is sized to its content and scrolls inside its card."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.table {
+	inline-size: max-content;
+	min-inline-size: 100%;
+}
+
+.td {
+	white-space: nowrap;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The widest column folds, and its row alone is three lines tall."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.table {
+	inline-size: 100%;
+}
+```
+
+</Example>
+</DoDont>
+
+### A control column collapses to its content
+
+A control column collapses to its content. Give it a one-pixel inline size with no wrapping, which makes the browser hand it exactly its min-content width. Without that, an expand or actions column takes an equal share of the free space and the buttons drift away from the data they act on.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The actions column collapses to its content."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ id: "actions", meta: { fit: true }, header: () => null, cell: … }
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The icon column grows as wide as a data column."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFixed}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount (€)</th><th aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.end}>112,50</td><td><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>45,00</td><td><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ id: "actions", header: () => null, cell: … }
+```
+
+</Example>
+</DoDont>
+
+### A table-level action menu is a labelled button beside the filters
+
+A table-level action menu is a labelled button beside the filters button, not an icon in the header of the actions column. An unlabelled glyph above a column of row icons does not read as "act on the whole table"; [a button that says so](?path=/docs/design-system-principles-language--docs#a-button-says-what-it-does) does.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="A button that says it acts on the table, next to the filters."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableWithToolbar}>
+        <div className={styles.toolbar}>
+          <Button size="sm" icon={FilterListIcon}>Filters</Button>
+          <Button size="sm" icon={MoreVertIcon}>Table actions</Button>
+        </div>
+        <div className={styles.tableCard}>
+          <table className={`${styles.table} ${styles.tableContent}`}>
+            <thead>
+              <tr><th>Client</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
+            </thead>
+            <tbody>
+              <tr><td>A. de Vries</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Button icon={MoreVertIcon} render={<Menu.Trigger />}>
+	Table actions
+</Button>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="One more glyph above a column of glyphs, and nothing says it means the whole table."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableWithToolbar}>
+        <div className={styles.toolbar}>
+          <Button size="sm" icon={FilterListIcon}>Filters</Button>
+        </div>
+        <div className={styles.tableCard}>
+          <table className={`${styles.table} ${styles.tableContent}`}>
+            <thead>
+              <tr><th>Client</th><th className={styles.end}>Amount (€)</th><th className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A. de Vries</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ id: "actions", header: () => <TableActionsMenu />, cell: … }
+```
+
+</Example>
+</DoDont>
+
+<Beside>
+
+### A table that scrolls sideways pins its controls, never its data
+
+On a table that scrolls sideways, the controls you drive it with stay pinned to the edge they sit at: the leading expand and select columns to the inline start, the trailing row-action column to the inline end. Without them you scroll back to the head of the row, act on it, and scroll out again to where you were — and the action column, being last, is the one column a screen narrower than the table never shows at all. <Pull>Pin controls, never data: a pinned column is width the scrolled content no longer has.</Pull> A pinned cell has to paint its own fill, restating [the row ladder](#rows-are-striped-on-a-ladder-of-fills-mixed-from-the-tonal-container), or the rows travel through it, and the table has to collapse its borders the long way — `border-collapse: separate` with zero spacing — because a sticky cell in a collapsed-border table drifts a few pixels before it catches.
+
+<Example kind="caution" caption="A sticky cell in a collapsed-border table drifts a few pixels before it catches.">
+
+```scss
+.table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+```
+
+</Example>
+
+</Beside>
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The controls stay at the edges, and the data scrolls between them."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ id: "select", meta: { fit: true, sticky: "start" }, … },
+{ id: "actions", meta: { fit: true, sticky: "end" }, … }
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The pinned data eats the width, and the row action is off the edge."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ accessorKey: "client", meta: { sticky: "start" } }
+```
+
+</Example>
+</DoDont>
+
+### A pinned column casts a shadow while content runs under it
+
+A pinned column can line up exactly with the columns it covers, and then it reads as one of them: the row looks whole while part of it is underneath. So while content runs under a pinned column, the column casts a faint narrow gradient onto the rows beside it, making it unmistakable that it lies over the rest of the table. It fades in as the table scrolls under the column and is absent while nothing is under it: a start-pinned column casts it once the table leaves its start, an end-pinned one until the table reaches its far end. It stops where the pinned column's cells stop. A table with no pinned column casts nothing at its edges; that the table scrolls is the scrollbar's to say.
+
+<DoDont>
+<Example kind="do" caption="The pinned column casts a shadow while rows run under it, so it can't be mistaken for one of them.">
+
+```scss
+.frame:has([data-sticky="start"])::before {
+	content: "";
+	inline-size: var(--unit-6);
+	background: linear-gradient(
+		to right,
+		var(--table-edge-shadow),
+		transparent
+	);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A shadow at an edge nothing is pinned to repeats what the scrollbar already says.">
+
+```scss
+.frame::after {
+	content: "";
+	inline-size: var(--unit-6);
+	background: linear-gradient(
+		to left,
+		var(--table-edge-shadow),
+		transparent
+	);
+}
+```
+
+</Example>
+</DoDont>
+
+The table itself still carries [no shadow, because it is part of the page](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow): the shadow belongs to the pinned column, over rows it actually covers. It reports a scroll position, so it survives reduced motion.
+
+### A nested sub-table is not a table
+
+A nested sub-table is not a table. An expanded row's detail sits flush in the parent row's cell: no radius, no card fill, no tinted header band, so it reads as extra rows on the recessed shelf beneath its parent rather than a widget parked inside a row. Strip it by re-pointing the table's own component tokens on the nested content, [not by writing a second table treatment](?path=/docs/design-system-components--docs#each-job-has-one-component-extended-rather-than-copied).
+
+The one inset it does take is a start indent past the control columns, so the detail begins under the first column of data. Those controls act on the parent row, and nothing in the nested table answers to them.
+
+Size it to its own content rather than stretching it to the width of the table it sits in, where its widest column swallows the slack and the rest sit cramped beside it.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The detail sits flush in the parent row: no radius, no card fill, no tinted header band."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th className={styles.fit} aria-label="Expand" /><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={ExpandMoreIcon} label="" /></span></td><td>A. de Vries</td><td className={styles.end}>157,50</td></tr>
+            <tr className={styles.subRow}>
+              <td colSpan={3} className={styles.indent}>
+                <table className={`${styles.table} ${styles.nested}`}>
+                  <thead>
+                    <tr><th>Date</th><th className={styles.end}>Amount (€)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>02-10</td><td className={styles.end}>112,50</td></tr>
+                    <tr><td>03-10</td><td className={styles.end}>45,00</td></tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr className={styles.stripe}><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={ChevronRightIcon} label="" /></span></td><td>J. Bakker</td><td className={styles.end}>45,00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.nested {
+	--table-header-bg: transparent;
+	--table-header-fg: var(--sys-color-text-muted);
+	--table-row-stripe: transparent;
+	--table-row-hover: transparent;
+
+	border-radius: 0;
+	background: none;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A second table parked in the row: its own card, its own header band, stretched to the parent's width."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th className={styles.fit} aria-label="Expand" /><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={ExpandMoreIcon} label="" /></span></td><td>A. de Vries</td><td className={styles.end}>157,50</td></tr>
+            <tr className={styles.subRow}>
+              <td colSpan={3} className={styles.parked}>
+                <table className={`${styles.table} ${styles.tableFull} ${styles.nestedCard}`}>
+                  <thead>
+                    <tr><th>Date</th><th className={styles.end}>Amount (€)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>02-10</td><td className={styles.end}>112,50</td></tr>
+                    <tr className={styles.stripe}><td>03-10</td><td className={styles.end}>45,00</td></tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr className={styles.stripe}><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={ChevronRightIcon} label="" /></span></td><td>J. Bakker</td><td className={styles.end}>45,00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+<tr>
+	<td colSpan={columns.length}>
+		<DataTable.Root table={detailTable} status="success">
+			…
+		</DataTable.Root>
+	</td>
+</tr>
+```
+
+</Example>
+</DoDont>
+
+### Quantities are end-aligned, in tabular figures
+
+A column of quantities is end-aligned, and the whole table is set in tabular figures. Amounts, counts and measures are compared by scanning down a column, and that only works when the digits sit under each other: the units column of one row above the units column of the next. Ragged-right numbers force the eye to re-measure every line, and proportional figures shift the columns even once they are aligned. Set the figures on the whole table, so dates and codes line up too. Mind that the `font` shorthand resets `font-variant`.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Quantities are end-aligned, and the whole table is set in tabular figures."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Date</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>02-10-2026</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10-2026</td><td className={styles.end}>7,05</td></tr>
+            <tr><td>11-10-2026</td><td className={styles.end}>1.019,28</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.table {
+	font: var(--sys-font-body-medium);
+	font-variant-numeric: tabular-nums;
+}
+
+.th[data-numeric="true"],
+.td[data-numeric="true"] {
+	text-align: end;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Ragged amounts in proportional figures: every row has to be measured again."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull} ${styles.proportional}`}>
+          <thead>
+            <tr><th>Date</th><th>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>02-10-2026</td><td>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10-2026</td><td>7,05</td></tr>
+            <tr><td>11-10-2026</td><td>1.019,28</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.table {
+	font: var(--sys-font-body-medium);
+}
+```
+
+</Example>
+</DoDont>
+
+### The unit is named once, in the header
+
+The unit is named once, in the header, never repeated in every cell. A column of `€ 19,28` spends its width restating what its header already said and pushes the digits away from [the edge they align on](#quantities-are-end-aligned-in-tabular-figures).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The header carries the unit, the cell carries digits."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>7,05</td></tr>
+            <tr><td>M. Jansen</td><td className={styles.end}>19,28</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+header: () => "Amount (€)",
+cell: ({ row }) => currency.formatAmount(row.original.amountCents)
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A symbol per row, and a column that cannot be scanned."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.end}>€ 112,50</td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>€ 7,05</td></tr>
+            <tr><td>M. Jansen</td><td className={styles.end}>€ 19,28</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+header: () => "Amount",
+cell: ({ row }) => currency.format(row.original.amountCents)
+```
+
+</Example>
+</DoDont>
+
+### Digits that name something stay start-aligned
+
+Digits that name something are not [quantities](#quantities-are-end-aligned-in-tabular-figures): a product code, a reference id, a BSN, a postcode. Neither is a date. None of them are compared by magnitude, so they stay start-aligned with the rest of the text. They keep the tabular figures, which is what makes a column of them scan.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The reference and the date read as names, so only the amount is end-aligned."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th>Reference</th><th>Date</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>DEC-0412</td><td>02-10-2026</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>DEC-1187</td><td>03-10-2026</td><td className={styles.end}>7,05</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ accessorKey: "reference", header: () => "Reference" },
+{ accessorKey: "amount", meta: { numeric: true }, … }
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Every column with digits in it is end-aligned, as if a reference could be summed."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableContent}`}>
+          <thead>
+            <tr><th className={styles.end}>Reference</th><th className={styles.end}>Date</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td className={styles.end}>DEC-0412</td><td className={styles.end}>02-10-2026</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td className={styles.end}>DEC-1187</td><td className={styles.end}>03-10-2026</td><td className={styles.end}>7,05</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{ accessorKey: "reference", meta: { numeric: true }, … },
+{ accessorKey: "amount", meta: { numeric: true }, … }
+```
+
+</Example>
+</DoDont>
+
+<Beside>
+
+### Selection is a leading control column
+
+Selection is a leading [control column](#a-control-column-collapses-to-its-content): a page checkbox in the header, a row checkbox per row. A checkbox is indeterminate when some but not all of its scope is selected. Watch the table library's predicates: "some selected" usually means "at least one", including all, so pair it with the matching "all selected" predicate to get the real indeterminate state.
+
+    <Example
+    	kind="caution"
+    	caption="“Some selected” usually counts all selected too, so on its own it leaves the page checkbox half-ticked with every row ticked."
+    	visual={
+    		<div className={`sb-unstyled ${styles.visual}`}>
+    			<div
+    				className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+    				<table
+    					className={`${styles.table} ${styles.tableFull}`}>
+    					<thead>
+    						<tr>
+    							<th className={styles.fit}>
+    								<Checkbox
+    									indeterminate
+    									aria-label="Select page"
+    								/>
+    							</th>
+    							<th>Client</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						<tr>
+    							<td className={styles.fit}>
+    								<Checkbox
+    									checked
+    									aria-label="Select row"
+    								/>
+    							</td>
+    							<td>A. de Vries</td>
+    						</tr>
+    						<tr className={styles.stripe}>
+    							<td className={styles.fit}>
+    								<Checkbox
+    									checked
+    									aria-label="Select row"
+    								/>
+    							</td>
+    							<td>J. Bakker</td>
+    						</tr>
+    						<tr>
+    							<td className={styles.fit}>
+    								<Checkbox
+    									checked
+    									aria-label="Select row"
+    								/>
+    							</td>
+    							<td>M. Jansen</td>
+    						</tr>
+    					</tbody>
+    				</table>
+    			</div>
+    		</div>
+    	}
+    />
+
+</Beside>
+
+### A selection travels to the server as the checked ids
+
+Whole-table selection cannot be a checkbox state, because under server pagination the client has never seen most of the rows. A selection therefore travels to the server as the list of ids the user actually checked. Where the endpoint accepts intent plus exclusions, offer an escalation to everything matching the filters.
+
+### Rows are striped on a ladder of fills mixed from the tonal container
+
+Rows are zebra-striped, and the three row fills form a ladder mixed from the brand colour into the surface, so each state is unmistakably a step past the one below it: the plain surface, then a fraction of the tonal container mixed into it, then the tonal container plus a little of the solid brand fill.
+
+Mix the stripe from the tonal container, not from the solid brand colour. A teal brand at a few percent into white lands on a cold blue-grey rather than a green, whereas the container step is already a resolved light tint, so a fraction of it stays on hue. Mix it in `oklab`, as [tints mixed into surfaces always are](?path=/docs/design-system-foundation-colour--docs#tints-are-mixed-into-surfaces-in-oklab).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="A fraction of the container stays on the brand's hue."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td></tr>
+            <tr><td>M. Jansen</td></tr>
+            <tr className={styles.stripe}><td>S. Visser</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+--table-row-stripe: color-mix(
+	in oklab,
+	var(--sys-color-primary-container) 30%,
+	var(--sys-color-surface)
+);
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A few percent of the solid brand lands on a cold grey."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td></tr>
+            <tr className={styles.stripeFromBrand}><td>J. Bakker</td></tr>
+            <tr><td>M. Jansen</td></tr>
+            <tr className={styles.stripeFromBrand}><td>S. Visser</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+--table-row-stripe: color-mix(
+	in oklab,
+	var(--sys-color-primary) 6%,
+	var(--sys-color-surface)
+);
+```
+
+</Example>
+</DoDont>
+
+### A hovered row is not the plain tonal container
+
+Hover must not be the plain tonal container. That is [the fill of a secondary button](?path=/docs/components-button--docs#a-button-is-one-of-three-tiers-and-destructive-is-a-tone-on-them), so a hovered row reads as one enormous button, and against a striped row the contrast is too slight to register as a response at all.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="A ladder of three distinguishable fills."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.fit} aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.hoverLadder}><td>M. Jansen <Icon svg={MouseIcon} label="" className={styles.pointer} /></td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.stripe}><td>S. Visser</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.row {
+	&[data-stripe="true"] {
+		background: var(--table-row-stripe);
+	}
+
+	&:hover {
+		background: var(--table-row-hover);
+	}
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The same fill as a secondary button, barely above the stripe."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.fit} aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.hoverFlat}><td>M. Jansen <Icon svg={MouseIcon} label="" className={styles.pointer} /></td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+            <tr className={styles.stripe}><td>S. Visser</td><td className={styles.fit}><Button size="sm">Open</Button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```scss
+.row:hover {
+	background: var(--sys-color-primary-container);
+}
+```
+
+</Example>
+</DoDont>
+
+<Beside>
+
+### Stripe parity comes from the row's index, never a structural selector
+
+Stripe parity comes from an attribute set off the row's own index, never a structural selector. Expanded sub-table rows are siblings in the same table body, so `:nth-child` counts them and the stripes lurch out of alignment as rows expand.
+
+    <Example
+    	kind="caution"
+    	caption="Sub-table rows are siblings, so :nth-child counts them and the stripes fall out of step as rows expand."
+    	visual={
+    		<div className={`sb-unstyled ${styles.visual}`}>
+    			<div
+    				className={`${styles.tableCard} ${styles.tableCardNarrow}`}>
+    				<table
+    					className={`${styles.table} ${styles.tableFull}`}>
+    					<thead>
+    						<tr>
+    							<th
+    								className={styles.fit}
+    								aria-label="Expand"
+    							/>
+    							<th>Client</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						<tr>
+    							<td className={styles.fit}>
+    								<span className={styles.rowIcon}>
+    									<Icon svg={ChevronRightIcon} label="" />
+    								</span>
+    							</td>
+    							<td>A. de Vries</td>
+    						</tr>
+    						<tr className={styles.stripe}>
+    							<td className={styles.fit}>
+    								<span className={styles.rowIcon}>
+    									<Icon svg={ExpandMoreIcon} label="" />
+    								</span>
+    							</td>
+    							<td>J. Bakker</td>
+    						</tr>
+    						<tr className={styles.subRow}>
+    							<td colSpan={2} className={styles.indent}>
+    								<table
+    									className={`${styles.table} ${styles.nested}`}>
+    									<tbody>
+    										<tr>
+    											<td>03-10</td>
+    											<td>Treatment session</td>
+    										</tr>
+    									</tbody>
+    								</table>
+    							</td>
+    						</tr>
+    						<tr className={styles.stripe}>
+    							<td className={styles.fit}>
+    								<span className={styles.rowIcon}>
+    									<Icon svg={ChevronRightIcon} label="" />
+    								</span>
+    							</td>
+    							<td>M. Jansen</td>
+    						</tr>
+    						<tr>
+    							<td className={styles.fit}>
+    								<span className={styles.rowIcon}>
+    									<Icon svg={ChevronRightIcon} label="" />
+    								</span>
+    							</td>
+    							<td>S. Visser</td>
+    						</tr>
+    					</tbody>
+    				</table>
+    			</div>
+    		</div>
+    	}
+    />
+
+</Beside>
+
+### Rows that are on screen never unmount
+
+Rows that are on screen never unmount. Paging, sorting and filtering are all new server queries, and replacing the body with a spinner or an empty state on each one makes the page jump under whoever is reading it. Keep the previous result while the next one loads, hold the last settled page so the rows outlive a failed fetch, and report the transition around the rows rather than in place of them: a dim while fetching, [an error strip above the table when a refresh fails](?path=/docs/design-system-patterns--docs#a-failure-keeps-what-is-already-on-screen). Only [a first load](#a-loading-table-is-the-table), with nothing to keep, draws something else.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The rows stay where they are, dimmed, while the next page loads."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull} ${styles.tableStale}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A. de Vries</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>J. Bakker</td><td className={styles.end}>45,00</td></tr>
+            <tr><td>M. Jansen</td><td className={styles.end}>19,28</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+useQuery({
+	...declarationsQuery(page),
+	placeholderData: keepPreviousData,
+});
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The rows vanish for a spinner, and the page jumps under the reader."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colSpan={2} className={styles.spinnerCell}><Spinner size={1.5} /></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+if (isFetching) {
+	return <Spinner />;
+}
+```
+
+</Example>
+</DoDont>
+
+### A loading table is the table
+
+A loading table is the table. That first load draws [one placeholder row per row of the selected page size](?path=/docs/design-system-foundation-motion--docs#a-wait-whose-shape-is-known-ahead-of-its-content-is-drawn-as-that-shape), so the table opens at the height it is about to have and nothing below it moves when the data lands. Those are real rows: same stripe parity, same columns.
+
+Controls are chrome, not content. A row checkbox, an expand toggle and a row menu are on screen whether or not a row exists, so in a placeholder row they render as themselves. A column declares what it draws while empty; a column that declares nothing gets a skeleton, so data is the only thing stood in for.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The control column draws its control; the data column gets a bar."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr className={styles.stripe}><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+{
+	id: "select",
+	meta: {
+		fit: true,
+		placeholderCell: () => <Checkbox aria-label={selectRowLabel} />,
+	},
+	header: () => <PageCheckbox />,
+	cell: ({ row }) => <RowCheckbox rowId={row.id} />,
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A bar where a checkbox belongs, on an unstriped row."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.tableCard}>
+        <table className={`${styles.table} ${styles.tableFull}`}>
+          <thead>
+            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td className={styles.fit}><Skeleton /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Skeleton /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Skeleton /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }>
+
+```tsx
+<tr>
+	<td>
+		<Skeleton />
+	</td>
+	<td>
+		<Skeleton />
+	</td>
+</tr>
+```
+
+</Example>
+</DoDont>
+
+Mark [the placeholder rows inert](?path=/docs/design-system-principles-accessibility--docs#inert-beats-disabled-for-content-that-is-only-stale): the controls keep full fidelity while there is nothing for them to act on, and stay out of the accessibility tree, which the table's busy state and a visually hidden caption carry instead.
+
+</DocsPage>

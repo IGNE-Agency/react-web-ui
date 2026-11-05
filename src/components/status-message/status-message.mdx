@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as StatusMessageStories from "./status-message.stories.tsx";
+
+<Meta of={StatusMessageStories} />
+
+<DocsPage>
+
+## Rules
+
+### A message stands where the content would have been
+
+A status message takes the place of a region's content, in that region, under its own headers and filters, so the reader can change what they asked for. A page-wide message is only for a page with nothing else to show. Most messages are one of the presets: `LoadingMessage`, `EmptyMessage` and `ErrorMessage`.
+
+### Waiting and finding nothing wait their turn, and a failure interrupts
+
+A message that is news is a live region. A wait and an empty result are a status, read out when the screen reader pauses; a failure is an alert, read out at once. A message the reader came for, such as a welcome, is not news and is not a live region.
+
+### A live region is in place before its words
+
+A screen reader announces a live region when its text changes, and may say nothing about one that arrives already filled. Keep `Root` mounted and change what is inside it, as `LoadingMessage` does.
+
+### One picture, then a title, a line and a way on
+
+A message carries at most one picture: an icon on a disc in the message's tone, or an illustration such as the app's own mark. The title says what happened in a sentence, the description says what to do next, and the action is the way on. A title is a paragraph unless the page's outline needs a heading there.
+
+</DocsPage>

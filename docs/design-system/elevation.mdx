@@ -1,0 +1,360 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { Beside } from "./beside";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import styles from "./elevation.module.scss";
+import { ElevationDrawing } from "./elevation-drawing";
+import {
+	DarkHeightDrawing,
+	ShadowPartsDrawing,
+} from "./elevation-figures";
+import { Specimen } from "./specimen";
+import { ElevationSpecimen } from "./elevation-specimen";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+
+<Meta title="Design system/Foundation/Elevation" />
+
+# Elevation
+
+Elevation is how a flat screen shows what sits on top of what. A menu that drops open, a tooltip, a message that slides in: each one floats above the page for a moment, and the eye needs to see that at a glance. Elevation keeps that clear, so the page stays put and whatever floats over it is plainly in front.
+
+<Illustration caption="The page lies flat. Only what floats above it casts a shadow, like the one sheet lifted out of its place.">
+	<ElevationDrawing />
+</Illustration>
+
+## Rising above the page
+
+Most of a screen belongs to the page: cards, tables, forms, the bar at the top. Those all sit at one height, flat. What floats above them is what comes and goes: a menu you opened, a hint under your pointer, a message that will disappear in a few seconds. Height marks those as temporary and in front, and asks for attention without shouting.
+
+That only works while height is rare. When everything on the page floats a little, nothing stands out, and the things that really are on top lose the one signal that sets them apart.
+
+## The anatomy of a shadow
+
+Light comes from above, so anything lifted off a surface blocks some of it and leaves a shadow underneath. Look closely at a real one and it has two parts. Right under the edge sits a small, dark, sharp shadow, the **umbra**, which pins the object down so it doesn't look pasted on. Around it spreads a wide, faint, blurry one, the **penumbra**, and how far that spreads is what reads as height.
+
+Lift something higher and its penumbra grows longer and softer while the umbra stays tight. That's why a convincing shadow is never a single blur, and why a higher level gets a wider, softer one rather than just a darker one.
+
+<Illustration caption="Lifted above the floor, a ball casts two shadows: a tight, dark core right under it and a wider, paler fringe around that.">
+	<ShadowPartsDrawing />
+</Illustration>
+
+## Height in the dark
+
+A shadow is darkness, and darkness doesn't show on something that's already dark. On a dark page a soft shadow all but disappears, so height needs a second signal: the higher a surface floats, the lighter it gets, as if it were closer to the light. That's tonal elevation. A shadow can still come along, but it's the lighter surface that does the work.
+
+<Illustration caption="On a dark page, a surface that floats higher is a step lighter, up to the highest, which is almost white.">
+	<DarkHeightDrawing />
+</Illustration>
+
+## Levels
+
+This product has three levels. Level 0 is the page and everything in its flow, and casts no shadow. Level 1 holds tooltips, menus, select popups and popovers. Level 2 holds toasts. Each floating level is a tight umbra plus a wide, soft penumbra, and in the dark theme each is also a lighter surface than the one below it.
+
+<Specimen caption="Each level stands a step higher and casts a wider shadow. On the dark canvas the shadow all but disappears, and each level's lighter surface does the work.">
+	<ElevationSpecimen
+		surfaces={{
+			"sys.elevation.0": "sys.color.surface",
+			"sys.elevation.1": "sys.color.surface-overlay",
+			"sys.elevation.2": "sys.color.surface-overlay-high",
+		}}
+	/>
+</Specimen>
+
+## When to cast a shadow
+
+<Beside>
+
+A shadow earns its place only on an element that floats over the page and has no other way to say how far above it sits. Work down [the order of separation tools](?path=/docs/design-system-principles-separation--docs#work-down-space-surface-elevation-and-line-and-stop-at-the-first-that-works) first: space, then surface tier, then elevation.
+
+A shadow is also the one separation tool that does not survive a theme. Over a dark fill a soft black penumbra is nearly invisible, which is why an overlay signals its height with [a lighter surface tier](?path=/docs/design-system-foundation-colour--docs#surfaces) and treats the shadow as reinforcement that happens to work in light mode.
+
+    <Example
+    	kind="caution"
+    	caption="Over a dark fill a shadow is nearly invisible, so an overlay rises by getting lighter."
+    	visual={
+    		<div className={styles.themes}>
+    			<div
+    				className={`${styles.stage} ${styles.stageLight}`}>
+    				<div className={styles.floating}>Saved</div>
+    			</div>
+    			<div
+    				className={`${styles.stage} ${styles.stageDark}`}>
+    				<div className={styles.floating}>Saved</div>
+    			</div>
+    		</div>
+    	}
+    />
+
+</Beside>
+
+## Grounded in the page
+
+Cards, panels, placeholder tiles, rails and bars in document flow are [separated from the page by their surface tier](?path=/docs/design-system-foundation-colour--docs#surfaces-on-surfaces), and so is [a table, which is a card on the page](?path=/docs/components-data-table--docs#a-table-is-a-card-part-of-the-page).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The table is told apart from the canvas by its surface."
+		visual={
+			<div className={styles.canvas}>
+				<div className={styles.card}>
+					<span className={styles.title}>Declarations</span>
+					<span className={styles.row}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.row}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A card in the page's flow carries a shadow."
+		visual={
+			<div className={styles.canvas}>
+				<div
+					className={`${styles.card} ${styles.cardShadowed}`}>
+					<span className={styles.title}>Declarations</span>
+					<span className={styles.row}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.row}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Controls sit flat
+
+Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. A shadowed button is the clearest sign a component has drifted into stock Material.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The button sits flat."
+		visual={<Button variant="primary">Submit</Button>}
+	/>
+	<Example
+		kind="dont"
+		caption="A shadowed button has drifted into stock Material."
+		visual={
+			<Button
+				variant="primary"
+				className={styles.shadowedButton}>
+				Submit
+			</Button>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Only an element that floats over the page casts a shadow">
+
+Height marks what is temporary and in front: a menu, a tooltip, a popover, a toast. Everything in the page's flow sits at level 0. Explained in [Rising above the page](#rising-above-the-page).
+
+</Details>
+
+<Details title="A shadow is the last resort, not the first">
+
+Work down the separation tools in order: space, then surface tier, then elevation. A shadow is for an element that floats and has no other way to say how far above the page it sits. Explained in [When to cast a shadow](#when-to-cast-a-shadow).
+
+</Details>
+
+<Details title="There are three levels: the page, popups and toasts">
+
+Level 0 is the page and everything in its flow. Level 1 holds tooltips, menus, select popups and popovers. Level 2 holds toasts. Shown in [Levels](#levels).
+
+</Details>
+
+<Details title="A floating level is a tight umbra under a wide, soft penumbra">
+
+A higher level gets a wider, softer penumbra, never just a darker one; the umbra stays tight at every level. Explained in [The anatomy of a shadow](#the-anatomy-of-a-shadow).
+
+</Details>
+
+<Details title="In the dark theme, a higher level is a lighter surface">
+
+A shadow barely shows on a dark fill, so each floating level also reads a lighter surface role: level 1 the overlay tier, level 2 the high overlay tier. The shadow only reinforces it. Explained in [Height in the dark](#height-in-the-dark).
+
+</Details>
+
+<Details title="An element that is part of the page carries no shadow">
+
+Cards, tables, panels, placeholder tiles, rails and bars in document flow are told apart by their surface tier. Shown in [Grounded in the page](#grounded-in-the-page).
+
+<DoDont>
+<Example kind="do" caption="The table is told apart from the canvas by its surface.">
+
+```scss
+.card {
+	border-radius: var(--radius-md);
+	background: var(--sys-color-surface);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A card in the page's flow carries a shadow.">
+
+```scss
+.card {
+	border-radius: var(--radius-md);
+	background: var(--sys-color-surface);
+	box-shadow: var(--elevation-1);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A control never carries a shadow">
+
+Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
+
+<DoDont>
+<Example kind="do" caption="The button sits flat.">
+
+```scss
+.button {
+	background: var(--sys-color-primary);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A shadowed button has drifted into stock Material.">
+
+```scss
+.button {
+	background: var(--sys-color-primary);
+	box-shadow: var(--elevation-1);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A popup with an arrow casts one shadow around the whole silhouette">
+
+An arrow nub is a sibling element, not part of the popup box, so a `box-shadow` on the popup stops at the popup's edge and the nub reads as a detached triangle stuck to a shadowed card.
+
+`filter: drop-shadow()` follows the composited alpha shape instead of the box. Put it on the positioner, the element wrapping both popup and arrow, and it shadows the combined outline as one object. `drop-shadow()` takes no spread, so its values are not mechanical translations of the `box-shadow` ramp and only the levels that need them are defined.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The positioner shadows popup and arrow together."
+  visual={
+    <div className={`${styles.positioner} ${styles.positionerShadowed}`}>
+      <div className={styles.popup}>Last edited 12 March</div>
+      <div className={styles.arrow} />
+    </div>
+  }>
+
+```scss
+.positioner {
+	filter: var(--elevation-1-filter);
+}
+
+.popup {
+	@include popup.surface($shadow: false);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The arrow sits outside the shadow."
+  visual={
+    <div className={styles.positioner}>
+      <div className={`${styles.popup} ${styles.popupShadowed}`}>Last edited 12 March</div>
+      <div className={styles.arrow} />
+    </div>
+  }>
+
+```scss
+.popup {
+	@include popup.surface;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A popup with no arrow keeps box-shadow">
+
+A popup with no arrow (tooltip, select list, typeahead, toast) keeps `box-shadow`: it is cheaper, and there is no second shape to enclose.
+
+<DoDont>
+<Example kind="do" caption="With no arrow there is one box, so the cheaper box-shadow encloses it.">
+
+```scss
+.select-popup {
+	@include popup.surface;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A filter on the positioner pays for tracing a silhouette that is only a box.">
+
+```scss
+.select-positioner {
+	filter: var(--elevation-1-filter);
+}
+
+.select-popup {
+	@include popup.surface($shadow: false);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A shadow is a token, never a literal">
+
+<DoDont>
+<Example kind="do" caption="The level comes from the scale, so it matches every other popup and deepens in dark mode.">
+
+```scss
+.toast {
+	box-shadow: var(--elevation-2);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A literal shadow is a level of its own that no theme can retune.">
+
+```scss
+.toast {
+	box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

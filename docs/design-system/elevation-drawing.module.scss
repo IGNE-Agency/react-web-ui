@@ -1,0 +1,26 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("neutral");
+}
+
+.field {
+	fill: var(--drawing-hot-vivid);
+}
+
+.tile {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 70%,
+		var(--drawing-paper)
+	);
+}
+
+.sheet {
+	fill: var(--drawing-paper);
+}
+
+.shade {
+	flood-color: var(--drawing-hot-muted);
+	flood-opacity: 0.55;
+}

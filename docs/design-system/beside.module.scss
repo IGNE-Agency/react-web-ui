@@ -1,0 +1,26 @@
+.beside.beside {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-12) var(--sys-unit-16);
+	align-items: start;
+	margin-block: var(--sys-unit-12) var(--sys-unit-24);
+
+	> :last-child {
+		flex: 1 1 20rem;
+		min-inline-size: 0;
+	}
+}
+
+.text.text {
+	flex: 1 1 28rem;
+	min-inline-size: 0;
+	max-inline-size: var(--docs-measure);
+
+	> :first-child {
+		margin-block-start: 0;
+	}
+
+	> :last-child {
+		margin-block-end: 0;
+	}
+}

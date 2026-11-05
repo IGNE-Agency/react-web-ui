@@ -1,0 +1,1598 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Avatar } from "../../src/components/avatar/index.ts";
+import { Tag } from "../../src/components/tag/index.ts";
+import { Skeleton } from "../../src/components/skeleton/index.ts";
+import styles from "./colour.module.scss";
+import { Beside } from "./beside";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { ColourDrawing } from "./colour-drawing";
+import {
+	DialsDrawing,
+	PerceptualDrawing,
+	ReserveDrawing,
+} from "./colour-figures";
+import { Specimen } from "./specimen";
+import { RampSpecimen } from "./ramp-specimen";
+import { RoleSpecimen } from "./role-specimen";
+
+<Meta title="Design system/Foundation/Colour" />
+
+# Colour
+
+Colour is the first thing anyone takes in on a screen, before a single word is read. It groups what belongs together and sets apart what doesn't, says what you can act on and what needs your attention, and sets the mood of the whole product. That speed is exactly why it needs rules: a colour that means two things means nothing.
+
+<Illustration caption="A ramp is one hue in even steps of lightness, from the palest tint to the deepest shade.">
+	<ColourDrawing />
+</Illustration>
+
+## What colour does
+
+Every colour on a screen is doing something. A tint behind a row says it's selected. A red border says something went wrong. A green button says this is the thing to press. Because colour is read so fast, it's the strongest signal a screen has, and the easiest one to wear out: paint everything and nothing stands out any more.
+
+Colour also never works alone. Some people see fewer colours than others, screens get washed out by sunlight, and printers turn everything grey. So whatever colour says, a word, an icon or a shape says it too.
+
+## Hue, lightness and chroma
+
+Any colour can be described by three things. Its **hue** is which colour it is: green, blue, orange. Its **lightness** is how close it sits to white or to black. Its **chroma** is how much colour it has, from grey to as vivid as the hue goes.
+
+Change just one of them and you get the words designers use every day. Mix a colour with white and you get a **tint**, with black a **shade**, with grey a **tone**. Line up one hue from its lightest tint to its darkest shade and you have a **ramp**, and a palette is a handful of ramps.
+
+<Illustration caption="A colour picked the way a designer picks it: a hue on the slider, then lightness down the grid and chroma across it.">
+	<DialsDrawing />
+</Illustration>
+
+## A palette with meaning
+
+A palette with meaning isn't a collection of nice colours. It hands each hue one job and keeps it there. One hue is the brand's accent. A few hues are kept for status: success, information, warning, error. Neutrals carry the surfaces and the text. When a hue takes a second job, both jobs get weaker.
+
+The brand colour is the accent. A status colour is a status colour and nothing else: it belongs on status chips, badges and toasts. It is never the hover, focus or generic accent, which is the default a lot of applications fall into, and never [the colour of selected text](?path=/docs/design-system-principles-interaction--docs#selected-text-is-a-role-not-a-browser-default).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="An avatar fallback or mention pill is brand-tinted."
+		visual={
+			<div className={styles.row}>
+				<span
+					className={`${styles.avatar} ${styles.brand}`}>
+					AV
+				</span>
+				<span className={`${styles.pill} ${styles.brand}`}>
+					@Anna de Vries
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Blue here means nothing; it is not an info message."
+		visual={
+			<div className={styles.row}>
+				<span className={`${styles.avatar} ${styles.info}`}>
+					AV
+				</span>
+				<span className={`${styles.pill} ${styles.info}`}>
+					@Anna de Vries
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+A person's colour is the one exception, because telling people apart takes more than one hue. It is an identity tone: the brand container's lightness and chroma, turned to a hue of its own that is no status colour. It tells one person from the next and means nothing else. It is cut from the container rather than from a ramp of its own, so it stays as soft as the brand tint and follows every theme with it.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Each person keeps a tone of their own, as soft as the brand tint."
+		visual={
+			<div className={styles.row}>
+				<Avatar name="Sem de Jong" />
+				<Avatar name="Sanne de Vries" />
+				<Avatar name="Anna de Vries" />
+				<Avatar name="Mark Jansen" />
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Green and orange say done and needs attention, which says nothing about a person."
+		visual={
+			<div className={styles.row}>
+				<span
+					className={`${styles.avatar} ${styles.success}`}>
+					SJ
+				</span>
+				<span
+					className={`${styles.avatar} ${styles.warning}`}>
+					SV
+				</span>
+				<span
+					className={`${styles.avatar} ${styles.success}`}>
+					AV
+				</span>
+				<span
+					className={`${styles.avatar} ${styles.warning}`}>
+					MJ
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Seeing lightness evenly
+
+How light a colour looks depends on its hue. A yellow and a blue with the same "lightness" in HSL look nothing alike: the yellow glows and the blue goes nearly black. That's because HSL describes how a screen mixes its red, green and blue, not how your eye sees the result.
+
+<Illustration caption="Squint and only lightness is left: hues set in HSL break into light and dark stripes, the same hues set in OKLCH into one even grey.">
+	<PerceptualDrawing />
+</Illustration>
+
+A perceptual colour space like **OKLCH** is built the other way round, from how people see. Its lightness is perceived lightness, so two colours at the same lightness look equally light whatever their hue, and the steps of a ramp look evenly spaced. Its chroma and hue are the same dials described above, which makes it the natural space to design a palette in.
+
+## Mixing colours
+
+Mixing two colours means walking a path from one to the other, and the colour space decides which path. **OKLab** walks a straight line: the hue never takes a detour, though the middle can come out a little greyer. **OKLCH** walks round the hue circle, keeping the colour vivid on the way, which is lovely for a gradient between two hues.
+
+That circle is also its catch. White, black and greys have no real hue, so the path's direction depends on whatever tiny hue a neutral happens to carry. Mix a green tint into white and it stays green by luck. Mix it into a dark grey that leans slightly blue and the result can swing halfway round the circle. Pick the space by what should stay put: for a tint mixed into a surface, that's the hue.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="On white and on charcoal alike, the neutral dilutes the tint instead of steering it."
+		visual={
+			<div className={styles.stripePair}>
+				<div
+					className={`${styles.stripeTable} ${styles.stripeOklab} ${styles.stripeOnWhite}`}>
+					<div />
+					<div />
+					<div />
+					<div />
+					<div />
+				</div>
+				<div
+					className={`${styles.stripeTable} ${styles.stripeOklab} ${styles.stripeOnCharcoal}`}>
+					<div />
+					<div />
+					<div />
+					<div />
+					<div />
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Fine on white, halfway to blue on charcoal."
+		visual={
+			<div className={styles.stripePair}>
+				<div
+					className={`${styles.stripeTable} ${styles.stripeOklch} ${styles.stripeOnWhite}`}>
+					<div />
+					<div />
+					<div />
+					<div />
+					<div />
+				</div>
+				<div
+					className={`${styles.stripeTable} ${styles.stripeOklch} ${styles.stripeOnCharcoal}`}>
+					<div />
+					<div />
+					<div />
+					<div />
+					<div />
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Ramps
+
+This product's palette is six ramps: one brand green, three status ramps, and two neutrals, a warm one for surfaces and a cool one for text. Each runs from near-white to near-black, with extra steps crowded at both ends, where surfaces, lines and their tiers are chosen.
+
+<Specimen caption="Six ramps, each from near-white to near-black. The steps crowd together towards both ends, because that is where surfaces, lines and their tiers are chosen, in both themes. Hover a swatch for its token.">
+	<RampSpecimen />
+</Specimen>
+
+## Roles
+
+A handful of the roles a screen leans on most, as each one looks in both themes, and the ramp step each theme points it at. [Components read these roles, never a ramp step](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step).
+
+<Specimen caption="A handful of the roles a screen leans on most, each in both themes. The full set lives in the tokens files.">
+	<RoleSpecimen
+		groups={[
+			{
+				title: "Most used",
+				roles: [
+					{
+						label: "Primary",
+						fill: "sys.color.primary",
+						ink: "sys.color.on-primary",
+					},
+					{ label: "Text", ink: "sys.color.text" },
+					{ label: "Surface", fill: "sys.color.surface" },
+					{ label: "Border", line: "sys.color.border" },
+					{
+						label: "Success",
+						fill: "sys.color.success.bg",
+						ink: "sys.color.success.fg",
+					},
+				],
+			},
+		]}
+	/>
+</Specimen>
+
+A status role's container and ink are a pair, exactly like the brand fill and its ink. Always use them together.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The warning fill carries its own warning ink."
+		visual={
+			<Tag.Root tone="warning">Needs attention</Tag.Root>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="An unpaired fill has no guaranteed contrast against the ink."
+		visual={
+			<span
+				className={`${styles.pill} ${styles.warningUnpaired}`}>
+				Needs attention
+			</span>
+		}
+	/>
+</DoDont>
+
+There are two line weights, and picking the wrong one is why a mark either disappears or shouts. The **border** role is the quiet hairline, kept for [the four cases that justify a line](?path=/docs/design-system-principles-separation--docs#the-four-cases-that-justify-a-line). The **outline** role is a deliberately visible mid-tone for a mark that has to be found: [a drawer's grab bar](?path=/docs/components-drawer--docs#a-swipeable-surface-shows-a-grab-bar), a scroll thumb, an outlined control that is not a container. Neither is ink, so neither should be reached for by taking muted text and hoping.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The grab bar has to be found, so it takes the outline; the hairline stays quiet."
+		visual={
+			<div
+				className={`${styles.sheetSample} ${styles.linesRight}`}>
+				<span className={styles.grabBar} />
+				<span className={styles.sheetHeading}>Filters</span>
+				<span>Status</span>
+				<span>Period</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The grab bar on the hairline role is hard to find, and a line drawn in muted ink shouts."
+		visual={
+			<div
+				className={`${styles.sheetSample} ${styles.linesWrong}`}>
+				<span className={styles.grabBar} />
+				<span className={styles.sheetHeading}>Filters</span>
+				<span>Status</span>
+				<span>Period</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+That gap is worth checking in a theme you did not tune. Roles cluster at the ends (near-surface fills, near-ink text) and a palette can easily ship with nothing in the middle, at which point anyone needing a quiet-but-visible mark grabs a surface tier, gets something indistinguishable from the surface, and moves on.
+
+## Contrast, held in reserve
+
+This product's palette is soft and close-toned on purpose. <Pull>Contrast is a signal, not a texture: it belongs to what the user can act on and to what needs their attention, and it is spent sparingly even there.</Pull> Anything passive (a skeleton, a placeholder, a caption, a status dot at rest) sits one quiet step off the surface it is drawn on: enough to be seen at a glance, and never climbing toward the ink.
+
+<Illustration caption="One action carries the contrast; the rest stay quiet beside it, at the same height.">
+	<ReserveDrawing />
+</Illustration>
+
+The same restraint governs decorative motion. A shimmer sweeping across a placeholder is louder than the content it stands in for, which inverts the hierarchy the palette exists to protect.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="A placeholder sits one quiet step off its surface, and breathes rather than sweeps."
+		visual={
+			<div className={styles.skeletonCard}>
+				<Skeleton className={styles.skeletonLine} />
+				<Skeleton className={styles.skeletonLine} />
+				<Skeleton className={styles.skeletonLine} />
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Drawn in a mid-tone and swept by a sheen, the placeholder is louder than the content it stands in for."
+		visual={
+			<div className={styles.skeletonCard}>
+				<span
+					className={`${styles.skeletonLine} ${styles.skeletonLoud}`}
+				/>
+				<span
+					className={`${styles.skeletonLine} ${styles.skeletonLoud}`}
+				/>
+				<span
+					className={`${styles.skeletonLine} ${styles.skeletonLoud}`}
+				/>
+			</div>
+		}
+	/>
+</DoDont>
+
+Text contrast is judged by APCA rather than by WCAG 2's ratio. The reasons, and the level each kind of text has to meet, are under [APCA contrast on the Accessibility page](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2).
+
+## Surfaces
+
+A screen is a stack of surfaces: the page itself, the cards that sit on it, the fills inside those cards, and the popups that float above everything. Each level gets a tier of its own, so you can tell at a glance what sits on what. This product has seven: a page canvas, a dimmest card, the default card, a nested fill, the deepest recess, an overlay for popups and tooltips, and a higher overlay for toasts.
+
+A surface gets **more tinted as you nest** and **lighter as you rise**. In light mode those pull in opposite directions, which is the thing to get straight: a nested fill is _darker_ than the card it sits in, while a popup floating above that card is not. Write the tier you mean rather than reasoning from "higher number means lighter".
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The nested fill is darker than its card, and the menu floating over both is not."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.stackCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<div className={styles.nested}>
+						<span>Physiotherapy</span>
+						<span>Dental care</span>
+					</div>
+				</div>
+				<div
+					className={`${styles.floatingMenu} ${styles.menuOverlay}`}>
+					<span>Edit</span>
+					<span>Archive</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The highest tier read as the most raised, so the menu is drawn as a recess."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.stackCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<div className={styles.nested}>
+						<span>Physiotherapy</span>
+						<span>Dental care</span>
+					</div>
+				</div>
+				<div
+					className={`${styles.floatingMenu} ${styles.menuHighest}`}>
+					<span>Edit</span>
+					<span>Archive</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+The overlay tier is the same step as the default card in light mode and a lighter one in dark. That is what makes elevation legible under a dark theme, where a shadow over a dark fill is close to invisible, so [popups rise by lightness, not by shadow](?path=/docs/design-system-foundation-elevation--docs#in-the-dark-theme-a-higher-level-is-a-lighter-surface). Every floating popup reads that tier, including [a popup arrow's fill](?path=/docs/design-system-principles-separation--docs#an-arrow-on-an-unoutlined-popup-has-no-stroke). A toast floats a level higher, so its tier is one step lighter again in dark.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Popup and arrow both read the overlay tier, so they are one shape in either theme."
+		visual={
+			<div className={styles.themes}>
+				<div
+					className={`${styles.stage} ${styles.stageLight}`}>
+					<div
+						className={`${styles.tip} ${styles.arrowOverlay}`}>
+						<span className={styles.tipBody}>
+							Edited 12 March
+						</span>
+						<span className={styles.tipArrow} />
+					</div>
+					<span className={styles.tipAnchor} />
+				</div>
+				<div
+					className={`${styles.stage} ${styles.stageDark}`}>
+					<div
+						className={`${styles.tip} ${styles.arrowOverlay}`}>
+						<span className={styles.tipBody}>
+							Edited 12 March
+						</span>
+						<span className={styles.tipArrow} />
+					</div>
+					<span className={styles.tipAnchor} />
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The arrow reads the card tier: right in light, a dark notch under the popup in dark."
+		visual={
+			<div className={styles.themes}>
+				<div
+					className={`${styles.stage} ${styles.stageLight}`}>
+					<div
+						className={`${styles.tip} ${styles.arrowCard}`}>
+						<span className={styles.tipBody}>
+							Edited 12 March
+						</span>
+						<span className={styles.tipArrow} />
+					</div>
+					<span className={styles.tipAnchor} />
+				</div>
+				<div
+					className={`${styles.stage} ${styles.stageDark}`}>
+					<div
+						className={`${styles.tip} ${styles.arrowCard}`}>
+						<span className={styles.tipBody}>
+							Edited 12 March
+						</span>
+						<span className={styles.tipArrow} />
+					</div>
+					<span className={styles.tipAnchor} />
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Every surface sits visibly away from the canvas, so a card reads as something placed on the page rather than a patch of it. How far is not one fixed step. It differs per theme, because the same gap shows less at the dark end, and it can differ per case. What does not differ is that the edge is plainly there.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The card sits visibly off the canvas, at the distance this theme sets."
+		visual={
+			<div
+				className={`${styles.canvas} ${styles.canvasApart}`}>
+				<div className={styles.canvasCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The canvas one notch off the card, so the card's edge is all but gone."
+		visual={
+			<div
+				className={`${styles.canvas} ${styles.canvasClose}`}>
+				<div className={styles.canvasCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Exactly one set of tiers is allowed to resolve to the same colour: the default card and the two overlays, in the theme where elevation is carried by the shadow. <Pull>Every other tier is a distinct value in every theme, and keeping it that way is the point.</Pull> Three nested tiers collapsing onto white is how a light theme ends up with no usable ladder, and the failure is quiet: whoever needed one of them reaches for the next tier along, gets the same colour again, and concludes the surfaces are useless rather than that two tokens were pointed at one step.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Every tier is its own step, so each level of nesting shows."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.stackCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<div className={styles.nested}>
+						<span>Physiotherapy</span>
+						<span className={styles.recess}>
+							Referral.pdf
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Three tiers on one step: the nested fill and its well vanish into the card."
+		visual={
+			<div className={styles.stack}>
+				<div
+					className={`${styles.stackCard} ${styles.collapsed}`}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<div className={styles.nested}>
+						<span>Physiotherapy</span>
+						<span className={styles.recess}>
+							Referral.pdf
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+<Beside>
+
+The same goes for the line roles. A border sharing a step with the deepest recess means a bordered control inside that recess has no border, in exactly one place nobody tests.
+
+    <Example
+    	kind="caution"
+    	caption="A border on the same step as the deepest recess leaves a control inside that recess with no border."
+    	visual={
+    		<div className={styles.wells}>
+    			<div
+    				className={`${styles.well} ${styles.wellCard}`}>
+    				<div className={styles.field}>Search clients</div>
+    			</div>
+    			<div
+    				className={`${styles.well} ${styles.wellRecess}`}>
+    				<div className={styles.field}>Search clients</div>
+    			</div>
+    		</div>
+    	}
+    />
+
+</Beside>
+
+## Surfaces on surfaces
+
+Each tier has an occupant. Reach for one by naming where the thing sits, never by how light you want it to look.
+
+| Tier | What sits there |
+| --- | --- |
+| Canvas | The page — the routed `<main>`, which takes no fill at all |
+| Default card | A sheet on the page |
+| Nested fill | A fill within a sheet: an expanded row's sub-table |
+| Deepest recess | A well within that |
+| Overlay | Off the ladder — popups and tooltips, with toasts on the higher overlay above them |
+
+Read down that column and it is the component tree. Every level is a surface on the one below it, so a component only has to know its own depth.
+
+The page is the canvas, not a surface on it. It declares no fill of its own, so what a sheet is read against is the canvas directly, which makes the canvas the one tier that is a _field_ rather than an object.
+
+The ladder is shorter than the tree, so the rule is not one tier per level — it is **never invent a tier.** A level that would repeat its parent's fill separates by something else: the space around it, its own header band, or a line in [one of the four cases that justify a line](?path=/docs/design-system-principles-separation--docs#the-four-cases-that-justify-a-line).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The page is the field its sheets are read against."
+		visual={
+			<div
+				className={`${styles.page} ${styles.pageCanvas}`}>
+				<div className={styles.sheet}>
+					<span className={styles.sheetTitle}>
+						Declarations
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A fill on the page, so every sheet on it needs a tier that doesn't exist."
+		visual={
+			<div
+				className={`${styles.page} ${styles.pageFilled}`}>
+				<div className={styles.sheet}>
+					<span className={styles.sheetTitle}>
+						Declarations
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Physiotherapy</span>
+						<span>€ 120</span>
+					</span>
+					<span className={styles.sheetRow}>
+						<span>Dental care</span>
+						<span>€ 85</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The groups would repeat their parent's fill, so space and a heading set them apart."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.stackCard}>
+					<span className={styles.cardTitle}>
+						Physiotherapy
+					</span>
+					<div
+						className={`${styles.nested} ${styles.groupsSpaced}`}>
+						<div className={styles.group}>
+							<span className={styles.groupHeading}>
+								March
+							</span>
+							<span>Treatment</span>
+						</div>
+						<div className={styles.group}>
+							<span className={styles.groupHeading}>
+								April
+							</span>
+							<span>Follow-up</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="An invented in-between tier: a fill no other screen uses and nobody can name."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.stackCard}>
+					<span className={styles.cardTitle}>
+						Physiotherapy
+					</span>
+					<div
+						className={`${styles.nested} ${styles.groupsFilled}`}>
+						<div className={styles.group}>
+							<span className={styles.groupHeading}>
+								March
+							</span>
+							<span>Treatment</span>
+						</div>
+						<div className={styles.group}>
+							<span className={styles.groupHeading}>
+								April
+							</span>
+							<span>Follow-up</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## After dark
+
+Past a certain darkness every step resolves to black or to something indistinguishable from it, so a dark theme built down there is one black field with no tiers left to separate anything on, and every accent over it reads as glare. Put the dark ladder in the band where the tiers are still evenly spaced and each is visibly a step above the last. The page itself is a dark grey, never black.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The dark ladder sits where each tier is still visibly a step above the last."
+		visual={
+			<div
+				className={`${styles.darkLadder} ${styles.ladderBand}`}>
+				<div className={styles.ladderCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<span className={styles.ladderNested}>
+						Physiotherapy
+					</span>
+					<span className={styles.ladderAccent}>
+						Submit
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Built at the bottom of the ramp: one black field, and the accent glares."
+		visual={
+			<div
+				className={`${styles.darkLadder} ${styles.ladderBottom}`}>
+				<div className={styles.ladderCard}>
+					<span className={styles.cardTitle}>
+						Declarations
+					</span>
+					<span className={styles.ladderNested}>
+						Physiotherapy
+					</span>
+					<span className={styles.ladderAccent}>
+						Submit
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Three things follow, and they are the difference between a dark theme that works and one that is merely dark.
+
+**The same step is not the same lightness in two ramps.** Near white they converge, so a light theme can point every status fill at one step and they all land in the same place. At the dark end they diverge by each ramp's own lightness, so the dark roles pick the step _per ramp_ that lands the same distance above the surface.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Chosen per ramp so every status fill lifts off the surface equally."
+		visual={
+			<div className={styles.darkSurface}>
+				<span
+					className={`${styles.darkChip} ${styles.darkSuccess}`}>
+					Approved
+				</span>
+				<span
+					className={`${styles.darkChip} ${styles.darkInfo}`}>
+					In review
+				</span>
+				<span
+					className={`${styles.darkChip} ${styles.darkWarning}`}>
+					Needs attention
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Tidied into a column, so the info chip vanishes and the warning shouts."
+		visual={
+			<div className={styles.darkSurface}>
+				<span
+					className={`${styles.darkChip} ${styles.darkSuccess}`}>
+					Approved
+				</span>
+				<span
+					className={`${styles.darkChip} ${styles.darkInfoTidied}`}>
+					In review
+				</span>
+				<span
+					className={`${styles.darkChip} ${styles.darkWarning}`}>
+					Needs attention
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+**Dark ink is not near-white.** Body text sits about the same distance from its surface in both themes, which in dark mode is a light grey. Ink pinned to the top of the ramp over a dark surface glares, and it leaves muted ink nowhere to go: muted is one notch closer to the surface than body text, in both themes.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Body ink is a light grey, which leaves muted ink a visible notch to step down."
+		visual={
+			<div
+				className={`${styles.darkText} ${styles.inkGrey}`}>
+				<span className={styles.darkBody}>
+					Physiotherapy
+				</span>
+				<span className={styles.darkMuted}>
+					Submitted 12 March
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="White ink glares on charcoal, and muted ink one notch below it reads the same."
+		visual={
+			<div
+				className={`${styles.darkText} ${styles.inkWhite}`}>
+				<span className={styles.darkBody}>
+					Physiotherapy
+				</span>
+				<span className={styles.darkMuted}>
+					Submitted 12 March
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+**A dark border needs more separation than a light one.** Perceived contrast compresses at the dark end, so the same numeric gap that reads as a hairline on white disappears on charcoal. Give it more and it still reads as restrained.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Given a wider gap on charcoal, the border still reads as restrained."
+		visual={
+			<div className={styles.darkFieldStage}>
+				<div
+					className={`${styles.darkField} ${styles.borderSeparated}`}>
+					Search clients
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A gap that reads as a hairline on white disappears on charcoal."
+		visual={
+			<div className={styles.darkFieldStage}>
+				<div
+					className={`${styles.darkField} ${styles.borderHairline}`}>
+					Search clients
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Colour never carries a meaning on its own">
+
+Whatever a colour says, a word, an icon or a shape says too, for anyone who sees fewer colours, on a washed-out screen or on paper. Explained in [What colour does](#what-colour-does).
+
+</Details>
+
+<Details title="The brand colour is the accent, and a status colour marks a status and nothing else">
+
+Status colours belong on status chips, badges and toasts. Hover, focus, selection and any generic accent take the brand roles, such as the brand container. Explained in [A palette with meaning](#a-palette-with-meaning).
+
+<DoDont>
+<Example kind="do" caption="An avatar fallback or mention pill is brand-tinted.">
+
+```scss
+.avatar {
+	background-color: var(--sys-color-primary-container);
+	color: var(--sys-color-on-primary-container);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Blue here means nothing; it is not an info message.">
+
+```scss
+.avatar {
+	background-color: var(--sys-color-info-bg);
+	color: var(--sys-color-info-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A person's colour is an identity tone, never a status colour">
+
+Each person gets one of the identity tones: the brand container's lightness and chroma, turned to a hue no status uses. Explained in [A palette with meaning](#a-palette-with-meaning).
+
+<DoDont>
+<Example kind="do" caption="Each person keeps a tone of their own, as soft as the brand tint.">
+
+```scss
+.avatar[data-tone="1"] {
+	background-color: var(--sys-color-identity-1-bg);
+	color: var(--sys-color-identity-1-fg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Green and orange say done and needs attention, which says nothing about a person.">
+
+```scss
+.avatar[data-tone="1"] {
+	background-color: var(--sys-color-success-bg);
+	color: var(--sys-color-success-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Tints are mixed into surfaces in oklab">
+
+The palette's own values are written in `oklch`, so every step's lightness and chroma can be read straight off it. A tint mixed into a surface is mixed in `oklab` instead, so it dilutes towards the surface rather than swinging round the hue circle on the way.
+
+<DoDont>
+<Example kind="do" caption="On white and on charcoal alike, the neutral dilutes the tint instead of steering it.">
+
+```scss
+--row-stripe: color-mix(
+	in oklab,
+	var(--sys-color-primary-container) 45%,
+	var(--sys-color-surface)
+);
+```
+
+</Example>
+<Example kind="dont" caption="Fine on white, halfway to blue on charcoal.">
+
+```scss
+--row-stripe: color-mix(
+	in oklch,
+	var(--sys-color-primary-container) 45%,
+	var(--sys-color-surface)
+);
+```
+
+</Example>
+</DoDont>
+
+Explained in [Mixing colours](#mixing-colours).
+
+</Details>
+
+<Details title="Step numbers count darkness, so a lighter tint is a lower step">
+
+<Beside>
+
+The step number is darkness, not lightness. The lowest step is white, the highest is black, so a lighter tint is a _lower_ step. Steps run in even increments with extra stops crowded at each end, where near-white and near-black need finer control than an even increment allows.
+
+    <Example
+    	kind="caution"
+    	caption="The number counts darkness, so a lighter tint is a lower step."
+    	visual={
+    		<div className={styles.ramp}>
+    			<span className={`${styles.swatch} ${styles.step0}`}>0</span>
+    			<span className={`${styles.swatch} ${styles.step150}`}>150</span>
+    			<span className={`${styles.swatch} ${styles.step500}`}>500</span>
+    			<span className={`${styles.swatch} ${styles.step750}`}>750</span>
+    			<span className={`${styles.swatch} ${styles.step1000}`}>1000</span>
+    		</div>
+    	}
+    />
+
+</Beside>
+
+Shown in [Ramps](#ramps).
+
+</Details>
+
+<Details title="A status fill always takes its own ink">
+
+A status role's container and ink are a pair, like the brand fill and its ink: the warning container with the warning ink. Explained in [Roles](#roles).
+
+<DoDont>
+<Example kind="do" caption="The warning fill carries its own warning ink.">
+
+```scss
+.chip[data-tone="warning"] {
+	background: var(--sys-color-warning-bg);
+	color: var(--sys-color-warning-fg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="An unpaired fill has no guaranteed contrast against the ink.">
+
+```scss
+.chip[data-tone="warning"] {
+	background: var(--sys-color-warning-bg);
+	color: var(--sys-color-text);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A mark that has to be found takes the outline role, and a separating line takes the border role">
+
+The outline role is a visible mid-tone for grab bars, scroll thumbs and outlined controls; the border role is the quiet hairline. Neither is ever drawn in muted ink. Explained in [Roles](#roles).
+
+<DoDont>
+<Example kind="do" caption="The grab bar has to be found, so it takes the outline; the hairline stays quiet.">
+
+```scss
+.grab-bar {
+	background: var(--sys-color-outline);
+}
+
+.header {
+	border-block-end: 1px solid var(--sys-color-border);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The grab bar on the hairline role is hard to find, and a line drawn in muted ink shouts.">
+
+```scss
+.grab-bar {
+	background: var(--sys-color-border);
+}
+
+.header {
+	border-block-end: 1px solid var(--sys-color-text-muted);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Anything passive sits one quiet step off its surface, and never sweeps">
+
+Skeletons, placeholders, captions and status dots at rest stay one step off the surface they're drawn on, and a placeholder breathes rather than shimmers. Explained in [Contrast, held in reserve](#contrast-held-in-reserve).
+
+<DoDont>
+<Example kind="do" caption="A placeholder sits one quiet step off its surface, and breathes rather than sweeps.">
+
+```scss
+.skeleton {
+	background-color: var(--sys-color-surface-highest);
+	opacity: 0.75;
+	animation: pulse 2.4s var(--motion-standard) infinite;
+}
+```
+
+</Example>
+<Example kind="dont" caption="Drawn in a mid-tone and swept by a sheen, the placeholder is louder than the content it stands in for.">
+
+```scss
+.skeleton {
+	background-color: var(--sys-color-outline);
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--sys-color-surface),
+		transparent
+	);
+	animation: skeleton-sheen 1.4s linear infinite;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A surface tier is named by where a thing sits, never by how light it should look">
+
+A surface gets more tinted as you nest and lighter as you rise, so in light mode a nested fill is darker than its card while a popup over it is not. Explained in [Surfaces](#surfaces).
+
+<DoDont>
+<Example kind="do" caption="The nested fill is darker than its card, and the menu floating over both is not.">
+
+```scss
+.sub-table {
+	background: var(--sys-color-surface-high);
+}
+
+.menu {
+	background: var(--sys-color-surface-overlay);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The highest tier read as the most raised, so the menu is drawn as a recess.">
+
+```scss
+.sub-table {
+	background: var(--sys-color-surface-high);
+}
+
+.menu {
+	background: var(--sys-color-surface-highest);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every floating popup, its arrow included, reads the overlay tier">
+
+Popups and tooltips read the overlay tier, toasts the high overlay tier, which is a step lighter again in the dark theme. Explained in [Surfaces](#surfaces).
+
+<DoDont>
+<Example kind="do" caption="Popup and arrow both read the overlay tier, so they are one shape in either theme.">
+
+```scss
+.popup,
+.arrow {
+	background: var(--sys-color-surface-overlay);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The arrow reads the card tier: right in light, a dark notch under the popup in dark.">
+
+```scss
+.popup {
+	background: var(--sys-color-surface-overlay);
+}
+
+.arrow {
+	background: var(--sys-color-surface);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every surface sits visibly away from the canvas">
+
+How far differs per theme and per case; that the edge is plainly there does not. Explained in [Surfaces](#surfaces).
+
+<DoDont>
+<Example kind="do" caption="The card sits visibly off the canvas, at the distance this theme sets.">
+
+```scss
+:root {
+	--sys-color-bg: var(--ref-sand-25);
+	--sys-color-surface: var(--ref-neutral-0);
+}
+
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-800);
+	--sys-color-surface: var(--ref-neutral-700);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The canvas one notch off the card, so the card's edge is all but gone.">
+
+```scss
+:root {
+	--sys-color-bg: var(--ref-sand-10);
+	--sys-color-surface: var(--ref-neutral-0);
+}
+
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-750);
+	--sys-color-surface: var(--ref-neutral-700);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every surface tier is a distinct value, except the default card and the overlays where a shadow carries elevation">
+
+Two tiers pointed at one step leave whoever needs one of them with the same colour again. Explained in [Surfaces](#surfaces).
+
+<DoDont>
+<Example kind="do" caption="Every tier is its own step, so each level of nesting shows.">
+
+```scss
+:root {
+	--sys-color-surface: var(--ref-neutral-0);
+	--sys-color-surface-high: var(--ref-sand-50);
+	--sys-color-surface-highest: var(--ref-sand-100);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Three tiers on one step: the nested fill and its well vanish into the card.">
+
+```scss
+:root {
+	--sys-color-surface: var(--ref-neutral-0);
+	--sys-color-surface-high: var(--ref-neutral-0);
+	--sys-color-surface-highest: var(--ref-neutral-0);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A line role never shares a step with a surface tier">
+
+A border on the same step as the deepest recess leaves a bordered control inside that recess with no border. Explained in [Surfaces](#surfaces).
+
+</Details>
+
+<Details title="The page is the canvas and takes no fill of its own">
+
+The routed `<main>` declares no background, so every sheet on it is read against the canvas directly. Explained in [Surfaces on surfaces](#surfaces-on-surfaces).
+
+<DoDont>
+<Example kind="do" caption="The page is the field its sheets are read against.">
+
+```scss
+.main {
+	padding: var(--unit-16);
+}
+
+.table {
+	background: var(--sys-color-surface);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A fill on the page, so every sheet on it needs a tier that doesn't exist.">
+
+```scss
+.main {
+	background-color: var(--sys-color-surface);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Never invent a surface tier">
+
+A level that would repeat its parent's fill is set apart by space, its own header band, or a justified line instead. Explained in [Surfaces on surfaces](#surfaces-on-surfaces).
+
+<DoDont>
+<Example kind="do" caption="The groups would repeat their parent's fill, so space and a heading set them apart.">
+
+```scss
+.group + .group {
+	margin-block-start: var(--unit-12);
+}
+```
+
+</Example>
+<Example kind="dont" caption="An invented in-between tier: a fill no other screen uses and nobody can name.">
+
+```scss
+.group {
+	background: color-mix(
+		in oklab,
+		var(--sys-color-surface-high),
+		var(--sys-color-surface-highest)
+	);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The dark theme sits where its tiers are still evenly spaced, and its page is a dark grey, never black">
+
+Past a certain darkness every step reads as black, leaving no tiers and making every accent glare. Explained in [After dark](#after-dark).
+
+<DoDont>
+<Example kind="do" caption="The dark ladder sits where each tier is still visibly a step above the last.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-800);
+	--sys-color-surface: var(--ref-neutral-700);
+	--sys-color-surface-high: var(--ref-neutral-650);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Built at the bottom of the ramp: one black field, and the accent glares.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-975);
+	--sys-color-surface: var(--ref-neutral-950);
+	--sys-color-surface-high: var(--ref-neutral-900);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="In the dark theme, each status role picks its step per ramp">
+
+Ramps diverge at the dark end, so each dark status role takes the step that lands the same distance above the surface as the others. Explained in [After dark](#after-dark).
+
+<DoDont>
+<Example kind="do" caption="Chosen per ramp so every status fill lifts off the surface equally.">
+
+```scss
+html[data-theme="dark"] {
+	--sys-color-success-bg: var(--ref-green-750);
+	--sys-color-info-bg: var(--ref-blue-700);
+	--sys-color-warning-bg: var(--ref-orange-750);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Tidied into a column, so the info chip vanishes and the warning shouts.">
+
+```scss
+html[data-theme="dark"] {
+	--sys-color-success-bg: var(--ref-green-750);
+	--sys-color-info-bg: var(--ref-blue-750);
+	--sys-color-warning-bg: var(--ref-orange-750);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Dark body text is a light grey, not near-white">
+
+Body text sits about the same distance from its surface in both themes, and muted text one notch closer than that. Explained in [After dark](#after-dark).
+
+<DoDont>
+<Example kind="do" caption="Body ink is a light grey, which leaves muted ink a visible notch to step down.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-text: var(--ref-neutral-50);
+	--sys-color-text-muted: var(--ref-neutral-200);
+}
+```
+
+</Example>
+<Example kind="dont" caption="White ink glares on charcoal, and muted ink one notch below it reads the same.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-text: var(--ref-neutral-0);
+	--sys-color-text-muted: var(--ref-neutral-10);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A dark border gets a wider gap from its surface than a light one">
+
+Contrast compresses at the dark end, so the gap that reads as a hairline on white disappears on charcoal. Explained in [After dark](#after-dark).
+
+<DoDont>
+<Example kind="do" caption="Given a wider gap on charcoal, the border still reads as restrained.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-surface: var(--ref-neutral-700);
+	--sys-color-border: var(--ref-neutral-500);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A gap that reads as a hairline on white disappears on charcoal.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-surface: var(--ref-neutral-700);
+	--sys-color-border: var(--ref-neutral-650);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A theme re-points the roles and touches nothing else">
+
+A theme re-points layer 2 and touches nothing else. A component that needs to know the active theme is a component that [read a ramp step instead of a role](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step).
+
+<DoDont>
+<Example kind="do" caption="The component names a role and works in every theme.">
+
+```scss
+.card {
+	background: var(--sys-color-surface);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A second definition to maintain, and a new theme misses it.">
+
+```scss
+.card {
+	background: var(--ref-neutral-0);
+}
+
+html[data-theme="dark"] .card {
+	background: var(--ref-neutral-700);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The dark theme is two conditions, kept behind one mixin">
+
+A theme is two conditions, not one. The stored preference pins a theme, and its default follows the operating system — so a dark document is either the attribute or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the preference is mounted. Because the condition is a pair of selectors, it lives behind a mixin (`theme.dark-root` at the root, `theme.dark` inside a rule) so no file spells out half of it.
+
+<DoDont>
+<Example kind="do" caption="The mixin carries both halves of the dark condition.">
+
+```scss
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-800);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Pinned dark works, auto never updates.">
+
+```scss
+html[data-theme="dark"] {
+	--sys-color-bg: var(--ref-neutral-800);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Each theme states its color-scheme outright">
+
+A theme declares `color-scheme`. Parts of the page are drawn by the browser, not by this system: scrollbars, form-control internals, spell-check underlines, the canvas behind an overscroll. <Pull>They follow `color-scheme` and nothing else, so a theme that only re-points tokens leaves light scrollbars framing a dark app.</Pull> State the value outright rather than leaving it to `light dark`: the preference has already been resolved by the time the attribute is set, and the browser should not resolve it a second time and disagree.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Each theme states its colour scheme outright, so the browser's own scrollbar goes dark too."
+  visual={
+    <div className={`${styles.scroller} ${styles.schemeDark}`}>
+      <p>Physiotherapy · € 120</p>
+      <p>Dental care · € 85</p>
+      <p>Pharmacy · € 32</p>
+      <p>Speech therapy · € 64</p>
+      <p>Dietitian · € 48</p>
+    </div>
+  }>
+
+```scss
+:root {
+	color-scheme: light;
+}
+
+@include theme.dark-root {
+	color-scheme: dark;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="The tokens went dark and the browser's own parts stayed light."
+  visual={
+    <div className={`${styles.scroller} ${styles.schemeLight}`}>
+      <p>Physiotherapy · € 120</p>
+      <p>Dental care · € 85</p>
+      <p>Pharmacy · € 32</p>
+      <p>Speech therapy · € 64</p>
+      <p>Dietitian · € 48</p>
+    </div>
+  }>
+
+```scss
+@include theme.dark-root {
+	--sys-color-bg: var(--ref-neutral-800);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The theme is resolved in the HTML shell, before the first paint">
+
+Resolve the theme before first paint, in the HTML shell. A framework cannot do this: its effects run after the browser has painted, so a dark-mode user gets a white flash on every full page load, including the reload that switching locale performs. The stylesheet is no help either — it is a module the app pulls in, so it lands after the first paint too. That takes two things in the shell: an inline script that pins the stored preference on the root element, and an inline style that states the canvas colour and `color-scheme` for both themes. Set the canvas colour on the root element as well as the body so nothing paints white behind the page.
+
+<DoDont>
+<Example kind="do" caption="The shell pins the stored theme before the browser paints anything.">
+
+```html
+<script>
+	const theme = localStorage.getItem("theme");
+
+	if (theme) document.documentElement.dataset.theme = theme;
+</script>
+```
+
+</Example>
+<Example kind="dont" caption="An effect runs after the first paint, so a dark-mode user sees a white flash on every load.">
+
+```tsx
+useEffect(() => {
+	document.documentElement.dataset.theme = theme;
+}, [theme]);
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The shell's raw canvas colour is guarded behind its token">
+
+The shell is the one exception to [colour values living only in the tokens files](?path=/docs/design-system-foundation-token-architecture--docs#a-colour-value-appears-only-in-the-tokens-files): a raw colour may be written there, and only for the canvas. Guard it behind the token so it expires: `var(--sys-color-bg, <raw>)` uses the raw value only while the stylesheet is missing, and every later load of the token wins on its own.
+
+<DoDont>
+<Example kind="do" caption="The raw value paints only until the token arrives.">
+
+```css
+html {
+	background-color: var(--sys-color-bg, #1f2329);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Unguarded, the raw value is a second canvas colour that has to be kept in step by hand.">
+
+```css
+html {
+	background-color: #1f2329;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Scrim opacity is the one theme selector a component may hold">
+
+<Beside>
+
+The one legitimate use of a theme selector inside a component file is a value that is not a role and differs per theme, such as scrim opacity:
+
+<Example kind="do" caption="Scrim opacity is not a role, so the component states its dark value itself.">
+
+```scss
+.backdrop {
+	--backdrop-opacity: 0.22;
+
+	background-color: black;
+	opacity: var(--backdrop-opacity);
+
+	@include theme.dark {
+		--backdrop-opacity: 0.4;
+	}
+}
+```
+
+</Example>
+
+</Beside>
+
+</Details>
+
+<Details title="State-layer opacities step up in the dark theme">
+
+[State-layer opacities](?path=/docs/design-system-principles-interaction--docs#hover-and-press-come-from-the-shared-state-layer) step up under a dark theme too: a translucent tint has to work harder over a dark fill.
+
+</Details>
+
+</DetailsList>

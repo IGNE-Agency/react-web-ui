@@ -1,0 +1,29 @@
+// See `docs/design-system/motion.mdx`.
+
+/// Emits the loading pulse keyframes. Include once at the root of any module
+/// that uses `pulse`.
+///
+/// @example
+///   @use "../../style/loading-motion.scss" as loading;
+///
+///   @include loading.pulse-keyframes;
+@mixin pulse-keyframes {
+	@keyframes loading-pulse {
+		50% {
+			opacity: 1;
+		}
+	}
+}
+
+/// A slow fade out and back that keeps a wait visibly running where movement is
+/// unavailable or unwanted. Takes the opacity it rests at.
+///
+/// @example
+///   .skeleton {
+///       @include loading.pulse(0.75);
+///   }
+@mixin pulse($rest: 0.55) {
+	opacity: $rest;
+	animation: loading-pulse 2.4s var(--sys-motion-standard)
+		infinite;
+}

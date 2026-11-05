@@ -1,0 +1,617 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { LogoMark } from "./logo-mark";
+import { Spinner } from "../../src/components/spinner/index.ts";
+import { Skeleton } from "../../src/components/skeleton/index.ts";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./motion.module.scss";
+import { Illustration } from "./illustration";
+import { MotionDrawing } from "./motion-drawing";
+import {
+	PlaceholderDrawing,
+	WaitingDrawing,
+} from "./motion-figures";
+import { Specimen } from "./specimen";
+import { MotionSpecimen } from "./motion-specimen";
+
+<Meta title="Design system/Foundation/Motion" />
+
+# Motion
+
+Motion is how a screen shows change. It says where something came from and where it went, that a click was heard, that work is still going on. Done well, nobody notices it. Done badly, it's a wait you sit through, or a flicker that looks like a fault.
+
+<Illustration caption="An ease, drawn as a hill: cut into equal beats of time, it climbs steeply at first and levels out, and the ball comes to rest on the plateau.">
+	<MotionDrawing />
+</Illustration>
+
+## Time and pace
+
+Every move has two settings: how long it takes, and how it spends that time.
+
+Duration is a cost. Each moment of movement is a moment someone waits, and a task is made of many moves, so the shortest duration that still shows the move is the right one. Small things move quickly and large ones a little slower, because a big surface that flies across the screen feels like a jolt.
+
+Easing is the pace. Nothing in the world starts or stops at full speed: a thing that arrives slows down as it lands, and a thing that leaves gathers speed as it goes. A move at one steady speed looks mechanical. A curve that runs briefly past its end and comes back reads as a small thing popping into place, which is lively once and tiring everywhere.
+
+And some people need less of all of it. Movement across a screen can make people dizzy or sick, so operating systems let them ask for less motion. An interface that ignores the setting puts its animation ahead of their comfort.
+
+## Durations and easings
+
+This product has four durations and five easings, and each has a job. The quickest is for popups, tooltips, hover and press, the next for dialogs, drawers and check marks, and a longer one for large surfaces, like the whole page changing theme. Most moves take the standard curve. A larger move, like a dialog opening, takes the emphasised one. Something arriving slows to a stop, something leaving speeds away, and only a small mark popping in, like a check mark, overshoots.
+
+Every one of them is switched off for someone who has asked for less motion.
+
+<Specimen caption="The same popup at every duration, with what twenty such moves cost a task. Below, each easing on the element that uses it, eight times slower than in the product, with the curve it follows.">
+	<MotionSpecimen
+		scenes={{
+			standard: "menu",
+			emphasized: "dialog",
+			decelerate: "comment",
+			accelerate: "selection",
+			overshoot: "checkbox",
+		}}
+	/>
+</Specimen>
+
+## Moving through space
+
+Motion that follows the layout tells people where they are. When tabs sit in a row, the pages behind them form a row too, and moving one tab to the right should feel like moving right. <Pull>A cross-fade, or a slide that always goes the same way, throws away the only spatial claim the tab strip was making.</Pull>
+
+So here, the page one tab to the right arrives from the right and pushes the old one out to the left, and going back reverses both. A page outside the tab strip doesn't slide at all. Someone who asked for less motion, or whose browser can't animate the change, simply gets the new page.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The page one tab to the right arrives from the right, and going back reverses both."
+		visual={
+			<div
+				className={`${styles.tabDemo} ${styles.directional}`}>
+				<div className={styles.tabs}>
+					<span>Overview</span>
+					<span>Attachments</span>
+					<span>History</span>
+					<div className={styles.indicator} />
+				</div>
+				<div className={styles.viewport}>
+					<div className={styles.page}>
+						Overview
+						<span
+							className={`${styles.bar} ${styles.wide}`}
+						/>
+						<span
+							className={`${styles.bar} ${styles.mid}`}
+						/>
+					</div>
+					<div
+						className={`${styles.page} ${styles.pageNext}`}>
+						Attachments
+						<span
+							className={`${styles.bar} ${styles.barTinted} ${styles.narrow}`}
+						/>
+						<span
+							className={`${styles.bar} ${styles.barTinted} ${styles.wide}`}
+						/>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Every move slides the same way and the direction stops meaning anything."
+		visual={
+			<div className={`${styles.tabDemo} ${styles.oneWay}`}>
+				<div className={styles.tabs}>
+					<span>Overview</span>
+					<span>Attachments</span>
+					<span>History</span>
+					<div className={styles.indicator} />
+				</div>
+				<div className={styles.viewport}>
+					<div className={styles.page}>
+						Overview
+						<span
+							className={`${styles.bar} ${styles.wide}`}
+						/>
+						<span
+							className={`${styles.bar} ${styles.mid}`}
+						/>
+					</div>
+					<div
+						className={`${styles.page} ${styles.pageNext}`}>
+						Attachments
+						<span
+							className={`${styles.bar} ${styles.barTinted} ${styles.narrow}`}
+						/>
+						<span
+							className={`${styles.bar} ${styles.barTinted} ${styles.wide}`}
+						/>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## The art of waiting
+
+People feel time in steps. Under a tenth of a second, a response feels instant. Up to about a second, they notice the delay but keep their train of thought. Past that, they start to wonder whether anything is happening at all.
+
+<Illustration caption="The indicator grows with the wait. An instant wait shows nothing but its result, a short one would only flash the ghost of a spinner, and a long one gets a spinner too big to miss.">
+	<WaitingDrawing />
+</Illustration>
+
+So an indicator that flashes up for a few frames during a quick refresh helps nobody: it reads as a glitch, not as feedback. But a wait with nothing to show for it is worse, like [a button that only greys out while it works](?path=/docs/components-button--docs#a-button-whose-handler-awaits-carries-a-moving-indicator), or [an empty region that doesn't say whether it's empty or still loading](?path=/docs/design-system-patterns--docs#an-empty-region-says-so-in-its-own-place). <Pull>Every wait owes the person waiting a sign that it's happening.</Pull>
+
+An indicator only indicates while it moves. Movement is the whole signal: a frozen glyph, a bar parked at one width, a placeholder that doesn't breathe, or an animation that has finished all read as an interface that has hung. And its size follows what is waiting: a small one on the line of the control it interrupts, a large one for a whole view.
+
+Here, a busy state waits a moment before it appears, and once it's there it stays for a minimum time, even if the work is already done, so it never flickers. If the wait drags on, it escalates: first [a dim over content that is only stale](?path=/docs/design-system-principles-accessibility--docs#inert-beats-disabled-for-content-that-is-only-stale), then an overlay, then [a retry, offered only when it can help](?path=/docs/design-system-patterns--docs#trying-again-is-offered-only-when-it-can-help).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="A refresh that resolves quickly shows nothing at all."
+		visual={
+			<div className={styles.table}>
+				<div className={styles.rows}>
+					<span className={styles.tableRow}>
+						Invoice 2026-114<span>€ 120.00</span>
+					</span>
+					<span className={styles.tableRow}>
+						Invoice 2026-115<span>€ 86.50</span>
+					</span>
+					<span className={styles.tableRow}>
+						Invoice 2026-116<span>€ 214.00</span>
+					</span>
+				</div>
+				<span className={styles.pager}>Page 2 of 9</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Every paging click flashes a spinner."
+		visual={
+			<div className={styles.table}>
+				<div className={styles.tableBody}>
+					<div
+						className={`${styles.rows} ${styles.flashRows}`}>
+						<span className={styles.tableRow}>
+							Invoice 2026-114<span>€ 120.00</span>
+						</span>
+						<span className={styles.tableRow}>
+							Invoice 2026-115<span>€ 86.50</span>
+						</span>
+						<span className={styles.tableRow}>
+							Invoice 2026-116<span>€ 214.00</span>
+						</span>
+					</div>
+					<span className={styles.flashSpinner}>
+						<Spinner />
+					</span>
+				</div>
+				<span className={styles.pager}>Page 2 of 9</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+The indicators come from a shared set: a spinner sized to the text of the control it sits in, and the logo mark for a whole view. That's [one component per job](?path=/docs/design-system-components--docs#each-job-has-one-component-extended-rather-than-copied), because a hand-rolled indicator has to redo its motion, its timing and its announcement, and one of the three always goes missing.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The submit shows a spinner for as long as it is pending."
+		visual={
+			<Button variant="primary" aria-busy>
+				<Spinner size={1} />
+				Log in
+			</Button>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The wait is invisible, so a slow network reads as a dead button."
+		visual={
+			<Button variant="primary" disabled>
+				Log in
+			</Button>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The field's indicator is sized to its text, so it sits on the line it interrupts."
+		visual={
+			<span className={styles.field}>
+				<Spinner size={1} />
+				Clients
+			</span>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A view-sized indicator in a field stretches it and shoves everything around it."
+		visual={
+			<span className={styles.field}>
+				<span className={styles.fieldMark}>
+					<LogoMark />
+				</span>
+				Clients
+			</span>
+		}
+	/>
+</DoDont>
+
+Asking for less motion doesn't switch an indicator off, because that person still needs to know the interface is alive, and a frozen glyph tells them the opposite. What they're spared is travel: spinning and sliding give way to a slow pulse of opacity, which moves nothing across the screen. That pulse is also the only motion a placeholder ever needs.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The mark keeps changing for as long as the wait does, as a slow pulse under reduced motion."
+		visual={
+			<span className={styles.mark}>
+				<LogoMark />
+			</span>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A reduced-motion user gets a frozen mark, and the rest get one turn."
+		visual={
+			<span className={`${styles.mark} ${styles.once}`}>
+				<LogoMark />
+			</span>
+		}
+	/>
+</DoDont>
+
+## Drawing what's coming
+
+When the shape of what's coming is known before it arrives, the most honest indicator is that shape, drawn empty: rows for a table, cards for a list, bubbles for a conversation. It says what's coming and roughly how much, it holds the space so nothing jumps when the content lands, and it [draws the wait in the region that waits](?path=/docs/design-system-patterns--docs#a-wait-is-drawn-in-the-region-that-waits) rather than in a corner. A spinner floating over the page says only that something is happening somewhere.
+
+<Illustration caption="An article before it arrives: the image, the heading, the author and the first lines are laid out as stand-ins before a word of them has loaded.">
+	<PlaceholderDrawing />
+</Illustration>
+
+Where the shape isn't known, like a page that might show anything or a form whose result appears elsewhere, a plain indicator is right, and a placeholder would only be a guess.
+
+A placeholder here is built from the same parts as the real thing, so the two line up and the swap is quiet. <Pull>Vary the sizes the way real content varies; a stack of identical bars reads as a broken layout, not as a wait.</Pull> The shapes are [decoration, hidden from assistive technology](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden), and the region that owns the wait announces it once.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The wait looks like what is coming, and says so once."
+		visual={
+			<div className={styles.thread}>
+				<span className={`${styles.bubble} ${styles.wide}`}>
+					<Skeleton />
+					<Skeleton className={styles.mid} />
+				</span>
+				<span
+					className={`${styles.bubble} ${styles.bubbleEnd} ${styles.mid}`}>
+					<Skeleton />
+				</span>
+				<span className={`${styles.bubble} ${styles.wide}`}>
+					<Skeleton className={styles.wide} />
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A centred glyph over a page whose shape was never in doubt, so the layout jumps when the rows arrive."
+		visual={
+			<span className={styles.centred}>
+				<Spinner />
+			</span>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Identical bars read as a broken layout, and each one announces the wait again."
+		visual={
+			<div className={styles.thread}>
+				<span className={styles.bubble}>
+					<Skeleton />
+				</span>
+				<span className={styles.bubble}>
+					<Skeleton />
+				</span>
+				<span className={styles.bubble}>
+					<Skeleton />
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="A move takes the shortest duration that still shows it">
+
+The quickest duration is for popups, tooltips, hover and press, the next for dialogs, drawers and check marks, and a longer one for large surfaces. Explained in [Time and pace](#time-and-pace).
+
+</Details>
+
+<Details title="Each easing has one kind of move">
+
+Standard for most moves, emphasised for a larger one like a dialog opening, decelerate for something arriving, accelerate for something leaving, and overshoot only for a small mark popping in. Shown in [Durations and easings](#durations-and-easings).
+
+</Details>
+
+<Details title="A duration or an easing is never a literal value">
+
+Every transition reads its timing from the motion scale, so it matches every other move and can be retuned in one place. Shown in [Durations and easings](#durations-and-easings).
+
+<DoDont>
+<Example kind="do" caption="The timing comes from the scale.">
+
+```scss
+.popup {
+	transition: opacity var(--motion-short)
+		var(--motion-standard);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A literal timing is a move of its own that nothing else matches.">
+
+```scss
+.popup {
+	transition: opacity 0.15s ease;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every transition runs only for someone who hasn't asked for less motion">
+
+Guard it with the `prefers-reduced-motion` media query. Explained in [Time and pace](#time-and-pace).
+
+<DoDont>
+<Example kind="do" caption="The transition runs only for a user who has not asked for less motion.">
+
+```scss
+.popup {
+	@media not (prefers-reduced-motion) {
+		transition: opacity var(--motion-short)
+			var(--motion-standard);
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="An unguarded transition ignores a user who has asked for less motion.">
+
+```scss
+.popup {
+	transition: opacity 0.15s ease;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Pages that sit beside each other travel along that axis">
+
+The browser runs this, not an animation mounted in script: the routed region is named, a move between siblings tags itself with a direction, and the stylesheet answers the tag. The direction belongs to the move, so it is read from the tab strip, which knows the order and where the user is. A destination outside the strip sends no direction and doesn't animate. Explained in [Moving through space](#moving-through-space).
+
+<DoDont>
+<Example kind="do" caption="The tab strip hands the move its direction.">
+
+```tsx
+<Link
+	to={tab.to}
+	viewTransition={tabViewTransition(tabs, activeId, tab.id)}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="Every move slides the same way and the direction stops meaning anything.">
+
+```tsx
+<Link
+	to={tab.to}
+	viewTransition={{ types: ["page-next"] }}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A wait announces itself late, and then stays a moment">
+
+A busy state waits out a delay before it appears, and once it has appeared it holds for a minimum duration. If the wait goes on, it escalates: a dim, then an overlay, then a retry. Feed the fetch state to the component that owns that bargain, and let it decide what the user sees. Explained in [The art of waiting](#the-art-of-waiting).
+
+<DoDont>
+<Example kind="do" caption="A refresh that resolves quickly shows nothing at all.">
+
+```tsx
+<Stale busy={query.isFetching}>
+	<Stale.Content>{table}</Stale.Content>
+</Stale>
+```
+
+</Example>
+<Example kind="dont" caption="Every paging click flashes a spinner.">
+
+```tsx
+{
+	query.isFetching ? <Spinner /> : table;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every wait has an indicator, and that indicator keeps changing">
+
+Every request, mutation, awaited handler and suspended boundary shows one, late but never not at all. The change runs on a loop for as long as the wait does: a `transition` plays once and stops, and so does `@keyframes` without `infinite`. Explained in [The art of waiting](#the-art-of-waiting).
+
+<DoDont>
+<Example kind="do" caption="The submit shows a spinner for as long as it is pending.">
+
+```tsx
+<Button
+	type="submit"
+	aria-busy={mutation.isPending || undefined}>
+	{mutation.isPending ? <Spinner size={1} /> : null}
+	{m.login_submit()}
+</Button>
+```
+
+</Example>
+<Example kind="dont" caption="The wait is invisible, so a slow network reads as a dead button.">
+
+```tsx
+<Form disabled={mutation.isPending}>
+	<Button type="submit">{m.login_submit()}</Button>
+</Form>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An indicator's size follows what is waiting, and it comes from the shared indicators">
+
+An inline indicator, sized in `em`, for a control or a widget, so it sits on the line it interrupts. A prominent one for a whole view or a consequential load. Shown in [The art of waiting](#the-art-of-waiting).
+
+<DoDont>
+<Example kind="do" caption="The field's indicator is sized to its text, so it sits on the line it interrupts.">
+
+```tsx
+<Field>
+	{query.isFetching ? <Spinner size={1} /> : null}
+	{m.clients_label()}
+</Field>
+```
+
+</Example>
+<Example kind="dont" caption="A view-sized indicator in a field stretches it and shoves everything around it.">
+
+```tsx
+<Field>
+	{query.isFetching ? (
+		<LoadingMessage title={loadingLabel} />
+	) : null}
+	{m.clients_label()}
+</Field>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Under reduced motion, an indicator pulses instead of travelling">
+
+Rotation and translation give way to a slow opacity pulse, which carries no vestibular cost. The same pulse is the only motion a skeleton needs. Explained in [The art of waiting](#the-art-of-waiting).
+
+<DoDont>
+<Example kind="do" caption="The mark keeps changing for as long as the wait does, as a slow pulse under reduced motion.">
+
+```scss
+@include loading.pulse-keyframes;
+
+.logo {
+	@include logo.tick(infinite);
+
+	@media (prefers-reduced-motion) {
+		@include loading.pulse;
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="A reduced-motion user gets a frozen mark, and the rest get one turn.">
+
+```scss
+.logo {
+	@media not (prefers-reduced-motion) {
+		animation: logo-tick 0.9s var(--motion-emphasized) 1;
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A wait whose shape is known ahead of its content is drawn as that shape">
+
+A table, a list of cards or a thread waits as its own layout, drawn empty. Where the shape is not known, like a route that may render anything or a submit whose result is elsewhere, a plain indicator is correct. Explained in [Drawing what's coming](#drawing-whats-coming).
+
+<DoDont>
+<Example kind="do" caption="The wait looks like what is coming, and says so once.">
+
+```tsx
+<div role="status">
+	<span class="visually-hidden">{m.thread_loading()}</span>
+	<div aria-hidden="true">
+		{placeholders.map(({ id, width }) => (
+			<Message key={id}>
+				<Skeleton width={width} />
+			</Message>
+		))}
+	</div>
+</div>
+```
+
+</Example>
+<Example kind="dont" caption="A centred glyph over a page whose shape was never in doubt.">
+
+```tsx
+<Spinner />
+```
+
+</Example>
+<Example kind="dont" caption="Identical bars, each announcing the wait again.">
+
+```tsx
+<div>
+	{placeholders.map(({ id }) => (
+		<Message key={id} role="status">
+			<Skeleton />
+		</Message>
+	))}
+</div>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A placeholder is built from the real parts, at varied sizes">
+
+The same parts as the content it stands in for, so the two line up and the swap is quiet, at sizes that vary the way real content does. Explained in [Drawing what's coming](#drawing-whats-coming).
+
+</Details>
+
+<Details title="A placeholder is hidden from assistive technology, and its region announces the wait once">
+
+The shapes are `aria-hidden`; the region that owns the wait carries one status message. Explained in [Drawing what's coming](#drawing-whats-coming).
+
+</Details>
+
+</DetailsList>

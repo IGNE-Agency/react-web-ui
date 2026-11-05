@@ -1,0 +1,14 @@
+@use "../../style/form.scss" as form;
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--sys-unit-12);
+	inline-size: 24rem;
+	max-inline-size: 100%;
+}
+
+.input {
+	@include form.control;
+}

@@ -1,0 +1,30 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("sand");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.track {
+	fill: none;
+	stroke: var(--drawing-deep);
+	stroke-linecap: round;
+	stroke-width: 24;
+}
+
+.node {
+	@include drawing.outline;
+
+	fill: var(--drawing-paper);
+}
+
+.line {
+	fill: var(--drawing-pale);
+}

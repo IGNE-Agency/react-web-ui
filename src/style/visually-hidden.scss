@@ -1,0 +1,19 @@
+// See `docs/design-system/accessibility.mdx`.
+
+/// Removes an element from view while leaving it in the accessibility tree, for
+/// text that names something only a glyph shows.
+///
+/// @example
+///   @use "../../style/visually-hidden.scss" as a11y;
+///
+///   .label {
+///       @include a11y.visually-hidden;
+///   }
+@mixin visually-hidden {
+	position: absolute;
+	overflow: hidden;
+	clip-path: inset(50%);
+	inline-size: 1px;
+	block-size: 1px;
+	white-space: nowrap;
+}

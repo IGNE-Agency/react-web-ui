@@ -1,0 +1,19 @@
+.cursor {
+	inline-size: 1.25rem;
+	block-size: 1.5rem;
+	overflow: visible;
+	filter: drop-shadow(0 0 1px var(--sys-color-surface))
+		drop-shadow(0 0 1px var(--sys-color-surface));
+	fill: var(--sys-color-text);
+	stroke: var(--sys-color-surface);
+	stroke-width: 1.25px;
+	stroke-linejoin: round;
+	paint-order: stroke;
+}
+
+.stroke {
+	fill: none;
+	stroke: var(--sys-color-text);
+	stroke-width: 2.5px;
+	stroke-linecap: round;
+}

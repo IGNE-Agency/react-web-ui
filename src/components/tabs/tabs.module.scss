@@ -1,0 +1,63 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/tab.scss";
+@use "../../lib/sliding-indicator/sliding-indicator.scss" as
+	indicator;
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-direction: column;
+		gap: var(--tabs-gap, var(--sys-unit-8));
+	}
+
+	.scroller {
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+	}
+
+	.list {
+		@include tab.strip;
+	}
+
+	.tab {
+		@include tab.tab;
+
+		border: none;
+		background: none;
+
+		&[data-disabled] {
+			cursor: not-allowed;
+			opacity: 0.38;
+		}
+	}
+
+	.indicator {
+		@include indicator.pill("--active-tab", 0px);
+
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--tab-indicator,
+			var(--sys-color-primary)
+		);
+	}
+
+	.indicatorLabels {
+		@include indicator.ink-copy("--active-tab");
+
+		gap: var(--tab-gap, var(--sys-unit-2));
+
+		.tab {
+			color: var(
+				--tab-fg-active,
+				var(--sys-color-on-primary)
+			);
+		}
+	}
+
+	.panel {
+		border-radius: var(--sys-radius-sm);
+
+		@include focus.ring;
+	}
+}

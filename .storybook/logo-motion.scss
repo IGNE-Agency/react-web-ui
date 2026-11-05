@@ -1,0 +1,47 @@
+// See `docs/design-system/motion.mdx`.
+
+/// Emits the brand mark's tick keyframes. Include once at the root of any
+/// module that uses `tick`.
+///
+/// @example
+///   @use "style/logo-motion.scss" as logo;
+///
+///   @include logo.tick-keyframes;
+@mixin tick-keyframes {
+	@keyframes logo-tick {
+		0% {
+			rotate: 0deg;
+			scale: 1;
+		}
+		40% {
+			rotate: -6deg;
+			scale: 0.82;
+		}
+		72% {
+			rotate: 90deg;
+			scale: 1.12;
+		}
+		88% {
+			scale: 0.98;
+		}
+		100% {
+			rotate: 90deg;
+			scale: 1;
+		}
+	}
+}
+
+/// One quarter-turn of the brand mark that ratchets and releases: it winds back
+/// a few degrees while compressing, springs through the turn while popping past
+/// full size, then settles. Takes an iteration count.
+///
+/// @example
+///   .logo {
+///       @include logo.tick(infinite);
+///   }
+@mixin tick($iterations) {
+	@media not (prefers-reduced-motion) {
+		animation: logo-tick 0.9s var(--sys-motion-emphasized)
+			$iterations;
+	}
+}

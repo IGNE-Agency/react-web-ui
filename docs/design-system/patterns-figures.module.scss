@@ -1,0 +1,75 @@
+@use "./drawing";
+
+@mixin -tones($field, $tone, $quiet, $soft) {
+	--f-field: #{$field};
+	--f-quiet: color-mix(
+		in oklab,
+		#{$tone} #{$quiet},
+		#{$field}
+	);
+	--f-soft: color-mix(
+		in oklab,
+		#{$tone} #{$soft},
+		#{$field}
+	);
+}
+
+.region {
+	@include drawing.palette("neutral");
+	@include -tones(
+		var(--drawing-hot-muted),
+		var(--drawing-hot-vivid),
+		20%,
+		46%
+	);
+}
+
+.told {
+	@include drawing.palette("neutral");
+	@include -tones(
+		var(--drawing-neighbour-muted),
+		var(--drawing-neighbour-vivid),
+		20%,
+		46%
+	);
+}
+
+.fields {
+	@include drawing.palette("pale");
+	@include -tones(
+		var(--drawing-field),
+		var(--drawing-deep),
+		18%,
+		40%
+	);
+}
+
+.rail {
+	@include drawing.palette("saturated");
+	@include -tones(
+		var(--drawing-field),
+		var(--drawing-deep),
+		34%,
+		58%
+	);
+}
+
+.field {
+	fill: var(--f-field);
+}
+
+.quiet {
+	fill: var(--f-quiet);
+}
+
+.soft {
+	fill: var(--f-soft);
+}
+
+.mark {
+	fill: var(--drawing-paper);
+}
+
+.markInk {
+	fill: var(--f-field);
+}

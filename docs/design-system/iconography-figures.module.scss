@@ -1,0 +1,44 @@
+@use "./drawing";
+
+.guess,
+.family {
+	@include drawing.palette("inverted");
+}
+
+.guess {
+	--figure-field: var(--drawing-hot-muted);
+	--figure-glyph: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 55%,
+		var(--drawing-paper)
+	);
+	--figure-rule: var(--drawing-paper);
+}
+
+.family {
+	--figure-field: var(--drawing-cool-muted);
+	--figure-glyph: var(--drawing-cool-vivid);
+	--figure-rule: var(--drawing-cool-vivid);
+}
+
+.field {
+	fill: var(--figure-field);
+}
+
+.rule {
+	@include drawing.rule;
+
+	stroke: var(--figure-rule);
+}
+
+.glyph {
+	fill: var(--figure-glyph);
+}
+
+.paired {
+	fill: var(--drawing-paper);
+}
+
+.intruder {
+	fill: var(--drawing-hot-vivid);
+}

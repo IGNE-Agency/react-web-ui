@@ -1,0 +1,21 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.small {
+	fill: var(--drawing-deep);
+}
+
+.tile {
+	fill: var(--drawing-deep);
+}
+
+.large {
+	fill: var(--drawing-paper);
+}

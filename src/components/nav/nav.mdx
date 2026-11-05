@@ -1,0 +1,145 @@
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import FolderIcon from "@material-design-icons/svg/outlined/folder.svg?react";
+import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
+import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
+import PeopleIcon from "@material-design-icons/svg/outlined/people.svg?react";
+import SettingsIcon from "@material-design-icons/svg/outlined/settings.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { Icon } from "../icon/icon.tsx";
+import * as NavStories from "./nav.stories.tsx";
+
+<Meta of={NavStories} />
+
+<DocsPage>
+
+## Rules
+
+### An expanded rail is wide enough for its labels
+
+An expanded rail is wide enough for its labels. [No ellipsis](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled), and no hint to recover lost text: size the rail from the longest label, and see [a panel opens to fit its content, not to a guess](?path=/docs/design-system-principles-layout--docs#a-panel-opens-to-fit-its-content-not-to-a-guess) for how that survives a collapse animation.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The label folds at a boundary the language recognises."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <nav className={styles.rail} aria-label="Example rail">
+        <span className={styles.navItem}>
+          <Icon svg={HomeIcon} label="" />
+          <span className={styles.navLabel}>Home</span>
+        </span>
+        <span className={`${styles.navItem} ${styles.navItemActive}`}>
+          <Icon svg={DescriptionIcon} label="" />
+          <span className={styles.navLabel}>Declarations awaiting review</span>
+        </span>
+      </nav>
+    </div>
+  }>
+
+```scss
+.label {
+	min-inline-size: 0;
+	overflow-wrap: normal;
+	hyphens: auto;
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="A long or translated label silently loses its tail."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <nav className={styles.rail} aria-label="Example rail">
+        <span className={styles.navItem}>
+          <Icon svg={HomeIcon} label="" />
+          <span className={styles.navLabelClipped}>Home</span>
+        </span>
+        <span className={`${styles.navItem} ${styles.navItemActive}`}>
+          <Icon svg={DescriptionIcon} label="" />
+          <span className={styles.navLabelClipped}>Declarations awaiting review</span>
+        </span>
+      </nav>
+    </div>
+  }>
+
+```scss
+.label {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+```
+
+</Example>
+</DoDont>
+
+### A collapsed rail names its items with a tooltip
+
+A collapsed rail names its items with [a tooltip on the icon](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), carrying the same string as the accessible name. An entry with `labelled={false}` does both: `Nav.Root` mounts the one tooltip its entries share, so the hint travels between them rather than one closing as the next opens.
+
+### A bar's entries are sized to their longest word
+
+A bar cannot be widened [the way a rail can](#an-expanded-rail-is-wide-enough-for-its-labels), because its inline size is the device's. [Size its entries to their longest word](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled) instead, and keep the count of destinations low enough that those add up to less than a phone.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Four destinations, each as wide as its longest word, fit a phone."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.phoneBar}>
+        <nav className={styles.bottomBar} aria-label="Example bar">
+          <span className={`${styles.barItem} ${styles.barItemActive}`}><Icon svg={HomeIcon} label="" /><span>Home</span></span>
+          <span className={styles.barItem}><Icon svg={DescriptionIcon} label="" /><span>Declarations</span></span>
+          <span className={styles.barItem}><Icon svg={MailIcon} label="" /><span>Inbox</span></span>
+          <span className={styles.barItem}><Icon svg={SettingsIcon} label="" /><span>Settings</span></span>
+        </nav>
+      </div>
+    </div>
+  }>
+
+```scss
+.bar {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(min-content, 1fr);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Six destinations add up to more than a phone, and the last ones fall off the edge."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.phoneBar}>
+        <nav className={styles.bottomBar} aria-label="Example bar">
+          <span className={`${styles.barItem} ${styles.barItemActive}`}><Icon svg={HomeIcon} label="" /><span>Home</span></span>
+          <span className={styles.barItem}><Icon svg={DescriptionIcon} label="" /><span>Declarations</span></span>
+          <span className={styles.barItem}><Icon svg={PeopleIcon} label="" /><span>Clients</span></span>
+          <span className={styles.barItem}><Icon svg={FolderIcon} label="" /><span>Contracts</span></span>
+          <span className={styles.barItem}><Icon svg={MailIcon} label="" /><span>Inbox</span></span>
+          <span className={styles.barItem}><Icon svg={SettingsIcon} label="" /><span>Settings</span></span>
+        </nav>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Nav.List className={bar}>{allDestinations}</Nav.List>
+```
+
+</Example>
+</DoDont>
+
+### The current page in a bar of tabs is a pill that slides there
+
+A horizontal nav marks the current page the way [tabs](?path=/docs/components-tabs--docs#the-active-tab-is-a-pill-that-slides-between-tabs) mark the open tab: a filled pill that slides between entries. Its links are a router's, so no tab primitive publishes the current one's place; the list measures the entry marked `aria-current="page"` and publishes the same `--active-tab-left` and `--active-tab-width`. The current label takes the inverted ink as the pill arrives.
+
+</DocsPage>

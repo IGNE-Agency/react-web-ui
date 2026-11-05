@@ -1,0 +1,102 @@
+import CheckCircleIcon from "@material-design-icons/svg/outlined/check_circle.svg?react";
+import ErrorIcon from "@material-design-icons/svg/outlined/error.svg?react";
+import InfoIcon from "@material-design-icons/svg/outlined/info.svg?react";
+import WarningIcon from "@material-design-icons/svg/outlined/warning.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { Tag } from "./tag.tsx";
+import * as TagStories from "./tag.stories.tsx";
+
+<Meta of={TagStories} />
+
+<DocsPage>
+
+## Rules
+
+### A tag leads with at most one indicator
+
+A tag leads with at most one indicator. A dot is enough where the tone is a distinction between tags a reader is comparing — a column of statuses, where the label is already there and the dot only speeds up the scan. Where the tone is the message rather than a distinction, that is a glyph: a table whose every row is an error has no contrasting tag to compare against, so the tone carries the meaning by itself and would be lost on anyone who cannot see it.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="Severity survives without the colour."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <Tag.Root tone="error">
+        <Tag.Icon svg={ErrorIcon} />
+        Rejected
+      </Tag.Root>
+    </div>
+  }>
+
+```tsx
+<Tag.Root tone="error">
+	<Tag.Icon svg={ErrorIcon} />
+	{label}
+</Tag.Root>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Red is the only thing saying this is a problem."
+  visual={<div className={`sb-unstyled ${styles.visual}`}><Tag.Root tone="error">Rejected</Tag.Root></div>}>
+
+```tsx
+<Tag.Root tone="error">{label}</Tag.Root>
+```
+
+</Example>
+</DoDont>
+
+<DoDont>
+<Example
+  kind="do"
+  caption="In a column of mixed statuses the label carries the meaning, and a dot speeds up the scan."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.stack}>
+        <Tag.Root tone="info"><Tag.Dot />Submitted</Tag.Root>
+        <Tag.Root tone="success"><Tag.Dot />Paid</Tag.Root>
+        <Tag.Root tone="warning"><Tag.Dot />Incomplete</Tag.Root>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Tag.Root tone={toneOf[status]}>
+	<Tag.Dot />
+	{label}
+</Tag.Root>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Two indicators saying the same thing."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.stack}>
+        <Tag.Root tone="info"><Tag.Dot /><Tag.Icon svg={InfoIcon} />Submitted</Tag.Root>
+        <Tag.Root tone="success"><Tag.Dot /><Tag.Icon svg={CheckCircleIcon} />Paid</Tag.Root>
+        <Tag.Root tone="warning"><Tag.Dot /><Tag.Icon svg={WarningIcon} />Incomplete</Tag.Root>
+      </div>
+    </div>
+  }>
+
+```tsx
+<Tag.Root tone={toneOf[status]}>
+	<Tag.Dot />
+	<Tag.Icon svg={statusIcon[status]} />
+	{label}
+</Tag.Root>
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

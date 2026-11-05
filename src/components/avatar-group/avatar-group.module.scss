@@ -1,0 +1,65 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/popup.scss" as popup;
+@use "../../style/visually-hidden.scss" as hidden;
+
+@layer kit.components {
+	.group {
+		display: flex;
+		align-items: center;
+		inline-size: fit-content;
+		border-radius: var(--sys-radius-full);
+		cursor: default;
+
+		@include focus.ring;
+	}
+
+	.label {
+		@include hidden.visually-hidden;
+	}
+
+	.member {
+		display: inline-flex;
+		flex-shrink: 0;
+		border-radius: var(--sys-radius-circle);
+		box-shadow: 0 0 0 2px
+			var(--avatar-group-ring, var(--sys-color-surface));
+	}
+
+	.overflow {
+		align-items: center;
+		justify-content: center;
+		background-color: var(
+			--avatar-group-overflow-bg,
+			var(--sys-color-surface-high)
+		);
+		color: var(
+			--avatar-group-overflow-fg,
+			var(--sys-color-text)
+		);
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.popup {
+		@include popup.surface;
+	}
+
+	.list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-4);
+		list-style: none;
+	}
+
+	.item {
+		display: flex;
+		align-items: center;
+		gap: var(--sys-unit-4);
+		font: var(--sys-font-body-medium);
+	}
+
+	.you {
+		color: var(--sys-color-text-muted);
+	}
+}

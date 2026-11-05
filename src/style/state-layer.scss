@@ -1,0 +1,56 @@
+// See `docs/design-system/interaction.mdx`.
+
+/// The hover and press treatment: a translucent layer of `$color` over the
+/// host's own fill. Inherits `border-radius` from the host.
+///
+/// @example
+///   @use "../../style/state-layer.scss" as state;
+///
+///   .nav-item {
+///       border-radius: var(--sys-radius-full);
+///       @include state.layer;
+///   }
+@mixin layer($color: currentcolor) {
+	& {
+		position: relative;
+		isolation: isolate;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		border-radius: inherit;
+		background: #{$color};
+		opacity: 0;
+		pointer-events: none;
+
+		@media not (prefers-reduced-motion) {
+			transition: opacity var(--sys-motion-instant)
+				var(--sys-motion-standard);
+		}
+	}
+
+	&:hover:not(:disabled, [data-disabled])::after {
+		opacity: var(--sys-state-hover);
+	}
+
+	&:active:not(:disabled, [data-disabled])::after {
+		opacity: var(--sys-state-pressed);
+	}
+}
+
+/// A persistent state layer, for elements whose selected state should read as
+/// a tint rather than a distinct background colour.
+///
+/// @example
+///   .nav-item[data-active="true"] {
+///       @include state.layer-selected;
+///   }
+@mixin layer-selected($color: currentcolor) {
+	&::after {
+		background: #{$color};
+		opacity: var(--sys-state-focus);
+	}
+}

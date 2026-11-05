@@ -1,0 +1,61 @@
+@use "./drawing";
+
+.hierarchy {
+	--figure-field: var(--drawing-cool-muted);
+
+	text-rendering: geometricPrecision;
+
+	@include drawing.palette("neutral");
+}
+
+.ladder {
+	--figure-field: var(--drawing-field);
+
+	text-rendering: geometricPrecision;
+
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--figure-field);
+}
+
+.regular {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-cool-vivid) 55%,
+		var(--drawing-cool-muted)
+	);
+	font: var(--sys-font-body-large);
+	font-size: 64px;
+}
+
+.strong {
+	fill: var(--drawing-paper);
+	font: var(--sys-font-heading-large);
+	font-size: 64px;
+}
+
+.rule {
+	@include drawing.rule;
+
+	stroke: var(--drawing-pale);
+}
+
+.letter,
+.role {
+	font: var(--sys-font-body-large);
+}
+
+.letter {
+	fill: var(--drawing-mid);
+}
+
+.role,
+.heading {
+	fill: var(--drawing-paper);
+}
+
+.heading {
+	font: var(--sys-font-heading-large);
+}

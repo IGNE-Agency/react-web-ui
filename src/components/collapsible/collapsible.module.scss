@@ -1,0 +1,26 @@
+@use "../../style/layers.scss";
+@use "../../style/disclosure.scss" as disclosure;
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.trigger {
+		@include disclosure.trigger("collapsible");
+	}
+
+	.chevron {
+		@include disclosure.chevron;
+	}
+
+	.panel {
+		@include disclosure.panel("--collapsible-panel-height");
+	}
+
+	.content {
+		padding: var(--collapsible-pad-y, var(--sys-unit-4))
+			var(--collapsible-pad-x, var(--sys-unit-6));
+	}
+}

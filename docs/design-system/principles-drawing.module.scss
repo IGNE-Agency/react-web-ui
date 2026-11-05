@@ -1,0 +1,64 @@
+@use "./drawing";
+
+.drawing {
+	text-rendering: geometricPrecision;
+
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}
+
+.neighbour {
+	fill: var(--drawing-neighbour-vivid);
+}
+
+.letters {
+	fill: var(--drawing-neighbour-muted);
+	font: var(--sys-font-heading-large);
+	font-size: 360px;
+}
+
+.baseline {
+	@include drawing.rule;
+
+	stroke: var(--drawing-neighbour-muted);
+}
+
+.opposite {
+	fill: var(--drawing-opposite-vivid);
+}
+
+.oppositeMuted {
+	fill: var(--drawing-opposite-muted);
+}
+
+.warm {
+	fill: var(--drawing-warm-vivid);
+}
+
+.hot {
+	fill: var(--drawing-hot-vivid);
+}
+
+.cool {
+	fill: var(--drawing-cool-vivid);
+}
+
+.hotLine,
+.coolLine {
+	stroke-width: 4;
+}
+
+.hotLine {
+	stroke: var(--drawing-hot-muted);
+}
+
+.coolLine {
+	stroke: var(--drawing-cool-muted);
+}

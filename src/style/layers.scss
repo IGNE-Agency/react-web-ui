@@ -1,0 +1,14 @@
+/// The kit's cascade layers, in order. Every stylesheet the kit emits opens with
+/// this statement, so unlayered app CSS always wins. `@use` it first, then put
+/// the module's own rules in `kit.components`.
+///
+/// @example
+///   @use "../../style/layers.scss";
+///   @use "../../style/focus.scss" as focus;
+///
+///   @layer kit.components {
+///       .root {
+///           @include focus.ring;
+///       }
+///   }
+@layer kit.reset, kit.base, kit.components;

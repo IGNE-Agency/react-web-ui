@@ -1,0 +1,56 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as FormStories from "./form.stories.tsx";
+
+<Meta of={FormStories} />
+
+<DocsPage>
+
+## Rules
+
+### The form submits through its form instance and validates nothing natively
+
+`Form.Root` takes the instance `useAppForm` returns and renders `<form noValidate>`: validation is the app's own, through Standard Schema, and the browser's bubbles never compete with it. A submit, by button or by Enter, goes through `form.handleSubmit()`. `Form.Errors` and `Form.Submit` read the form from the root, so neither takes it as a prop.
+
+```tsx
+<Form.Root form={form}>
+	<form.AppField name="email">
+		{field => (
+			<field.EmailField
+				label="Email"
+				optionalLabel="optional"
+			/>
+		)}
+	</form.AppField>
+	<Form.Errors />
+	<Form.Submit busyLabel="Signing in">Sign in</Form.Submit>
+</Form.Root>
+```
+
+### A busy form holds still
+
+While a submit is in flight, or while `busy` says the form waits on other work, its fields sit in a disabled, inert `<fieldset>` and the form is `aria-busy`. Nothing can be changed under a request that is already on its way.
+
+### A failed submit takes the user to the first thing to fix
+
+After a submit the validators refuse, focus moves to the first invalid control in document order, once the form is enabled again, and the control is scrolled to the middle of the view, instantly under reduced motion. A field hands focus to its invalid control, else to its selected option, else to the first control Tab would reach.
+
+### The submit button announces a wait late, and then holds it
+
+`Form.Submit` shows nothing for a submit shorter than 150 ms. Past that it shows a spinner, sets `aria-busy`, and announces `busyLabel`, and once shown it stays at least 200 ms, so a quick answer never flickers. The announcement goes to a live region the root mounts empty, outside the inert fields, before its text ever changes.
+
+### An edited form holds a leave until its policy lets go
+
+While its `leaveGuard` policy returns true for the form's live state, `Form.Root` reports unsaved changes to the page's leave guards, which hold a reload or a navigation and ask before discarding. It stops once the policy returns false or the form unmounts. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. `never` turns the guard off for a form whose edits need not survive leaving, such as a filter; any other `(state) => boolean` is a policy too.
+
+```tsx
+<Form.Root form={filters} leaveGuard={never}>
+	…
+</Form.Root>
+```
+
+### Errors that belong to no field are the form's
+
+A refusal that names no field, such as a message `onSubmitAsync` returns, is shown by `Form.Errors`. Errors a field owns stay on that field.
+
+</DocsPage>

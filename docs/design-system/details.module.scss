@@ -1,0 +1,101 @@
+@use "../../src/style/focus.scss" as focus;
+@use "../../src/style/state-layer.scss" as state;
+
+.details {
+	--details-top: var(--sys-radius-md);
+	--details-bottom: var(--sys-radius-md);
+
+	border-radius: var(--details-top) var(--details-top)
+		var(--details-bottom) var(--details-bottom);
+	background: var(--sys-color-surface);
+	interpolate-size: allow-keywords;
+
+	.list > & {
+		--details-top: var(--sys-radius-xs);
+		--details-bottom: var(--sys-radius-xs);
+	}
+
+	.list > &:first-child {
+		--details-top: var(--sys-radius-md);
+	}
+
+	.list > &:last-child {
+		--details-bottom: var(--sys-radius-md);
+	}
+
+	&::details-content {
+		block-size: 0;
+		overflow: clip;
+	}
+
+	&[open]::details-content {
+		block-size: auto;
+	}
+
+	@media not (prefers-reduced-motion) {
+		&::details-content {
+			transition:
+				block-size var(--sys-motion-medium)
+					var(--sys-motion-emphasized),
+				content-visibility var(--sys-motion-medium)
+					allow-discrete;
+		}
+	}
+}
+
+.summary {
+	@include state.layer;
+	@include focus.ring;
+
+	display: flex;
+	align-items: center;
+	gap: var(--sys-unit-8);
+	border-radius: var(--details-top) var(--details-top)
+		var(--details-bottom) var(--details-bottom);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+
+	.details[open] > & {
+		border-end-start-radius: var(--sys-radius-xs);
+		border-end-end-radius: var(--sys-radius-xs);
+	}
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-large);
+	cursor: pointer;
+	list-style: none;
+
+	&::-webkit-details-marker {
+		display: none;
+	}
+}
+
+.icon {
+	flex: none;
+	inline-size: 1.5rem;
+	block-size: 1.5rem;
+	fill: currentcolor;
+
+	@media not (prefers-reduced-motion) {
+		transition: rotate var(--sys-motion-medium)
+			var(--sys-motion-emphasized);
+	}
+
+	.details[open] & {
+		rotate: 180deg;
+	}
+}
+
+.body {
+	display: grid;
+	gap: var(--sys-unit-16);
+	padding: var(--sys-unit-4) var(--sys-unit-16)
+		var(--sys-unit-24);
+
+	> * {
+		margin: 0;
+	}
+}
+
+.list {
+	display: grid;
+	gap: var(--sys-unit-1);
+}

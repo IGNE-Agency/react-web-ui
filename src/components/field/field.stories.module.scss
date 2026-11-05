@@ -1,0 +1,36 @@
+@use "../../style/form.scss" as form;
+
+.field {
+	inline-size: 20rem;
+	max-inline-size: 100%;
+}
+
+.input {
+	@include form.control;
+}
+
+.group {
+	@include form.group;
+}
+
+.bare {
+	flex: 1;
+	min-inline-size: 0;
+	font: inherit;
+
+	@include form.field-text-metrics;
+}
+
+.inline {
+	display: grid;
+	grid-template-areas:
+		"box text"
+		". optional";
+	grid-template-columns: auto 1fr;
+	column-gap: var(--sys-unit-4);
+	align-items: center;
+}
+
+.box {
+	grid-area: box;
+}

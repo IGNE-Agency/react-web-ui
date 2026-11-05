@@ -1,0 +1,20 @@
+@use "../../style/layers.scss";
+@use "../../style/error-motion.scss" as error;
+
+@layer kit.components {
+	@include error.pop-in-keyframes;
+
+	.text {
+		color: var(--error-text-fg, var(--sys-color-error-fg));
+		font: var(
+			--error-text-font,
+			var(--sys-font-body-medium)
+		);
+	}
+
+	.message {
+		display: block;
+
+		@include error.pop-in;
+	}
+}

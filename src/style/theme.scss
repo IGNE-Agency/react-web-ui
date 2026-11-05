@@ -1,0 +1,23 @@
+// See `docs/design-system/colour.mdx`.
+
+/// A nested rule in a CSS module under the dark theme: pinned by
+/// `data-theme="dark"`, or following the OS while the preference is `auto` (no
+/// attribute).
+///
+/// @example
+///   .backdrop {
+///       @include theme.dark {
+///           --overlay-dim: 0.6;
+///       }
+///   }
+@mixin dark {
+	:global(html[data-theme="dark"]) & {
+		@content;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme="light"])) & {
+			@content;
+		}
+	}
+}

@@ -1,0 +1,26 @@
+@use "./caption";
+
+.buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-6);
+}
+
+.message {
+	display: grid;
+	gap: var(--sys-unit-4);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+	max-inline-size: 22rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+}
+
+.title {
+	font: var(--sys-font-heading-small);
+}
+
+.next {
+	@include caption.register;
+}

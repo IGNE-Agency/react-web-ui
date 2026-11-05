@@ -1,0 +1,45 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import * as TabsStories from "./tabs.stories.tsx";
+
+<Meta of={TabsStories} />
+
+<DocsPage>
+
+## Rules
+
+### The active tab is a pill that slides between tabs
+
+Tabs are pill-shaped and carry no strip border. The active tab is marked by a filled pill that slides between tabs, with the active label inverted. The strip does not measure anything itself: the tab primitive publishes the active tab's offset and width as custom properties, and the pill animates those. The inverted label is not a per-tab colour rule either. The pill is opaque, covers the active tab, and contains a duplicate of the whole label row offset back to the strip's origin by the negated offset. Clipped by the pill's own overflow, that copy shows only where the pill sits, so the inverted text follows the pill with nothing to keep in sync and no script measuring anything.
+
+The consequence to respect: the real row and the duplicate must keep identical box metrics and typography.
+
+<DoDont>
+<Example kind="do" caption="One shared class for both rows.">
+
+```scss
+.tab {
+	padding: var(--sys-unit-6) var(--sys-unit-10);
+	font: var(--sys-font-label-medium);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The copy inside the pill no longer lines up with the real labels.">
+
+```scss
+.tab[data-selected] {
+	font: var(--sys-font-label-medium-strong);
+}
+```
+
+</Example>
+</DoDont>
+
+### Tabs switch what one page shows; links to pages are a nav
+
+A tab opens a panel on the page you are on, and moving between tabs keeps the address. Tabs that lead to other pages are a horizontal [nav](?path=/docs/components-nav--docs), whose entries are links a router marks current.
+
+</DocsPage>

@@ -1,0 +1,39 @@
+@use "./theme.scss" as theme;
+
+// See `docs/design-system/components.mdx`.
+
+/// The dimmed, blurred sheet every modal overlay sits on — dialog, alert dialog,
+/// drawer — fading with the popup it belongs to. Re-point `--overlay-dim` for a
+/// lighter tier, and `--overlay-opacity` where something other than presence
+/// drives what paints, such as a swipe.
+///
+/// @example
+///   @use "../../style/overlay.scss" as overlay;
+///
+///   .backdrop {
+///       @include overlay.backdrop;
+///   }
+@mixin backdrop {
+	--overlay-dim: 0.4;
+	--overlay-opacity: 1;
+
+	position: fixed;
+	inset: 0;
+	background-color: rgb(0 0 0 / var(--overlay-dim));
+	backdrop-filter: blur(1px);
+	opacity: var(--overlay-opacity);
+
+	@media not (prefers-reduced-motion) {
+		transition: opacity var(--sys-motion-short)
+			var(--sys-motion-standard);
+	}
+
+	@include theme.dark {
+		--overlay-dim: 0.6;
+	}
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: 0;
+	}
+}

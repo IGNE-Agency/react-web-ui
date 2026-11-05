@@ -1,0 +1,212 @@
+@use "./focus.scss" as focus;
+@use "./state-layer.scss" as state;
+
+// See `docs/design-system/components.mdx`.
+
+/// The scrollbar for a popup's own scroll container: narrow, and drawn in the
+/// outline role so it reads as chrome rather than content. Applies to whichever
+/// element actually scrolls — the surface, or a list inside it.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .list {
+///       @include popup.thin-scrollbar;
+///   }
+@mixin thin-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: var(--sys-color-outline) transparent;
+}
+
+/// A trigger that opens a popover: sets the colour of the disclosure line
+/// beneath it, the text's own colour faded, at full strength on hover and while
+/// the popup is open. Pair with `disclosure-line` on whatever holds the text.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .group {
+///       @include popup.disclosure-trigger;
+///
+///       > * {
+///           @include popup.disclosure-line;
+///       }
+///   }
+@mixin disclosure-trigger {
+	--disclosure-line: color-mix(
+		in oklab,
+		currentcolor 50%,
+		transparent
+	);
+
+	@include focus.ring;
+
+	&:hover,
+	&[data-popup-open] {
+		--disclosure-line: currentcolor;
+	}
+}
+
+/// The dotted underline that marks progressive disclosure, in the colour its
+/// `disclosure-trigger` sets.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .trigger {
+///       @include popup.disclosure-trigger;
+///       @include popup.disclosure-line;
+///   }
+@mixin disclosure-line {
+	text-decoration: underline dotted var(--disclosure-line);
+	text-underline-offset: var(--sys-unit-1);
+}
+
+/// The space a positioned popup keeps from the viewport's edges: the
+/// `--popup-edge-padding` knob, `--sys-unit-16` by default, resolved to pixels
+/// on the positioner for `usePopupEdgePadding` (`src/lib/popup-edge-padding.ts`)
+/// to pass as its collision padding.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .positioner {
+///       @include popup.edge-padding;
+///   }
+@mixin edge-padding {
+	--_popup-edge-padding: var(
+		--popup-edge-padding,
+		var(--sys-unit-16)
+	);
+
+	@at-root {
+		@property --_popup-edge-padding {
+			syntax: "<length>";
+			inherits: false;
+			initial-value: 0px;
+		}
+	}
+}
+
+/// The floating card shared by every popup that lists things — menus, select
+/// popups, typeahead menus. For a popup with an arrow, pass `$shadow: false` and
+/// put `elevation.on-silhouette` on the positioner instead.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .popup {
+///       @include popup.surface;
+///   }
+@mixin surface($shadow: true) {
+	box-sizing: border-box;
+	border: none;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface-overlay);
+	padding: var(--sys-unit-4);
+	color: var(--sys-color-text);
+	transform-origin: var(--transform-origin);
+
+	@include thin-scrollbar;
+
+	@if $shadow {
+		box-shadow: var(--sys-elevation-1);
+	}
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			opacity var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			transform var(--sys-motion-instant)
+				var(--sys-motion-standard);
+	}
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+}
+
+/// One selectable row inside a `popup.surface`. Drives its own highlight from
+/// `data-highlighted`, so it takes no focus ring.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .item {
+///       @include popup.item;
+///   }
+@mixin item {
+	display: flex;
+	align-items: center;
+	gap: var(--sys-unit-6);
+	box-sizing: border-box;
+	min-block-size: var(--sys-unit-20);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-4) var(--sys-unit-6);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+	user-select: none;
+
+	@include state.layer;
+
+	outline: none;
+
+	&[data-highlighted] {
+		background: var(--sys-color-primary-container);
+		color: var(--sys-color-on-primary-container);
+	}
+
+	&[data-disabled] {
+		opacity: 0.38;
+		color: var(--sys-color-text-muted);
+	}
+}
+
+/// A muted line of text in a popup where an option would be: its empty state
+/// or its load status. Collapses while it has nothing to say, and wraps to the
+/// popup's width rather than widening it.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .empty {
+///       @include popup.note;
+///   }
+@mixin note {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	gap: var(--sys-unit-4);
+	contain: inline-size;
+	min-block-size: 1lh;
+	padding: var(--sys-unit-4) var(--sys-unit-6);
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-medium);
+
+	&:empty {
+		min-block-size: 0;
+		padding: 0;
+	}
+}
+
+/// Where a popup's status `note` sits, with the one action the status offers,
+/// such as a retry, below it. Wraps to the popup's width rather than widening it.
+///
+/// @example
+///   @use "../../style/popup.scss" as popup;
+///
+///   .statusArea {
+///       @include popup.status-area;
+///   }
+@mixin status-area {
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	contain: inline-size;
+
+	> * + * {
+		align-self: flex-start;
+	}
+}

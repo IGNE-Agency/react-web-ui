@@ -1,0 +1,2159 @@
+import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { Tag } from "../../src/components/tag/index.ts";
+import {
+	Checkbox,
+	CheckboxField,
+} from "../../src/components/checkbox-field/index.ts";
+import { CheckboxGroupField } from "../../src/components/checkbox-group-field/index.ts";
+import { SwitchField } from "../../src/components/switch-field/index.ts";
+import { DateField } from "../../src/components/date-field/index.ts";
+import { TextField } from "../../src/components/text-field/index.ts";
+import { Icon } from "../../src/components/icon/index.ts";
+import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { Beside } from "./beside";
+import componentStyles from "./components.module.scss";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { PatternsDrawing } from "./patterns-drawing";
+import {
+	FieldsDrawing,
+	RailDrawing,
+	RegionDrawing,
+	ToldDrawing,
+} from "./patterns-figures";
+import styles from "./patterns.module.scss";
+
+export const Live = ({ children }) => (
+	<StoryProviders>{children}</StoryProviders>
+);
+
+export const ignore = () => undefined;
+
+export const dateLabels = {
+	optionalLabel: "optional",
+	openCalendarLabel: "Open calendar",
+	previousMonthLabel: "Previous month",
+	nextMonthLabel: "Next month",
+	monthLabel: "Month",
+	yearLabel: "Year",
+	noMatchingYearLabel: "No matching year.",
+};
+
+<Meta title="Design system/Patterns" />
+
+# Patterns
+
+A product is built from components, but people meet it in moments, and in families. The moments are waiting for something to load, finding nothing, watching something fail, being told that something happened and being asked whether they are sure. The families are components that share a job: the fields you type in, the labels pinned to things, the navigation around every page and the surfaces that float above it. A pattern answers one moment or one family once, so that every component it touches behaves the same way.
+
+<Illustration caption="A region of data starts loading and ends ready, empty or failed, and a failure can always try again.">
+	<PatternsDrawing />
+</Illustration>
+
+## Applies to
+
+- **Regions of data:** [data tables](?path=/docs/components-data-table--docs), [comment threads](?path=/docs/components-conversation--docs), [stale content](?path=/docs/components-stale--docs), the menus of [selects](?path=/docs/components-select-field--docs) and [comboboxes](?path=/docs/components-combobox-field--docs), and [popovers](?path=/docs/components-popover--docs) that load details.
+- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs), banners, and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
+- **Fields and forms:** [forms](?path=/docs/components-form--docs), [text fields](?path=/docs/components-text-field--docs), [password fields](?path=/docs/components-password-field--docs), [text areas](?path=/docs/components-textarea-field--docs), [number fields](?path=/docs/components-number-field--docs), [selects](?path=/docs/components-select-field--docs), [comboboxes](?path=/docs/components-combobox-field--docs), [date fields](?path=/docs/components-date-field--docs), [date range fields](?path=/docs/components-date-range-field--docs), [time fields](?path=/docs/components-time-field--docs), [checkboxes](?path=/docs/components-checkbox-field--docs), [checkbox groups](?path=/docs/components-checkbox-group-field--docs), [radio groups](?path=/docs/components-radio-group-field--docs), [segmented controls](?path=/docs/components-segmented-control-field--docs), [toggle groups](?path=/docs/components-toggle-group-field--docs), [switches](?path=/docs/components-switch-field--docs), [file fields](?path=/docs/components-file-field--docs), [photo fields](?path=/docs/components-photo-field--docs), [one-time code fields](?path=/docs/components-otp-field--docs) and the preset fields for [email](?path=/docs/components-email-field--docs), [phone numbers](?path=/docs/components-phone-field--docs) and [search](?path=/docs/components-search-field--docs).
+- **Labels pinned to things:** [tags](?path=/docs/components-tag--docs), [tag groups](?path=/docs/components-tag-group--docs), [badges](?path=/docs/components-badge--docs) and the [filter bar](?path=/docs/components-filter-bar--docs).
+- **Navigation:** [the nav](?path=/docs/components-nav--docs), as a rail or a bar, [tabs](?path=/docs/components-tabs--docs) and [breadcrumbs](?path=/docs/components-breadcrumbs--docs).
+- **Above the page:** [tooltips](?path=/docs/components-tooltip--docs), [menus](?path=/docs/components-menu--docs), [popovers](?path=/docs/components-popover--docs), [dialogs](?path=/docs/components-dialog--docs), the confirmation dialog, [drawers](?path=/docs/components-drawer--docs) and [toasts](?path=/docs/components-toast--docs).
+
+## The life of a region
+
+Data arrives over a network, so every part of a screen that shows it lives through the same few moments. First it waits. Then it shows what it found, or finds nothing, or fails. A screen handles those moments well when each one happens in place: in the region it concerns, without taking down anything around it, and without making the reader look for it somewhere else.
+
+<Illustration caption="A region fails in its own place, and everything around it stands.">
+	<RegionDrawing />
+</Illustration>
+
+Waiting comes first. It shows in the region that waits, [late enough not to flicker, and then for long enough not to flash](?path=/docs/design-system-foundation-motion--docs#a-wait-announces-itself-late-and-then-stays-a-moment), and [in the shape of what is coming](?path=/docs/design-system-foundation-motion--docs#a-wait-whose-shape-is-known-ahead-of-its-content-is-drawn-as-that-shape) when that shape is known. A whole page waits behind the mark; [a button waits behind a spinner](?path=/docs/components-button--docs#a-button-whose-handler-awaits-carries-a-moving-indicator) in its own place.
+
+Finding nothing is an answer too, and it belongs where the answer would have been. The message takes the place of the rows, under the same headers and filters, so the reader can change what they asked for. It says in one sentence that nothing was found, and offers nothing it can't follow through.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The headers stay, and the message sits where the rows would be."
+		visual={
+			<div className={styles.table}>
+				<div className={styles.head}>
+					<span>Client</span>
+					<span>Amount (€)</span>
+				</div>
+				<div className={styles.empty}>
+					No results found.
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The table is gone, and with it the filters that would have found something."
+		visual={
+			<div className={styles.message}>
+				<span className={styles.title}>Nothing here</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Failing gracefully
+
+A failure is the moment a screen is most tempted to throw everything away, and the moment the reader can least afford it. When a region already shows data and a refresh fails, the data stays and the failure is reported above it. Only a region with nothing to show puts the failure in place of its content.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The rows stay; the failure and the retry sit above them."
+		visual={
+			<div className={styles.table}>
+				<div className={styles.strip}>
+					<span>Data could not be loaded.</span>
+					<Button
+						variant="tertiary"
+						size="sm"
+						icon={RestartIcon}>
+						Try again
+					</Button>
+				</div>
+				<div className={styles.head}>
+					<span>Client</span>
+					<span>Amount (€)</span>
+				</div>
+				<div className={styles.row}>
+					<span>A. de Vries</span>
+					<span>120,00</span>
+				</div>
+				<div className={styles.row}>
+					<span>S. de Jong</span>
+					<span>85,00</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="One failed refresh throws away rows the user was reading."
+		visual={
+			<div className={styles.table}>
+				<div className={styles.head}>
+					<span>Client</span>
+					<span>Amount (€)</span>
+				</div>
+				<div className={styles.empty}>
+					Data could not be loaded.
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Offering to try again is a promise that it might work. A failure that can pass by itself, such as a timeout, an overloaded server or a lost connection, makes that promise honestly, and is tried again quietly in the background a few times first. Any other failure would fail the same way twice, so it offers no retry. It says so, and [says who can help](?path=/docs/design-system-principles-language--docs#an-error-says-what-happened-and-what-to-do-next).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Nothing the user can do will fix it, so the message says who can."
+		visual={
+			<div className={styles.message}>
+				<span className={styles.title}>
+					Something went wrong
+				</span>
+				<span>
+					This page could not be loaded, and trying again
+					won't help. Report this to the app's
+					administrator.
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A retry that can only fail again."
+		visual={
+			<div className={styles.message}>
+				<span className={styles.title}>
+					Something went wrong
+				</span>
+				<span>
+					This page could not be loaded, and trying again
+					won't help.
+				</span>
+				<Button variant="primary" icon={RestartIcon}>
+					Try again
+				</Button>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Telling people what happened
+
+News is easiest to take in where the eye already is. Feedback about what is in front of the reader appears right there. A toast is for something that happened out of view, usually after they moved on. A dialog interrupts everything, so it is kept for a question that has to be answered before anything else.
+
+<Illustration caption="The row that changed says so at its own end.">
+	<ToldDrawing />
+</Illustration>
+
+| What happened | Said where | For example |
+| --- | --- | --- |
+| Data in view didn't load | In the region | "Comments could not be loaded." |
+| A field is invalid | Under the field | "An AGB code has 8 digits." |
+| A form did its job | In place of its introduction | "A recovery link is on its way." |
+| Background work failed | A toast, with the fix | A comment that didn't send |
+| A condition that lasts | A banner across the app | "Storage almost full" |
+| The session ended | A toast at sign-in | "You were signed out" |
+| A step can't be undone | A dialog | "Delete comment?" |
+
+A toast that offers an action waits until it is dismissed, because a fix that disappears before it can be pressed is no fix. Any other toast leaves after a few seconds, and the same toast is never shown twice at once.
+
+## Where you type
+
+A form field is a promise that you can type here, and its outline is what makes the promise: without it, an entry reads as static text, which is why a field is one of [the four cases that justify a line](?path=/docs/design-system-principles-separation--docs#the-four-cases-that-justify-a-line). People learn what a field looks like from the first form they fill in and expect every field after it to look the same, so a field that draws its edge, its focus or its error its own way reads as a different kind of thing.
+
+Here every text-entry control takes one shared shell: a card-surface fill, a hairline border that warms to the brand colour on hover and focus, a small radius, the same padding, [the focus ring](?path=/docs/design-system-principles-interaction--docs#everything-you-can-reach-with-the-keyboard-shows-the-focus-ring), and the disabled and invalid treatments. No field writes its own.
+
+<Illustration caption="Search, select, time, amount, password, date: every field wears the same shell.">
+	<FieldsDrawing />
+</Illustration>
+
+The browser's own date picker isn't used, for [the same reasons as the native select](?path=/docs/components-select-field--docs#there-is-no-native-select), in the same order. The browser draws its calendar, so it takes none of our surface, radius or highlight. It differs from browser to browser, down to which segments exist. And it stays stubbornly light under a dark theme. The date, date range and time fields are the primitive library's date parts inside our own frame, which is what buys the styling back.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The date field is a date primitive inside our own frame."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<DateField
+							{...dateLabels}
+							label="Treatment date"
+							defaultValue="2026-10-02"
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="An unstyleable calendar, and light under a dark theme."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<label className={componentStyles.native}>
+						Treatment date
+						<input
+							className={componentStyles.nativeControl}
+							type="date"
+							defaultValue="2026-10-02"
+						/>
+					</label>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Nothing is masked. A formatted identifier, like a BSN, an AGB code, a postcode, an IBAN or a phone number, is plain text entry with its format in the description, and the spaces, dashes and capitals are tidied on the way to the server.
+
+The reason is not taste. Every masking engine either rejects a character or cuts off what comes after its last slot. <Pull>Either way, the screen reader announces the character the user typed while the field keeps something else.</Pull> That comes from rejecting and cutting off, not from formatting, so no setting makes it go away: allowing more characters fixes the first half and leaves the second, and a fixed number of slots overflows by design.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Plain entry, the format on screen, and the tidying at the boundary."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.card} ${componentStyles.cardWide}`}>
+					<TextField
+						optionalLabel="optional"
+						label="IBAN"
+						description="For example NL91 ABNA 0417 1643 00"
+						value="NL91 ABNA 0417"
+						onValueChange={ignore}
+					/>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The reader hears a character the field did not keep."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.card} ${componentStyles.cardWide}`}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							IBAN
+						</span>
+						<span className={componentStyles.box}>
+							NL91 ABNA 0417
+							<span className={componentStyles.slots}>
+								{" ____ __"}
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## What a field says about itself
+
+A field speaks before anyone types in it. It says whether it has to be filled in, whether it can be changed at all, and whether what's in it is wrong. Each of those has to be readable at a glance and mean the same on every field, or the reader works the signals out again on every form.
+
+Invalid is the whole field turning: error ink on an error fill, inside an error border. A red outline around a field that otherwise looks untouched reads as a highlight, not as a problem.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Ink, fill and border all say the field is wrong."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<TextField
+							optionalLabel="optional"
+							label="Amount"
+							prefix="€"
+							value="-5"
+							onValueChange={ignore}
+							errors={["An amount can't be negative."]}
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A red outline around a field that otherwise looks untouched."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Amount
+						</span>
+						<span
+							className={`${componentStyles.box} ${componentStyles.boxOutlinedError}`}>
+							<span className={componentStyles.muted}>
+								€
+							</span>
+							<span className={componentStyles.grow}>
+								-5
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Every field says when it is optional, always. <Pull>Silence is not the signal for either state: a field that says nothing is a field nobody can tell is optional.</Pull> The marker goes on the field's own label, which is also why a group of boxes or radios has a label of its own: the marker belongs to the field, not to the third option down.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The group is named, so the marker has somewhere to live."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<CheckboxGroupField
+						optionalLabel="optional"
+						label="Status"
+						requiredness="optional"
+						items={[
+							{ label: "Draft", value: "draft" },
+							{ label: "Submitted", value: "submitted" },
+							{ label: "Paid", value: "paid" },
+						]}
+						defaultValue={["submitted"]}
+					/>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Three labelled boxes and no way to know the answer can be left empty."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<label className={componentStyles.check}>
+						<Checkbox /> Draft
+					</label>
+					<label className={componentStyles.check}>
+						<Checkbox defaultChecked /> Submitted
+					</label>
+					<label className={componentStyles.check}>
+						<Checkbox /> Paid
+					</label>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+A control whose only label sits beside it, like a lone checkbox or a switch, has nowhere to put the marker without it reading as part of the sentence. So its label is laid out in two columns, the marker takes a second row under the text, and the control stays centred in the column it already sits in.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="A lone checkbox puts the marker on a row of its own, under the text."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<CheckboxField
+							optionalLabel="optional"
+							label="Send me a copy by email"
+							requiredness="optional"
+						/>
+						<SwitchField
+							optionalLabel="optional"
+							label="Notify the referrer"
+							requiredness="optional"
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The marker reads as part of the sentence it is tacked onto."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<CheckboxField
+							optionalLabel="optional"
+							label="Send me a copy by email (optional)"
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+</DoDont>
+
+Behind those signals sits one vocabulary of states. Every control publishes its states the same way, and every stylesheet reads them from there, never from the browser's own states or a library's. The two primitive libraries publish different sets: one knows filled, dirty and touched but never read-only, and the other knows read-only and none of those three. Neither covers the other, so a rule written against either one's names quietly does nothing for half the fields, and the field that lost its treatment looks correct until someone opens it in the missing state.
+
+No single place holds those states. Each is read from whatever owns it: the field's own settings for disabled, read-only and required, the validator for validity, the form for dirty and touched, the value for filled, the primitive for focus, and the shared busy timing for pending.
+
+Read-only is a dashed border on the raised surface, not a slightly different fill. It is the app's one read-only signal, so every control that can be read-only wears it: a text field, a select, a combobox, a segmented group, and the box of a checkbox, radio or switch. It is the control's own border in its own place, never a second edge drawn beside it.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="One read-only treatment reaches every control, the date field included."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<TextField
+							optionalLabel="optional"
+							label="Practitioner"
+							value="Anna de Vries"
+							onValueChange={ignore}
+							readOnly
+						/>
+						<DateField
+							{...dateLabels}
+							label="Treatment date"
+							defaultValue="2026-10-02"
+							readOnly
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The date controls have no native read-only state to read, so half the fields keep the entry treatment while read-only."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Practitioner
+						</span>
+						<span
+							className={`${componentStyles.box} ${componentStyles.boxGreyed}`}>
+							Anna de Vries
+						</span>
+					</div>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Treatment date
+						</span>
+						<span className={componentStyles.box}>
+							<span className={componentStyles.grow}>
+								2-10-2026
+							</span>
+							<span
+								className={`${componentStyles.glyph} ${componentStyles.glyphInPadding}`}>
+								<Icon svg={CalendarTodayIcon} label="" />
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The box's own border goes dashed, where the border already was."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<CheckboxField
+							optionalLabel="optional"
+							label="Treatment completed"
+							readOnly
+						/>
+						<SwitchField
+							optionalLabel="optional"
+							label="Notify the referrer"
+							readOnly
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A second dashed edge drawn around a box that still looks editable."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<label className={componentStyles.check}>
+						<span className={componentStyles.secondEdge}>
+							<Checkbox />
+						</span>
+						Treatment completed
+					</label>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Everything in one box
+
+Plenty of fields hold more than the text you type: a currency sign before an amount, a unit after it, a button that clears it, a calendar to pick a date from. To the reader it is still one field, one box with one border, and adding a part shouldn't change its shape. Each part has to fit inside without bringing a second edge, a second height or a second target.
+
+Here a field that shares its box with anything else, like a leading glyph, a unit, a clear button, a spinner or a calendar trigger, is a field group. The group, not the control, carries the border, the radius, the fill and the padding, and the focus ring whenever focus is anywhere inside it. Because the group isn't the control, it can't see the browser's own disabled or focus states, so it takes every treatment from the one vocabulary of states.
+
+Anything inside a group is bare. The control drops its border, background and padding, and takes its colour and type from the group. A control that keeps its own shell inside a group is two boxes and two focus rings, which is easy to miss the first time a part is added to a field that started out on its own.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The control inside the group is bare, so the field is one box."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<TextField
+						optionalLabel="optional"
+						label="Amount"
+						prefix="€"
+						value="19,28"
+						onValueChange={ignore}
+					/>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A bordered box inside a bordered box."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Amount
+						</span>
+						<span className={componentStyles.box}>
+							<span className={componentStyles.muted}>
+								€
+							</span>
+							<span
+								className={`${componentStyles.box} ${componentStyles.inner}`}>
+								19,28
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+A field's height comes from the field, never from its parts. The group has a floor at the height of a bare field, and a part sits in the padding the group already has instead of adding to it. Otherwise [a clear button that appears on the first keystroke](?path=/docs/components-text-field--docs#clear-appears-once-the-field-holds-a-value-and-never-on-one-that-cannot-change) resizes the box being typed into and moves every field below it, and the same field measures differently depending on which of its parts happen to be showing.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The group states its own height, and the clear button sits in the padding."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div
+						className={`${componentStyles.card} ${componentStyles.rowTop}`}>
+						<TextField
+							optionalLabel="optional"
+							label="Reference"
+							value=""
+							onValueChange={ignore}
+							clearable
+							clearLabel="Clear"
+						/>
+						<TextField
+							optionalLabel="optional"
+							label="Reference"
+							value="DEC-0412"
+							onValueChange={ignore}
+							clearable
+							clearLabel="Clear"
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The field is one height empty and another with a value in it."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Reference
+						</span>
+						<span className={componentStyles.box} />
+					</div>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Reference
+						</span>
+						<span className={componentStyles.box}>
+							<span className={componentStyles.grow}>
+								DEC-0412
+							</span>
+							<span className={componentStyles.glyph}>
+								<Icon svg={CloseIcon} label="" />
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Text on the field's line hugs the font, not the line height. A native entry lays its value out from the top of its own box and leaves the leading below it, so a control the height of the line reads as text with a gap under it. Once that's fixed, a unit or a counter still sitting on the line height lands a pixel above the value beside it. So every piece of text in the row is fitted to its font the same way, and the group centres them.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The value, the unit and the glyph share one baseline."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<TextField
+						optionalLabel="optional"
+						label="Amount"
+						prefix="€"
+						value="19,28"
+						onValueChange={ignore}
+					/>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The box is centred and the text inside it is not."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Amount
+						</span>
+						<span className={componentStyles.box}>
+							<span className={componentStyles.muted}>
+								€
+							</span>
+							<span className={componentStyles.offBaseline}>
+								19,28
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+The same reasoning keeps a part's finger target off its own box. A target on the button would be a floor on the field, and at coarse pointers the same field would come in two sizes. [The touch target](?path=/docs/design-system-principles-responsiveness--docs#a-touch-target-is-larger-than-its-glyph) is a transparent hit area centred on the button and outside its layout box, so it reaches the finger without reaching the layout.
+
+A field's static text, like a currency sign, a unit or a fixed prefix, is [decoration, hidden from screen readers](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden), so whatever it says has to be in the label or the description as well. A euro sign before the amount, and no mention of euros in either, makes a field whose unit exists only for people who can see it. The same goes for a decorative glyph inside the field.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The label names the unit the currency sign shows."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
+					<TextField
+						optionalLabel="optional"
+						label="Amount in euros"
+						prefix="€"
+						value="19,28"
+						onValueChange={ignore}
+					/>
+					<span className={componentStyles.announce}>
+						Screen reader says:{" "}
+						<span className={componentStyles.spoken}>
+							“Amount in euros”
+						</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The unit exists only for people who can see it."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
+					<TextField
+						optionalLabel="optional"
+						label="Amount"
+						prefix="€"
+						value="19,28"
+						onValueChange={ignore}
+					/>
+					<span className={componentStyles.announce}>
+						Screen reader says:{" "}
+						<span className={componentStyles.spoken}>
+							“Amount”
+						</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Every part of the box belongs to the field. [The cursor](?path=/docs/design-system-principles-interaction--docs#the-cursor-says-what-happens-on-click) over the padding and over a decorative part is the field's own, so the whole rim promises a caret and has to deliver one: decoration lets a press pass through, and a press anywhere on the box puts the caret in the field. Only a part that acts keeps its own press.
+
+A part that acts is a button, an icon-only one, with everything [an icon-only control needs: a tooltip and an accessible name](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name). Clearing the field, showing a password, opening a calendar and copying to the clipboard are each our button set into the field, never a glyph that happens to answer a click.
+
+Invalid reaches the field's ink, not its buttons. The field's ink is set once, and every part that is ink follows it: the value, the placeholder, a unit, a separator between date segments, a chevron. A part that acts keeps its own colour, because red on something you press reads as destructive: a clear button that turns red says the wrong thing about what pressing it does. And a part reads the field's ink with no colour of its own to fall back on, because a second colour is a second place the muted ink can drift.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The ink follows the field, and the clear button keeps its own colour."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.card}>
+						<TextField
+							optionalLabel="optional"
+							label="Amount"
+							prefix="€"
+							value="-5"
+							onValueChange={ignore}
+							errors={["An amount can't be negative."]}
+							clearable
+							clearLabel="Clear"
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The field reaches into the button, and the clear button now reads as destructive."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.card}>
+					<div className={componentStyles.field}>
+						<span className={componentStyles.label}>
+							Amount
+						</span>
+						<span
+							className={`${componentStyles.box} ${componentStyles.boxInvalid}`}>
+							<span>€</span>
+							<span className={componentStyles.grow}>
+								-5
+							</span>
+							<span
+								className={`${componentStyles.glyph} ${componentStyles.glyphInPadding} ${componentStyles.glyphError}`}>
+								<Icon svg={CloseIcon} label="" />
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Forms that wait their turn
+
+<Beside>
+
+Nobody likes being corrected mid-sentence. A form says nothing about errors while it is first filled in. When it is submitted, every problem shows at once, the first field with a problem takes focus and scrolls into view, and from then on each field checks itself as it changes. A problem with the form as a whole shows above the submit button. Every field is required unless it says Optional, and [the fields themselves are on Components](#where-you-type).
+
+    <Example
+    	kind="do"
+    	caption="After a submit, the field says what is wrong in a sentence that also says what is right."
+    	visual={
+    		<TextField optionalLabel="optional"
+    			className={styles.field}
+    			label="AGB code"
+    			value="1234"
+    			onValueChange={() => {}}
+    			errors={["An AGB code has 8 digits."]}
+    		/>
+    	}
+    />
+
+</Beside>
+
+## Labels pinned to things
+
+A chip, a badge or a tag is a word pinned to something else: a status on a row, a count on a tab, a filter that's switched on. It annotates, so it has to stay quieter than the thing it belongs to. And its colour carries meaning, so the same tone has to mean the same thing on every screen.
+
+Here anything that carries a tone and a variant colours itself from one shared table of tones, which sets its fill, its ink and its border. Sharing one table is what stops these drifting: a new tone lands everywhere at once. The solid variant swaps [the role's own pair](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step) rather than bringing in a fourth colour, so it follows the theme.
+
+Shape and size come from one shared chip shell, which wraps the table of tones and adds the pill. A chip sits at the small label size. It is usually one of several in a row or a cell, and at body size a row of them is the loudest thing on the page instead of a note on the thing it belongs to.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The statuses annotate the rows instead of competing with them."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.tableCard} ${componentStyles.tableCardNarrow}`}>
+					<table
+						className={`${componentStyles.table} ${componentStyles.tableFull}`}>
+						<thead>
+							<tr>
+								<th>Client</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>A. de Vries</td>
+								<td>
+									<Tag.Root tone="info">Submitted</Tag.Root>
+								</td>
+							</tr>
+							<tr className={componentStyles.stripe}>
+								<td>J. Bakker</td>
+								<td>
+									<Tag.Root tone="success">Paid</Tag.Root>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="At body size the statuses are the loudest thing on the page."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div
+					className={`${componentStyles.tableCard} ${componentStyles.tableCardNarrow}`}>
+					<table
+						className={`${componentStyles.table} ${componentStyles.tableFull}`}>
+						<thead>
+							<tr>
+								<th>Client</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>A. de Vries</td>
+								<td>
+									<Tag.Root
+										tone="info"
+										className={componentStyles.chipLoud}>
+										Submitted
+									</Tag.Root>
+								</td>
+							</tr>
+							<tr className={componentStyles.stripe}>
+								<td>J. Bakker</td>
+								<td>
+									<Tag.Root
+										tone="success"
+										className={componentStyles.chipLoud}>
+										Paid
+									</Tag.Root>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+A chip's remove control pulls its extra height back into the chip's padding, so a removable chip is no taller than a plain one beside it. Like [every control that belongs to one item, it is visible at all times](?path=/docs/design-system-principles-responsiveness--docs#a-per-item-control-is-visible-at-all-times), because hover is not a state a touch device has.
+
+## Finding your way
+
+Navigation is the part of a product people stop seeing once they know it, and that is the point. It has to say where you are and where else you can go, and otherwise stay out of the way of the page it frames. The surest way to stay out of the way is to stay the same: the same place and the same marks, on every page.
+
+<Illustration caption="Navigation keeps to its edge, says where you are, and leaves the rest of the screen to the page.">
+	<RailDrawing />
+</Illustration>
+
+Here a navigation item is a full-height pill. The selected one is a tonal fill with the stronger ink of the label role, and [hover and press come from the shared state layer](?path=/docs/design-system-principles-interaction--docs#hover-and-press-come-from-the-shared-state-layer). <Pull>Rails and bars are told apart from the canvas by their surface, never by a border or a shadow.</Pull> That is [how any region in the page's flow is set apart](?path=/docs/design-system-principles-separation--docs#a-region-in-the-pages-flow-is-told-apart-by-its-surface-tier-not-a-hairline), and a bottom bar is no exception: it sits in the page's flow, so [it isn't floating and carries no shadow](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow).
+
+The top bar of the app's frame owns the page title and the tab strip, and both come from the tree of routes. A page never draws its own top-level heading or tab strip, and never pushes a header up into the frame, which would send state the wrong way through the tree.
+
+## Above the page
+
+Some surfaces float over the page for a moment: a tooltip that names a button, a menu, a list of options, a dialog that asks a question, a drawer of filters. They share a job, to say something now and then get out of the way. So they should look like one family, letting a reader tell at a glance what is floating and how to send it away.
+
+Here tooltips, menus, select lists and popovers sit at [the first floating level](?path=/docs/design-system-foundation-elevation--docs#levels) on the overlay surface, a tooltip at the tightest radius and a list at a card's. Toasts sit one level up, on a tone container. A dialog takes the largest radius. None of them is outlined.
+
+Menus, select lists and typeahead lists are the same object behind different triggers, so they share one surface and one row. The row brings its highlight and [the deliberate absence of a focus ring](?path=/docs/design-system-principles-interaction--docs#a-list-whose-highlight-follows-mouse-and-keyboard-takes-no-ring-on-top), which would mark a row twice that the highlight already marks.
+
+A dialog or a drawer [carries no shadow](?path=/docs/design-system-foundation-elevation--docs#a-shadow-is-the-last-resort-not-the-first). <Pull>Its darkened, blurred backdrop already says it sits over the page, so a shadow on top says nothing a reader can use.</Pull> That backdrop stays restrained, enough to push the page back without hiding what the user opened the surface to act on: a one-pixel blur, and a lighter scrim under a drawer.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The page steps back but stays readable, and the drawer needs no shadow."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.stage}>
+					<div className={componentStyles.stagePage}>
+						<span className={componentStyles.stageTitle}>
+							Declarations
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>A. de Vries</span>
+							<span>112,50</span>
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>J. Bakker</span>
+							<span>45,00</span>
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>M. Jansen</span>
+							<span>19,28</span>
+						</span>
+					</div>
+					<div className={componentStyles.stageScrim} />
+					<div className={componentStyles.stageDrawer}>
+						<span className={componentStyles.sheetTitle}>
+							Filters
+						</span>
+						<span className={componentStyles.line} />
+						<span
+							className={`${componentStyles.line} ${componentStyles.lineShort}`}
+						/>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The list the user opened the drawer to filter is gone, and the shadow adds nothing."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.stage}>
+					<div className={componentStyles.stagePage}>
+						<span className={componentStyles.stageTitle}>
+							Declarations
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>A. de Vries</span>
+							<span>112,50</span>
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>J. Bakker</span>
+							<span>45,00</span>
+						</span>
+						<span className={componentStyles.stageRow}>
+							<span>M. Jansen</span>
+							<span>19,28</span>
+						</span>
+					</div>
+					<div
+						className={`${componentStyles.stageScrim} ${componentStyles.stageScrimHeavy}`}
+					/>
+					<div
+						className={`${componentStyles.stageDrawer} ${componentStyles.stageDrawerShadowed}`}>
+						<span className={componentStyles.sheetTitle}>
+							Filters
+						</span>
+						<span className={componentStyles.line} />
+						<span
+							className={`${componentStyles.line} ${componentStyles.lineShort}`}
+						/>
+					</div>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+Every modal surface dims the page through one shared sheet, so a drawer and a dialog darken it by the same rule and follow a change of theme together. A surface tunes how much the sheet dims rather than drawing a sheet of its own: a drawer dims less than a dialog, and fades the dimming with its swipe.
+
+Whatever floats has to say how to send it away. Dialogs and drawers put [an icon-only close button](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name) on the heading's line, at the surface's own inset: not floating in a corner, and not only in the footer. <Pull>A drawer that can be swiped or backdrop-clicked away still gets one: neither of those is discoverable, and neither exists for a keyboard.</Pull>
+
+A drawer's footer carries no Cancel beside its actions. The close button, Escape, the backdrop and a swipe already close it, and a fifth way out only takes room from the actions that do something. A dialog that asks a question is different: its Cancel is the answer no, the deliberate counterpart to [the action it asks you to be sure of](?path=/docs/design-system-patterns--docs#a-destructive-action-asks-first-in-its-own-words), so every such dialog has one, even though it closes the dialog like every other way out.
+
+Neither carries a subtitle. A heading with a line of explanatory grey under it is a caption for a surface the user just opened on purpose, and it pushes the content they came for further down. The title says what the surface is. If something genuinely needs explaining, it belongs next to the control it explains.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The close button sits on the title's line, and the title stands alone."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<Live>
+					<div className={componentStyles.sheet}>
+						<div className={componentStyles.sheetHeader}>
+							<span className={componentStyles.sheetTitle}>
+								Filters
+							</span>
+							<Button
+								variant="tertiary"
+								iconOnly
+								icon={CloseIcon}
+								label="Close filters"
+							/>
+						</div>
+						<span className={componentStyles.line} />
+						<span
+							className={`${componentStyles.line} ${componentStyles.lineShort}`}
+						/>
+					</div>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="No way out but a swipe, and a subtitle restating the title."
+		visual={
+			<div
+				className={`sb-unstyled ${componentStyles.visual}`}>
+				<div className={componentStyles.sheet}>
+					<div>
+						<span className={componentStyles.sheetTitle}>
+							Filters
+						</span>
+						<div className={componentStyles.sheetSubtitle}>
+							Filter the declarations in this list
+						</div>
+					</div>
+					<span className={componentStyles.line} />
+					<span
+						className={`${componentStyles.line} ${componentStyles.lineShort}`}
+					/>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Questions that can't wait
+
+A question in a dialog stops everything, so it has to be worth stopping for, and it has to be clear what it asks. Before something that can't be undone, the dialog's title is a question that names the action: "Delete comment?". The body says what will happen. [The confirm button repeats the verb](?path=/docs/design-system-principles-language--docs#a-button-says-what-it-does), in [the danger tone](?path=/docs/components-button--docs#a-button-is-one-of-three-tiers-and-destructive-is-a-tone-on-them), and Cancel comes first.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The title, the body and the button all name the same action."
+		visual={
+			<div className={styles.dialog}>
+				<span className={styles.title}>
+					Delete comment?
+				</span>
+				<span>
+					This comment will be removed from the queue.
+				</span>
+				<div className={styles.actions}>
+					<Button variant="tertiary">Cancel</Button>
+					<Button variant="primary" tone="danger">
+						Delete
+					</Button>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Yes to what? The user has to remember what they clicked."
+		visual={
+			<div className={styles.dialog}>
+				<span className={styles.title}>Are you sure?</span>
+				<div className={styles.actions}>
+					<Button variant="tertiary">No</Button>
+					<Button variant="primary">Yes</Button>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+A session about to run out is the other question that can't wait. Two minutes before it ends, a dialog asks whether the reader is still there, counts down, and offers to stay signed in or to sign out now. It can only be [closed by answering it](#a-dismissable-surface-says-so-on-its-titles-line). Any request the app makes in the meantime resets the clock and closes the dialog. When the session does end, the sign-in page says so in a toast that stays until it is dismissed.
+
+## Exceptions
+
+- Popovers that load details show a failure [without a retry](#trying-again-is-offered-only-when-it-can-help).
+
+## Known issues
+
+- There is no offline state. A lost connection reads as a failed request and is tried again in the background.
+- There is no permission state. A page the user may not open shows the general failure, with no way forward.
+- A record that no longer exists shows the general failure too, not "not found".
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="A wait is drawn in the region that waits">
+
+Its timing and its indicator follow [the rules for waiting on Motion](?path=/docs/design-system-foundation-motion--docs#a-wait-announces-itself-late-and-then-stays-a-moment). Explained in [The life of a region](#the-life-of-a-region).
+
+</Details>
+
+<Details title="An empty region says so in its own place">
+
+The message replaces the rows and keeps the headers and filters. Explained in [The life of a region](#the-life-of-a-region).
+
+<DoDont>
+<Example kind="do" caption="The table's own empty state, under its headers.">
+
+```tsx
+<DataTable
+	table={table}
+	emptyState={m.data_table_empty()}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The table swapped for a page-level message.">
+
+```tsx
+{
+	rows.length === 0 ? (
+		<MessagePage title={m.data_table_empty()} />
+	) : (
+		<DataTable table={table} />
+	);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A failure keeps what is already on screen">
+
+A failed refresh is reported above the data it leaves in place. Only a region with nothing to show puts the failure in place of its content. Explained in [Failing gracefully](#failing-gracefully).
+
+</Details>
+
+<Details title="Trying again is offered only when it can help">
+
+A timeout, a rate limit or a server fault is retried in the background, then offered to the reader. Anything else says who can help. Explained in [Failing gracefully](#failing-gracefully).
+
+<DoDont>
+<Example kind="do" caption="The retry is offered only for a failure that can clear up.">
+
+```tsx
+{
+	isRetryable(error) ? (
+		<Button icon={RestartIcon} onClick={retry}>
+			{m.data_table_retry()}
+		</Button>
+	) : null;
+}
+```
+
+</Example>
+<Example kind="dont" caption="Every failure offers a retry, including the ones that will fail again.">
+
+```tsx
+<Button icon={RestartIcon} onClick={retry}>
+	{m.data_table_retry()}
+</Button>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Feedback appears where the user is looking">
+
+In the region, under the field or in place of the form's introduction. A toast is for what happened out of view, a banner for a condition that lasts, and a dialog only for a question. Explained in [Telling people what happened](#telling-people-what-happened).
+
+</Details>
+
+<Details title="A toast with an action stays until it is dismissed">
+
+Any other toast leaves after a few seconds. Explained in [Telling people what happened](#telling-people-what-happened).
+
+<DoDont>
+<Example kind="do" caption="The fix stays until it is used or dismissed.">
+
+```ts
+error(m.toast_comment_send_failed(), {
+	actions: [
+		{
+			label: m.toast_retry(),
+			onClick: () => retry(item.id),
+		},
+	],
+	timeout: 0,
+});
+```
+
+</Example>
+<Example kind="dont" caption="The fix leaves before it can be pressed.">
+
+```ts
+error(m.toast_comment_send_failed(), {
+	actions: [
+		{
+			label: m.toast_retry(),
+			onClick: () => retry(item.id),
+		},
+	],
+	timeout: 5000,
+});
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The same toast is never shown twice at once">
+
+A toast about one thing carries that thing's key, so a second failure replaces it rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
+
+```ts
+error(m.toast_comment_send_failed(), {
+	key: `outbox-${item.id}`,
+});
+```
+
+</Details>
+
+<Details title="Every text-entry control takes its shell from the one shared field treatment">
+
+`form.control` brings the card-surface fill, the hairline border that warms on hover and focus, the radius, the padding, the focus ring and the disabled and invalid treatments. Explained in [Where you type](#where-you-type).
+
+<DoDont>
+<Example kind="do" caption="The input takes all of its treatments from the one form-control mixin.">
+
+```scss
+.input {
+	@include form.control;
+
+	inline-size: 100%;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The border, radius, padding, hover, focus, invalid and disabled treatments all now differ from every other field in the app.">
+
+```scss
+.input {
+	border: 1px solid var(--sys-color-border);
+	border-radius: var(--radius-sm);
+	padding: var(--unit-6);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Dates and times are entered in our own frame, never the native date picker">
+
+`DateField`, `DateRangeField` and `TimeField` wrap the primitive library's date parts in our own frame. Shown in [Where you type](#where-you-type).
+
+<DoDont>
+<Example kind="do" caption="The date field is a date primitive inside our own frame.">
+
+```tsx
+<DateField
+	label={label}
+	value={date}
+	onValueChange={setDate}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="An unstyleable calendar, and light under a dark theme.">
+
+```tsx
+<input
+	type="date"
+	value={date}
+	onChange={e => setDate(e.target.value)}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Nothing is masked: a formatted identifier is plain entry with its format described">
+
+The format goes in the field's `description`, and the separators and case are normalized in the validator layer on the way to the wire. Shown in [Where you type](#where-you-type).
+
+<DoDont>
+<Example kind="do" caption="Plain entry, the format on screen, normalization at the boundary.">
+
+```tsx
+<TextField
+	label={label}
+	description={formatHint}
+	value={iban}
+	onValueChange={setIban}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The reader hears a character the field did not keep.">
+
+```tsx
+<MaskedInput mask="AA00 0000 0000 0000" value={iban} />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Invalid is error ink, fill and border together, never a red outline alone">
+
+`form.invalid` sets all three. Shown in [What a field says about itself](#what-a-field-says-about-itself).
+
+<DoDont>
+<Example kind="do" caption="Ink, fill and border all say the field is wrong.">
+
+```scss
+.input[data-invalid] {
+	@include form.invalid;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A red outline around a field that otherwise looks untouched.">
+
+```scss
+.input[data-invalid] {
+	border-color: var(--sys-color-error-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every field says when it is optional, on its own label">
+
+A group of checkboxes or radios takes a `label` of its own, so the marker has a label to sit on. Explained in [What a field says about itself](#what-a-field-says-about-itself).
+
+<DoDont>
+<Example kind="do" caption="The group is named, so the marker has somewhere to live.">
+
+```tsx
+<CheckboxGroupField
+	label={m.declarations_status_label()}
+	items={items}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="Three labelled boxes and no way to know the answer can be left empty.">
+
+```tsx
+<CheckboxGroup>
+	{items.map(item => (
+		<Checkbox key={item.value} {...item} />
+	))}
+</CheckboxGroup>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A lone checkbox or switch puts its optional marker on a row under the text">
+
+Its label is a two-column grid: the marker takes a second row, and the control stays centred in its own column. Pass `requiredness` rather than writing the marker into the label. Shown in [What a field says about itself](#what-a-field-says-about-itself).
+
+<DoDont>
+<Example kind="do" caption="A lone checkbox puts the marker on a row of its own, under the text.">
+
+```tsx
+<CheckboxField
+	label={m.declaration_send_copy()}
+	requiredness="optional"
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The suffix reads as part of the sentence it is tacked onto.">
+
+```tsx
+<CheckboxField
+	label={`${m.declaration_send_copy()} (${m.forms_optional()})`}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A field's states are read from one projected vocabulary, never from native or library attributes">
+
+`fieldStateAttributes` projects every state onto the markup as `data-*` attributes, and every stylesheet keys off those rather than off `:disabled`, `[aria-invalid]` or a library's own attribute. That holds for `form.control` as much as for `form.group`, so a box that wears either mixin has to carry the projection. One primitive library publishes `filled`, `dirty` and `touched` but never `readonly`; the other publishes `readonly` and none of those three. Explained in [What a field says about itself](#what-a-field-says-about-itself).
+
+<DoDont>
+<Example kind="do" caption="One selector reaches every control in the system.">
+
+```scss
+.group[data-readonly] {
+	@include form.readonly;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The temporal controls have no such element, so half the fields keep the entry treatment while read-only.">
+
+```scss
+.group input[readonly] {
+	background: var(--sys-color-surface-high);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Each state is read from its single owner">
+
+No root holds the state. Props give disabled, readonly and required; the validator gives validity; the form library gives dirty and touched; the control's own value gives filled; the library's render state gives focused; and `useBusyPhase` gives pending. Explained in [What a field says about itself](#what-a-field-says-about-itself).
+
+</Details>
+
+<Details title="Read-only is a dashed border on the raised surface, drawn on the control's own border">
+
+Every control that can be read-only wears it: a text field, a select, a combobox, a segmented group, and the box of a checkbox, radio or switch. Never a second edge beside the box. Shown in [What a field says about itself](#what-a-field-says-about-itself).
+
+<DoDont>
+<Example kind="do" caption="The box's own border goes dashed, where the border already was.">
+
+```scss
+.box[data-readonly] {
+	@include checkbox.box-readonly;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A second dashed edge drawn around a box that still looks editable.">
+
+```scss
+.box[data-readonly] {
+	outline: 1px dashed var(--sys-color-outline);
+	outline-offset: var(--unit-2);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A field that shares its box with anything else is a field group">
+
+`form.group` is a flex wrapper carrying the border, the radius, the card fill and the padding that `form.control` would otherwise own, plus the ring on `:focus-within`. It can't read `:disabled` or `:focus-visible`, so its treatments hang off the projected attributes: `[data-focused]` for a library that owns focus itself, then `[data-readonly]`, `[data-pending]`, `[data-invalid]` and `[data-disabled]`. Explained in [Everything in one box](#everything-in-one-box).
+
+</Details>
+
+<Details title="Anything inside a field group is bare">
+
+The control drops its border, background and padding and inherits colour and font from the group. `form.control` is still right for a control alone in its box; the moment it gains a neighbour it moves inside a group and goes bare. Shown in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="The control inside the group is bare, so the field is one box.">
+
+```scss
+.group {
+	@include form.group;
+
+	inline-size: 100%;
+	cursor: text;
+}
+
+.control {
+	flex: 1;
+	min-inline-size: 0;
+	border: none;
+	background: none;
+	padding: 0;
+	color: inherit;
+	font: inherit;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A bordered box inside a bordered box.">
+
+```scss
+.control {
+	@include form.control;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A field's height comes from the field, never from its inlays">
+
+The group carries a floor at the height of a bare control, and an inlay occupies the padding the group already owns instead of adding to it. Shown in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="The group states its own height, and the inlay sits in the padding.">
+
+```scss
+.group {
+	min-block-size: calc(1lh + 2 * var(--unit-6) + 2px);
+}
+
+.action {
+	margin-block: calc(-1 * var(--unit-6));
+}
+```
+
+</Example>
+<Example kind="dont" caption="The field is one height empty and another with a value in it.">
+
+```scss
+.action {
+	min-block-size: var(--unit-22);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Text on a field's line hugs the font, not the line height">
+
+Every text part in the row includes `form.field-text-metrics`, and the group's `align-items` does the centring. Include it after any `font` shorthand, which resets `line-height` on its way past. Shown in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="The value, the unit and the glyph share one baseline.">
+
+```scss
+.input {
+	font: inherit;
+
+	@include form.field-text-metrics;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The box is centred and the text inside it is not.">
+
+```scss
+.input {
+	font: inherit;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An inlay's touch target is a hit area outside its layout box">
+
+The target is a transparent area centred on the button and outside its layout box, so it never sets a floor on the field. Explained in [Everything in one box](#everything-in-one-box).
+
+</Details>
+
+<Details title="Whatever a field's static text or glyph says is in its label or description too">
+
+An `Affix` is static text sharing the control's box, and a glyph in an `Inlay` is a decorative icon; both are `aria-hidden`. Shown in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="The label names the unit the affix shows.">
+
+```tsx
+<TextField
+	label={m.declaration_amount_euros()}
+	prefix="€"
+	value={amount}
+	onValueChange={setAmount}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The unit exists only for people who can see it.">
+
+```tsx
+<TextField
+	label={m.declaration_amount()}
+	prefix="€"
+	value={amount}
+	onValueChange={setAmount}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The whole box is the field's hit box, and decoration takes no pointer events">
+
+A press that lands on the group focuses the control. Only an inlay that acts keeps its own press. Explained in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="The glyph and the unit are scenery, and the press falls through to the group.">
+
+```scss
+@mixin inlay {
+	pointer-events: none;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A 24px dead zone inside a field that shows an I-beam over it.">
+
+```scss
+.inlay {
+	cursor: text;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An inlay that acts is the design-system button, with a tooltip and an accessible name">
+
+The clear affordance, a password reveal, a calendar trigger and a copy-to-clipboard are all the button rendered into the inlay row, never a glyph with a click handler. Explained in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="Decoration is decoration, and the action is a named button.">
+
+```tsx
+<TextInput.Group>
+	<TextInput.Affix>{"€"}</TextInput.Affix>
+	<TextInput.Input inputMode="decimal" />
+	<TextInput.Clear />
+</TextInput.Group>
+```
+
+</Example>
+<Example kind="dont" caption="An unnamed glyph that is also a click target, and no hint for anyone.">
+
+```tsx
+<TextInput.Group>
+	<TextInput.Input />
+	<span onClick={clear}>
+		<Icon svg={CloseIcon} label="" />
+	</span>
+</TextInput.Group>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Invalid re-points the field's ink and leaves its buttons alone">
+
+`--field-fg` and `--field-muted-fg` are re-pointed once, on the control or on the group, and every part that is ink reads them bare, with no fallback literal. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
+
+<DoDont>
+<Example kind="do" caption="Ink reads the knob, and the action leaves its colour to the button.">
+
+```scss
+.separator {
+	color: var(--field-muted-fg);
+}
+
+.action {
+	@include form.inlay-action;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The field reaches into the button, and the affordance now reads as destructive.">
+
+```scss
+.group[data-invalid] .action {
+	color: var(--sys-color-error-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An invalid form says so when it is submitted, then keeps up">
+
+On submit every problem shows at once, and the first invalid field takes focus and scrolls into view. From then on each field validates as it changes. A problem with the form as a whole shows above the submit button. Explained in [Forms that wait their turn](#forms-that-wait-their-turn).
+
+</Details>
+
+<Details title="Anything with a tone and a variant colours itself from the one shared tone table">
+
+`tone.variants` emits a fill, an ink and a border for every tone and variant. Explained in [Labels pinned to things](#labels-pinned-to-things).
+
+<DoDont>
+<Example kind="do" caption="The chip colours itself from the one shared tone mixin.">
+
+```scss
+.chip {
+	@include tone.variants("chip");
+
+	background: var(--chip-bg);
+	color: var(--chip-fg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A fourth copy of the same tone table.">
+
+```scss
+.chip[data-tone="warning"] {
+	background: var(--sys-color-warning-bg);
+	color: var(--sys-color-warning-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The solid variant swaps the role's own pair instead of adding a colour">
+
+Explained in [Labels pinned to things](#labels-pinned-to-things).
+
+<DoDont>
+<Example kind="do" caption="Solid swaps the role's own pair, so it re-points with the theme.">
+
+```scss
+&[data-variant="solid"] {
+	--chip-bg: var(--sys-color-error-fg);
+	--chip-fg: var(--sys-color-error-bg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A fourth colour, fixed to one theme's step of the ramp.">
+
+```scss
+&[data-variant="solid"] {
+	--chip-bg: var(--ref-red-600);
+	--chip-fg: var(--ref-neutral-0);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A chip takes its shape from the shared chip shell, at the small label size">
+
+`chip.shell` wraps the tone table and adds the pill. Shown in [Labels pinned to things](#labels-pinned-to-things).
+
+<DoDont>
+<Example kind="do" caption="The statuses annotate the rows instead of competing with them.">
+
+```scss
+.chip {
+	@include chip.shell("chip");
+}
+```
+
+</Example>
+<Example kind="dont" caption="At body size the statuses are the loudest thing on the page.">
+
+```scss
+.chip {
+	@include chip.shell("chip");
+
+	padding: var(--unit-4) var(--unit-10);
+	font: var(--sys-font-body-large);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A removable chip is no taller than a plain one">
+
+The remove control pulls its extra height back with a negative block margin. Explained in [Labels pinned to things](#labels-pinned-to-things).
+
+<DoDont>
+<Example kind="do" caption="The remove control's extra height is pulled back into the chip's padding.">
+
+```scss
+.remove {
+	block-size: var(--unit-10);
+	margin-block: calc(-1 * var(--unit-1));
+}
+```
+
+</Example>
+<Example kind="dont" caption="Every removable chip stands taller than the plain chip beside it.">
+
+```scss
+.remove {
+	block-size: var(--unit-10);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A navigation item is a full-height pill, selected with a tonal fill and the label's strong ink">
+
+Hover and press come from the shared state layer. Explained in [Finding your way](#finding-your-way).
+
+</Details>
+
+<Details title="Rails and bars are told apart from the canvas by their surface, never a border or a shadow">
+
+A bottom bar in document flow is not floating either. Explained in [Finding your way](#finding-your-way).
+
+</Details>
+
+<Details title="The frame's top bar owns the page title and the tab strip">
+
+Both are derived from the route tree: a route declares its tab in `staticData`, and the shell draws the strip and the title. Explained in [Finding your way](#finding-your-way).
+
+<DoDont>
+<Example kind="do" caption="The route declares its tab, and the shell draws the strip and the title.">
+
+```tsx
+export const Route = createFileRoute(
+	"/_app/declarations/incomplete",
+)({
+	staticData: {
+		tab: { label: m.tab_incomplete, order: 10 },
+	},
+	component: Page,
+});
+```
+
+</Example>
+<Example kind="dont" caption="A second title and a strip the route tree knows nothing about.">
+
+```tsx
+const Page = () => (
+	<>
+		<h1>{m.declarations_title()}</h1>
+		<Tabs items={declarationTabs} />
+		<DeclarationsTable />
+	</>
+);
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every popup floats on the overlay surface at the first level, with no outline">
+
+Tooltips take the tightest radius and lists a card radius. Toasts sit one level up, on a tone container, and a dialog takes the largest radius. Explained in [Above the page](#above-the-page).
+
+</Details>
+
+<Details title="Every popup that lists things shares one surface and one row">
+
+Menus, select lists and typeahead menus take the card from `popup.surface` and the row from `popup.item`, which includes the highlighted treatment and no focus ring. Explained in [Above the page](#above-the-page).
+
+<DoDont>
+<Example kind="do" caption="One mixin gives the card, another the row.">
+
+```scss
+.popup {
+	@include popup.surface;
+}
+
+.item {
+	@include popup.item;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A third list-row treatment, with its own hover colour.">
+
+```scss
+.item {
+	border-radius: var(--radius-sm);
+	padding: var(--unit-4) var(--unit-6);
+
+	&:hover {
+		background: var(--sys-color-surface-high);
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A dialog or drawer carries no shadow, and its backdrop stays restrained">
+
+A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in [Above the page](#above-the-page).
+
+<DoDont>
+<Example kind="do" caption="The page steps back but stays readable, and the drawer needs no shadow.">
+
+```scss
+.backdrop {
+	--overlay-dim: 0.22;
+	backdrop-filter: blur(1px);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The list the user opened the drawer to filter is gone, and the shadow adds nothing.">
+
+```scss
+.backdrop {
+	--overlay-dim: 0.7;
+	backdrop-filter: blur(8px);
+}
+
+.popup {
+	box-shadow: var(--elevation-2);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every modal overlay dims the page through the one shared sheet">
+
+An overlay includes `overlay.backdrop` and re-points the tier rather than restating the sheet; a drawer also scales what paints by its swipe progress. Explained in [Above the page](#above-the-page).
+
+<DoDont>
+<Example kind="do" caption="The drawer re-points the shared sheet to a lighter tier.">
+
+```scss
+.backdrop {
+	@include overlay.backdrop;
+
+	--overlay-dim: 0.22;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A second sheet that will not follow the next theme step.">
+
+```scss
+.backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgb(0 0 0 / 0.22);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A dismissable surface says so on its title's line">
+
+Dialogs and drawers put an icon-only close button on the heading's line, at the surface's own inset, even when they can also be swiped or backdrop-clicked away. The header part draws it from its `closeLabel`. Shown in [Above the page](#above-the-page).
+
+<DoDont>
+<Example kind="do" caption="The close button sits on the title's line, and the title stands alone.">
+
+```tsx
+<Drawer.Header closeLabel={m.filter_close()}>
+	<Drawer.Title>{m.filter_title()}</Drawer.Title>
+</Drawer.Header>
+```
+
+</Example>
+<Example kind="dont" caption="No way out but a swipe, and a subtitle restating the title.">
+
+```tsx
+<Drawer.Title>{m.filter_title()}</Drawer.Title>
+<Drawer.Description>{m.filter_description()}</Drawer.Description>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A drawer carries no Cancel beside its actions, and a dialog that asks a question always has one">
+
+In the dialog, Cancel is the answer no to the action it asks you to be sure of. Explained in [Above the page](#above-the-page).
+
+</Details>
+
+<Details title="A dialog or drawer carries no subtitle">
+
+The title says what the surface is, and anything that needs explaining sits next to the control it explains. Shown in [Above the page](#above-the-page).
+
+</Details>
+
+<Details title="A destructive action asks first, in its own words">
+
+The title is a question that names the action, and the body says what will happen. The confirm button repeats the verb in the danger tone, after Cancel. Explained in [Questions that can't wait](#questions-that-cant-wait).
+
+<DoDont>
+<Example kind="do" caption="The title, the body and the button all name the same action.">
+
+```tsx
+<ConfirmDialog
+	open={open}
+	onOpenChange={setOpen}
+	title={m.comment_delete_title()}
+	description={m.comment_delete_description()}
+	confirmLabel={m.comment_delete_confirm()}
+	cancelLabel={m.comment_delete_cancel()}
+	onConfirm={() => void deleteOutboxItem(id)}
+	destructive
+/>
+```
+
+</Example>
+<Example kind="dont" caption="Yes to what? The reader has to remember what they clicked.">
+
+```tsx
+<ConfirmDialog
+	open={open}
+	onOpenChange={setOpen}
+	title="Are you sure?"
+	confirmLabel="Yes"
+	cancelLabel="No"
+	onConfirm={() => void deleteOutboxItem(id)}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A session warns before it ends, and says so after">
+
+Two minutes ahead, a dialog that only an answer closes, and any request resets the clock. After it ends, a toast at sign-in that stays until it is dismissed. Explained in [Questions that can't wait](#questions-that-cant-wait).
+
+</Details>
+
+</DetailsList>

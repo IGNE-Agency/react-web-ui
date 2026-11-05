@@ -1,0 +1,67 @@
+@use "./drawing";
+
+.waiting,
+.placeholderFigure {
+	@include drawing.palette("sand");
+}
+
+.waiting,
+.placeholderFigure {
+	--waiting-peach: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 55%,
+		var(--drawing-paper)
+	);
+}
+
+.field {
+	fill: var(--drawing-hot-muted);
+}
+
+.rule {
+	@include drawing.rule;
+
+	stroke: var(--drawing-paper);
+}
+
+.dot {
+	fill: var(--waiting-peach);
+}
+
+.ghost {
+	fill: none;
+	stroke: var(--waiting-peach);
+	stroke-dasharray: 18 16;
+	stroke-width: 22;
+}
+
+.track,
+.arc {
+	fill: none;
+	stroke-width: 72;
+}
+
+.track {
+	stroke: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 50%,
+		var(--drawing-hot-muted)
+	);
+}
+
+.arc {
+	stroke: var(--drawing-paper);
+	stroke-linecap: round;
+}
+
+.bone {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 55%,
+		var(--drawing-hot-muted)
+	);
+}
+
+.shimmer {
+	fill: var(--waiting-peach);
+}

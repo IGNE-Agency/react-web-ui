@@ -1,0 +1,40 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.bar {
+		display: flex;
+		flex-shrink: 0;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--filter-bar-gap, var(--sys-unit-8));
+	}
+
+	.search {
+		flex: 1 1
+			var(--filter-bar-search-basis, var(--sys-unit-64));
+		min-inline-size: 0;
+	}
+
+	.active {
+		display: flex;
+		flex: 1 0 100%;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--filter-bar-active-gap, var(--sys-unit-4));
+	}
+
+	.fields {
+		display: flex;
+		flex-direction: column;
+		gap: var(--filter-bar-fields-gap, var(--sys-unit-12));
+		margin-block-start: var(--sys-unit-12);
+	}
+
+	.footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--sys-unit-8);
+		margin-block-start: var(--sys-unit-16);
+	}
+}

@@ -1,0 +1,138 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/form.scss" as form;
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.photoInput {
+		position: relative;
+		inline-size: var(
+			--photo-input-size,
+			var(--sys-unit-64)
+		);
+	}
+
+	.well {
+		--_well-state-layer: 0;
+
+		position: relative;
+		display: grid;
+		box-sizing: border-box;
+		inline-size: 100%;
+		aspect-ratio: 1;
+		margin: 0;
+		border: 1px solid
+			var(--photo-input-border, var(--sys-color-border));
+		border-radius: var(--sys-radius-circle);
+		padding: var(--sys-unit-2);
+		background-color: var(
+			--photo-input-bg,
+			var(--sys-color-surface)
+		);
+		color: var(--sys-color-text);
+		cursor: pointer;
+
+		@include focus.ring;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				border-color var(--sys-motion-instant)
+					var(--sys-motion-standard),
+				background-color var(--sys-motion-instant)
+					var(--sys-motion-standard),
+				outline-width var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+
+		&:is(:hover, :focus-visible):not([data-readonly]),
+		&[data-dragover] {
+			--_well-state-layer: var(--sys-state-hover);
+
+			border-color: var(
+				--photo-input-active-border,
+				var(--sys-color-primary)
+			);
+		}
+
+		&[data-dragover] {
+			--_well-state-layer: var(--sys-state-dragged);
+
+			background-color: var(
+				--photo-input-drop-bg,
+				var(--sys-color-primary-container)
+			);
+		}
+
+		&[data-pending] {
+			@include form.pending;
+		}
+
+		&[data-invalid] {
+			@include form.invalid;
+		}
+
+		&[data-readonly] {
+			@include form.readonly;
+
+			cursor: default;
+		}
+	}
+
+	.face {
+		position: relative;
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		border-radius: var(--sys-radius-circle);
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background-color: var(--sys-color-primary);
+			opacity: var(--_well-state-layer);
+			pointer-events: none;
+		}
+
+		img,
+		svg {
+			inline-size: 100%;
+			block-size: 100%;
+			object-fit: cover;
+			border-radius: var(--sys-radius-circle);
+		}
+	}
+
+	.badge {
+		position: absolute;
+		inset-block-end: 0;
+		inset-inline-end: 0;
+		display: grid;
+		place-items: center;
+		inline-size: var(--sys-unit-20);
+		block-size: var(--sys-unit-20);
+		border: 3px solid var(--sys-color-surface);
+		border-radius: var(--sys-radius-circle);
+		background-color: var(
+			--photo-input-badge-bg,
+			var(--sys-color-primary)
+		);
+		color: var(
+			--photo-input-badge-fg,
+			var(--sys-color-on-primary)
+		);
+		pointer-events: none;
+	}
+
+	.remove {
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline-end: 0;
+		border: 3px solid var(--sys-color-surface);
+	}
+
+	.picker,
+	.valueText {
+		@include a11y.visually-hidden;
+	}
+}

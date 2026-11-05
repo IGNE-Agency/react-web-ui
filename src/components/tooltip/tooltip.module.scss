@@ -1,0 +1,37 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.popup {
+		max-inline-size: var(--tooltip-max-inline-size, 18rem);
+		border-radius: var(
+			--tooltip-radius,
+			var(--sys-radius-sm)
+		);
+		background: var(
+			--tooltip-bg,
+			var(--sys-color-surface-overlay)
+		);
+		box-shadow: var(
+			--tooltip-shadow,
+			var(--sys-elevation-1)
+		);
+		padding: var(--sys-unit-4) var(--sys-unit-6);
+		color: var(--tooltip-fg, var(--sys-color-text));
+		font: var(--tooltip-font, var(--sys-font-body-small));
+		transform-origin: var(--transform-origin);
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				opacity var(--sys-motion-instant)
+					var(--sys-motion-standard),
+				scale var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			opacity: 0;
+			scale: 0.9;
+		}
+	}
+}

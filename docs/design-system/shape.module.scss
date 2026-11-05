@@ -1,0 +1,102 @@
+.card {
+	display: grid;
+	gap: var(--sys-unit-2);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+	inline-size: 12rem;
+	color: var(--sys-color-text);
+}
+
+.cardShaped {
+	border-radius: var(--sys-radius-md);
+}
+
+.cardSpaced {
+	border-radius: var(--sys-unit-2);
+}
+
+.title {
+	font: var(--sys-font-label-medium);
+}
+
+.meta {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-small);
+}
+
+.menu {
+	display: grid;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface-overlay);
+	padding: var(--sys-unit-4);
+	inline-size: 11rem;
+	box-shadow: var(--sys-elevation-1);
+}
+
+.row {
+	position: relative;
+	isolation: isolate;
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.rowRounded {
+	border-radius: var(--sys-radius-sm);
+}
+
+.rowHovered::after {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	inset: 0;
+	border-radius: inherit;
+	background: currentcolor;
+	opacity: var(--sys-state-pressed);
+}
+
+.group {
+	display: grid;
+	gap: var(--sys-unit-1);
+	inline-size: 12rem;
+}
+
+.groupRow {
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-8) var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.groupJoined > :first-child {
+	border-start-start-radius: var(--sys-radius-md);
+	border-start-end-radius: var(--sys-radius-md);
+}
+
+.groupJoined > :last-child {
+	border-end-start-radius: var(--sys-radius-md);
+	border-end-end-radius: var(--sys-radius-md);
+}
+
+.groupPinched > * {
+	border-radius: var(--sys-radius-md);
+}
+
+.bleedCard {
+	display: grid;
+	border-radius: var(--sys-radius-xl);
+	background: var(--sys-color-surface);
+	padding-block-start: var(--sys-unit-8);
+	inline-size: 12rem;
+}
+
+.bleedRow {
+	padding: var(--sys-unit-6) var(--sys-unit-16);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.bleedRowSelected {
+	background: var(--sys-color-primary-container);
+	color: var(--sys-color-on-primary-container);
+}

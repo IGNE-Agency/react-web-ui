@@ -1,0 +1,12 @@
+/// The caption register: the line under or beside a figure that says what to
+/// notice in it.
+///
+/// @example
+///   .caption {
+///       @include caption.register;
+///   }
+@mixin register {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-small);
+	text-wrap: pretty;
+}

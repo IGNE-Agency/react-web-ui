@@ -1,0 +1,45 @@
+@mixin frame {
+	position: relative;
+	box-sizing: border-box;
+	block-size: min(
+		var(--overlay-frame-block-size),
+		100dvh - 2 * var(--sys-unit-8)
+	);
+	border-radius: var(--sys-radius-md);
+	background-color: var(--sys-color-surface-high);
+	overflow: clip;
+	contain: layout paint;
+}
+
+:global([data-overlay-frame="small"]) {
+	--overlay-frame-block-size: 10rem;
+	--overlay-frame-offset: 3.5rem;
+}
+
+:global([data-overlay-frame="medium"]) {
+	--overlay-frame-block-size: 26rem;
+}
+
+:global([data-overlay-frame="large"]) {
+	--overlay-frame-block-size: 32rem;
+}
+
+:global(html[data-overlay-frame]) {
+	padding: var(--sys-unit-8);
+
+	> :global(body) {
+		@include frame;
+	}
+}
+
+.frame {
+	@include frame;
+
+	padding: var(--sys-unit-8);
+}
+
+.stage {
+	display: flex;
+	justify-content: center;
+	padding-block-start: var(--overlay-frame-offset, 0);
+}

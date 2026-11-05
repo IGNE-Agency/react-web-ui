@@ -1,0 +1,27 @@
+@use "../../style/layers.scss";
+@use "../../style/dialog.scss" as dialog;
+@use "../../style/overlay.scss" as overlay;
+
+@layer kit.components {
+	.backdrop {
+		@include overlay.backdrop;
+	}
+
+	.popup {
+		@include dialog.surface;
+
+		padding: var(--sys-unit-20);
+	}
+
+	.title {
+		@include dialog.title;
+	}
+
+	.description {
+		@include dialog.description;
+	}
+
+	.actions {
+		@include dialog.actions;
+	}
+}

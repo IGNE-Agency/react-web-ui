@@ -1,0 +1,42 @@
+@use "./drawing";
+
+.proximity,
+.scale {
+	@include drawing.palette("neutral");
+}
+
+.proximity {
+	--figure-field: var(--drawing-cool-muted);
+}
+
+.scale {
+	--figure-field: var(--drawing-neighbour-vivid);
+}
+
+.field {
+	fill: var(--figure-field);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.scale .rule {
+	stroke: var(--drawing-neighbour-muted);
+}
+
+.dot {
+	fill: var(--drawing-paper);
+}
+
+.proximity .picked {
+	fill: var(--drawing-hot-vivid);
+}
+
+.step {
+	fill: var(--drawing-neighbour-muted);
+}
+
+.scale .picked {
+	fill: var(--drawing-paper);
+}

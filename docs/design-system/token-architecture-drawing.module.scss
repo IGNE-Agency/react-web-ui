@@ -1,0 +1,39 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("neutral");
+}
+
+.field {
+	fill: var(--drawing-hot-muted);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}
+
+.left {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 45%,
+		var(--drawing-hot-muted)
+	);
+}
+
+.right {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 20%,
+		var(--drawing-hot-muted)
+	);
+}
+
+@for $step from 0 through 8 {
+	.ramp#{$step} {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-vivid) ($step * 12.5%),
+			var(--drawing-paper)
+		);
+	}
+}

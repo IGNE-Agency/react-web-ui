@@ -1,0 +1,72 @@
+@use "../../style/layers.scss";
+@use "../../style/tone.scss" as tone;
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--status-message-gap, var(--sys-unit-6));
+		padding: var(--status-message-pad, var(--sys-unit-12));
+		color: var(--status-message-fg, var(--sys-color-text));
+		text-align: center;
+	}
+
+	.disc {
+		@include tone.variants("_status-message-disc");
+
+		display: grid;
+		place-items: center;
+		inline-size: var(
+			--status-message-disc-size,
+			var(--sys-unit-32)
+		);
+		block-size: var(
+			--status-message-disc-size,
+			var(--sys-unit-32)
+		);
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--status-message-disc-bg,
+			var(--_status-message-disc-bg)
+		);
+		color: var(
+			--status-message-disc-fg,
+			var(--_status-message-disc-fg)
+		);
+	}
+
+	.illustration {
+		display: grid;
+		place-items: center;
+		color: var(
+			--status-message-illustration-fg,
+			var(--sys-color-primary)
+		);
+	}
+
+	.title {
+		font: var(
+			--status-message-title-font,
+			var(--sys-font-heading-medium)
+		);
+	}
+
+	.description {
+		max-inline-size: var(--status-message-measure, 40ch);
+		font: var(
+			--status-message-description-font,
+			var(--sys-font-body-medium)
+		);
+	}
+
+	.action {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(
+			--status-message-action-gap,
+			var(--sys-unit-4)
+		);
+	}
+}

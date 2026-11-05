@@ -1,0 +1,99 @@
+@use "../../style/layers.scss";
+@use "../../style/form.scss" as form;
+@use "../../style/popup.scss" as popup;
+
+@layer kit.components {
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: var(--field-gap, var(--sys-unit-4));
+		inline-size: 100%;
+	}
+
+	.label {
+		@include form.label;
+	}
+
+	.trigger {
+		@include form.control;
+
+		position: relative;
+		gap: var(--select-gap, var(--sys-unit-6));
+		justify-content: space-between;
+		min-inline-size: 0;
+		text-align: start;
+		cursor: pointer;
+
+		&[data-readonly] {
+			cursor: default;
+		}
+	}
+
+	.value {
+		flex: 1;
+		overflow: hidden;
+		min-inline-size: 0;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		@include form.field-text-metrics;
+	}
+
+	.icon {
+		display: inline-flex;
+		flex-shrink: 0;
+		color: var(--select-icon-fg, var(--field-muted-fg));
+	}
+
+	.positioner {
+		@include popup.edge-padding;
+
+		outline: none;
+	}
+
+	.popup {
+		@include popup.surface;
+
+		min-inline-size: var(--anchor-width);
+		max-block-size: var(--available-height);
+		overflow-y: auto;
+	}
+
+	.item {
+		@include popup.item;
+	}
+
+	.statusArea {
+		@include popup.status-area;
+	}
+
+	.status {
+		@include popup.note;
+	}
+
+	.itemText {
+		flex: 1;
+		min-inline-size: 0;
+	}
+
+	.itemDetail {
+		display: block;
+		color: var(
+			--select-detail-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--select-detail-font,
+			var(--sys-font-body-small)
+		);
+	}
+
+	.indicator {
+		display: inline-flex;
+		flex-shrink: 0;
+		color: var(
+			--select-indicator-fg,
+			var(--sys-color-primary)
+		);
+	}
+}

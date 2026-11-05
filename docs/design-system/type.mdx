@@ -1,0 +1,424 @@
+import ArchiveIcon from "@material-design-icons/svg/outlined/archive.svg?react";
+import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
+import PrintIcon from "@material-design-icons/svg/outlined/print.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { Beside } from "./beside";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import styles from "./type.module.scss";
+import { TypeDrawing } from "./type-drawing";
+import {
+	HierarchyDrawing,
+	LadderDrawing,
+} from "./type-figures";
+import { Specimen } from "./specimen";
+import { TypefaceSpecimen } from "./typeface-specimen";
+import { TypeRoleSpecimen } from "./type-role-specimen";
+
+export const Live = ({ children }) => (
+	<StoryProviders>{children}</StoryProviders>
+);
+
+<Meta title="Design system/Foundation/Type" />
+
+# Type
+
+Most of what a product says, it says in words, and type decides how those words are read: what comes first, what can be skimmed, what is only there to be pressed. When type is right nobody notices it. The reader just reads, and finds the next thing where they expected it.
+
+<Illustration caption="Two families on one baseline. The white band is the x-height, where most of the reading happens.">
+	<TypeDrawing />
+</Illustration>
+
+## What type does
+
+Before anyone reads a word, the shape of the text has already told them where to look. A larger, heavier line reads as the title, a short line beside a field reads as its label, and a calm block of smaller text reads as something to settle into. That order is the hierarchy, and it comes from a handful of contrasts: size, weight, family and the space around a line.
+
+The fewer of those contrasts a product uses, and the more consistently it uses them, the faster a reader learns them. A screen where every title is set a little differently makes the reader work out the order again each time.
+
+<Illustration caption="Same letter, same size: the one set heavier, in the other family, still leads.">
+	<HierarchyDrawing />
+</Illustration>
+
+Reading text has a comfortable width, too. Lines much longer than about seventy characters make the eye lose its place on the way back, and much shorter ones chop a sentence into pieces. Type and layout share that decision.
+
+## A ladder of sizes, a set of jobs
+
+Sizes come from a scale: a short ladder where each step is the one below it times a fixed ratio. A fixed ratio keeps the steps far enough apart that the difference between two of them is a decision anyone can see, and it lets the whole ladder be retuned at once.
+
+The scale is raw material, though. What a screen asks for is a role, named after the job the text does: a heading, a label, body copy. A role settles the family, the weight, the size and the line height in one go, so they can't drift apart, and it keeps working when the ladder under it is retuned. It's the same idea as [a component reading a role rather than a step](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step), applied to type.
+
+<Illustration caption="One letter at every step of a scale that grows by one ratio. The three in white are the steps the roles use, and the largest of them, a heading, is set in the heading family.">
+	<LadderDrawing />
+</Illustration>
+
+## Two families
+
+This product sets type in two families. The heading family gives titles their character; the body family carries everything that is read or acted on.
+
+<Specimen caption="Satoshi gives titles their character; Roboto carries everything that is read or acted on.">
+	<TypefaceSpecimen />
+</Specimen>
+
+## Roles
+
+There are three groups of roles. Headings title dialogs and pages. Labels name the things you act on: buttons, tabs, nav items, field labels and chips. Body roles carry copy. A few of them are set in themselves below, with the family, weight, size and line height each resolves to.
+
+<Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in Satoshi; the full set is in the tokens file.">
+	<TypeRoleSpecimen
+		groups={[
+			{
+				group: "sys.font.heading",
+				title: "Headings",
+				sample: "Declarations",
+				roles: ["large", "small"],
+			},
+			{
+				group: "sys.font.label",
+				title: "Labels",
+				sample: "Submit declaration",
+				roles: ["large", "medium-strong"],
+			},
+			{
+				group: "sys.font.body",
+				title: "Body",
+				sample:
+					"Physiotherapy on 12 March, declared for € 120.",
+				roles: ["large", "medium"],
+			},
+		]}
+	/>
+</Specimen>
+
+## Holding still
+
+Selecting, activating or hovering an item may change its weight and its colour. It never changes its size, family or line height: the item would grow, and every neighbour in the row or rail would shift to make room.
+
+That's why each label role has a strong twin at exactly the same size, and a selected item takes that twin. Reaching for the next step up the ladder is the mistake the pairing exists to prevent.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Same size, heavier weight, branded ink."
+		visual={
+			<div className={`${styles.nav} sb-unstyled`}>
+				<span className={styles.navItem}>Inbox</span>
+				<span
+					className={`${styles.navItem} ${styles.navItemStrong}`}>
+					Declarations
+				</span>
+				<span className={styles.navItem}>Clients</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The active item is a step larger and its neighbours jump."
+		visual={
+			<div className={`${styles.nav} sb-unstyled`}>
+				<span className={styles.navItem}>Inbox</span>
+				<span
+					className={`${styles.navItem} ${styles.navItemLarger}`}>
+					Declarations
+				</span>
+				<span className={styles.navItem}>Clients</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## When words don't fit
+
+<Beside>
+
+There are three ways to force text into a box that's too small, and none of them is allowed. Clipping it with an ellipsis hides the part that tells an item apart from its neighbours. Shrinking it breaks the scale and gives the longest string the smallest type. Breaking it mid-word is the worst of the three, because the reader can't tell a fold from a spelling mistake.
+
+What's left is folding where the language allows it: between words, and at a hyphenation point when a single word is longer than the box. The browser can only hyphenate when it knows which language it's reading, so the page's language follows the one the reader chose. <Pull>A word can't be relied on to have a hyphenation point, so a box that must hold any text is sized to fit its longest word.</Pull>
+
+    <Example
+    	kind="caution"
+    	caption="Automatic hyphenation needs the document language to match the locale, and a word cannot be relied on to have a hyphenation point."
+    	visual={
+    		<span
+    			lang="en"
+    			className={`${styles.tile} ${styles.tileUnhyphenated} sb-unstyled`}>
+    			Reimbursement request
+    		</span>
+    	}
+    />
+
+</Beside>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Folded between words, and at a hyphenation point inside a word longer than the box."
+		visual={
+			<span
+				lang="en"
+				className={`${styles.tile} ${styles.tileFolded} sb-unstyled`}>
+				{"Reimburse­ment request"}
+			</span>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Clipped before the part that tells it apart, broken with no relation to the word, or shrunk so the longest string gets the smallest type."
+		visual={
+			<div className={`${styles.tiles} sb-unstyled`}>
+				<span
+					lang="en"
+					className={`${styles.tile} ${styles.tileClipped}`}>
+					Reimbursement request
+				</span>
+				<span
+					lang="en"
+					className={`${styles.tile} ${styles.tileMangled}`}>
+					Reimbursement request
+				</span>
+				<span
+					lang="en"
+					className={`${styles.tile} ${styles.tileShrunk}`}>
+					Reimbursement request
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+When the box really can't grow, the words go and something else names the control: [a tooltip and an accessible label](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), or a caption elsewhere. Copy that only fits at one length is a constraint on the copy, and the thing to change is usually how many items share the space, not how each one is set.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The row cannot grow, so the labels go and each icon is named by its tooltip and accessible label."
+		visual={
+			<Live>
+				<div className={styles.toolbar}>
+					<Button
+						iconOnly
+						icon={DownloadIcon}
+						label="Download"
+					/>
+					<Button iconOnly icon={PrintIcon} label="Print" />
+					<Button
+						iconOnly
+						icon={ArchiveIcon}
+						label="Archive"
+					/>
+				</div>
+			</Live>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The labels are cut to fit, and what is left names nothing."
+		visual={
+			<div className={styles.toolbar}>
+				<Button className={styles.squeezed}>
+					<span className={styles.clipped}>Download</span>
+				</Button>
+				<Button className={styles.squeezed}>
+					<span className={styles.clipped}>Print</span>
+				</Button>
+				<Button className={styles.squeezed}>
+					<span className={styles.clipped}>Archive</span>
+				</Button>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="A component names a type role, never a step of the scale">
+
+Retuning the scale then changes every heading, label and body text at once, instead of leaving behind each component that named a step. Explained in [A ladder of sizes, a set of jobs](#a-ladder-of-sizes-a-set-of-jobs).
+
+<DoDont>
+<Example kind="do" caption="The tab names a label role.">
+
+```scss
+.tab {
+	font: var(--sys-font-label-medium);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Retuning the scale now means finding every component that named a step.">
+
+```scss
+.tab {
+	font: var(--ref-font-body-semibold-1);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A role sets family, weight, size and line height together">
+
+Each role is a complete `font` shorthand, so a component sets it in one declaration and never sets a size or a weight on its own. Explained in [A ladder of sizes, a set of jobs](#a-ladder-of-sizes-a-set-of-jobs).
+
+<DoDont>
+<Example kind="do" caption="One declaration sets the family, weight, size and line height.">
+
+```scss
+.tab {
+	font: var(--sys-font-label-medium);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Loose values drift away from the role the next time it is retuned.">
+
+```scss
+.tab {
+	font-size: 1rem;
+	font-weight: 600;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Only headings are set in the heading family">
+
+Everything that is read or acted on, labels and body text alike, is set in the body family. Shown in [Two families](#two-families).
+
+</Details>
+
+<Details title="Headings title dialogs and pages, labels name what you act on, and body roles carry copy">
+
+Labels cover buttons, tabs, nav items, field labels and chips. Shown in [Roles](#roles).
+
+</Details>
+
+<Details title="A state never changes the type size">
+
+A selected, active or hovered item may change its weight and its colour, never its size, family or line height. It takes its label role's strong twin, which has the same size. Explained in [Holding still](#holding-still).
+
+<DoDont>
+<Example kind="do" caption="Same size, heavier weight, branded ink.">
+
+```scss
+.nav-item {
+	font: var(--sys-font-label-medium);
+
+	&[data-active="true"] {
+		background-color: var(--sys-color-primary-container);
+		color: var(--sys-color-on-primary-container);
+		font: var(--sys-font-label-medium-strong);
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="The active item is a step larger and its neighbours jump.">
+
+```scss
+.nav-item {
+	font: var(--sys-font-label-medium);
+
+	&[data-active="true"] {
+		font: var(--sys-font-label-large);
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Text that does not fit is folded, never mangled">
+
+No ellipsis, no shrinking and no breaking mid-word. Text folds between words, and at a hyphenation point inside a word longer than its box. Explained in [When words don't fit](#when-words-dont-fit).
+
+<DoDont>
+<Example kind="do" caption="Folded between words, and at a hyphenation point inside a word longer than the box.">
+
+```scss
+.label {
+	overflow-wrap: normal;
+	hyphens: auto;
+}
+```
+
+</Example>
+<Example kind="dont" caption="Clipped, broken with no relation to the word, or shrunk.">
+
+```scss
+.label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.label {
+	overflow-wrap: anywhere;
+}
+
+.label--long {
+	font-size: 0.75rem;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The document language follows the active locale">
+
+Automatic hyphenation picks its dictionary from the document's `lang`, so it has to change with the locale. Explained in [When words don't fit](#when-words-dont-fit).
+
+</Details>
+
+<Details title="A box that must hold any text is sized to fit its longest word">
+
+A word can't be relied on to have a hyphenation point. Explained in [When words don't fit](#when-words-dont-fit).
+
+</Details>
+
+<Details title="When a box can't grow, the text goes and something else names the control">
+
+An icon-only control gets a tooltip and an accessible label, and any longer text moves to a caption elsewhere. Explained in [When words don't fit](#when-words-dont-fit).
+
+<DoDont>
+<Example kind="do" caption="The row cannot grow, so each icon is named by its tooltip and accessible label.">
+
+```tsx
+<Button
+	iconOnly
+	icon={DownloadIcon}
+	label={m.invoice_download()}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The labels are cut to fit, and what is left names nothing.">
+
+```tsx
+<Button className={styles.truncated}>
+	{m.invoice_download()}
+</Button>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

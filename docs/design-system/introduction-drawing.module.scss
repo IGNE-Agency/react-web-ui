@@ -1,0 +1,56 @@
+@use "./drawing";
+
+.drawing {
+	text-rendering: geometricPrecision;
+
+	@include drawing.palette("sand");
+
+	--introduction-field: color-mix(
+		in oklab,
+		var(--drawing-opposite-vivid) 30%,
+		var(--drawing-paper)
+	);
+}
+
+.field {
+	fill: var(--introduction-field);
+}
+
+.column {
+	fill: var(--drawing-opposite-vivid);
+	opacity: 0.4;
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.letters {
+	fill: var(--drawing-deep);
+	font: var(--sys-font-heading-large);
+	font-size: 532px;
+}
+
+.block {
+	fill: var(--drawing-hot-vivid);
+}
+
+.text {
+	fill: var(--drawing-paper);
+}
+
+.square {
+	fill: var(--drawing-cool-muted);
+}
+
+.disc {
+	fill: var(--drawing-cool-vivid);
+}
+
+.band {
+	fill: var(--drawing-warm-vivid);
+}
+
+.measure {
+	@include drawing.outline(var(--drawing-ink));
+}

@@ -1,0 +1,62 @@
+<style>
+	/* See `docs/design-system/colour.mdx`. */
+	html {
+		--canvas-light: color-mix(in oklch, white, #847171 5%);
+		--canvas-dark: color-mix(in oklch, #424654, black 60%);
+		--card-dark: color-mix(in oklch, #424654, black 35%);
+
+		color-scheme: light;
+		background-color: var(
+			--sys-color-bg,
+			var(--canvas-light)
+		);
+	}
+
+	html[data-theme="dark"] {
+		color-scheme: dark;
+		background-color: var(
+			--sys-color-bg,
+			var(--canvas-dark)
+		);
+	}
+
+	html[data-theme="dark"] .sb-preparing-docs {
+		background-color: var(
+			--sys-color-bg,
+			var(--canvas-dark)
+		);
+	}
+
+	html[data-theme="dark"] .sb-previewBlock_icon,
+	html[data-theme="dark"] .sb-argstableBlock td span,
+	html[data-theme="dark"] .sb-argstableBlock-body button {
+		background-color: rgb(255 255 255 / 0.12);
+	}
+
+	html[data-theme="dark"]
+		.sb-argstableBlock-body
+		tr:not(:first-child) {
+		border-top-color: rgb(255 255 255 / 0.08);
+	}
+
+	html[data-theme="dark"] .sb-previewBlock,
+	html[data-theme="dark"] .sb-argstableBlock-body td {
+		border-color: transparent;
+		background: var(--sys-color-surface, var(--card-dark));
+	}
+
+	html[data-theme="dark"] .sb-loader {
+		border-color: rgb(255 255 255 / 0.2);
+		border-top-color: rgb(255 255 255 / 0.7);
+	}
+</style>
+<script>
+	(() => {
+		const globals =
+			new URLSearchParams(location.search).get("globals") ??
+			"";
+		if (globals.split(";").includes("theme:dark")) {
+			document.documentElement.dataset.theme = "dark";
+		}
+	})();
+</script>

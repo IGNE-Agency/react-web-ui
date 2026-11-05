@@ -1,0 +1,58 @@
+// See `docs/design-system/components.mdx`.
+
+/// Emits `--<$prefix>-{bg,fg,border}` for every `[data-tone]` × `[data-variant]`
+/// pair, so every tone-carrying leaf colours itself from one definition.
+///
+/// @example
+///   @use "../../style/tone.scss" as tone;
+///
+///   .tag {
+///       @include tone.variants("tag");
+///
+///       border: 1px solid var(--tag-border);
+///       background: var(--tag-bg);
+///       color: var(--tag-fg);
+///   }
+@mixin variants($prefix) {
+	&[data-variant="subtle"] {
+		--#{$prefix}-bg: var(--sys-color-neutral-bg);
+		--#{$prefix}-fg: var(--sys-color-neutral-fg);
+		--#{$prefix}-border: transparent;
+	}
+
+	&[data-variant="solid"] {
+		--#{$prefix}-bg: var(--sys-color-neutral-fg);
+		--#{$prefix}-fg: var(--sys-color-neutral-bg);
+		--#{$prefix}-border: transparent;
+	}
+
+	&[data-variant="outline"] {
+		--#{$prefix}-bg: transparent;
+		--#{$prefix}-fg: var(--sys-color-neutral-fg);
+		--#{$prefix}-border: var(--sys-color-neutral-border);
+	}
+
+	@each $tone in (info, success, warning, error) {
+		&[data-tone="#{$tone}"] {
+			&[data-variant="subtle"] {
+				--#{$prefix}-bg: var(--sys-color-#{$tone}-bg);
+				--#{$prefix}-fg: var(--sys-color-#{$tone}-fg);
+				--#{$prefix}-border: transparent;
+			}
+
+			&[data-variant="solid"] {
+				--#{$prefix}-bg: var(--sys-color-#{$tone}-fg);
+				--#{$prefix}-fg: var(--sys-color-#{$tone}-bg);
+				--#{$prefix}-border: transparent;
+			}
+
+			&[data-variant="outline"] {
+				--#{$prefix}-bg: transparent;
+				--#{$prefix}-fg: var(--sys-color-#{$tone}-fg);
+				--#{$prefix}-border: var(
+					--sys-color-#{$tone}-border
+				);
+			}
+		}
+	}
+}

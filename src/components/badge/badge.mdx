@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as BadgeStories from "./badge.stories.tsx";
+
+<Meta of={BadgeStories} />
+
+<DocsPage>
+
+## Rules
+
+### A badge's colour is a status, and its words say the same
+
+A badge takes one of the five status tones, and its text names the status as well, so the colour is never the only thing that carries it. Neutral is for a label or a count that marks nothing good or bad.
+
+### A badge holds a count or a word or two
+
+A badge is a label pinned to something else: a number of unread items, or a short status such as "New". Anything longer is a sentence, and belongs in the text beside it.
+
+### Subtle is the default, and solid is for the one badge that must be found
+
+The subtle tint sits quietly in a list of many. The solid variant swaps the tone's own pair, so it stands out without adding a colour; keep it for the badge the reader has to find first. The outline variant is for a badge on a surface that already carries a tint.
+
+</DocsPage>

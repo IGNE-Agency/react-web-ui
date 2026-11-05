@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as ErrorTextStories from "./error-text.stories.tsx";
+
+<Meta of={ErrorTextStories} />
+
+<DocsPage>
+
+## Rules
+
+### Errors that arrive together drop in one after another
+
+Each message drops into place, held back 20 ms for every message ahead of it that arrived in the same frame. Inside a `Form.Root`, the root counts them across the whole form, so the errors of a refused submit cascade down the page in document order. An error that arrives on its own, such as one that follows a correction, starts its own cascade at once. Outside a form each block cascades on its own.
+
+### The text is there from the first frame, and motion is optional
+
+The messages are in the page, and in the accessibility tree, from the first render: an alert announces them at once, whatever the motion does. The drop-in only runs for someone who hasn't asked for less motion.
+
+### Error text is one message per line, or nothing
+
+`ErrorText` takes one message or a list, skips empty entries, and renders nothing at all when none are left, so it can stay in place while a field is valid. In a field, use `Field.Error`, which normalises the field's errors and makes them its live region.
+
+</DocsPage>

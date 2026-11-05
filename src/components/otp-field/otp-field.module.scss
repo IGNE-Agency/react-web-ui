@@ -1,0 +1,44 @@
+@use "../../style/layers.scss";
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.root {
+		min-inline-size: 0;
+	}
+
+	.group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--otp-field-gap, var(--sys-unit-4));
+		align-items: center;
+	}
+
+	.slot {
+		@include form.control;
+
+		justify-content: center;
+		inline-size: var(
+			--otp-field-slot-size,
+			var(--sys-unit-24)
+		);
+		min-block-size: var(
+			--otp-field-slot-size,
+			var(--sys-unit-24)
+		);
+		padding-inline: 0;
+		font-variant-numeric: tabular-nums;
+		text-align: center;
+		cursor: text;
+
+		@include form.field-text-metrics;
+	}
+
+	.separator {
+		inline-size: var(--sys-unit-8);
+		block-size: 1px;
+		background: var(
+			--otp-field-separator-bg,
+			var(--sys-color-border)
+		);
+	}
+}

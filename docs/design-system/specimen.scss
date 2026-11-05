@@ -1,0 +1,51 @@
+@use "./caption";
+
+/// A token's name in a specimen.
+///
+/// @example
+///   .name {
+///       @include specimen.name;
+///   }
+@mixin name {
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+/// What a token is for, or the value it resolves to, under its name.
+///
+/// @example
+///   .use {
+///       @include specimen.meta;
+///   }
+@mixin meta {
+	@include caption.register;
+
+	font-variant-numeric: tabular-nums;
+}
+
+/// A group's title inside a specimen, above the tokens it gathers.
+///
+/// @example
+///   .group {
+///       @include specimen.group;
+///   }
+@mixin group {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-label-small-strong);
+}
+
+/// A dashed construction line drawn with CSS, in the illustrations' style:
+/// it measures the subject without competing with it.
+///
+/// @example
+///   .ground {
+///       @include specimen.construction(block-end);
+///   }
+@mixin construction($side) {
+	border-#{$side}: 1.5px dashed
+		color-mix(
+			in oklab,
+			var(--sys-color-text-muted) 45%,
+			transparent
+		);
+}

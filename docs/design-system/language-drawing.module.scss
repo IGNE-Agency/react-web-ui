@@ -1,0 +1,13 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("neutral");
+}
+
+.field {
+	fill: var(--drawing-hot-muted);
+}
+
+.glyph {
+	fill: var(--drawing-paper);
+}

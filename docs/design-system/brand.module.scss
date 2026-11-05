@@ -1,0 +1,42 @@
+.marks {
+	display: flex;
+	gap: var(--sys-unit-16);
+	align-items: center;
+
+	svg {
+		inline-size: var(--sys-unit-32);
+		block-size: auto;
+	}
+}
+
+.brand {
+	color: var(--sys-color-primary);
+}
+
+.onBrand {
+	display: grid;
+	place-items: center;
+	border-radius: var(--sys-radius-lg);
+	background: var(--sys-color-primary);
+	padding: var(--sys-unit-10);
+	color: var(--sys-color-on-primary);
+
+	svg {
+		color: inherit;
+	}
+}
+
+.status {
+	color: var(--sys-color-warning-fg);
+}
+
+.outlined {
+	color: transparent;
+	stroke: var(--sys-color-primary);
+	stroke-width: 1px;
+}
+
+.ticking {
+	inline-size: var(--sys-unit-32);
+	block-size: auto;
+}

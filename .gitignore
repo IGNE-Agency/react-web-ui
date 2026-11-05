@@ -1,0 +1,16 @@
+# dependencies
+/node_modules/
+
+# generated files
+# Named paths only, never a `*.gen.*` glob.
+/dist/
+/docs/design-system/tokens.gen.d.ts
+/docs/design-system/tokens.gen.js
+/src/style/tokens.gen.css
+/storybook-static/
+/tools/fixtures/consumer/dist/
+/tools/fixtures/consumer/node_modules/
+/.vitest/
+
+# local tooling
+/.claude/worktrees/

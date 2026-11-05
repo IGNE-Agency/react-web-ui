@@ -1,0 +1,23 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.container {
+		margin-block: var(--divider-space, var(--sys-unit-6));
+	}
+
+	.divider {
+		inline-size: 100%;
+		border: none;
+		border-block-start: 1px solid
+			var(--divider-color, var(--sys-color-border));
+	}
+
+	.subtitle {
+		margin-block-start: var(--sys-unit-4);
+		color: var(
+			--divider-subtitle-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(--sys-font-body-small);
+	}
+}

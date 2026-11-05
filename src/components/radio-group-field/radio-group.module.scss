@@ -1,0 +1,66 @@
+@use "../../style/layers.scss";
+@use "../../style/checkbox.scss" as checkbox;
+@use "../../style/focus.scss" as focus;
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.group {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--radio-group-gap, var(--sys-unit-2));
+	}
+
+	.item {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		gap: var(--radio-group-item-gap, var(--sys-unit-6));
+		min-block-size: var(--sys-unit-20);
+
+		@include checkbox.box-affordance(".radio");
+	}
+
+	.radio {
+		@include checkbox.box;
+		@include checkbox.box-focus;
+		@include focus.ring-projected;
+
+		position: relative;
+		border-radius: var(--sys-radius-circle);
+
+		&[data-invalid] {
+			@include checkbox.box-invalid;
+		}
+
+		&[data-readonly] {
+			@include checkbox.box-readonly;
+		}
+
+		&[data-checked] {
+			@include checkbox.box-checked;
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+	}
+
+	.indicator {
+		@include checkbox.indicator;
+		@include checkbox.indicator-hidden;
+
+		inline-size: calc(
+			var(--checkbox-size, #{checkbox.$size}) * 0.4
+		);
+		block-size: calc(
+			var(--checkbox-size, #{checkbox.$size}) * 0.4
+		);
+		border-radius: var(--sys-radius-circle);
+		background: currentcolor;
+
+		&[data-checked] {
+			@include checkbox.indicator-shown;
+		}
+	}
+}

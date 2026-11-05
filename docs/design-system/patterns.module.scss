@@ -1,0 +1,79 @@
+@use "./caption";
+
+.table {
+	display: grid;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	inline-size: min(100%, 20rem);
+	overflow: hidden;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+}
+
+.head {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	background: var(--sys-color-surface-high);
+	padding: var(--sys-unit-6) var(--sys-unit-10);
+	font: var(--sys-font-label-small);
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	padding: var(--sys-unit-6) var(--sys-unit-10);
+}
+
+.empty {
+	padding: var(--sys-unit-16) var(--sys-unit-10);
+	color: var(--sys-color-text-muted);
+	text-align: center;
+}
+
+.strip {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--sys-unit-6);
+	background: var(--sys-color-error-bg);
+	padding: var(--sys-unit-4) var(--sys-unit-4)
+		var(--sys-unit-4) var(--sys-unit-10);
+	color: var(--sys-color-error-fg);
+}
+
+.message {
+	display: grid;
+	justify-items: start;
+	gap: var(--sys-unit-6);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-12) var(--sys-unit-16);
+	max-inline-size: 22rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+}
+
+.dialog {
+	display: grid;
+	gap: var(--sys-unit-8);
+	border-radius: var(--sys-radius-xl);
+	background: var(--sys-color-surface-overlay);
+	padding: var(--sys-unit-16);
+	max-inline-size: 22rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+}
+
+.title {
+	font: var(--sys-font-heading-small);
+}
+
+.actions {
+	display: flex;
+	justify-content: end;
+	gap: var(--sys-unit-6);
+}
+
+.field {
+	inline-size: min(100%, 18rem);
+}

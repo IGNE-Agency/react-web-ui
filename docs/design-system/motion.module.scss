@@ -1,0 +1,347 @@
+$cycle: 6s;
+
+@keyframes tab-indicator {
+	0%,
+	15% {
+		translate: 0 0;
+	}
+
+	25%,
+	65% {
+		translate: 100% 0;
+	}
+
+	75%,
+	100% {
+		translate: 0 0;
+	}
+}
+
+@keyframes page-out-and-back {
+	0%,
+	15% {
+		translate: 0 0;
+	}
+
+	25%,
+	65% {
+		translate: -100% 0;
+	}
+
+	75%,
+	100% {
+		translate: 0 0;
+	}
+}
+
+@keyframes page-in-and-back {
+	0%,
+	15% {
+		translate: 100% 0;
+	}
+
+	25%,
+	65% {
+		translate: 0 0;
+	}
+
+	75%,
+	100% {
+		translate: 100% 0;
+	}
+}
+
+@keyframes page-out-then-in-from-right {
+	0%,
+	15% {
+		translate: 0 0;
+	}
+
+	25%,
+	65% {
+		translate: -100% 0;
+	}
+
+	65.01% {
+		translate: 100% 0;
+	}
+
+	75%,
+	100% {
+		translate: 0 0;
+	}
+}
+
+@keyframes page-in-then-out-to-left {
+	0%,
+	15% {
+		translate: 100% 0;
+	}
+
+	25%,
+	65% {
+		translate: 0 0;
+	}
+
+	75% {
+		translate: -100% 0;
+	}
+
+	75.01%,
+	100% {
+		translate: 100% 0;
+	}
+}
+
+@keyframes flash-table {
+	0%,
+	74% {
+		opacity: 1;
+	}
+
+	75%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes flash-spinner {
+	0%,
+	74% {
+		opacity: 0;
+	}
+
+	75%,
+	100% {
+		opacity: 1;
+	}
+}
+
+.tabDemo {
+	display: grid;
+	gap: var(--sys-unit-8);
+	inline-size: min(100%, 16rem);
+}
+
+.tabs {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	border-block-end: 1px solid var(--sys-color-border);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+	text-align: center;
+
+	span {
+		padding: var(--sys-unit-4);
+	}
+}
+
+.indicator {
+	position: absolute;
+	inset-block-end: -1px;
+	inset-inline-start: 0;
+	border-radius: var(--sys-radius-full);
+	background: var(--sys-color-primary);
+	inline-size: calc(100% / 3);
+	block-size: var(--sys-unit-1);
+}
+
+.viewport {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	block-size: 4.5rem;
+}
+
+.page {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	align-content: start;
+	gap: var(--sys-unit-6);
+	padding: var(--sys-unit-8) var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.pageNext {
+	translate: 100% 0;
+}
+
+.bar {
+	border-radius: var(--sys-radius-xs);
+	background: var(--sys-color-surface-highest);
+	block-size: 0.5rem;
+}
+
+.barTinted {
+	background: var(--sys-color-primary-container);
+}
+
+.wide {
+	inline-size: 85%;
+}
+
+.mid {
+	inline-size: 60%;
+}
+
+.narrow {
+	inline-size: 40%;
+}
+
+@media not (prefers-reduced-motion) {
+	.indicator {
+		animation: tab-indicator $cycle
+			var(--sys-motion-standard) infinite;
+	}
+
+	.directional {
+		.page {
+			animation: page-out-and-back $cycle
+				var(--sys-motion-standard) infinite;
+		}
+
+		.pageNext {
+			animation-name: page-in-and-back;
+		}
+	}
+
+	.oneWay {
+		.page {
+			animation: page-out-then-in-from-right $cycle
+				var(--sys-motion-standard) infinite;
+		}
+
+		.pageNext {
+			animation-name: page-in-then-out-to-left;
+		}
+	}
+}
+
+.table {
+	display: grid;
+	gap: var(--sys-unit-4);
+	inline-size: min(100%, 16rem);
+}
+
+.tableBody {
+	display: grid;
+	place-items: center;
+
+	> * {
+		grid-area: 1 / 1;
+	}
+}
+
+.rows {
+	display: grid;
+	gap: var(--sys-unit-4);
+	justify-self: stretch;
+}
+
+.tableRow {
+	display: flex;
+	justify-content: space-between;
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-4) var(--sys-unit-12);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+	font-variant-numeric: tabular-nums;
+}
+
+.pager {
+	justify-self: end;
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-label-small);
+}
+
+.flashSpinner {
+	color: var(--sys-color-primary);
+}
+
+@media not (prefers-reduced-motion) {
+	.flashRows {
+		animation: flash-table 2s steps(1) infinite;
+	}
+
+	.flashSpinner {
+		animation: flash-spinner 2s steps(1) infinite;
+	}
+}
+
+@media (prefers-reduced-motion) {
+	.flashRows {
+		opacity: 0;
+	}
+}
+
+.mark {
+	display: grid;
+	place-items: center;
+	inline-size: 5rem;
+}
+
+.once svg {
+	@media not (prefers-reduced-motion) {
+		animation-iteration-count: 1;
+	}
+
+	@media (prefers-reduced-motion) {
+		animation: none;
+		opacity: 1;
+	}
+}
+
+.field {
+	display: flex;
+	align-items: center;
+	gap: var(--sys-unit-4);
+	border: 1px solid var(--sys-color-border);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-4) var(--sys-unit-8);
+	inline-size: 12rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-medium);
+
+	> svg {
+		color: var(--sys-color-primary);
+	}
+}
+
+.fieldMark {
+	display: grid;
+	place-items: center;
+	inline-size: 6rem;
+}
+
+.thread {
+	display: grid;
+	gap: var(--sys-unit-8);
+	inline-size: min(100%, 16rem);
+	min-block-size: 8rem;
+}
+
+.bubble {
+	display: grid;
+	gap: var(--sys-unit-4);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-8) var(--sys-unit-12);
+}
+
+.bubbleEnd {
+	justify-self: end;
+}
+
+.centred {
+	display: grid;
+	place-items: center;
+	inline-size: min(100%, 16rem);
+	min-block-size: 8rem;
+	color: var(--sys-color-primary);
+}

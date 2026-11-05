@@ -1,0 +1,14 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.group {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.textarea {
+		resize: none;
+		overflow-y: auto;
+		line-height: inherit;
+	}
+}

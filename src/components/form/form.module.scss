@@ -1,0 +1,12 @@
+@use "../../style/layers.scss";
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.fieldset {
+		display: contents;
+	}
+
+	.status {
+		@include a11y.visually-hidden;
+	}
+}

@@ -1,0 +1,14 @@
+.line {
+	inline-size: 16rem;
+}
+
+.paragraph {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sys-unit-4);
+	inline-size: 24rem;
+}
+
+.lastLine {
+	inline-size: 60%;
+}

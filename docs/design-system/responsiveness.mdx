@@ -1,0 +1,628 @@
+import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
+import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Tag } from "../../src/components/tag/index.ts";
+import { TagGroup } from "../../src/components/tag-group/index.ts";
+import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import components from "./components.module.scss";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./responsiveness.module.scss";
+import { Illustration } from "./illustration";
+import { ResponsivenessDrawing } from "./responsiveness-drawing";
+import {
+	RoomDrawing,
+	WrappedDrawing,
+} from "./responsiveness-figures";
+
+export const Live = ({ children }) => (
+	<StoryProviders>{children}</StoryProviders>
+);
+
+<Meta title="Design system/Principles/Responsiveness" />
+
+# Responsiveness
+
+The same product gets read on a phone held in one hand, on a laptop, on a wide monitor, and on a desktop window zoomed to twice its size. It has to work on all of them, and work the same: the screen changes shape, the person and the task don't.
+
+<Illustration caption="Given room, the pieces sprawl into a ragged, organic shape; given a narrow column, the same pieces slot neatly into it. The white one is in both.">
+	<ResponsivenessDrawing />
+</Illustration>
+
+## Narrow first
+
+The narrow layout is the one to design first. Widening a layout that already works in a small column is a matter of spending the extra room. Narrowing one built for a wide screen means deciding what to give up, and that decision gets made late, under pressure, and it always shows.
+
+A narrow column also asks the useful questions early: what comes first, what belongs together, what the screen is actually for. Once those are settled, a wider screen is a gift rather than a problem.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Built narrow first, each declaration stacks and every value is whole."
+		visual={
+			<div className={styles.narrow}>
+				<div className={styles.card}>
+					<span className={styles.cardHead}>
+						Physiotherapy
+						<span className={styles.amount}>€ 120.00</span>
+					</span>
+					<span className={styles.cardMeta}>
+						12 March
+						<Tag.Root tone="info">Outstanding</Tag.Root>
+					</span>
+				</div>
+				<div className={styles.card}>
+					<span className={styles.cardHead}>
+						Dental care
+						<span className={styles.amount}>€ 85.50</span>
+					</span>
+					<span className={styles.cardMeta}>
+						3 March
+						<Tag.Root tone="success">Processed</Tag.Root>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A desktop table squeezed to phone width, with every column cut to fit."
+		visual={
+			<div className={styles.narrow}>
+				<div
+					className={`${styles.squeezed} ${styles.squeezedHead}`}>
+					<span>Description</span>
+					<span>Date</span>
+					<span>Amount</span>
+					<span>Status</span>
+				</div>
+				<div className={styles.squeezed}>
+					<span>Physiotherapy</span>
+					<span>12 March</span>
+					<span>€ 120.00</span>
+					<span>Outstanding</span>
+				</div>
+				<div className={styles.squeezed}>
+					<span>Dental care</span>
+					<span>3 March</span>
+					<span>€ 85.50</span>
+					<span>Processed</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Everything, at every width
+
+A narrow screen is not a request for less of the product. Everything a screen offers is still there at every width: it stacks, wraps, or moves into a menu or a sheet, but it is never dropped. Only decoration may go.
+
+<Illustration caption="Wrapped, not dropped: the same six items in one wide row and in a narrow column of pairs, and the one picked out is still there in both.">
+	<WrappedDrawing />
+</Illustration>
+
+And a narrow screen is not always a phone. Someone with low vision zooms a desktop window in until the text is large enough to read, and the window behaves like a narrow one. That only works if zooming is always allowed, and if the layout changes with the size of the text rather than with a count of device pixels, so a zoomed window gets the narrow layout instead of a wide one that runs off the edge.
+
+## Made for fingers
+
+A pointer is precise and can hover. A fingertip is broad, covers what it touches, and has no hover at all. A screen built only for the pointer fails the finger in two ways.
+
+The first is size. An icon is drawn at the size it reads best, but the control around it has to be big enough to hit. Those are different numbers, and when space gets tight it's the padding, the gaps and the number of items that give way, never the target.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="A small glyph in a finger-sized control."
+		visual={
+			<div className={styles.bar}>
+				<span className={styles.target}>
+					<AttachFileIcon aria-hidden />
+				</span>
+				<span className={styles.target}>
+					<DeleteIcon aria-hidden />
+				</span>
+				<span className={styles.target}>
+					<MoreVertIcon aria-hidden />
+				</span>
+				<span className={styles.finger} />
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The control is only as big as what it draws."
+		visual={
+			<div className={styles.bar}>
+				<span className={styles.targetTight}>
+					<AttachFileIcon aria-hidden />
+				</span>
+				<span className={styles.targetTight}>
+					<DeleteIcon aria-hidden />
+				</span>
+				<span className={styles.targetTight}>
+					<MoreVertIcon aria-hidden />
+				</span>
+				<span className={styles.finger} />
+			</div>
+		}
+	/>
+</DoDont>
+
+The second is hover. A control that only shows up when the pointer passes over it doesn't exist on a touch screen. Every per-item control, like the remove on a filter or a row's own action, is visible at all times. Where showing all of them would wreck the layout, they fold into one menu button, and that button is always there.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Every filter shows its own remove, with or without a pointer to hover."
+		visual={
+			<div className={`sb-unstyled ${components.visual}`}>
+				<Live>
+					<TagGroup.Root
+						aria-label="Active filters"
+						onRemove={() => undefined}>
+						<TagGroup.List className={components.row}>
+							<TagGroup.Tag textValue="Submitted">
+								Submitted
+								<TagGroup.Remove label="Remove" />
+							</TagGroup.Tag>
+							<TagGroup.Tag textValue="October 2026">
+								October 2026
+								<TagGroup.Remove label="Remove" />
+							</TagGroup.Tag>
+						</TagGroup.List>
+					</TagGroup.Root>
+				</Live>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Revealed on hover, so on a touch screen a filter cannot be removed."
+		visual={
+			<div className={`sb-unstyled ${components.visual}`}>
+				<div className={components.row}>
+					<Tag.Root>Submitted</Tag.Root>
+					<Tag.Root>October 2026</Tag.Root>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## The edge of the glass
+
+A screen's edge is not a clean line. Phones round their corners, cut a notch into the top and lay a home indicator across the bottom, and a mobile browser grows and shrinks its own toolbars as the page scrolls. A layout that runs right up to the edge ends up under one of them.
+
+So a bar pinned to an edge leaves room for whatever the device has there, which costs nothing on hardware without it. Content keeps one steady distance from the edge, the gutter, and popups keep the same one, so a menu on a phone lines up with the cards beneath it instead of hugging the glass. And a layout that fills the screen's height measures it in a way that survives the toolbars coming and going.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The bar's bottom padding grows to clear the home indicator."
+		visual={
+			<div className={styles.phone}>
+				<div className={styles.screen}>
+					<div
+						className={`${styles.tabBar} ${styles.tabBarInset}`}>
+						<span>
+							<HomeIcon aria-hidden />
+							Home
+						</span>
+						<span>
+							<DescriptionIcon aria-hidden />
+							Declarations
+						</span>
+						<span>
+							<PersonIcon aria-hidden />
+							Profile
+						</span>
+					</div>
+					<span className={styles.homeIndicator} />
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The last row of controls sits under the home indicator."
+		visual={
+			<div className={styles.phone}>
+				<div className={styles.screen}>
+					<div className={styles.tabBar}>
+						<span>
+							<HomeIcon aria-hidden />
+							Home
+						</span>
+						<span>
+							<DescriptionIcon aria-hidden />
+							Declarations
+						</span>
+						<span>
+							<PersonIcon aria-hidden />
+							Profile
+						</span>
+					</div>
+					<span className={styles.homeIndicator} />
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Room, not screens
+
+A part of a screen rarely knows how wide the screen is, and it shouldn't care. The same component can sit across a whole page, in a side rail or inside a narrow drawer on a wide monitor. What decides its layout is the room it has been given, so it adapts to its own container, at the width where its own content stops fitting. Often it needs no threshold at all: letting things wrap, or a grid that fits as many columns as there is room for, does the job.
+
+<Illustration caption="A responsive component is like a cat: whatever the size of a box, they will make sure they fit. If they fits, they sits, after all.">
+	<RoomDrawing />
+</Illustration>
+
+Only the things that change with the whole page, like the navigation or a drawer that turns into a sheet, look at the size of the screen. Keeping the two apart matters: a part that answers to both can't be reasoned about, because nobody can tell which one changed it.
+
+## Where an app bends
+
+An app changes its page layout at one screen width. Below it, [the rail becomes a bottom bar](?path=/docs/components-nav--docs#a-bars-entries-are-sized-to-their-longest-word), [a drawer becomes a bottom sheet](?path=/docs/components-drawer--docs#a-drawer-swiped-down-is-a-bottom-sheet) and the gutter narrows. Above it, the wide layout and the wide gutter take over. That one width is set in text-relative units, so zooming in moves a window across it just as a smaller screen would.
+
+That width and both gutters belong to the app, not to the kit. They are page layout, and a media query cannot read a custom property, so the kit's tokens hold neither. No kit component asks about the screen: where one would change with it, the app tells it, through a prop like the drawer's swipe direction or a knob like a popup's distance from the edge.
+
+Because there is only one width, the app's stylesheets and scripts that ask about the screen all read the same value, and none of them holds a number of its own. Two places that each hold the number will hold two different numbers after the next change.
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="The narrow layout is designed first">
+
+The wider layouts spend extra room on content that already works narrow; they never decide what to cut. Explained in [Narrow first](#narrow-first).
+
+</Details>
+
+<Details title="Content is rearranged, never hidden">
+
+At every width everything a screen offers is still there. It stacks, wraps or moves into a menu or a sheet; only decoration may go. Explained in [Everything, at every width](#everything-at-every-width).
+
+<DoDont>
+<Example kind="do" caption="The row's actions fold into one menu button, which is always there.">
+
+```tsx
+<Menu.Root>
+	<Menu.Trigger
+		render={
+			<Button
+				iconOnly
+				icon={MoreVertIcon}
+				label={m.row_actions()}
+			/>
+		}
+	/>
+	…
+</Menu.Root>
+```
+
+</Example>
+<Example kind="dont" caption="Below the breakpoint the secondary actions are simply gone.">
+
+```scss
+@media (max-width: breakpoint.$mobile) {
+	.secondary-actions {
+		display: none;
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Zoom is never disabled">
+
+The viewport meta never sets `maximum-scale` or `user-scalable=no`. Because the breakpoint is in `rem`, zooming in, or a larger default text size, moves a desktop window into the narrow layout instead of overflowing the wide one. Explained in [Everything, at every width](#everything-at-every-width).
+
+<DoDont>
+<Example kind="do" caption="The page scales to the device and leaves zoom to the user.">
+
+```html
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0" />
+```
+
+</Example>
+<Example kind="dont" caption="A locked viewport, and a page some people can no longer read.">
+
+```html
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A touch target is larger than its glyph">
+
+The glyph is sized for reading, the control for a fingertip. When space is tight, padding, gaps and the number of items give way, never the target. Shown in [Made for fingers](#made-for-fingers).
+
+<DoDont>
+<Example kind="do" caption="A small glyph in a finger-sized control.">
+
+```scss
+.control {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-block-size: var(--unit-24);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The control is only as big as what it draws.">
+
+```scss
+.control {
+	padding: var(--unit-1);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A per-item control is visible at all times">
+
+A remove on a staged file, a chip's dismiss, a row's own action: none is revealed on hover. Where showing every one would wreck the layout, they collapse into one menu button, which is itself always visible. Shown in [Made for fingers](#made-for-fingers).
+
+<DoDont>
+<Example kind="do" caption="Every filter shows its own remove, with or without a pointer to hover.">
+
+```tsx
+<TagGroup.Root
+	aria-label={activeFiltersLabel}
+	onRemove={remove}>
+	<TagGroup.List items={filters}>
+		{filter => (
+			<TagGroup.Tag textValue={filter.label}>
+				{filter.label}
+				<TagGroup.Remove label={removeLabel} />
+			</TagGroup.Tag>
+		)}
+	</TagGroup.List>
+</TagGroup.Root>
+```
+
+</Example>
+<Example kind="dont" caption="Revealed on hover, so on a touch screen a filter cannot be removed.">
+
+```scss
+.remove {
+	opacity: 0;
+}
+
+.chip:hover .remove {
+	opacity: 1;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A surface against an edge pays the safe-area inset">
+
+Its padding on that edge is the larger of the padding it wants and the inset the device reports, so it costs nothing on hardware without one. Shown in [The edge of the glass](#the-edge-of-the-glass).
+
+<DoDont>
+<Example kind="do" caption="The bar's bottom padding grows to clear the home indicator.">
+
+```scss
+.bar {
+	padding: var(--unit-2);
+	padding-block-end: max(
+		var(--unit-2),
+		env(safe-area-inset-bottom)
+	);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The last row of controls sits under the home indicator.">
+
+```scss
+.bar {
+	padding: var(--unit-2);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Content and popups keep one gutter from the screen's edge">
+
+Nothing comes closer to the screen's edge than the gutter: the wide one from the breakpoint up, the narrow one below it. The page's content is inset by it, and a popup that would run past it is pushed back inside it. The gutter and the breakpoint belong to the app, which declares both; the kit has neither. Every kit popup takes its distance from the edge from the `--popup-edge-padding` knob and hands it to its positioner in pixels, so the app sets that knob to its own gutter, once, and the layouts and the popups cannot drift apart. Explained in [The edge of the glass](#the-edge-of-the-glass).
+
+<DoDont>
+<Example kind="do" caption="The page and the kit's popups read the app's one gutter.">
+
+```scss
+:root {
+	--app-gutter: 1.5rem;
+	--popup-edge-padding: var(--app-gutter);
+
+	@media (max-width: breakpoint.$mobile) {
+		--app-gutter: 1rem;
+	}
+}
+
+.main {
+	padding: var(--app-gutter);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A popup with its own idea of the edge, a few pixels from the glass.">
+
+```tsx
+<Menu.Positioner collisionPadding={5} />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Full-height uses svh then dvh">
+
+Declare the small viewport unit first as a floor for browsers without the dynamic one, then the dynamic one. Explained in [The edge of the glass](#the-edge-of-the-glass).
+
+<DoDont>
+<Example kind="do" caption="The small unit is the floor, and the dynamic unit replaces it wherever it is understood.">
+
+```scss
+.layout {
+	min-block-size: 100svh;
+	min-block-size: 100dvh;
+}
+```
+
+</Example>
+<Example kind="dont" caption="Without the floor, a browser that lacks the dynamic unit drops the line and the layout shrinks to its content.">
+
+```scss
+.layout {
+	min-block-size: 100dvh;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A component answers to its own width, not the viewport's">
+
+Where it only needs to fit, it adapts to its container with a container query, at the width where its own content stops fitting. That threshold belongs to the component and is not a token. Where wrapping or an `auto-fit` grid can do the job, it needs no threshold at all. Only what changes with the layout itself reads the viewport. Explained in [Room, not screens](#room-not-screens).
+
+<DoDont>
+<Example kind="do" caption="The bar wraps when its own container gets narrow, wherever it is placed.">
+
+```scss
+.table {
+	container: selection-bar / inline-size;
+}
+
+@container selection-bar (max-width: 36rem) {
+	.selection-bar {
+		flex-wrap: wrap;
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="The bar wraps by the window's width, even when it sits in a narrow drawer on a wide screen.">
+
+```scss
+@media (max-width: 36rem) {
+	.selection-bar {
+		flex-wrap: wrap;
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="One responsive system per file">
+
+A file uses container queries or media queries, not both. Mixing them makes the breakpoint that actually fired impossible to reason about. Explained in [Room, not screens](#room-not-screens).
+
+<DoDont>
+<Example kind="do" caption="One kind of query, so the breakpoint that fired is the one you read.">
+
+```scss
+.stat-grid {
+	container-type: inline-size;
+}
+
+@container (width > 40rem) {
+	.stat {
+		grid-column: span 2;
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="A container query and a media query in one file, and either could be the one that fired.">
+
+```scss
+.stat-grid {
+	container-type: inline-size;
+}
+
+@container (width > 40rem) {
+	.stat {
+		grid-column: span 2;
+	}
+}
+
+@media (width < 48rem) {
+	.stat {
+		grid-column: span 1;
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The layout changes at one viewport width, which the app declares">
+
+The page changes layout at one width, and that width is the app's, not the kit's: the kit has no breakpoint token. The app declares it once, as a Sass variable and a script constant, because a custom property cannot be read inside a media query. Every media query on the viewport reads it, in a stylesheet and in script alike, and never a number of its own. A kit component never queries the viewport; the app tells it what changed, through a prop or a knob. Explained in [Where an app bends](#where-an-app-bends).
+
+<DoDont>
+<Example kind="do" caption="The app's stylesheet and script read the same value.">
+
+```scss
+@use "../style/breakpoints.scss" as breakpoint;
+
+@media (max-width: breakpoint.$mobile) {
+	.bar {
+		inset-block-end: 0;
+	}
+}
+```
+
+```tsx
+const isMobile = useMediaQuery(MOBILE_QUERY);
+```
+
+</Example>
+<Example kind="dont" caption="A second opinion about the same threshold.">
+
+```tsx
+const isSmall = useMediaQuery("(max-width: 768px)");
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

@@ -1,0 +1,249 @@
+import DescriptionFilledIcon from "@material-design-icons/svg/filled/description.svg?react";
+import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
+import SearchFilledIcon from "@material-design-icons/svg/filled/search.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+import SettingsFilledIcon from "@material-design-icons/svg/filled/settings.svg?react";
+import SettingsIcon from "@material-design-icons/svg/outlined/settings.svg?react";
+import PersonFilledIcon from "@material-design-icons/svg/filled/person.svg?react";
+import ChecklistIcon from "@material-design-icons/svg/outlined/checklist.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Icon } from "../../src/components/icon/index.ts";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { IconGallery } from "./icon-gallery";
+import { IconographyDrawing } from "./iconography-drawing";
+import {
+	FamilyDrawing,
+	GuessDrawing,
+} from "./iconography-figures";
+import styles from "./iconography.module.scss";
+import { Illustration } from "./illustration";
+import { Specimen } from "./specimen";
+
+<Meta title="Design system/Foundation/Iconography" />
+
+# Iconography
+
+An icon is a word's shorthand. A good one gets a familiar thing found faster: a magnifier where you search, a cog where the settings live. A poor one is a riddle. Icons help most when they stand beside the word they mean, and they are never the only way to learn what something does.
+
+<Illustration caption="One outlined set, drawn on one grid with one line weight: enlarged, a document and a checklist still belong with the small glyphs around them.">
+	<IconographyDrawing />
+</Illustration>
+
+## A picture beside a word
+
+People recognise faster than they read. Once someone knows the cog means settings, their eye finds it before any label, and a row of icons turns into a row of landmarks. But only a handful of icons mean the same thing to everyone: search, close, add, settings. Past those, an icon is a guess, and two people guess differently.
+
+So an icon keeps its word with it. The word says what the control does, and the icon makes it quicker to find the second time. Beside a word, the icon is decoration, and [decoration is hidden from screen readers](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden), because the word already says it. Where there is only room for the icon, the word moves somewhere else rather than disappearing: [an icon-only control always has a tooltip and an accessible name](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name).
+
+<Illustration caption="Search, close and add need no word; a bookmark could mean several things, so it carries one.">
+	<GuessDrawing />
+</Illustration>
+
+## One family
+
+Icons read as a set when they share everything but their subject: one grid, one line weight, one way of rounding a corner and drawing a curve. Mix two sets and the screen fills with small disagreements, a stroke a little heavier here and a corner a little rounder there, that nobody can name but everybody feels.
+
+An icon's weight belongs to its surroundings too. Thin outlined glyphs sit easily among hairline borders, while solid ones look a shade heavier than everything around them. That difference is useful in its own right: an outlined icon that fills in when its item is chosen says "you are here" without a second colour or a change of words.
+
+<Illustration caption="One glyph from another set, and it's all the eye can see.">
+	<FamilyDrawing />
+</Illustration>
+
+## Sized like a letter
+
+An icon mostly sits in a line of text, so it is sized like a letter, as tall as the words beside it. A larger label brings a larger icon, and the pair stays balanced at every size. Where an icon stands on its own above a short label, it can afford to be a little larger, because it leads.
+
+The glyph's size is about reading it. The size of what you tap is a separate question: [a touch target is larger than its glyph](?path=/docs/design-system-principles-responsiveness--docs#a-touch-target-is-larger-than-its-glyph), so a small icon never makes a small target.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The icon is as tall as its text, at every size."
+		visual={
+			<div className={styles.sizes}>
+				<span className={styles.small}>
+					<Icon svg={ChecklistIcon} label="" />
+					Declarations
+				</span>
+				<span className={styles.medium}>
+					<Icon svg={ChecklistIcon} label="" />
+					Declarations
+				</span>
+				<span className={styles.large}>
+					<Icon svg={ChecklistIcon} label="" />
+					Declarations
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A fixed size outweighs small text and shrinks beside large text."
+		visual={
+			<div className={`${styles.sizes} ${styles.fixed}`}>
+				<span className={styles.small}>
+					<ChecklistIcon aria-hidden />
+					Declarations
+				</span>
+				<span className={styles.medium}>
+					<ChecklistIcon aria-hidden />
+					Declarations
+				</span>
+				<span className={styles.large}>
+					<ChecklistIcon aria-hidden />
+					Declarations
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## The set
+
+This product draws its icons from Google's [Material Icons, in the outlined style](https://fonts.google.com/icons?icon.set=Material+Icons&icon.style=Outlined). Browse it there for a glyph and use the name it gives, because every glyph on that page is already available. The product draws only three glyphs of its own: the mark, the asterisk on a required field and the spinner.
+
+<Specimen caption="A sample of the outlined set, at the size the bottom bar draws it, and the three glyphs the product draws itself: the mark, the required-field asterisk and the spinner.">
+	<IconGallery />
+</Specimen>
+
+Outlined is the resting state everywhere, because its weight matches the hairline borders and one-pixel seams the rest of the system is built from. The filled style is kept for one job: the item you are on. A navigation entry fills its glyph while it is the current page, and goes back to outlined when it isn't. In the bottom bar, where each icon stands above a short label, the icons are half as large again as the text. And a button that carries a word [carries an icon as well](?path=/docs/components-button--docs#a-labelled-button-carries-an-icon-as-well).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Outlined at rest, at the density of the hairline around them, and filled only for the item you are on."
+		visual={
+			<div className={styles.iconRail}>
+				<span>
+					<SearchIcon aria-hidden />
+					Search
+				</span>
+				<span>
+					<DescriptionFilledIcon aria-hidden />
+					Declarations
+				</span>
+				<span>
+					<PersonIcon aria-hidden />
+					Profile
+				</span>
+				<span>
+					<SettingsIcon aria-hidden />
+					Settings
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Filled at rest, heavier than the hairline around them, and the item you are on no longer stands out."
+		visual={
+			<div className={styles.iconRail}>
+				<span>
+					<SearchFilledIcon aria-hidden />
+					Search
+				</span>
+				<span>
+					<DescriptionFilledIcon aria-hidden />
+					Declarations
+				</span>
+				<span>
+					<PersonFilledIcon aria-hidden />
+					Profile
+				</span>
+				<span>
+					<SettingsFilledIcon aria-hidden />
+					Settings
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Known issues
+
+- Two pairs of glyphs share a meaning: `download` and `file_download`, and `error` and `error_outline`. Which of each pair stays is undecided.
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="An icon stands beside a word and is never the only way to learn what something does">
+
+The word says what the control does, and the icon helps it be found. Where only the icon fits, the word becomes the tooltip and the accessible name. Explained in [A picture beside a word](#a-picture-beside-a-word).
+
+</Details>
+
+<Details title="Icons are the outlined set">
+
+Every glyph comes from one set, drawn on one grid at one line weight, and the outlined style is the resting state. The product installs the set from the `@material-design-icons/svg` package, so a glyph found on the Material Icons page imports by the same name. Explained in [One family](#one-family).
+
+```tsx
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+```
+
+</Details>
+
+<Details title="A filled glyph marks only the item you are on">
+
+The filled style is the counterpart of an outlined resting state, never the resting state itself. Shown in [The set](#the-set).
+
+<DoDont>
+<Example kind="do" caption="Outlined at rest, and filled only for the item you are on.">
+
+```tsx
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import DescriptionActiveIcon from "@material-design-icons/svg/filled/description.svg?react";
+```
+
+</Example>
+<Example kind="dont" caption="Filled at rest, heavier than the hairline around it.">
+
+```tsx
+import SearchIcon from "@material-design-icons/svg/filled/search.svg?react";
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An icon is sized in ems, so it follows its text">
+
+The icon is one em square, so it is as tall as the text beside it at every size. Explained in [Sized like a letter](#sized-like-a-letter).
+
+<DoDont>
+<Example kind="do" caption="The icon is as tall as its text, at every size.">
+
+```scss
+.icon {
+	inline-size: 1em;
+	block-size: 1em;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A fixed size outweighs small text and shrinks beside large text.">
+
+```scss
+.icon {
+	inline-size: 24px;
+	block-size: 24px;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An icon above a short label is half as large again">
+
+In the bottom bar, where each icon stands above its label, it is half as large again as the text. Shown in [The set](#the-set).
+
+</Details>
+
+</DetailsList>

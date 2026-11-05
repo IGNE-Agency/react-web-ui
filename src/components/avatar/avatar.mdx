@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as AvatarStories from "./avatar.stories.tsx";
+
+<Meta of={AvatarStories} />
+
+<DocsPage>
+
+## Rules
+
+### An avatar stands beside the name, never in place of it
+
+An avatar is a picture of someone whose name is already on the screen next to it, so it is hidden from assistive technology rather than read out twice. Where there is no room for the name, the name goes in a tooltip or a list, as `AvatarGroup` does, and the avatar still says nothing.
+
+### A person keeps one colour, and it is never a status colour
+
+Without a portrait, an avatar shows the initials over a colour worked out from the name, so the same person has the same colour on every screen. The colours are the identity tones and the brand tint, never green, amber or red, which would read as a status.
+
+### A portrait that fails falls back to the initials
+
+While a portrait loads, and when it fails, the initials show in its place, so an avatar never shows a broken image or an empty circle.
+
+</DocsPage>

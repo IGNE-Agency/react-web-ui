@@ -1,0 +1,1316 @@
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
+import InboxIcon from "@material-design-icons/svg/outlined/inbox.svg?react";
+import KeyboardIcon from "@material-design-icons/svg/outlined/keyboard.svg?react";
+import MenuIcon from "@material-design-icons/svg/outlined/menu.svg?react";
+import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import MouseIcon from "@material-design-icons/svg/outlined/mouse.svg?react";
+import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import SendIcon from "@material-design-icons/svg/outlined/send.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { Tag } from "../../src/components/tag/index.ts";
+import { Beside } from "./beside";
+import { Cursor } from "./cursor";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./interaction.module.scss";
+import { Illustration } from "./illustration";
+import { InteractionDrawing } from "./interaction-drawing";
+import { PromisesDrawing } from "./interaction-figures";
+
+<Meta title="Design system/Principles/Interaction" />
+
+# Interaction
+
+A screen can't give way under your finger, so a control has to answer some other way. It lights up when you point at it, gives when you press it, shows where the keyboard is, and tells you before you click what the click will do. When those answers are right, nobody thinks about the interface. When they're missing, every control becomes a small gamble.
+
+<Illustration caption="Pointer, keyboard, voice, touch, pen or switch: six ways in, and one control that reaches into every one of them.">
+	<InteractionDrawing />
+</Illustration>
+
+## Every control answers back
+
+People reach a control in three ways: with a pointer, with a finger and with the keyboard. Each asks something different. The pointer asks whether this can be clicked, and the control answers by brightening a little when the pointer arrives and a little more while it's pressed. The keyboard asks where it is, and the answer is a ring around whatever it has reached. A finger gets no hover at all, so the press itself has to be enough.
+
+The answers only work if they're the same everywhere. A reader learns them once, on the first screen, and trusts them on every screen after. A control that answers differently, or not at all, looks broken even when it works.
+
+Here, every control answers the pointer with [the shared state layer](?path=/docs/design-system-foundation-states--docs#the-state-layer), a thin wash of its own ink, and the keyboard with [one focus ring](?path=/docs/design-system-foundation-states--docs#the-focus-ring), drawn the same way on everything.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Every focusable element draws the one shared ring."
+		visual={
+			<div className={styles.row}>
+				<span className={`${styles.button} ${styles.ring}`}>
+					Save
+				</span>
+				<span className={`${styles.chip} ${styles.ring}`}>
+					Pending
+				</span>
+				<span className={`${styles.link} ${styles.ring}`}>
+					Details
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A hand-rolled ring drifts in colour, width and offset, and a removed one hides focus altogether."
+		visual={
+			<div className={styles.row}>
+				<span
+					className={`${styles.button} ${styles.ringHandRolled}`}>
+					Save
+				</span>
+				<span
+					className={`${styles.chip} ${styles.ringDrifted}`}>
+					Pending
+				</span>
+				<span className={styles.link}>Details</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+The same wash covers every variant, so a new variant brings no new hover colours. The one exception is a row or a tab that should look picked out rather than dimmed: it steps to a tint instead, the way [table rows](?path=/docs/components-data-table--docs#rows-are-striped-on-a-ladder-of-fills-mixed-from-the-tonal-container) do.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="One translucent layer of the item's own ink covers every variant."
+		visual={
+			<div className={styles.navGrid}>
+				<span
+					className={`${styles.navItem} ${styles.navSelected}`}>
+					<InboxIcon aria-hidden />
+					Inbox
+				</span>
+				<span
+					className={`${styles.navItem} ${styles.navSelected} ${styles.navLayer}`}>
+					<InboxIcon aria-hidden />
+					Inbox
+				</span>
+				<span className={styles.navItem}>
+					<DescriptionIcon aria-hidden />
+					Drafts
+				</span>
+				<span
+					className={`${styles.navItem} ${styles.navLayer}`}>
+					<DescriptionIcon aria-hidden />
+					Drafts
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A hand-picked hover colour per variant, none of which follows the theme."
+		visual={
+			<div className={styles.navGrid}>
+				<span
+					className={`${styles.navItem} ${styles.navSelected}`}>
+					<InboxIcon aria-hidden />
+					Inbox
+				</span>
+				<span
+					className={`${styles.navItem} ${styles.navSelected} ${styles.navHandPicked}`}>
+					<InboxIcon aria-hidden />
+					Inbox
+				</span>
+				<span className={styles.navItem}>
+					<DescriptionIcon aria-hidden />
+					Drafts
+				</span>
+				<span
+					className={`${styles.navItem} ${styles.navHandPicked}`}>
+					<DescriptionIcon aria-hidden />
+					Drafts
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The hovered row steps to a tint of the brand, so it reads as picked out."
+		visual={
+			<div className={styles.rows}>
+				<span className={styles.dataRow}>
+					Physiotherapy
+					<span className={styles.amount}>€ 120.00</span>
+				</span>
+				<span
+					className={`${styles.dataRow} ${styles.dataRowTinted}`}>
+					Dental care
+					<span className={styles.amount}>€ 85.50</span>
+					<span className={styles.rowCursor}>
+						<Cursor shape="arrow" />
+					</span>
+				</span>
+				<span className={styles.dataRow}>
+					Pharmacy
+					<span className={styles.amount}>€ 14.20</span>
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A layer of the row's own ink only greys it, so the hover reads as a dim rather than a tint."
+		visual={
+			<div className={styles.rows}>
+				<span className={styles.dataRow}>
+					Physiotherapy
+					<span className={styles.amount}>€ 120.00</span>
+				</span>
+				<span
+					className={`${styles.dataRow} ${styles.navLayer}`}>
+					Dental care
+					<span className={styles.amount}>€ 85.50</span>
+					<span className={styles.rowCursor}>
+						<Cursor shape="arrow" />
+					</span>
+				</span>
+				<span className={styles.dataRow}>
+					Pharmacy
+					<span className={styles.amount}>€ 14.20</span>
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Where the keyboard is
+
+For someone on the keyboard, focus is the cursor. Lose sight of it and they're lost on the page, with no way of knowing what the next key will press. So anything you can click, you can also reach with the keyboard, and wherever the keyboard lands, the ring is there. Leaving it off doesn't bring back the browser's own outline: this product removes that everywhere, so a control without the ring shows no focus at all.
+
+Focus is two states, not one. <Pull>A field's border warms whenever focus is anywhere inside it, however it arrived; the ring is keyboard focus and only keyboard focus.</Pull> Merge the two and a mouse click draws a keyboard ring, or a field you clicked into looks untouched.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Clicked into, the field warms; reached by the keyboard, it warms and wears the ring."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.device}>
+					<MouseIcon aria-hidden />
+					<span
+						className={`${styles.field} ${styles.fieldFocused}`}>
+						Anna de Vries
+						<span className={styles.fieldCursor}>
+							<Cursor shape="text" />
+						</span>
+					</span>
+				</div>
+				<div className={styles.device}>
+					<KeyboardIcon aria-hidden />
+					<span
+						className={`${styles.field} ${styles.fieldFocused} ${styles.ring}`}>
+						Anna de Vries
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A mouse click rings the field as if the keyboard had reached it."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.device}>
+					<MouseIcon aria-hidden />
+					<span
+						className={`${styles.field} ${styles.fieldFocused} ${styles.ring}`}>
+						Anna de Vries
+						<span className={styles.fieldCursor}>
+							<Cursor shape="text" />
+						</span>
+					</span>
+				</div>
+				<div className={styles.device}>
+					<KeyboardIcon aria-hidden />
+					<span
+						className={`${styles.field} ${styles.fieldFocused} ${styles.ring}`}>
+						Anna de Vries
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+<Beside>
+
+Two deviations are allowed, and only these two. A list whose highlight already follows the mouse and the keyboard alike [draws its own highlight](?path=/docs/design-system-patterns--docs#every-popup-that-lists-things-shares-one-surface-and-one-row), and a ring on top would mark the same row twice. And a control inside a scrolling area would have an outward ring cut off at the edge, so its ring sits inside it instead.
+
+<Example
+	kind="caution"
+	caption="Inside a scrolling strip, an outward ring is cut off at the edge, so it sits inside the tab."
+	visual={
+		<div className={styles.tabStrip}>
+			<span className={styles.tab}>Overview</span>
+			<span className={`${styles.tab} ${styles.ring}`}>
+				Attachments
+			</span>
+			<span className={styles.tab}>History</span>
+		</div>
+	}
+/>
+
+</Beside>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The list's highlight follows mouse and keyboard alike, so it is the only mark on the row."
+		visual={
+			<div className={styles.listbox}>
+				<span className={styles.option}>Travel</span>
+				<span
+					className={`${styles.option} ${styles.optionHighlighted}`}>
+					Training
+				</span>
+				<span className={styles.option}>Equipment</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A ring on top of the highlight marks the same row twice."
+		visual={
+			<div className={styles.listbox}>
+				<span className={styles.option}>Travel</span>
+				<span
+					className={`${styles.option} ${styles.optionHighlighted} ${styles.ring} ${styles.ringInset}`}>
+					Training
+				</span>
+				<span className={styles.option}>Equipment</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+Not everything that reacts is a stop for the keyboard. A row that highlights on hover is decoration; the keyboard stops at the controls inside it. But anything that answers a click has to answer a key too, or a keyboard user can see it and never reach it.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The row's highlight is decoration; the link inside it is what a key reaches."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.device}>
+					<MouseIcon aria-hidden />
+					<span
+						className={`${styles.tableRow} ${styles.dataRowTinted}`}>
+						<span className={styles.link}>
+							Invoice 2026-114
+						</span>
+						<span className={styles.amount}>€ 120.00</span>
+					</span>
+				</div>
+				<div className={styles.device}>
+					<KeyboardIcon aria-hidden />
+					<span className={styles.tableRow}>
+						<span
+							className={`${styles.link} ${styles.ring}`}>
+							Invoice 2026-114
+						</span>
+						<span className={styles.amount}>€ 120.00</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The row answers a click but no key, so a keyboard user cannot open it."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.device}>
+					<MouseIcon aria-hidden />
+					<span
+						className={`${styles.tableRow} ${styles.dataRowTinted}`}>
+						Invoice 2026-114
+						<span className={styles.amount}>€ 120.00</span>
+					</span>
+				</div>
+				<div className={styles.device}>
+					<KeyboardIcon aria-hidden />
+					<span className={styles.tableRow}>
+						Invoice 2026-114
+						<span className={styles.amount}>€ 120.00</span>
+					</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Promises before the click
+
+Before anyone clicks, the screen has already told them what the click will do. The cursor changes shape over something that acts, a line under a word says it leads somewhere, and a different line says it opens something here. These are promises, and the interface keeps them only if they're made the same way every time.
+
+<Illustration caption="Two words marked in a line of text. A solid underline promises the click goes somewhere else; a dotted one promises it opens something right here.">
+	<PromisesDrawing />
+</Illustration>
+
+The cursor comes in four shapes, each a promise about the click:
+
+- **Pointer** over anything that acts on a click: buttons, links, the summary of a fold, and the controls that aren't text entry, like selects, checkboxes, radios and switches.
+- **Not allowed** over anything disabled.
+- **Text** over text entry. A text field, a text area and the message composer don't take the pointer: a click there puts a caret where you clicked, and the I-beam says so.
+- **Arrow** over a control that can only be read. Text entry keeps its caret even then, because its text can still be selected.
+
+A label isn't in that list. It's the field with a larger target, not a separate thing to click, so it takes the cursor of whatever it labels: the arrow over a text field's label, the pointer over the label beside a checkbox, a radio or a switch, where the whole row is one target.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Each cursor says what a click there does: act, place a caret, or nothing."
+		visual={
+			<div className={styles.cursorForm}>
+				<span className={styles.pointed}>
+					<span className={styles.cursorLabel}>Name</span>
+					<span className={styles.cursorAt}>
+						<Cursor shape="arrow" />
+					</span>
+				</span>
+				<span
+					className={`${styles.pointed} ${styles.field}`}>
+					Anna de Vries
+					<span className={styles.cursorAt}>
+						<Cursor shape="text" />
+					</span>
+				</span>
+				<span
+					className={`${styles.pointed} ${styles.checkRow}`}>
+					<span className={styles.checkBox} />
+					Email me a copy
+					<span className={styles.cursorAt}>
+						<Cursor shape="pointer" />
+					</span>
+				</span>
+				<span className={styles.cursorButtons}>
+					<span className={styles.pointed}>
+						<Button icon={CheckIcon}>Save</Button>
+						<span className={styles.cursorAt}>
+							<Cursor shape="pointer" />
+						</span>
+					</span>
+					<span className={styles.pointed}>
+						<Button
+							variant="primary"
+							icon={SendIcon}
+							disabled>
+							Submit
+						</Button>
+						<span className={styles.cursorAt}>
+							<Cursor shape="not-allowed" />
+						</span>
+					</span>
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A pointer everywhere promises a click from a label, a text field and a disabled button alike."
+		visual={
+			<div className={styles.cursorForm}>
+				<span className={styles.pointed}>
+					<span className={styles.cursorLabel}>Name</span>
+					<span className={styles.cursorAt}>
+						<Cursor shape="pointer" />
+					</span>
+				</span>
+				<span
+					className={`${styles.pointed} ${styles.field}`}>
+					Anna de Vries
+					<span className={styles.cursorAt}>
+						<Cursor shape="pointer" />
+					</span>
+				</span>
+				<span
+					className={`${styles.pointed} ${styles.checkRow}`}>
+					<span className={styles.checkBox} />
+					Email me a copy
+					<span className={styles.cursorAt}>
+						<Cursor shape="pointer" />
+					</span>
+				</span>
+				<span className={styles.cursorButtons}>
+					<span className={styles.pointed}>
+						<Button icon={CheckIcon}>Save</Button>
+						<span className={styles.cursorAt}>
+							<Cursor shape="pointer" />
+						</span>
+					</span>
+					<span className={styles.pointed}>
+						<Button
+							variant="primary"
+							icon={SendIcon}
+							disabled>
+							Submit
+						</Button>
+						<span className={styles.cursorAt}>
+							<Cursor shape="pointer" />
+						</span>
+					</span>
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+A link in running text is the one place the brand colour is spent on words, and it's underlined. On hover it moves to a deeper or lighter shade of the brand, whichever stands out in the theme, so the reaction reads the same in both. <Pull>The underline is not decoration to be traded away: colour alone is not a link.</Pull> The links that are part of the product's chrome, like [navigation items](?path=/docs/design-system-patterns--docs#finding-your-way), a tab strip or the logo, are already shaped by their own rules and carry no underline.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Chrome is shaped by its own rules; a link in running text is brand-coloured and underlined."
+		visual={
+			<div className={styles.stack}>
+				<div className={styles.chrome}>
+					<span
+						className={`${styles.navItem} ${styles.navSelected}`}>
+						Declarations
+					</span>
+					<span className={styles.navItem}>Settings</span>
+				</div>
+				<span className={styles.prose}>
+					Forgot your password?{" "}
+					<span className={styles.link}>
+						Reset it by email
+					</span>
+					.
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A second link treatment, off the theme, with the underline removed."
+		visual={
+			<span className={styles.prose}>
+				Forgot your password?{" "}
+				<span className={styles.linkUnthemed}>
+					Reset it by email
+				</span>
+				.
+			</span>
+		}
+	/>
+</DoDont>
+
+A solid underline already means one thing: this goes somewhere. <Pull>A trigger that reveals more on hover or click does not navigate, and borrowing the link's line would overload it.</Pull> So anything that opens more in a popover, like a name in a table cell or a row of chips that opens as one, carries a dotted underline instead. It keeps its own colours, and the dots follow the colour of the text above them, faded at rest and at full strength on hover and while the popover is open. In a group of chips the dots go under each chip's label, never under the group, because they mark the text. A tooltip that only [names an icon button](#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name) is a label, not disclosure, and takes none of this.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The dots sit under the text that opens more, in the text's own colour."
+		visual={
+			<div className={styles.stack}>
+				<span className={styles.cellRow}>
+					Submitted by{" "}
+					<span className={styles.disclosure}>
+						Anna de Vries
+					</span>
+				</span>
+				<span className={styles.chips}>
+					<Tag.Root>
+						<span className={styles.disclosure}>
+							Travel
+						</span>
+					</Tag.Root>
+					<Tag.Root>
+						<span className={styles.disclosure}>
+							Training
+						</span>
+					</Tag.Root>
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A link's line promises a page the click never reaches, and a line under the group marks nothing a reader can point at."
+		visual={
+			<div className={styles.stack}>
+				<span className={styles.cellRow}>
+					Submitted by{" "}
+					<span className={styles.link}>Anna de Vries</span>
+				</span>
+				<span
+					className={`${styles.chips} ${styles.groupLine}`}>
+					<Tag.Root>Travel</Tag.Root>
+					<Tag.Root>Training</Tag.Root>
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Marks of selection
+
+Selecting is a state too, and the reader drives it. Drag across a paragraph and the browser paints its own opaque blue over the words, a colour that answers to nothing in the palette. <Pull>Where blue means a status, an unclaimed highlight says "status message" across every paragraph the reader drags over.</Pull> So the highlight and the text on it are a pair of roles in every theme, tinted by the brand like anything else that's active, and checked against [the surfaces text actually sits on](?path=/docs/design-system-foundation-colour--docs#surfaces), not just the page.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The highlight and its ink, as one pair."
+		visual={
+			<span className={styles.prose}>
+				Your declaration was{" "}
+				<span className={styles.selection}>
+					submitted on 2 October
+				</span>{" "}
+				and is awaiting review.
+			</span>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A highlight with the text left as it was, and the browser's own blue, the one colour a status is reserved for."
+		visual={
+			<div className={styles.stack}>
+				<span className={styles.prose}>
+					Your declaration was{" "}
+					<span className={styles.selectionUnpaired}>
+						submitted on 2 October
+					</span>{" "}
+					and is awaiting review.
+				</span>
+				<span className={styles.prose}>
+					Your declaration was{" "}
+					<span className={styles.selectionBrowser}>
+						submitted on 2 October
+					</span>{" "}
+					and is awaiting review.
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+A selected item is marked as well, and a marker is drawn for a shape. A pill fits a single line of text. Stretched over an item that stacks an icon above its label, it turns into a lozenge, and a circle over a wide row turns into an ellipse. When the item changes shape, the marker moves to the part that still has the shape it was drawn for, usually the icon, in [the same colours](?path=/docs/design-system-patterns--docs#a-navigation-item-is-a-full-height-pill-selected-with-a-tonal-fill-and-the-labels-strong-ink) wherever it lands.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The marker moves to the part it fits."
+		visual={
+			<div className={styles.bottomNav}>
+				<span className={styles.stackedItem}>
+					<span
+						className={`${styles.stackedIcon} ${styles.markerFill}`}>
+						<HomeIcon aria-hidden />
+					</span>
+					Home
+				</span>
+				<span className={styles.stackedItem}>
+					<span className={styles.stackedIcon}>
+						<DescriptionIcon aria-hidden />
+					</span>
+					Declarations
+				</span>
+				<span className={styles.stackedItem}>
+					<span className={styles.stackedIcon}>
+						<PersonIcon aria-hidden />
+					</span>
+					Profile
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The pill stretches into a lozenge around the stack."
+		visual={
+			<div className={styles.bottomNav}>
+				<span
+					className={`${styles.stackedItem} ${styles.markerFill}`}>
+					<span className={styles.stackedIcon}>
+						<HomeIcon aria-hidden />
+					</span>
+					Home
+				</span>
+				<span className={styles.stackedItem}>
+					<span className={styles.stackedIcon}>
+						<DescriptionIcon aria-hidden />
+					</span>
+					Declarations
+				</span>
+				<span className={styles.stackedItem}>
+					<span className={styles.stackedIcon}>
+						<PersonIcon aria-hidden />
+					</span>
+					Profile
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Names for silent controls
+
+<Pull>
+	An icon with no text is unlabelled to a screen reader and
+	a guess to everyone else.
+</Pull>
+So a control that shows only an icon always carries two
+things with the same words: a name that assistive technology
+reads out, and a tooltip that shows on hover and focus. That
+goes for menu triggers, close buttons, paging arrows, a
+chip's remove button and toolbar actions alike, and [the
+icon-only
+button](?path=/docs/components-button--docs#an-icon-only-button-is-a-circle-with-an-accessible-label)
+gives both for free.
+
+The browser's own hint, the `title` attribute, does neither job. Screen readers treat it unreliably, it never shows on touch, it can't be styled or themed, and the keyboard can't reach it. Whatever it was carrying belongs in [a name the control points at](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism) and in the tooltip.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The tooltip and the accessible name carry the same words."
+		visual={
+			<div className={styles.hinted}>
+				<span className={styles.tooltip}>Menu</span>
+				<span className={styles.iconButton}>
+					<MenuIcon aria-hidden />
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Announced unreliably, invisible on touch, impossible to style."
+		visual={
+			<div className={styles.hinted}>
+				<span className={styles.iconButton}>
+					<MenuIcon aria-hidden />
+				</span>
+				<span className={styles.nativeTitle}>Menu</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The row's menu trigger is the icon-only button, so its label is both the tooltip and the name."
+		visual={
+			<div
+				className={`${styles.tableRow} ${styles.tableRowTipped}`}>
+				Invoice 2026-114
+				<span className={styles.amount}>€ 120.00</span>
+				<span className={styles.anchored}>
+					<span
+						className={`${styles.tooltip} ${styles.anchoredTip}`}>
+						Row actions
+					</span>
+					<span className={styles.iconButton}>
+						<MoreVertIcon aria-hidden />
+					</span>
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A second icon button of its own, and no hint for anyone who can see it."
+		visual={
+			<div className={styles.tableRow}>
+				Invoice 2026-114
+				<span className={styles.amount}>€ 120.00</span>
+				<span className={styles.iconBare}>
+					<MoreVertIcon aria-hidden />
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+A hint added to stop a cut-off label from being lost is a layout problem wearing a hint. [Fix the layout instead](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled), so the whole label is on screen for everyone.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The heading wraps, so all of it is on screen for everyone."
+		visual={
+			<div className={styles.headRow}>
+				<span>Date</span>
+				<span className={styles.headWraps}>
+					Outstanding declarations
+				</span>
+				<span className={styles.amount}>Amount</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The heading is cut off, and the hover box gives it back only to a mouse."
+		visual={
+			<div className={styles.hinted}>
+				<div className={styles.headRow}>
+					<span>Date</span>
+					<span className={styles.headTruncates}>
+						Outstanding declarations
+					</span>
+					<span className={styles.amount}>Amount</span>
+				</div>
+				<span
+					className={`${styles.nativeTitle} ${styles.titleTip}`}>
+					Outstanding declarations
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Hover and press come from the shared state layer">
+
+The layer paints a translucent wash of the element's own content colour over its fill, so one recipe covers every variant. How strong it is for each state, in each theme, is on [States](?path=/docs/design-system-foundation-states--docs#the-state-layer). Explained in [Every control answers back](#every-control-answers-back).
+
+<DoDont>
+<Example kind="do" caption="One translucent layer of the item's own ink covers every variant.">
+
+```scss
+.nav-item {
+	border-radius: var(--radius-full);
+
+	@include state.layer;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A hand-picked hover colour per variant, none of which themes.">
+
+```scss
+.nav-item {
+	&:hover {
+		background: #f2f2f2;
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A row or tab that should read as picked out swaps its fill instead of taking the layer">
+
+Table rows and tabs hover to a tint, so they read as picked out rather than dimmed. Shown in [Every control answers back](#every-control-answers-back).
+
+<DoDont>
+<Example kind="do" caption="The hovered row steps to a tint of the brand.">
+
+```scss
+.row:hover {
+	background: var(--row-hover);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A layer of the row's own ink only greys it.">
+
+```scss
+.row {
+	@include state.layer;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Everything you can reach with the keyboard shows the focus ring">
+
+Every focusable element includes the shared ring; the reset has already removed the browser's outline, so a hand-rolled ring drifts and a missing one hides focus. Use the idle and shown variants to drive one element's ring from another element's focus. Explained in [Where the keyboard is](#where-the-keyboard-is).
+
+<DoDont>
+<Example kind="do" caption="Every focusable element draws the one shared ring.">
+
+```scss
+.my-button {
+	@include focus.ring;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A hand-rolled ring drifts in colour, width and offset; removing the outline just hides focus.">
+
+```scss
+.my-button {
+	&:focus-visible {
+		outline: 2px solid var(--sys-color-primary);
+		outline-offset: 2px;
+	}
+}
+
+.my-button {
+	outline: none;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A field's border warms on any focus, and the ring is keyboard focus only">
+
+A form control publishes both states, like every other state: `[data-focused]` and `[data-focus-visible]`, from `useFieldFocus`. It does not read `:focus-visible` or `:focus-within`, for the same reason it does not read `:disabled`: one vocabulary, so a rule written against a field reads the same wherever it is. It also covers focus that has moved into a portalled popup, which is nowhere near its trigger in the DOM, and lets a story stand the state up without focusing anything.
+
+This covers wrappers as well as bare controls, which is why there is no within-variant of the ring: a wrapper whose focus lands on a descendant, like a field group or the composer around its contenteditable, publishes the same two flags from the same hook, because React's focus events bubble. A button, a link, a nav item or a tab has no state to publish and keeps `focus.ring` on `:focus-visible`. Shown in [Where the keyboard is](#where-the-keyboard-is).
+
+<DoDont>
+<Example kind="do" caption="The projection answers both questions.">
+
+```scss
+.group {
+	@include focus.ring-projected;
+
+	&[data-focused] {
+		border-color: var(--sys-color-primary);
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="Two vocabularies in one stylesheet, and a mouse click rings the field.">
+
+```scss
+.group {
+	&:focus-within {
+		@include focus.ring-shown;
+
+		border-color: var(--sys-color-primary);
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A list whose highlight follows mouse and keyboard takes no ring on top">
+
+The library's highlight is already the keyboard's mark, so it is the only mark on the row. Shown in [Where the keyboard is](#where-the-keyboard-is).
+
+<DoDont>
+<Example kind="do" caption="The highlight is the only mark on the row.">
+
+```scss
+.item[data-highlighted] {
+	background: var(--sys-color-primary-container);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A ring on top of the highlight marks the same row twice.">
+
+```scss
+.item {
+	@include focus.ring;
+
+	&[data-highlighted] {
+		background: var(--sys-color-primary-container);
+	}
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Inside a scroll container the focus ring is inset">
+
+An outward ring is clipped by the container's edge. Shown in [Where the keyboard is](#where-the-keyboard-is).
+
+```scss
+.tab {
+	@include focus.ring;
+
+	outline-offset: calc(-1 * var(--focus-ring-width));
+}
+```
+
+</Details>
+
+<Details title="A non-focusable element is decoration, not an exemption">
+
+A row that highlights on hover is decoration, and a wrapper label is not the focus target; the controls inside them are. If an element is clickable, it is focusable, and it needs both states. Shown in [Where the keyboard is](#where-the-keyboard-is).
+
+<DoDont>
+<Example kind="do" caption="The row's highlight is decoration; the link inside it is what a key reaches.">
+
+```tsx
+<tr className={styles.row}>
+	<td>
+		<Link to={href}>{name}</Link>
+	</td>
+</tr>
+```
+
+</Example>
+<Example kind="dont" caption="The row answers a click but no key.">
+
+```tsx
+<tr className={styles.row} onClick={open}>
+	<td>{name}</td>
+</tr>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The cursor says what happens on click">
+
+Pointer for anything that acts on a click, including the ARIA roles a library renders in place of native controls; not-allowed for anything disabled, by the native attribute, the ARIA attribute or a library's data attribute; text over text entry; default over a read-only control, except text entry, which keeps the caret. Explained in [Promises before the click](#promises-before-the-click).
+
+<DoDont>
+<Example kind="do" caption="Text entry takes the I-beam; a checkbox's label takes the pointer.">
+
+```scss
+input,
+textarea,
+[contenteditable="true"] {
+	cursor: text;
+}
+
+.checkbox-label {
+	cursor: pointer;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A pointer everywhere promises a click from a label, a text field and a disabled button alike.">
+
+```scss
+.text-field-label,
+.text-field,
+.submit {
+	cursor: pointer;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A label takes the cursor of the control it labels">
+
+The arrow over a text field's label, the pointer over the label beside a checkbox, a radio or a switch. Those three set it on their own label element; the global rule does not. Explained in [Promises before the click](#promises-before-the-click).
+
+</Details>
+
+<Details title="The cursor is given back once, globally, outranking the reset">
+
+The global reset throws the user agent's cursor away along with everything else. Give it back once, globally, not per component. Watch the specificity: a reset that re-applies `cursor: revert` on `a, button` is a type selector, so a zero-specificity default loses to it, and `revert` on a button lands on the user agent's arrow, so links keep working while every button quietly stops. Component overrides still win, because they name a class. Explained in [Promises before the click](#promises-before-the-click).
+
+<DoDont>
+<Example kind="do" caption="Once, globally, outranking the reset's own selector; the disabled rule follows it.">
+
+```scss
+button,
+select,
+[role="menuitem"] {
+	cursor: pointer;
+}
+
+:disabled,
+[aria-disabled="true"],
+[data-disabled] {
+	cursor: not-allowed;
+}
+```
+
+</Example>
+<Example kind="dont" caption="The twelfth copy of a rule that is already global.">
+
+```scss
+.sort-toggle {
+	cursor: pointer;
+}
+```
+
+</Example>
+</DoDont>
+
+<Example kind="caution" caption="The reset's “a, button” outranks a zero-specificity default, so every button shows an arrow while links still work.">
+
+```scss
+:where(button, select, [role="menuitem"]) {
+	cursor: pointer;
+}
+```
+
+</Example>
+
+</Details>
+
+<Details title="A link carries the brand colour and is underlined">
+
+Declare it as a zero-specificity default so links that are not body copy override it by naming their class. On hover it moves to the tonal container's ink. Chrome such as nav items, a rail's logo and a tab strip opts out by saying what it is. Explained in [Promises before the click](#promises-before-the-click).
+
+<DoDont>
+<Example kind="do" caption="One default, overridable by any class. Chrome opts out by saying what it is.">
+
+```scss
+:where(a[href]) {
+	color: var(--sys-color-primary);
+	text-decoration: underline;
+
+	&:hover {
+		color: var(--sys-color-on-primary-container);
+	}
+}
+
+.nav-item {
+	color: var(--sys-color-text);
+	text-decoration: none;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A second link treatment, unthemed, with the affordance removed.">
+
+```scss
+.forgot-password {
+	color: #006d97;
+	text-decoration: none;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Progressive disclosure is underlined dotted, not styled as a link">
+
+The trigger sets the line and the text draws it: faded at rest, full strength on hover and while the popup is open, in the text's own colour. In a group of chips that opens as one trigger, the line goes in each chip, and the trigger owns the states. Explained in [Promises before the click](#promises-before-the-click).
+
+<DoDont>
+<Example kind="do" caption="The trigger sets the line, the text draws it.">
+
+```scss
+.group {
+	--disclosure-line: color-mix(
+		in oklab,
+		currentcolor 50%,
+		transparent
+	);
+
+	&:hover,
+	&[data-popup-open] {
+		--disclosure-line: currentcolor;
+	}
+
+	> * {
+		text-decoration: underline dotted var(--disclosure-line);
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="A line under the group, and a trigger styled as a link.">
+
+```scss
+.group::after {
+	border-block-end: 1px dotted var(--sys-color-outline);
+}
+
+.trigger {
+	color: var(--sys-color-primary);
+	text-decoration: underline;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Selected text is a role, not a browser default">
+
+Every theme declares the selection fill and its ink as a pair, and they are checked against every surface text sits on as part of any palette change. Explained in [Marks of selection](#marks-of-selection).
+
+<DoDont>
+<Example kind="do" caption="Once, globally, as a pair.">
+
+```scss
+::selection {
+	background-color: var(--sys-color-selection-bg);
+	color: var(--sys-color-selection-fg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The ink is still whatever the text was, or the fill is the browser's own.">
+
+```scss
+::selection {
+	background-color: var(--sys-color-primary-container);
+}
+
+::selection {
+	background-color: #b4d5fe;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A selected state fits the shape of what it marks">
+
+When the item's silhouette changes, the marker moves onto the part that still has the shape it was drawn for, with the same tokens. Shown in [Marks of selection](#marks-of-selection).
+
+<DoDont>
+<Example kind="do" caption="The marker moves to the part it fits.">
+
+```scss
+.item[data-stacked="true"] {
+	background: none;
+
+	> .icon {
+		border-radius: var(--radius-full);
+		background: var(--sys-color-primary-container);
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="The pill stretches into a lozenge around the stack.">
+
+```scss
+.item[data-stacked="true"] {
+	border-radius: var(--radius-full);
+	background: var(--sys-color-primary-container);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An icon-only control always has a tooltip and an accessible name">
+
+An icon-only control is the button component's icon-only form, which requires a label and surfaces it as both; a library trigger that needs to be one renders through it. Where a component wraps a library trigger, the label is a required prop, so the type check enforces it. Explained in [Names for silent controls](#names-for-silent-controls).
+
+<DoDont>
+<Example kind="do" caption="The menu trigger is the icon-only button.">
+
+```tsx
+<Menu.Trigger icon={MoreVertIcon} label={m.row_actions()} />
+```
+
+</Example>
+<Example kind="dont" caption="A second icon-button implementation, and no hint for sighted users.">
+
+```tsx
+<Menu.Trigger className={styles.trigger}>
+	<Icon svg={MoreVertIcon} label={m.row_actions()} />
+</Menu.Trigger>
+```
+
+</Example>
+</DoDont>
+
+<DoDont>
+<Example kind="do" caption="A trigger without a label fails the type check.">
+
+```tsx
+type TriggerProps = Readonly<{
+	icon: SvgComponent;
+	label: string;
+}>;
+```
+
+</Example>
+<Example kind="dont" caption="The label is a convention, and the next trigger ships without one.">
+
+```tsx
+type TriggerProps = Readonly<{
+	icon: SvgComponent;
+	label?: string;
+}>;
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Never use the title attribute">
+
+The accessible name goes through a label the control points at, and the hint through the tooltip component, both with the same string. A `title` used to rescue a truncated label is a layout bug: wrap the label instead. Explained in [Names for silent controls](#names-for-silent-controls).
+
+<DoDont>
+<Example kind="do" caption="The tooltip and the accessible name carry the same string.">
+
+```tsx
+<Tooltip content={label}>
+	<button aria-label={label}>
+		<Icon svg={MenuIcon} label="" />
+	</button>
+</Tooltip>
+```
+
+</Example>
+<Example kind="dont" caption="Announced unreliably, invisible on touch, unstyleable.">
+
+```tsx
+<button title={label}>
+	<Icon svg={MenuIcon} label="" />
+</button>
+```
+
+</Example>
+</DoDont>
+
+<DoDont>
+<Example kind="do" caption="The heading wraps.">
+
+```tsx
+<th className={styles.wraps}>{label}</th>
+```
+
+</Example>
+<Example kind="dont" caption="The heading is cut off, and the hover box gives it back only to a mouse.">
+
+```tsx
+<th className={styles.truncates} title={label}>
+	{label}
+</th>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

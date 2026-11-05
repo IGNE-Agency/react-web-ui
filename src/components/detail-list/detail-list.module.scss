@@ -1,0 +1,50 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.list {
+		display: grid;
+		gap: var(--detail-list-gap, var(--sys-unit-4));
+	}
+
+	%row {
+		display: grid;
+		align-items: center;
+		gap: var(--detail-list-column-gap, var(--sys-unit-4));
+		overflow-wrap: anywhere;
+	}
+
+	.row {
+		@extend %row;
+
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
+		&:has(> .action) {
+			grid-template-columns: minmax(0, 1fr) minmax(
+					0,
+					2fr
+				) auto;
+		}
+	}
+
+	.iconRow {
+		@extend %row;
+
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: start;
+
+		&:has(> .action) {
+			grid-template-columns: auto minmax(0, 1fr) auto;
+		}
+	}
+
+	.term {
+		color: var(
+			--detail-list-term-fg,
+			var(--sys-color-text-muted)
+		);
+	}
+
+	.action {
+		justify-self: end;
+	}
+}

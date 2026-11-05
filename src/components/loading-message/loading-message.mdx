@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as LoadingMessageStories from "./loading-message.stories.tsx";
+
+<Meta of={LoadingMessageStories} />
+
+<DocsPage>
+
+## Rules
+
+### A region's first wait shows late, and is announced once
+
+A loading message is for a region waiting for its first content. It shows nothing for the first moment, so a quick load does not flicker, and then shows a moving indicator and its title, announced once as a status. A region that already shows content and refreshes it uses `Stale` instead, and a wait whose shape is known is drawn as skeletons.
+
+### The indicator moves, and may be the app's own mark
+
+The indicator is a spinner unless the app passes its own, such as its animated logo, through `illustration`. Whatever it is, it keeps changing, so a slow wait never looks like a stuck one.
+
+</DocsPage>

@@ -1,0 +1,82 @@
+@use "./drawing";
+
+@mixin -figure($family, $field, $part, $paint) {
+	@include drawing.palette($family);
+
+	--f-field: #{$field};
+	--f-part: #{$part};
+	--f-paint: #{$paint};
+}
+
+.openerA {
+	@include -figure(
+		"saturated",
+		var(--drawing-field),
+		var(--drawing-paper),
+		var(--drawing-deep)
+	);
+}
+
+.openerB {
+	@include -figure(
+		"inverted",
+		var(--drawing-field),
+		var(--drawing-paper),
+		var(--drawing-mid)
+	);
+}
+
+.openerC {
+	@include -figure(
+		"neutral",
+		var(--drawing-cool-muted),
+		var(--drawing-cool-vivid),
+		color-mix(
+			in oklab,
+			var(--drawing-cool-vivid) 45%,
+			var(--drawing-cool-muted)
+		)
+	);
+}
+
+.openerD {
+	@include -figure(
+		"neutral",
+		var(--drawing-hot-vivid),
+		var(--drawing-paper),
+		var(--drawing-hot-muted)
+	);
+}
+
+.openerE {
+	@include -figure(
+		"neutral",
+		var(--drawing-hot-muted),
+		var(--drawing-paper),
+		var(--drawing-hot-vivid)
+	);
+}
+
+.field {
+	fill: var(--f-field);
+}
+
+.part {
+	fill: var(--f-part);
+}
+
+.paint {
+	fill: var(--f-paint);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}
+
+.hole {
+	fill: color-mix(
+		in oklab,
+		var(--f-field) 60%,
+		var(--drawing-shade)
+	);
+}

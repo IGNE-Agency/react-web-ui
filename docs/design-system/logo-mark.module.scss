@@ -1,0 +1,19 @@
+@use "../../src/style/loading-motion.scss" as loading;
+@use "../../.storybook/logo-motion.scss" as logo;
+
+@include loading.pulse-keyframes;
+@include logo.tick-keyframes;
+
+.logo {
+	inline-size: 6rem;
+	max-inline-size: 60%;
+	block-size: auto;
+	color: var(--sys-color-primary);
+	will-change: transform;
+
+	@include logo.tick(infinite);
+
+	@media (prefers-reduced-motion) {
+		@include loading.pulse;
+	}
+}

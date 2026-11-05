@@ -1,0 +1,401 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import { TextField } from "../../src/components/text-field/index.ts";
+import styles from "./accessibility.module.scss";
+import { AccessibilityDrawing } from "./accessibility-drawing";
+import {
+	KeepPlaceDrawing,
+	SpeakDrawing,
+} from "./accessibility-figures";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+
+<Meta title="Design system/Principles/Accessibility" />
+
+# Accessibility
+
+People reach a product in more ways than one. Some hear it through a screen reader, some move through it with a keyboard or a switch, some zoom it until a button fills the screen. Accessibility is making sure every one of them gets the same product: the same names, the same warnings, the same way back to where they were. Done well, nobody notices it at all.
+
+<Illustration caption="Keyboard, speech, touch, zoom, captions, a switch: many ways in, and every one of them is someone reaching the same product.">
+	<AccessibilityDrawing />
+</Illustration>
+
+## A screen, read aloud
+
+A screen reader doesn't see a layout. It walks a tree of the things on the page, and for each control it says what it is, what it's called, what's explained about it and what state it's in. Everything else is either text to read or decoration to skip.
+
+So a control's name matters more than anything around it. The best name is simply the label everyone can see, used as the one and only name, so what is read aloud and what is on screen can never drift apart. A hint or an error under a field only reaches a listener when it is tied to that field; red text beside it is silent otherwise. And something drawn only to be looked at, like an icon beside a label or a status dot, is kept out of the reading altogether, so it doesn't interrupt the name it decorates.
+
+A placeholder is not a name. It disappears the moment someone types, it is read out inconsistently, and it is drawn faint on purpose, so a field named only by its placeholder loses its name as soon as it is used. Every field gets a label that stays; a format hint goes in the description under it, which stays on screen while the field is being filled in.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Named, and the format survives the first keystroke."
+		visual={
+			<TextField
+				optionalLabel="optional"
+				className={styles.textField}
+				label="IBAN"
+				description="Format: NL00 BANK 0000 0000 00"
+				placeholder="NL91 ABNA 0417 1643 00"
+				value="NL91 ABNA 0417 1643 00"
+				onValueChange={() => {}}
+			/>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Unnamed once it has a value, and the hint leaves at the same moment."
+		visual={
+			<div className={styles.fields}>
+				<span
+					className={`${styles.field} ${styles.placeholder}`}>
+					IBAN
+				</span>
+				<span className={styles.field}>
+					NL91 ABNA 0417 1643 00
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+A few of these rules are about what you can see as well as hear, and live with [interaction](?path=/docs/design-system-principles-interaction--docs): [everything you can reach with the keyboard shows the focus ring](?path=/docs/design-system-principles-interaction--docs#everything-you-can-reach-with-the-keyboard-shows-the-focus-ring), [never use the title attribute](?path=/docs/design-system-principles-interaction--docs#never-use-the-title-attribute), [an icon-only control always has a tooltip and an accessible name](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), and [a non-focusable element is decoration, not an exemption](?path=/docs/design-system-principles-interaction--docs#a-non-focusable-element-is-decoration-not-an-exemption).
+
+## Speaking at the right moment
+
+Some things change while nobody is looking: an error appears, a wait drags on, a counter ticks. A screen reader can be told to announce those changes as they happen, and that is a tool to use sparingly. <Pull>Something that speaks on every keystroke talks over the very typing it describes.</Pull>
+
+So each change is announced once, at the moment it matters. An error is read when it appears and again when someone returns to its field, and never twice in a row. A character counter is there for the eye and stays quiet; the limit it counts against is part of the field's description, read once on the way in. And a wait is only announced once it has lasted long enough to be worth a sentence, the same bargain as [a wait that announces itself late](?path=/docs/design-system-foundation-motion--docs#a-wait-announces-itself-late-and-then-stays-a-moment).
+
+<Illustration caption="Typing stays quiet. It speaks once, right after the last key, when there is something worth saying.">
+	<SpeakDrawing />
+</Illustration>
+
+## Keeping your place
+
+A keyboard user is always somewhere: on one control, with a sense of where they've been. Two things quietly take that away.
+
+The first is a control that removes itself. Clear a field, remove a file, dismiss a chip, and the button that was pressed is gone. If nothing catches it, focus falls back to the top of the page, and the person has to find their way back. So whatever removes the focused control moves focus somewhere sensible in the same moment: to the field it emptied, to the button that added the file.
+
+<Illustration caption="The chip is gone and its place stands empty, but focus hasn't fallen away: it has landed on the field beside it.">
+	<KeepPlaceDrawing />
+</Illustration>
+
+The second is content that's only waiting. Rows being refreshed, or a stand-in row for one that hasn't arrived yet, should stop taking clicks and focus for a moment, but they aren't unavailable. <Pull>Greying out every button in them says the actions are gone, which isn't true, and it repaints half the screen on every refresh.</Pull> They are set aside instead, and the wait is reported once, by the region that holds them.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The stale region stops taking clicks and focus without claiming its actions are unavailable."
+		visual={
+			<div className={`${styles.list} ${styles.stale}`}>
+				<span className={styles.listRow}>
+					Invoice 2026-114<Button size="sm">Edit</Button>
+				</span>
+				<span className={styles.listRow}>
+					Invoice 2026-115<Button size="sm">Edit</Button>
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Every control in the region now claims to be unavailable."
+		visual={
+			<div className={styles.list}>
+				<span className={styles.listRow}>
+					Invoice 2026-114
+					<Button size="sm" disabled>
+						Edit
+					</Button>
+				</span>
+				<span className={styles.listRow}>
+					Invoice 2026-115
+					<Button size="sm" disabled>
+						Edit
+					</Button>
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Contrast you can read
+
+Text has to stand out from what's behind it, and how much is a measurement, not a feeling. The long-standing way to measure it is WCAG 2's contrast ratio, which compares the brightness of the two colours and nothing else. It scores light text on dark the same as dark text on light, though the eye doesn't, and it is least reliable around mid-tones and near black. A newer, perceptual method, APCA, weighs what the eye actually sees: the size and weight of the text, and which of the two colours is the lighter.
+
+This product judges contrast by APCA. <Pull>A brand that sits in the middle of its ramp and a dark theme are exactly where the ratio goes wrong.</Pull> On a mid-tone the ratio prefers black text that reads worse than white; near black it passes greys that are hard to read. Body text meets APCA's bronze level, which sets its minimum by size and weight. Muted text meets Lc 60, APCA's minimum for content text that isn't body text, or Lc 45 from 32px up. Each colour role points at the nearest step of its ramp that passes, in each theme.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="White on the brand green: Lc 69 by APCA, though WCAG 2 fails it at 3.7:1."
+		visual={
+			<div className={styles.contrastPair}>
+				<span
+					className={`${styles.contrastSample} ${styles.contrastLight}`}>
+					Export
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Black on the same green passes WCAG 2 at 5.7:1, and reads worse: Lc 40."
+		visual={
+			<div className={styles.contrastPair}>
+				<span
+					className={`${styles.contrastSample} ${styles.contrastDark}`}>
+					Export
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+WCAG 2 is still the standard that accessibility law, such as the European Accessibility Act, points to, and APCA is not a standard yet. A claim of WCAG 2 conformance is checked against the ratio as well.
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Every control has a name, from exactly one mechanism">
+
+Where a library wires its own label to its own control, let it. Where the control is not a labelable element, like a segmented date group or a drop target, render the visible label as something else, give it an id, and point the control at it with `aria-labelledby`. Never both mechanisms on one control: the library either drops the label it was going to render or replaces the name we gave it, and which one happens is a version detail. The label is one string, on screen and announced. Explained in [A screen, read aloud](#a-screen-read-aloud).
+
+<DoDont>
+<Example kind="do" caption="The visible label is the name, and the control points at it.">
+
+```tsx
+<Field.Label id={labelId} nativeLabel={false} render={<span />}>
+	{label}
+</Field.Label>
+<DateControl.Root aria-labelledby={labelId} />
+```
+
+</Example>
+<Example kind="dont" caption="Two strings for one control, and the visible one names nothing.">
+
+```tsx
+<Field.Label id={labelId}>{label}</Field.Label>
+<DateControl.Root aria-label={label} />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A description and an error chain into aria-describedby">
+
+A field joins the ids of whichever of its description and its error are actually on screen, description first, and hands the control the result. An error that only exists in the DOM [once validation fails](?path=/docs/design-system-patterns--docs#an-invalid-form-says-so-when-it-is-submitted-then-keeps-up) must not leave its id behind when it goes, and must not be missing from the chain when it arrives. Where the primitive owns the frame it does this itself; where the ids come from `Field.useIds`, the joining is ours. Explained in [A screen, read aloud](#a-screen-read-aloud).
+
+<DoDont>
+<Example kind="do" caption="Only the ids that are rendered.">
+
+```tsx
+const describedBy =
+	[
+		description === undefined ? undefined : descriptionId,
+		messages.length === 0 ? undefined : errorId,
+	]
+		.filter(id => id !== undefined)
+		.join(" ") || undefined;
+```
+
+</Example>
+<Example kind="dont" caption="The error is on screen and absent from the announcement.">
+
+```tsx
+<DateControl.Root aria-describedby={descriptionId} />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Decoration is aria-hidden">
+
+A leading glyph, an affix, a status dot, [the mark](?path=/docs/design-system-brand--docs#the-mark-is-decoration) in an overlay message: anything drawn to be looked at rather than read is hidden from the accessibility tree, and its meaning lives in the label, the description or the name of the control beside it. A decorative icon is the icon component with an empty label, which makes an icon given no thought fail the type check. Explained in [A screen, read aloud](#a-screen-read-aloud).
+
+<DoDont>
+<Example kind="do" caption="Drawn, not read; the label says it is a search box.">
+
+```tsx
+<TextInput.Inlay>
+	<Icon svg={SearchIcon} label="" />
+</TextInput.Inlay>
+```
+
+</Example>
+<Example kind="dont" caption="A second name inside a field that already has one.">
+
+```tsx
+<TextInput.Inlay>
+	<Icon svg={SearchIcon} label={m.filter_search()} />
+</TextInput.Inlay>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An accessible name is never only a placeholder">
+
+Every control takes a visible label; where the layout genuinely cannot carry one, the name is an `aria-label`, which is still not the placeholder. A format hint goes in the description. Shown in [A screen, read aloud](#a-screen-read-aloud).
+
+<DoDont>
+<Example kind="do" caption="Named, and the format survives the first keystroke.">
+
+```tsx
+<TextField
+	label={label}
+	description={formatHint}
+	placeholder={example}
+	value={value}
+	onValueChange={setValue}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="Unnamed once it has a value, and the hint leaves at the same moment.">
+
+```tsx
+<Input
+	placeholder={label}
+	value={value}
+	onValueChange={setValue}
+/>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A field's error is its only live region">
+
+`Field.Error` carries `role="alert"`, so a message that appears while someone is in the field interrupts rather than waiting for focus to land there again. That is one announcement per message: the alert when it arrives, the described-by chain when focus arrives. A second `role="status"` or `aria-live` over the same text reads it twice. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
+
+<DoDont>
+<Example kind="do" caption="The error is read once, by the alert it already carries.">
+
+```tsx
+<Field.Error>{message}</Field.Error>
+```
+
+</Example>
+<Example kind="dont" caption="A second live region over the same text reads the message twice.">
+
+```tsx
+<div aria-live="polite">
+	<Field.Error>{message}</Field.Error>
+</div>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A counter and a pending state do not announce per keystroke">
+
+A character counter is `aria-live="off"`, and the limit it counts against is in the field's description. A pending indicator is a status region that mounts only once the wait has outlasted the delay, so it announces late, once; `useBusyPhase` is its one implementation, shared by the stale treatment and the pending inlay. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
+
+<DoDont>
+<Example kind="do" caption="The counter exists for the eye, so it is never announced.">
+
+```tsx
+<span aria-live="off">
+	{m.text_field_counter({
+		length: value.length,
+		max: maxLength,
+	})}
+</span>
+```
+
+</Example>
+<Example kind="dont" caption="“38 of 240” read out again on top of every character typed.">
+
+```tsx
+<span aria-live="polite">
+	{m.text_field_counter({
+		length: value.length,
+		max: maxLength,
+	})}
+</span>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Focus returns after a part removes itself">
+
+A clear button, a per-file remove or a chip's remove control unmounts on the click that activated it. The handler that removes the focused element puts focus somewhere deliberate in the same breath: the input it emptied, the picker button that staged the file it deleted. Explained in [Keeping your place](#keeping-your-place).
+
+<DoDont>
+<Example kind="do" caption="Focus moves to the input the button emptied, in the same breath as the removal.">
+
+```tsx
+onClick={() => {
+	setValue("");
+	focusControl();
+}}
+```
+
+</Example>
+<Example kind="dont" caption="The button vanishes and the next Tab starts from the top of the page.">
+
+```tsx
+onClick={() => setValue("")}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Inert beats disabled for content that is only stale">
+
+Content waiting on a refresh, and [a placeholder row standing in for a row that does not exist yet](?path=/docs/components-data-table--docs#a-loading-table-is-the-table), take `inert`, which stops clicks and focus and takes the subtree out of the accessibility tree without claiming the actions are unavailable. The wait is reported once, by the region: `aria-busy` on the content and a status message in whatever surfaces over it. Shown in [Keeping your place](#keeping-your-place).
+
+<DoDont>
+<Example kind="do" caption="The stale region stops taking clicks and focus without claiming its actions are unavailable.">
+
+```tsx
+<div
+	aria-busy={busy || undefined}
+	inert={isOverlaid(phase)}>
+	{children}
+</div>
+```
+
+</Example>
+<Example kind="dont" caption="Every control in the region now claims to be unavailable.">
+
+```tsx
+<fieldset disabled={busy}>{children}</fieldset>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Contrast is judged by APCA, not WCAG 2">
+
+Body text meets APCA's bronze level. Muted text meets Lc 60, or Lc 45 from 32px up. Story tests check every text pair against APCA, and each role points at the nearest ramp step that passes it, in each theme. A claim of WCAG 2 conformance is checked against the ratio as well. Explained in [Contrast you can read](#contrast-you-can-read).
+
+</Details>
+
+</DetailsList>

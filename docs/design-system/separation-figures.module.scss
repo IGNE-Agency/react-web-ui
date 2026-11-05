@@ -1,0 +1,23 @@
+@use "./drawing";
+
+.lines {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-cool-muted);
+}
+
+.glyph {
+	fill: var(--drawing-cool-vivid);
+}
+
+.line {
+	fill: var(--drawing-paper);
+}
+
+.outline {
+	fill: none;
+	stroke: var(--drawing-paper);
+	stroke-width: 8;
+}

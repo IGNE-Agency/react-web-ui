@@ -1,0 +1,25 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.mention {
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--mention-bg,
+			var(--sys-color-neutral-bg)
+		);
+		padding: var(--sys-unit-1) var(--sys-unit-4);
+		color: var(--mention-fg, var(--sys-color-neutral-fg));
+		font: var(--sys-font-label-small);
+
+		&[data-you] {
+			background: var(
+				--mention-you-bg,
+				var(--sys-color-primary-container)
+			);
+			color: var(
+				--mention-you-fg,
+				var(--sys-color-on-primary-container)
+			);
+		}
+	}
+}

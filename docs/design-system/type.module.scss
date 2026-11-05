@@ -1,0 +1,90 @@
+.nav {
+	display: flex;
+	gap: var(--sys-unit-2);
+	align-items: center;
+	border-radius: var(--sys-radius-full);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-4);
+}
+
+.navItem {
+	border-radius: var(--sys-radius-full);
+	padding: var(--sys-unit-4) var(--sys-unit-5);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.navItemStrong {
+	background-color: var(--sys-color-primary-container);
+	color: var(--sys-color-on-primary-container);
+	font: var(--sys-font-label-medium-strong);
+}
+
+.navItemLarger {
+	background-color: var(--sys-color-primary-container);
+	color: var(--sys-color-on-primary-container);
+	font: var(--sys-font-label-large);
+}
+
+.toolbar {
+	display: flex;
+	gap: var(--sys-unit-4);
+	border-radius: var(--sys-radius-full);
+	background: var(--sys-color-surface);
+	justify-content: center;
+	padding: var(--sys-unit-4);
+	inline-size: 9rem;
+}
+
+.squeezed {
+	flex: 1 1 0;
+	min-inline-size: 0;
+	padding-inline: var(--sys-unit-6);
+}
+
+.clipped {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tiles {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sys-unit-12);
+	align-items: start;
+	justify-content: center;
+}
+
+.tile {
+	border: 1px solid var(--sys-color-outline);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-8);
+	inline-size: 7rem;
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-medium);
+}
+
+.tileFolded {
+	overflow-wrap: normal;
+	hyphens: auto;
+}
+
+.tileUnhyphenated {
+	overflow-wrap: normal;
+	hyphens: manual;
+}
+
+.tileClipped {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tileMangled {
+	overflow-wrap: anywhere;
+}
+
+.tileShrunk {
+	font-size: var(--sys-unit-6);
+}

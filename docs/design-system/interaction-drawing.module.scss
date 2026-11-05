@@ -1,0 +1,58 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field,
+.hole {
+	fill: var(--drawing-field);
+}
+
+.near {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-mid) 22%,
+		var(--drawing-field)
+	);
+}
+
+.far {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-mid) 48%,
+		var(--drawing-field)
+	);
+}
+
+.glyph {
+	fill: var(--drawing-mid);
+	stroke: var(--drawing-mid);
+}
+
+.control {
+	fill: var(--drawing-paper);
+}
+
+.cut,
+.cutKey {
+	fill: none;
+	stroke: var(--drawing-field);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.cut {
+	stroke-width: 1.2;
+}
+
+.cutKey {
+	stroke-width: 1.8;
+}
+
+.stroke {
+	fill: none;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2.2;
+}

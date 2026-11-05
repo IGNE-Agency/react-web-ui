@@ -1,0 +1,46 @@
+@use "../../style/layers.scss";
+@use "../../style/dialog.scss" as dialog;
+@use "../../style/overlay.scss" as overlay;
+
+@layer kit.components {
+	.backdrop {
+		@include overlay.backdrop;
+	}
+
+	.popup {
+		@include dialog.surface;
+
+		display: flex;
+		flex-direction: column;
+		max-block-size: calc(100dvh - var(--sys-unit-24));
+	}
+
+	.header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--sys-unit-10);
+		padding: var(--sys-unit-20) var(--sys-unit-20)
+			var(--sys-unit-8);
+	}
+
+	.title {
+		@include dialog.title($spaced: false);
+	}
+
+	.body {
+		overflow-y: auto;
+		padding: var(--sys-unit-8) var(--sys-unit-20);
+		color: var(--sys-color-text);
+		font: var(--sys-font-body-medium);
+	}
+
+	.footer {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: end;
+		gap: var(--sys-unit-8);
+		padding: var(--sys-unit-12) var(--sys-unit-20)
+			var(--sys-unit-20);
+	}
+}

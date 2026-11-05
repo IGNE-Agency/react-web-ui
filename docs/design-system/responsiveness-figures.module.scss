@@ -1,0 +1,62 @@
+@use "./drawing";
+
+.wrapped,
+.room {
+	@include drawing.palette("neutral");
+}
+
+.field {
+	fill: var(--drawing-hot-muted);
+}
+
+.rule {
+	@include drawing.rule;
+
+	stroke: var(--drawing-paper);
+}
+
+.item {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 55%,
+		var(--drawing-paper)
+	);
+}
+
+.picked {
+	fill: var(--drawing-paper);
+}
+
+.floor {
+	@include drawing.rule;
+
+	stroke: var(--drawing-hot-vivid);
+}
+
+.cat {
+	fill: var(--drawing-paper);
+	stroke: var(--drawing-paper);
+}
+
+.tail {
+	fill: none;
+	stroke: var(--drawing-paper);
+	stroke-linecap: round;
+	stroke-width: 22;
+}
+
+.box {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 48%,
+		var(--drawing-hot-muted)
+	);
+}
+
+.flap {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 74%,
+		var(--drawing-hot-muted)
+	);
+}

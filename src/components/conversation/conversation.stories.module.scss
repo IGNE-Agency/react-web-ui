@@ -1,0 +1,7 @@
+.frame {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	max-inline-size: 40rem;
+	min-block-size: 20rem;
+}

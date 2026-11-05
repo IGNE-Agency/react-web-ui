@@ -1,0 +1,64 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Illustration } from "./illustration";
+import { IntroductionDrawing } from "./introduction-drawing";
+import {
+	ReadersDrawing,
+	ScreensDrawing,
+} from "./introduction-figures";
+
+<Meta title="Design system/Introduction" />
+
+# Design system
+
+A shared set of standards meant to keep a product or experience consistent across its many parts. It can help reduce time spent while designing or building by offering answers to common questions. It also provides building blocks to get a head start on any new design requirement.
+
+<Illustration caption="The core of any design system: colours, shapes, type, space, and more. The choices you make here will shape the image of your product or brand.">
+	<IntroductionDrawing />
+</Illustration>
+
+## Why use a design system?
+
+When a design system is implemented properly, it can provide a lot of benefits:
+
+- It enforces a unified language across teams and products.
+- It lets designers think about more important things than the 10th button on the 100th page.
+- It helps speed up development.
+
+<Illustration caption="The pieces are already cut and they fit each other, so a new screen is mostly a matter of fitting the next one in.">
+	<ScreensDrawing />
+</Illustration>
+
+A system helps teams at any scale. It fosters collaboration in larger companies, it provides the tools to communicate between teams, and smaller teams benefit from a shared course.
+
+Design systems might at first feel daunting. "So many rules, so little room to add my personal touch!" Nothing is less true: rules and boundaries help keep the solution space small, while general guidelines help to effectively convey a product's brand identity. <Pull>Having a shared vocabulary means your users feel at home everywhere.</Pull>
+
+With the right building blocks, engineers will find every new design decision easier to tackle: the components are all there. All you have to do is implement them.
+
+## How it's used
+
+Whatever your role, you work from the same rules:
+
+- **Designer?** Browse them here or in Figma, whether you're exploring or need a quick answer.
+- **Engineer?** Check the page for whatever you're building before you style it.
+- **Agent?** Read this page first, then the pages for whatever you're building, before you write UI code.
+
+<Illustration caption="A designer's pen, an engineer's caret, an agent's spark: three ways in, and every one of them leads to the same rule.">
+	<ReadersDrawing />
+</Illustration>
+
+If the code doesn't match a rule, trust the rule: the code needs fixing. Think the rule itself is wrong? [Here's how to change it](?path=/docs/design-system-working-on-the-system-contributing--docs).
+
+The foundation and the principles can change, but only after the team has talked it over, never by an agent on its own. Component rules are more relaxed: they change whenever the component does.
+
+## Where to go
+
+- **[Getting started](?path=/docs/design-system-getting-started--docs)**: new here? Start with this.
+- **[Brand](?path=/docs/design-system-brand--docs)**: our logo, and what makes the product feel like ours.
+- **Foundation**: the values every screen is made of. Read about [Token architecture](?path=/docs/design-system-foundation-token-architecture--docs), [Colour](?path=/docs/design-system-foundation-colour--docs), [Spacing](?path=/docs/design-system-foundation-spacing--docs), [Shape](?path=/docs/design-system-foundation-shape--docs), [Elevation](?path=/docs/design-system-foundation-elevation--docs), [Motion](?path=/docs/design-system-foundation-motion--docs), [Type](?path=/docs/design-system-foundation-type--docs), [Iconography](?path=/docs/design-system-foundation-iconography--docs) and [States](?path=/docs/design-system-foundation-states--docs).
+- **[Principles](?path=/docs/design-system-principles-overview--docs)**: how the foundation is put to use. Read about [Separation](?path=/docs/design-system-principles-separation--docs), [Interaction](?path=/docs/design-system-principles-interaction--docs), [Accessibility](?path=/docs/design-system-principles-accessibility--docs), [Layout](?path=/docs/design-system-principles-layout--docs), [Responsiveness](?path=/docs/design-system-principles-responsiveness--docs) and [Language](?path=/docs/design-system-principles-language--docs).
+- **[Patterns](?path=/docs/design-system-patterns--docs)**: solutions that work across components.
+- **[Components](?path=/docs/design-system-components--docs)**: the rules components share. A component's own rules are on its docs page, under the component in the sidebar.
+- **[Contributing](?path=/docs/design-system-working-on-the-system-contributing--docs)** and **[Writing a rule](?path=/docs/design-system-working-on-the-system-writing-a-rule--docs)**: want to change or add a rule? Start here.
+- **[Changelog](?path=/docs/design-system-working-on-the-system-changelog--docs)**: what changed and when.
+
+Just looking around? The sidebar is in reading order, so start at the top.

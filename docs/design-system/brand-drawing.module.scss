@@ -1,0 +1,45 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("sand");
+}
+
+.field {
+	fill: var(--ref-sand-100);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.step100 {
+	fill: var(--ref-green-100);
+}
+
+.step250 {
+	fill: var(--ref-green-250);
+}
+
+.step400 {
+	fill: var(--ref-green-400);
+}
+
+.brand {
+	fill: var(--ref-green-550);
+}
+
+.step700 {
+	fill: var(--ref-green-700);
+}
+
+.step850 {
+	fill: var(--ref-green-850);
+}
+
+.brandMark {
+	fill: var(--ref-green-550);
+}
+
+.onBrand {
+	fill: var(--ref-neutral-0);
+}

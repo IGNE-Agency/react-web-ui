@@ -1,0 +1,22 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+
+@layer kit.components {
+	.link {
+		color: var(--link-fg, var(--sys-color-primary));
+		text-decoration: underline;
+		text-underline-offset: var(
+			--link-underline-offset,
+			var(--sys-unit-1)
+		);
+
+		@include focus.ring;
+
+		&:hover {
+			color: var(
+				--link-hover-fg,
+				var(--sys-color-on-primary-container)
+			);
+		}
+	}
+}

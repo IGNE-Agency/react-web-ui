@@ -1,0 +1,21 @@
+@use "../../style/layers.scss";
+@use "../../style/tag.scss" as tag;
+
+@layer kit.components {
+	.root {
+		@include tag.shell("tag");
+	}
+
+	.dot {
+		flex-shrink: 0;
+		inline-size: var(--sys-unit-3);
+		block-size: var(--sys-unit-3);
+		border-radius: var(--sys-radius-circle);
+		background: currentcolor;
+	}
+
+	.icon {
+		flex-shrink: 0;
+		margin-inline-start: calc(-1 * var(--sys-unit-1));
+	}
+}

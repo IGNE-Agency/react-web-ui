@@ -1,0 +1,8 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.spinner {
+		display: inline-block;
+		color: var(--spinner-color, currentcolor);
+	}
+}

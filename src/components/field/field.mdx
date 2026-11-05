@@ -1,0 +1,48 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as FieldStories from "./field.stories.tsx";
+
+<Meta of={FieldStories} />
+
+<DocsPage>
+
+## Rules
+
+### Every control comes in three tiers, and the field frame belongs to the middle one
+
+A control family is named after its field tier: `TextInput` → `TextField` → `TSFTextField`. Pick the lowest one that does the job.
+
+1. **The raw compound**, such as `TextInput` or `Select`, owns the control and nothing else. It has no label, description or error, and it does not lay itself out. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control.
+2. **The shorthand**, such as `TextField`, assembles the raw parts with `Field` into the ordinary case: a label above a full-width control, then the description, then the error. It is built from the parts, never a second implementation of them, and it takes no prop that switches it to another anatomy. A control that should not be a stacked field drops to the raw tier.
+3. **The bridge**, such as `TSFTextField`, wires the shorthand to TanStack Form. It is registered in the kit's form hook and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix.
+
+### Every field takes the same props on every tier
+
+`label`, `description`, `errors`, `requiredness`, `optionalLabel`, `dirty`, `touched` and `pending`, with the same meaning on the raw root, the shorthand and the bridge. A bridge passes them at the top level.
+
+```tsx
+<form.AppField name="email">
+	{field => (
+		<field.EmailField
+			label="Email"
+			description="We send the receipt here."
+			requiredness="required"
+			optionalLabel="optional"
+		/>
+	)}
+</form.AppField>
+```
+
+### Requiredness is stated, never inferred
+
+`requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails `optionalLabel`, which is part of the control's name.
+
+### The error is the field's only live region, after the description
+
+`Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time, and any line of error makes the field invalid.
+
+### A wait inside a field is a spinner inlay, and the field says it is busy
+
+A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. The spinner itself is hidden from assistive tech.
+
+</DocsPage>

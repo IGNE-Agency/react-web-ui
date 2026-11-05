@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as DetailListStories from "./detail-list.stories.tsx";
+
+<Meta of={DetailListStories} />
+
+<DocsPage>
+
+## Rules
+
+### A detail list tells what a form would ask
+
+A detail list shows stored information as terms and the details that answer them: the read-only half of a screen that also edits. It is a description list, so a term and its detail belong together for a screen reader too, not only because they sit side by side.
+
+### A term in words takes a third of the row, a pictogram only itself
+
+A term written out takes a third of the row and its detail the rest, so the details of a list line up. A term that is a pictogram, as on a contact line, takes only its own width, and still carries its words as an accessible name.
+
+### An action names the term it acts on
+
+A row's action sits at its end, and its control says what it changes: "Change phone number", never "Change", because a control read out of context says nothing about what it changes.
+
+</DocsPage>

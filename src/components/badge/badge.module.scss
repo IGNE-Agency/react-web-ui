@@ -1,0 +1,26 @@
+@use "../../style/layers.scss";
+@use "../../style/tone.scss" as tone;
+
+@layer kit.components {
+	.badge {
+		@include tone.variants("_badge");
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--badge-gap, var(--sys-unit-2));
+		box-sizing: border-box;
+		min-inline-size: var(--badge-size, var(--sys-unit-10));
+		min-block-size: var(--badge-size, var(--sys-unit-10));
+		border: 1px solid
+			var(--badge-border, var(--_badge-border));
+		border-radius: var(
+			--badge-radius,
+			var(--sys-radius-full)
+		);
+		background: var(--badge-bg, var(--_badge-bg));
+		padding-inline: var(--badge-pad-x, var(--sys-unit-2));
+		color: var(--badge-fg, var(--_badge-fg));
+		font: var(--badge-font, var(--sys-font-label-small));
+	}
+}

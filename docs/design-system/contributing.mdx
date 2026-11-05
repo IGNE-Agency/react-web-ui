@@ -1,0 +1,58 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Illustration } from "./illustration";
+import { ContributingDrawing } from "./contributing-drawing";
+
+<Meta title="Design system/Working on the system/Contributing" />
+
+# Contributing
+
+How a change to these rules gets made and reviewed. It is written for two readers: engineers working in the codebase, and designers' agents working from Figma.
+
+<Illustration caption="A change leaves the main line on its own branch, carries the edited page through review, and joins the main line again.">
+	<ContributingDrawing />
+</Illustration>
+
+## Who edits what
+
+- **Designers' agents edit rule prose only.** A rule is the text of a page in `docs/design-system/`: what to do, why, and the example that shows it.
+- **Engineers own everything else.** That covers the example cards on these pages and the pictures inside them, the components, and the tokens in `src/style/`.
+- **Tokens are not edited from Figma.** [The colour ramps are tuned in the token files](?path=/docs/design-system-foundation-colour--docs#ramps), and their steps don't map onto Figma's fixed values. A rule may say which role a colour plays; picking the ramp step behind that role is an engineer's change.
+
+A rule change that needs a new example, a token or a component change goes in as prose. An engineer then adds the rest in the same pull request or a follow-up.
+
+## Writing a rule
+
+Follow [What belongs here](?path=/docs/design-system-working-on-the-system-writing-a-rule--docs#what-belongs-here):
+
+- State a general design decision and why it beat the alternative.
+- [Use generic role names, never token, prop or hook names](?path=/docs/design-system-working-on-the-system-writing-a-rule--docs#a-rule-uses-generic-role-names-never-names-from-our-code).
+- Give one passing and one failing example, as small as they can be.
+- Put the rule on the page for its section. If it fits no page, say so in the pull request rather than starting a new one.
+
+Rewording an existing rule follows the same bar. Say in the pull request what the old wording got wrong.
+
+## Proposing a change
+
+1. Create a branch from `develop`.
+2. Edit the page or pages in `docs/design-system/`.
+3. Open a pull request to `develop`. Put the link to the Figma frame or comment that prompted the change in the description.
+4. `.github/CODEOWNERS` requests review from the owners of `docs/design-system/` and `src/style/`. The pull request's checks must pass, and they build these pages.
+
+## Setting up a designer's Figma agent
+
+Designers use Claude through Figma. Two pieces let that agent read these rules and propose changes back.
+
+- **A GitHub connector** published for the organisation, with the branch, file and pull request tools that write enabled. Through it the agent creates the branch, edits the page and opens the pull request.
+- **A Figma skill per project** that tells the agent where the rules live:
+  - the repository, `IGNE-Agency/phase2-declarations`;
+  - the folder, `docs/design-system/`;
+  - this page, as the process to follow.
+
+With both in place the agent reads `introduction.mdx` and the pages that matter for the frame in front of it, and proposes prose changes as pull requests.
+
+## What the checks don't cover
+
+Every story is tested for rendering, accessibility and keyboard, mouse and touch input in light and dark. Two things are still tested by hand:
+
+- **Pen input:** the test tools drive touch, not pen.
+- **Screen readers:** the tests check names, roles and states, not what a screen reader actually announces.

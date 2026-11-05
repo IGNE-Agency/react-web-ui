@@ -1,0 +1,86 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.root {
+		position: relative;
+	}
+
+	.content {
+		@media not (prefers-reduced-motion) {
+			transition: opacity var(--sys-motion-short)
+				var(--sys-motion-standard);
+		}
+
+		&[data-busy] {
+			opacity: var(--stale-busy-opacity, 0.55);
+			pointer-events: none;
+		}
+	}
+
+	.overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: var(--stale-gap, var(--sys-unit-8));
+		padding: var(--stale-pad, var(--sys-unit-16));
+		background-color: color-mix(
+			in oklab,
+			var(--stale-scrim, var(--sys-color-surface)),
+			transparent 25%
+		);
+		backdrop-filter: blur(8px);
+		color: var(--sys-color-text);
+		text-align: center;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				opacity var(--sys-motion-short)
+					var(--sys-motion-standard),
+				backdrop-filter var(--sys-motion-short)
+					var(--sys-motion-standard);
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			backdrop-filter: blur(0);
+			opacity: 0;
+		}
+	}
+
+	.message {
+		display: grid;
+		justify-items: center;
+		gap: var(--stale-gap, var(--sys-unit-8));
+		max-inline-size: 40ch;
+		color: var(--sys-color-text-muted);
+		font: var(--sys-font-body-medium);
+	}
+
+	.illustration {
+		display: grid;
+		place-items: center;
+		color: var(
+			--stale-illustration-fg,
+			var(--sys-color-primary)
+		);
+	}
+
+	.retry {
+		@media not (prefers-reduced-motion) {
+			transition:
+				opacity var(--sys-motion-short)
+					var(--sys-motion-standard),
+				translate var(--sys-motion-short)
+					var(--sys-motion-emphasized);
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			translate: 0 var(--sys-unit-2);
+			opacity: 0;
+		}
+	}
+}

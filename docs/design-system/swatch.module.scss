@@ -1,0 +1,15 @@
+@use "../../src/style/focus.scss" as focus;
+
+.swatch {
+	display: block;
+	background: var(--swatch);
+	block-size: 100%;
+	inline-size: 100%;
+
+	@include focus.ring;
+
+	&:focus-visible {
+		position: relative;
+		z-index: 1;
+	}
+}

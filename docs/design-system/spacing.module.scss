@@ -1,0 +1,42 @@
+.panel {
+	display: grid;
+	gap: var(--sys-unit-2);
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	inline-size: 12rem;
+	color: var(--sys-color-text);
+}
+
+.panelPorted {
+	padding: var(--sys-unit-8);
+}
+
+.panelCopied {
+	padding: var(--sys-unit-4);
+}
+
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-8);
+	inline-size: 14rem;
+}
+
+.chipsGap {
+	gap: var(--sys-unit-4);
+}
+
+.chipsMargin > * {
+	margin-inline-end: var(--sys-unit-4);
+}
+
+.title {
+	font: var(--sys-font-label-medium);
+}
+
+.meta {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-small);
+}

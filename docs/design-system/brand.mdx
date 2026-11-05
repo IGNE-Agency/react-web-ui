@@ -1,0 +1,138 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import Logo from "./logo.svg?react";
+import { LogoMark } from "./logo-mark";
+import { BrandBoard } from "./brand-board";
+import { Beside } from "./beside";
+import { BrandDrawing } from "./brand-drawing";
+import styles from "./brand.module.scss";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { LogoSpecimen } from "./logo-specimen";
+import { Specimen } from "./specimen";
+
+<Meta title="Design system/Brand" />
+
+# Brand
+
+ZPM is where care providers prepare, check and submit their declarations. Its brand is small on purpose: one mark, one green, two typefaces and a soft, rounded shape. The rest of this guide is about how those few things are spent.
+
+<Illustration caption="The brand green from palest to darkest, the mark at sidebar size in the ink of its brand fill, and the same mark at a scale no screen uses, measured by its axes of symmetry.">
+	<BrandDrawing />
+</Illustration>
+
+## At a glance
+
+The whole brand on one board. Each part has its own page: [Colour](?path=/docs/design-system-foundation-colour--docs), [Type](?path=/docs/design-system-foundation-type--docs) and [Shape](?path=/docs/design-system-foundation-shape--docs).
+
+<Specimen caption="The mark on the brand green, the heading typeface, the rounded corner, and the soft tints every surface is made of.">
+	<BrandBoard
+		name="ZPM"
+		description="Where care providers prepare, check and submit their declarations."
+	/>
+</Specimen>
+
+## The mark
+
+A circle with four petals cut out of it, each pointing at the centre: a cross held in negative space, unchanged by a quarter turn. It is one shape in one colour, so it holds up at any size, down to a browser tab.
+
+<Specimen caption="Every size the product draws the mark, in the brand green each theme gives it.">
+	<LogoSpecimen
+		sizes={[
+			{ size: "1rem", use: "Browser tab" },
+			{ size: "1.75rem", use: "Sidebar" },
+			{ size: "3rem", use: "A long wait" },
+			{ size: "5rem", use: "Sign-in" },
+			{ size: "6rem", use: "Page loader" },
+		]}
+	/>
+</Specimen>
+
+## The mark is drawn in the brand colour and nothing else
+
+The mark [takes the brand role](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step), so it follows the theme like any other brand fill: a deeper green on light, a paler one on dark. On a brand fill it takes that fill's ink. It is never a status colour, a gradient or an outline.
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The mark in the brand role, and in the ink of a brand fill."
+  visual={
+    <div className={styles.marks}>
+      <Logo className={styles.brand} aria-hidden />
+      <span className={styles.onBrand}>
+        <Logo aria-hidden />
+      </span>
+    </div>
+  }>
+
+```scss
+.mark {
+	color: var(--sys-color-primary);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="In a status colour the mark reads as a warning about the product itself."
+  visual={
+    <div className={styles.marks}>
+      <Logo className={styles.status} aria-hidden />
+      <Logo className={styles.outlined} aria-hidden />
+    </div>
+  }>
+
+```scss
+.mark {
+	color: var(--sys-color-warning-fg);
+}
+```
+
+</Example>
+</DoDont>
+
+In code: the file keeps the brand green as its own colour, for the browser tab, which has no stylesheet. Every use in the product sets the colour itself, or the mark stays that one green in both themes.
+
+## The mark is decoration
+
+Wherever it appears, the mark is hidden from assistive technology. Where it is a link, as at the top of the sidebar, [the link carries the name](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism) of where it goes. See [Decoration is `aria-hidden`](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden).
+
+<DoDont>
+<Example kind="do" caption="The link says where it goes; the mark says nothing.">
+
+```html
+<a href="/" aria-label="Home">
+	<svg aria-hidden="true">…</svg>
+</a>
+```
+
+</Example>
+<Example kind="dont" caption="A screen reader announces the product's name, which is not where the link goes.">
+
+```html
+<a href="/">
+	<svg role="img" aria-label="ZPM">…</svg>
+</a>
+```
+
+</Example>
+</DoDont>
+
+## The mark's one movement is a tick
+
+<Beside>
+
+When the mark moves, it winds back, springs a quarter turn past where it started and settles. A quarter turn leaves it looking exactly as before, so the tick can repeat for as long as it needs to: while a page loads, or while a wait runs long. It ticks once when the sidebar's mark is clicked. For a user who asked for less motion it pulses instead. See [Every wait has an indicator](?path=/docs/design-system-foundation-motion--docs#every-wait-has-an-indicator-and-that-indicator-keeps-changing).
+
+    <Example
+    	kind="do"
+    	caption="The tick: it winds back, overshoots a quarter turn and settles."
+    	visual={<LogoMark className={styles.ticking} />}
+    />
+
+</Beside>
+
+## Known issues
+
+- The product name, ZPM, is still a working title in the code.
+- There is no app manifest or theme colour, so a browser's own bar and an installed app fall back to the browser's colours.

@@ -1,0 +1,495 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Tag } from "../../src/components/tag/index.ts";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { SeparationDrawing } from "./separation-drawing";
+import { LinesDrawing } from "./separation-figures";
+import styles from "./separation.module.scss";
+
+<Meta title="Design system/Principles/Separation" />
+
+# Separation
+
+A screen is a handful of regions, and nobody can use any of them until they can see where one ends and the next begins. There are only a few ways to tell two things apart, and they are not equally quiet: the quieter the one that does the job, the calmer the screen.
+
+<Illustration caption="Every box adds noise. A page boxed in by hairlines feels cramped, while the one tile with room around it needs no line at all.">
+	<SeparationDrawing />
+</Illustration>
+
+## Telling things apart
+
+Distance is the first thing the eye reads. Two things close together look like one group, and a gap between them says they're two, without adding a single mark. A change of ground comes next: a region on a slightly different surface reads as its own place, the way a sheet of paper stands out on a desk. Height says something floats above the rest, for a moment. A line is the most explicit of the four, and the noisiest, because every line is one more thing to look at.
+
+So each step up the list costs a little more of the reader's attention. Reach for the quietest one that works, and stop there.
+
+There are two familiar ways to get this wrong. The first wraps every panel, toolbar and strip in a hairline until the page feels boxed in and cramped. The second gives everything a shadow, until the page is a stack of floating cards that all claim to be on top, and none of them stands out.
+
+## Quietest first
+
+This product works down the list in order: space, then a step along [the surface tiers](?path=/docs/design-system-foundation-colour--docs#surfaces), then elevation, and a line only when none of those will do. Elevation is only ever for something that genuinely floats, and only when its surface alone didn't carry it: [anything in the page's flow carries no shadow](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow).
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The two groups are told apart by the gap between them."
+		visual={
+			<div
+				className={`${styles.form} ${styles.formSpaced}`}>
+				<div className={styles.group}>
+					<span className={styles.groupTitle}>
+						Personal details
+					</span>
+					<span className={styles.fieldBar} />
+					<span className={styles.fieldBar} />
+				</div>
+				<div className={styles.group}>
+					<span className={styles.groupTitle}>
+						Bank account
+					</span>
+					<span className={styles.fieldBar} />
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A rule between two groups that a wider gap would already separate."
+		visual={
+			<div className={`${styles.form} ${styles.formRuled}`}>
+				<div className={styles.group}>
+					<span className={styles.groupTitle}>
+						Personal details
+					</span>
+					<span className={styles.fieldBar} />
+					<span className={styles.fieldBar} />
+				</div>
+				<div className={styles.group}>
+					<span className={styles.groupTitle}>
+						Bank account
+					</span>
+					<span className={styles.fieldBar} />
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The rail is told apart from the canvas by its surface."
+		visual={
+			<div className={styles.shell}>
+				<div className={styles.sidebar}>
+					<span className={styles.sidebarItem} />
+					<span className={styles.sidebarItem} />
+					<span className={styles.sidebarItem} />
+				</div>
+				<div className={styles.content} />
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A hairline on a rail its surface already separates."
+		visual={
+			<div className={styles.shell}>
+				<div
+					className={`${styles.sidebar} ${styles.sidebarRuled}`}>
+					<span className={styles.sidebarItem} />
+					<span className={styles.sidebarItem} />
+					<span className={styles.sidebarItem} />
+				</div>
+				<div className={styles.content} />
+			</div>
+		}
+	/>
+</DoDont>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The menu floats, so it is separated by elevation."
+		visual={
+			<div className={styles.menuStage}>
+				<div className={styles.page} />
+				<div
+					className={`${styles.menu} ${styles.menuFloating}`}>
+					<span>Edit</span>
+					<span>Duplicate</span>
+					<span>Archive</span>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A floating menu separated by a line instead of its elevation."
+		visual={
+			<div className={styles.menuStage}>
+				<div className={styles.page} />
+				<div
+					className={`${styles.menu} ${styles.menuOutlined}`}>
+					<span>Edit</span>
+					<span>Duplicate</span>
+					<span>Archive</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+## When a line earns its place
+
+A line belongs where the line is the thing itself, not a fence around something. Without its outline, a text field reads as static text, and an unchecked box has no fill to tell it from the surface behind it. A separator between table rows or menu groups exists to be a line. So does the underline that marks the selected tab, and a variant whose whole point is to be outlined. Everywhere else, space, a surface or height does the job.
+
+<Illustration caption="Where the line is the thing itself: a field's outline and caret, an empty checkbox, the selected tab's underline, an outlined button. Take the line away and the control is gone.">
+	<LinesDrawing />
+</Illustration>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="Each line is the thing itself: a field's edge, a group separator, the selected tab, an outlined variant."
+		visual={
+			<div className={styles.cases}>
+				<div className={styles.case}>
+					<span className={styles.caseLabel}>Name</span>
+					<span
+						className={`${styles.input} ${styles.inputOutlined}`}>
+						Anna de Vries
+					</span>
+					<span className={styles.checkRow}>
+						<span
+							className={`${styles.box} ${styles.boxOutlined}`}
+						/>
+						Email me a copy
+					</span>
+				</div>
+				<div className={styles.miniMenu}>
+					<span>Edit</span>
+					<span>Duplicate</span>
+					<span
+						className={`${styles.menuGroup} ${styles.menuGroupRuled}`}>
+						Archive
+					</span>
+				</div>
+				<div className={styles.tabs}>
+					<span
+						className={`${styles.tabItem} ${styles.tabItemUnderlined}`}>
+						Overview
+					</span>
+					<span className={styles.tabItem}>History</span>
+				</div>
+				<div className={styles.case}>
+					<Tag.Root variant="outline">Draft</Tag.Root>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Without its line the field reads as text, the box vanishes, the groups merge and no tab is selected."
+		visual={
+			<div className={styles.cases}>
+				<div className={styles.case}>
+					<span className={styles.caseLabel}>Name</span>
+					<span className={styles.input}>
+						Anna de Vries
+					</span>
+					<span className={styles.checkRow}>
+						<span className={styles.box} />
+						Email me a copy
+					</span>
+				</div>
+				<div className={styles.miniMenu}>
+					<span>Edit</span>
+					<span>Duplicate</span>
+					<span className={styles.menuGroup}>Archive</span>
+				</div>
+				<div className={styles.tabs}>
+					<span className={styles.tabItem}>Overview</span>
+					<span className={styles.tabItem}>History</span>
+				</div>
+				<div className={styles.case}>
+					<span className={styles.chipBare}>Draft</span>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+A break between groups in a navigation rail isn't on that list. It's space, and the space grows to take the slack, so the last destinations settle at the bottom of the rail.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The break is space, and it takes the slack."
+		visual={
+			<div className={styles.rail}>
+				<span className={styles.railItem}>Inbox</span>
+				<span className={styles.railItem}>
+					Declarations
+				</span>
+				<span className={styles.railItem}>Clients</span>
+				<span className={styles.railSpacer} />
+				<span className={styles.railItem}>Settings</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A rule across the rail, and the last items float mid-column."
+		visual={
+			<div className={styles.rail}>
+				<span className={styles.railItem}>Inbox</span>
+				<span className={styles.railItem}>
+					Declarations
+				</span>
+				<span className={styles.railItem}>Clients</span>
+				<span className={styles.railDivider} />
+				<span className={styles.railItem}>Settings</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+The little arrow on a popup isn't a line either. It's a piece of the popup's own surface, and [reads the overlay tier like the popup does](?path=/docs/design-system-foundation-colour--docs#every-floating-popup-its-arrow-included-reads-the-overlay-tier), so stroking it draws an outline the popup itself doesn't have.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The arrow is filled with the popup's surface and nothing else."
+		visual={
+			<div className={styles.positioner}>
+				<div className={styles.popup}>
+					Last edited 12 March
+				</div>
+				<svg
+					className={styles.arrow}
+					viewBox="0 0 20 10"
+					aria-hidden>
+					<path
+						className={styles.arrowFill}
+						d="M0 0 L10 10 L20 0 Z"
+					/>
+				</svg>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The stroke draws an outline the popup itself does not have."
+		visual={
+			<div className={styles.positioner}>
+				<div className={styles.popup}>
+					Last edited 12 March
+				</div>
+				<svg
+					className={styles.arrow}
+					viewBox="0 0 20 10"
+					aria-hidden>
+					<path
+						className={`${styles.arrowFill} ${styles.arrowStroked}`}
+						d="M0 0 L10 10 L20 0"
+					/>
+				</svg>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Work down space, surface, elevation and line, and stop at the first that works">
+
+Each tool costs more attention than the one before it, so the quietest one that tells two regions apart is the one to use. Explained in [Telling things apart](#telling-things-apart).
+
+</Details>
+
+<Details title="A gap separates two groups before a rule does">
+
+Shown in [Quietest first](#quietest-first).
+
+<DoDont>
+<Example kind="do" caption="The two groups are told apart by the gap between them.">
+
+```scss
+.form {
+	gap: var(--unit-24);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A rule between two groups that a wider gap would already separate.">
+
+```scss
+.group + .group {
+	border-top: 1px solid var(--sys-color-border);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A region in the page's flow is told apart by its surface tier, not a hairline">
+
+Rails, panels and bars take a step along the surface tiers. Shown in [Quietest first](#quietest-first).
+
+<DoDont>
+<Example kind="do" caption="The rail is told apart from the canvas by its surface.">
+
+```scss
+.sidebar {
+	background-color: var(--sys-color-surface);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A hairline on a rail its surface already separates.">
+
+```scss
+.sidebar {
+	background-color: var(--sys-color-surface);
+	border-right: 1px solid var(--sys-color-border);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Only a region that floats is separated by elevation">
+
+A menu, a popover or a toast floats, so it takes the overlay tier and a shadow, never an outline. Shown in [Quietest first](#quietest-first).
+
+<DoDont>
+<Example kind="do" caption="The menu floats, so it is separated by elevation.">
+
+```scss
+.popup {
+	background: var(--sys-color-surface-overlay);
+	box-shadow: var(--elevation-1);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A floating menu separated by a line instead of its elevation.">
+
+```scss
+.popup {
+	background: var(--sys-color-surface-overlay);
+	border: 1px solid var(--sys-color-border);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="The four cases that justify a line">
+
+A line is drawn only for these. Everything else uses space, surface or elevation. Explained in [When a line earns its place](#when-a-line-earns-its-place).
+
+1. **A text-entry control or checkbox.** Without an outline an input reads as static text, and an unchecked box has no fill to distinguish it from the surface behind it.
+2. **A separator whose entire job is to be a line**, between table rows or menu groups.
+3. **An active indicator**, such as the underline on a selected tab.
+4. **A variant that exists to be outlined.**
+
+<DoDont>
+<Example kind="do" caption="Each line is the thing itself: a field's edge, a group separator, the selected tab.">
+
+```scss
+.input {
+	border: 1px solid var(--sys-color-outline);
+}
+
+.menu-separator {
+	border-top: 1px solid var(--sys-color-border);
+}
+
+.tab[aria-selected="true"] {
+	border-bottom: 2px solid var(--sys-color-primary);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Without its line the field reads as text.">
+
+```scss
+.input {
+	border: none;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A group break inside a rail is space, and the spacer takes the slack">
+
+The spacer grows, so the trailing destinations sit at the bottom of the rail. Shown in [When a line earns its place](#when-a-line-earns-its-place).
+
+<DoDont>
+<Example kind="do" caption="The break is space, and it takes the slack.">
+
+```scss
+.rail-spacer {
+	flex: 1;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A rule across the rail, and the last items float mid-column.">
+
+```scss
+.rail-divider {
+	border-top: 1px solid var(--sys-color-border);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An arrow on an unoutlined popup has no stroke">
+
+The arrow is a piece of the popup's surface and is filled with the overlay tier, nothing else. Shown in [When a line earns its place](#when-a-line-earns-its-place).
+
+<DoDont>
+<Example kind="do" caption="The arrow is filled with the popup's surface and nothing else.">
+
+```scss
+.arrow-fill {
+	fill: var(--sys-color-surface-overlay);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The stroke draws an outline the popup itself does not have.">
+
+```scss
+.arrow-fill {
+	fill: var(--sys-color-surface-overlay);
+	stroke: var(--sys-color-border);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

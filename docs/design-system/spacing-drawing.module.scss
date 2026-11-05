@@ -1,0 +1,17 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-cool-muted);
+}
+
+.square {
+	fill: var(--drawing-cool-vivid);
+}
+
+.picked {
+	fill: var(--drawing-paper);
+}

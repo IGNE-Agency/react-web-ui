@@ -1,0 +1,23 @@
+@use "../../style/layers.scss";
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.muted {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--sys-unit-2);
+		min-inline-size: 0;
+		color: var(
+			--combobox-unavailable-fg,
+			var(--sys-color-text-muted)
+		);
+	}
+
+	.item {
+		min-inline-size: 0;
+	}
+
+	.name {
+		@include a11y.visually-hidden;
+	}
+}

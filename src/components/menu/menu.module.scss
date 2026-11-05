@@ -1,0 +1,64 @@
+@use "../../style/layers.scss";
+@use "../../style/popup.scss" as popup;
+
+@layer kit.components {
+	.positioner {
+		@include popup.edge-padding;
+
+		outline: none;
+		filter: var(--sys-elevation-1-filter);
+	}
+
+	.popup {
+		@include popup.surface($shadow: false);
+
+		min-inline-size: 12rem;
+	}
+
+	.arrow {
+		display: flex;
+
+		&[data-side="top"] {
+			bottom: -8px;
+			transform: rotate(180deg);
+		}
+
+		&[data-side="bottom"] {
+			top: -8px;
+		}
+
+		&[data-side="left"] {
+			right: -12px;
+			transform: rotate(90deg);
+		}
+
+		&[data-side="right"] {
+			left: -12px;
+			transform: rotate(-90deg);
+		}
+	}
+
+	.arrowFill {
+		fill: var(--sys-color-surface-overlay);
+	}
+
+	.item {
+		@include popup.item;
+	}
+
+	.linkItem {
+		text-decoration: none;
+	}
+
+	.separator {
+		block-size: 1px;
+		margin: var(--sys-unit-2) 0;
+		background: var(--sys-color-border);
+	}
+
+	.groupLabel {
+		padding: var(--sys-unit-4) var(--sys-unit-6);
+		color: var(--sys-color-text-muted);
+		font: var(--sys-font-label-small);
+	}
+}

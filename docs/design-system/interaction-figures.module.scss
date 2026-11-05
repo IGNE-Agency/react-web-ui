@@ -1,0 +1,29 @@
+@use "./drawing";
+
+.promises {
+	@include drawing.palette("inverted");
+
+	text-rendering: geometricPrecision;
+}
+
+.field {
+	fill: var(--drawing-cool-muted);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}
+
+.letter,
+.marked {
+	font: var(--sys-font-body-large);
+	font-size: 100px;
+}
+
+.letter {
+	fill: var(--drawing-cool-vivid);
+}
+
+.marked {
+	fill: var(--drawing-paper);
+}

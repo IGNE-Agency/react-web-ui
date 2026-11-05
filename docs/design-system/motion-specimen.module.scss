@@ -1,0 +1,488 @@
+@use "../../src/style/checkbox.scss" as checkbox;
+@use "../../src/style/dialog.scss" as dialog;
+@use "../../src/style/overlay.scss" as overlay;
+@use "../../src/style/popup.scss" as popup;
+@use "./drawing";
+@use "./specimen";
+
+.motion {
+	@include drawing.palette("pale");
+
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--sys-unit-24);
+	container: motion / inline-size;
+}
+
+.durationRow {
+	display: grid;
+	gap: var(--sys-unit-4);
+}
+
+.rowControls {
+	display: flex;
+	justify-content: end;
+}
+
+.replay {
+	.motion & {
+		@media (prefers-reduced-motion) {
+			display: none;
+		}
+	}
+
+	.name & {
+		flex: none;
+		margin-inline-start: auto;
+	}
+}
+
+.durations {
+	display: grid;
+	grid-template-columns: repeat(
+		var(--count),
+		minmax(0, 1fr)
+	);
+	gap: var(--sys-unit-20) var(--sys-unit-10);
+
+	@container motion (width < 36rem) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.duration {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: subgrid;
+	grid-row: span 4;
+	align-content: start;
+	row-gap: var(--sys-unit-2);
+	min-inline-size: 0;
+}
+
+.easings {
+	display: grid;
+	gap: var(--sys-unit-16);
+}
+
+.easing {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+	align-items: start;
+	gap: var(--sys-unit-6) var(--sys-unit-12);
+
+	@container motion (width < 36rem) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.label {
+	display: grid;
+	align-content: start;
+	row-gap: var(--sys-unit-2);
+	min-inline-size: 0;
+}
+
+.name {
+	@include specimen.name;
+
+	display: flex;
+	align-items: center;
+	gap: var(--sys-unit-4);
+}
+
+.meta {
+	@include specimen.meta;
+}
+
+.cost {
+	display: grid;
+	gap: var(--sys-unit-2);
+	margin-block-start: var(--sys-unit-4);
+}
+
+.costBar {
+	border-radius: var(--sys-radius-full);
+	background: var(--drawing-mid);
+	block-size: var(--sys-unit-3);
+}
+
+.curve {
+	flex: none;
+	inline-size: var(--sys-unit-24);
+	block-size: auto;
+	overflow: visible;
+
+	path {
+		fill: none;
+		stroke: var(--sys-color-primary);
+		stroke-linecap: round;
+		stroke-width: 2px;
+		vector-effect: non-scaling-stroke;
+	}
+
+	circle {
+		fill: var(--sys-color-primary);
+	}
+}
+
+.time {
+	transform: translateX(var(--trace-x));
+}
+
+.progress {
+	transform: translateY(var(--trace-y));
+}
+
+@keyframes trace {
+	from {
+		transform: none;
+	}
+}
+
+@media not (prefers-reduced-motion) {
+	.time.tracing {
+		animation: trace var(--trace-duration) linear both;
+	}
+
+	.progress.tracing {
+		animation: trace var(--trace-duration)
+			var(--trace-easing) both;
+	}
+}
+
+.frame {
+	position: relative;
+	box-sizing: border-box;
+	contain: layout paint;
+	margin-block-end: var(--sys-unit-6);
+	border-radius: var(--sys-radius-lg);
+	background: var(--sys-color-surface-high);
+	block-size: calc(var(--sys-unit-64) + var(--sys-unit-12));
+	overflow: clip;
+
+	.easing & {
+		margin-block-end: 0;
+	}
+
+	&[data-scene="dialog"] {
+		padding: var(--sys-unit-12) var(--sys-unit-16);
+	}
+
+	&[data-scene="comment"] {
+		display: flex;
+		flex-direction: column;
+		justify-content: end;
+		align-items: end;
+		gap: var(--sys-unit-2);
+		padding: var(--sys-unit-12) var(--sys-unit-16);
+	}
+
+	&[data-scene="selection"] {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		align-content: start;
+		gap: var(--sys-unit-10);
+		padding-block: var(--sys-unit-12);
+		padding-inline: var(--sys-unit-16);
+	}
+
+	&[data-scene="checkbox"] {
+		--checkbox-size: var(--sys-unit-40);
+
+		display: grid;
+		place-items: center;
+	}
+}
+
+.bone {
+	display: block;
+	flex: none;
+	border-radius: var(--sys-radius-xs);
+	background: var(--sys-color-surface-highest);
+	inline-size: 100%;
+	block-size: 1em;
+}
+
+.menuScene {
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+	gap: var(--sys-unit-4);
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+}
+
+.trigger {
+	flex: none;
+	inline-size: var(--sys-unit-12);
+	block-size: var(--sys-unit-12);
+	fill: var(--sys-color-text-muted);
+}
+
+.menu {
+	@include popup.surface;
+
+	--transform-origin: 100% 0;
+
+	flex: none;
+	min-inline-size: 12rem;
+}
+
+.item {
+	@include popup.item;
+}
+
+.itemIcon {
+	inline-size: var(--sys-unit-10);
+	block-size: var(--sys-unit-10);
+}
+
+.itemLong {
+	inline-size: 60%;
+}
+
+.itemShort {
+	inline-size: 45%;
+}
+
+.page {
+	display: grid;
+	gap: var(--sys-unit-6);
+	max-inline-size: 28rem;
+}
+
+.pageHeading {
+	inline-size: 40%;
+	block-size: 1.5em;
+}
+
+.pageShort {
+	inline-size: 60%;
+}
+
+.backdrop {
+	@include overlay.backdrop;
+}
+
+@mixin -dialog-place {
+	inline-size: 32rem;
+	block-size: 20rem;
+	top: calc(var(--sys-unit-20) + 10rem);
+	left: calc(var(--sys-unit-24) + 16rem);
+}
+
+.dialog {
+	@include dialog.surface;
+	@include -dialog-place;
+
+	display: grid;
+	align-content: start;
+	gap: var(--sys-unit-8);
+	padding: var(--sys-unit-20);
+}
+
+.dialogTitle {
+	inline-size: 45%;
+	block-size: 1.5em;
+}
+
+@mixin -bubble-shape {
+	border-radius: var(--sys-radius-lg);
+	border-start-end-radius: var(--sys-radius-xs);
+}
+
+.bubble {
+	@include -bubble-shape;
+
+	display: flex;
+	background: var(--sys-color-primary-container);
+	padding: var(--sys-unit-6) var(--sys-unit-8);
+
+	.bone {
+		background: color-mix(
+			in oklab,
+			var(--sys-color-on-primary-container) 20%,
+			transparent
+		);
+	}
+}
+
+.bubbleLong {
+	inline-size: 14rem;
+}
+
+.bubbleShort {
+	inline-size: 6rem;
+}
+
+@keyframes arriving {
+	from {
+		opacity: 0;
+		transform: translateY(calc(-1 * var(--sys-unit-4)))
+			scale(0.98);
+	}
+}
+
+.arriving {
+	@media not (prefers-reduced-motion) {
+		animation: arriving var(--sys-motion-short)
+			var(--sys-motion-decelerate);
+	}
+}
+
+.selectionBar {
+	--selection-radius: var(--sys-radius-md);
+	--selection-pad: var(--sys-unit-2);
+	--selection-text-inset: 0;
+
+	display: flex;
+	position: relative;
+	align-items: center;
+	gap: var(--sys-unit-6);
+	isolation: isolate;
+	border-radius: var(--selection-radius);
+	padding-block: var(--selection-pad);
+	padding-inline: 0;
+
+	&::before {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: inherit;
+		background: var(--sys-color-surface);
+		content: "";
+		opacity: 0;
+		scale: 0.98 0.8;
+	}
+
+	&[data-selected] {
+		--selection-text-inset: var(--sys-unit-6);
+
+		padding-inline: var(--selection-pad);
+
+		&::before {
+			opacity: 1;
+			scale: 1;
+		}
+	}
+
+	@media not (prefers-reduced-motion) {
+		transition: padding-inline var(--sys-motion-instant)
+			var(--sys-motion-accelerate);
+
+		&::before {
+			transition:
+				opacity var(--sys-motion-instant)
+					var(--sys-motion-accelerate),
+				scale var(--sys-motion-instant)
+					var(--sys-motion-accelerate);
+		}
+	}
+}
+
+.summary {
+	display: grid;
+	flex: 0 1 auto;
+	min-inline-size: 0;
+	align-items: center;
+	padding-inline-start: var(--selection-text-inset);
+
+	@media not (prefers-reduced-motion) {
+		transition: padding-inline-start
+			var(--sys-motion-instant) var(--sys-motion-accelerate);
+	}
+}
+
+.total,
+.count {
+	grid-area: 1 / 1;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			opacity var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			translate var(--sys-motion-instant)
+				var(--sys-motion-standard);
+	}
+}
+
+.total {
+	inline-size: 8rem;
+	max-inline-size: 100%;
+
+	.selectionBar[data-selected] & {
+		opacity: 0;
+		translate: 0 calc(-1 * var(--sys-unit-2));
+	}
+}
+
+.count {
+	inline-size: 5rem;
+
+	.selectionBar:not([data-selected]) & {
+		opacity: 0;
+		translate: 0 var(--sys-unit-2);
+	}
+}
+
+.actions {
+	display: flex;
+	flex: 1 1 auto;
+	min-inline-size: 0;
+	align-items: center;
+	gap: var(--selection-pad);
+
+	.selectionBar:not([data-selected]) & {
+		visibility: hidden;
+
+		> * {
+			opacity: 0;
+		}
+	}
+
+	@media not (prefers-reduced-motion) {
+		transition: visibility var(--sys-motion-instant);
+
+		> * {
+			transition: opacity var(--sys-motion-instant)
+				var(--sys-motion-standard);
+		}
+	}
+}
+
+.action {
+	flex: 0 1 auto;
+	min-inline-size: 0;
+	border-radius: calc(
+		var(--selection-radius) - var(--selection-pad)
+	);
+	inline-size: 6rem;
+	block-size: var(--sys-unit-16);
+}
+
+.bulk {
+	margin-inline-start: auto;
+	inline-size: 5rem;
+}
+
+.rows {
+	display: grid;
+	gap: var(--sys-unit-8);
+}
+
+.box {
+	@include checkbox.box;
+
+	&[data-checked] {
+		@include checkbox.box-checked;
+	}
+}
+
+.indicator {
+	@include checkbox.indicator;
+	@include checkbox.indicator-hidden;
+
+	&[data-checked] {
+		@include checkbox.indicator-shown;
+	}
+}

@@ -1,0 +1,52 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import {
+	PageTile,
+	PageTiles,
+} from "../../.storybook/docs-links/page-tile.tsx";
+import { Illustration } from "./illustration";
+import { PrinciplesDrawing } from "./principles-drawing";
+
+<Meta title="Design system/Principles/Overview" />
+
+# Principles
+
+The foundation gives you the values: colours, spacing, type, shapes, states. The principles put them to use. Each one takes a handful of those values and turns them into decisions about one problem that keeps coming back, like telling two regions apart or answering a click. Components are built on both.
+
+<Illustration caption="A principle takes a few of the foundation's values, like type, colour or the spacing scale, and packs them into one answer to one kind of question.">
+	<PrinciplesDrawing />
+</Illustration>
+
+## Each principle answers one kind of question
+
+Find the question you're working on, and its principle has the rules. A rule that seems to belong to two principles lives on the one whose question it answers first, and the other links to it: everything you can click wears a focus ring because it answers the keyboard, so that rule lives on Interaction, and Accessibility points there.
+
+<PageTiles>
+	<PageTile
+		page="Principles/Separation"
+		description="How to tell two regions apart: with space, a surface, elevation or, last of all, a line."
+	/>
+	<PageTile
+		page="Principles/Interaction"
+		description="How a control answers the pointer and the keyboard."
+	/>
+	<PageTile
+		page="Principles/Accessibility"
+		description="How every control stays usable with a keyboard and a screen reader."
+	/>
+	<PageTile
+		page="Principles/Layout"
+		description="Where things go on a screen, and how much room each part gets."
+	/>
+	<PageTile
+		page="Principles/Responsiveness"
+		description="How that arrangement adapts when the room changes."
+	/>
+	<PageTile
+		page="Principles/Language"
+		description="How the product words things, in both its languages."
+	/>
+</PageTiles>
+
+## A principle owns no values of its own
+
+Every principle draws on the foundation rather than adding to it. When a rule needs a value that doesn't exist yet, like a new colour, size or duration, that value goes into the foundation first, and the principle uses it from there. That's why the focus ring's look is on [States](?path=/docs/design-system-foundation-states--docs#the-focus-ring), while the rule that everything focusable wears it is on [Interaction](?path=/docs/design-system-principles-interaction--docs#everything-you-can-reach-with-the-keyboard-shows-the-focus-ring).

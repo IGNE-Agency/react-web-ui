@@ -1,0 +1,273 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Tag } from "../../src/components/tag/index.ts";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./spacing.module.scss";
+import { Illustration } from "./illustration";
+import { SpacingDrawing } from "./spacing-drawing";
+import {
+	ProximityDrawing,
+	ScaleDrawing,
+} from "./spacing-figures";
+import { Specimen } from "./specimen";
+import { SpacingSpecimen } from "./spacing-specimen";
+
+<Meta title="Design system/Foundation/Spacing" />
+
+# Spacing
+
+Space is the quiet half of every layout. It decides what belongs together and what doesn't, how calm or busy a screen feels, and where the eye goes next. Nobody notices good spacing, but everybody feels it when it's off.
+
+<Illustration caption="From tight to generous, one step at a time: each row's gaps are a step of the scale wider than the row above, and the white row is the step in use.">
+	<SpacingDrawing />
+</Illustration>
+
+## The space between
+
+Put two things close and they read as one group. Push them apart and they read as two. That's how people sort a screen before they read a word of it, so space is the first tool for grouping, long before lines, boxes or colour.
+
+It follows that the space inside a group is always smaller than the space between groups. A heading sits closer to the text it introduces than to the section above it. A label sits closer to its field than to the next one. Get that the wrong way round and a screen falls apart into pieces that don't belong to each other.
+
+<Illustration caption="The same dots, read two ways. Close side by side they make rows; close above each other they make columns. Only the gaps changed.">
+	<ProximityDrawing />
+</Illustration>
+
+## Keeping rhythm
+
+Picking a new number for every gap gives a screen dozens of almost-equal spaces that never quite line up. A scale fixes that: a short set of steps that grow as they go, so every gap is picked from the set. The steps are far enough apart that the difference between two of them is a decision you can see, and they repeat across every screen, which gives the product its rhythm.
+
+One scale, one name per step. A second ladder of names for the same values, like small, medium and large, is two things to keep in step and a coin toss for whoever builds the next component. And how much of the scale a screen uses sets its density: a busy data screen leans on the small steps, a quiet form on the larger ones.
+
+<Illustration caption="A scale is a short run of steps that grow as they go. A gap is picked from it, like the one picked out here, rather than made up on the spot.">
+	<ScaleDrawing />
+</Illustration>
+
+## Between, not around
+
+The space between two things belongs to the pair, so it's set once, on whatever holds them. Space added to each item separately only works in the direction it was added: as soon as a row wraps or a list grows, the gaps come out uneven or disappear.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The gap spaces the chips along each line and between the lines, and nowhere else."
+		visual={
+			<div className={`${styles.chips} ${styles.chipsGap}`}>
+				<Tag.Root>Physio</Tag.Root>
+				<Tag.Root>Dental</Tag.Root>
+				<Tag.Root>Pharmacy</Tag.Root>
+				<Tag.Root>Speech</Tag.Root>
+				<Tag.Root>Diet</Tag.Root>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Margins on the chips space them along the line only, so the wrapped lines touch."
+		visual={
+			<div
+				className={`${styles.chips} ${styles.chipsMargin}`}>
+				<Tag.Root>Physio</Tag.Root>
+				<Tag.Root>Dental</Tag.Root>
+				<Tag.Root>Pharmacy</Tag.Root>
+				<Tag.Root>Speech</Tag.Root>
+				<Tag.Root>Diet</Tag.Root>
+			</div>
+		}
+	/>
+</DoDont>
+
+## The scale
+
+This product's scale has every step from 0 to 64, and a step's number is its size in eighths of a rem.
+
+<Specimen caption="A panel at true size with its spacing redlined: 12 around the edge, 8 beside the avatar, 4 between the lines. Below, a handful of the steps this product reaches for most, each at its true size.">
+	<SpacingSpecimen
+		units={[
+			"sys.unit.4",
+			"sys.unit.8",
+			"sys.unit.12",
+			"sys.unit.16",
+			"sys.unit.24",
+			"sys.unit.32",
+		]}
+	/>
+</Specimen>
+
+## Translating between scales
+
+Scales that share a token name do not necessarily share a step size. A scale indexed in quarter-rems and one indexed in eighths disagree by a factor of two at every step, so copying the number across halves every gap and starves the layout.
+
+Convert by size, not by name: look up what the source value is in pixels, then pick the token here with that pixel size.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The source value was 16px, so it is the 16px token here."
+		visual={
+			<div
+				className={`${styles.panel} ${styles.panelPorted}`}>
+				<span className={styles.title}>Physiotherapy</span>
+				<span className={styles.meta}>
+					12 March · € 120
+				</span>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The source said 4 and that got copied verbatim."
+		visual={
+			<div
+				className={`${styles.panel} ${styles.panelCopied}`}>
+				<span className={styles.title}>Physiotherapy</span>
+				<span className={styles.meta}>
+					12 March · € 120
+				</span>
+			</div>
+		}
+	/>
+</DoDont>
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="The space inside a group is smaller than the space between groups">
+
+A heading sits closer to the text it introduces than to the section above it, and a label closer to its field than to the next one. Explained in [The space between](#the-space-between).
+
+</Details>
+
+<Details title="A gap names a step on the one numeric scale">
+
+Every gap, padding and margin is a step of the spacing scale, never a fresh number, and a step has one name only: no second ladder like small, medium and large. Explained in [Keeping rhythm](#keeping-rhythm).
+
+<DoDont>
+<Example kind="do" caption="The gap names a step on the one numeric scale.">
+
+```scss
+.toolbar {
+	gap: var(--unit-8);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A second, t-shirt-sized name for a step, and a value off the scale.">
+
+```scss
+.toolbar {
+	gap: var(--unit-md);
+}
+
+.panel {
+	padding: 24px;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Space goes between things, not around each one">
+
+The space between items is a `gap` on whatever holds them, set once, not a margin on each item. Shown in [Between, not around](#between-not-around).
+
+<DoDont>
+<Example kind="do" caption="The gap spaces the chips along each line and between the lines, and nowhere else.">
+
+```scss
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--unit-4);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Margins on the chips space them along the line only, so the wrapped lines touch.">
+
+```scss
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.chip {
+	margin-inline-end: var(--unit-4);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Never reset a margin">
+
+The global reset unsets everything, so nothing arrives with a margin. A `margin: 0` is dead code, and a three-sided shorthand to set one side is a reset hiding [a physical property where a logical one belongs](?path=/docs/design-system-principles-layout--docs#sizes-and-spacing-use-logical-properties).
+
+<DoDont>
+<Example kind="do" caption="The title sets the one logical side it needs.">
+
+```scss
+.title {
+	margin-block-end: var(--unit-4);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The reset already did this. Three sides restated to set one, and physical rather than logical.">
+
+```scss
+.title {
+	margin: 0;
+}
+
+.title {
+	margin: 0 0 var(--unit-4);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A step's number is its size in eighths of a rem">
+
+The scale runs from step 0 to step 64, so step 8 is one rem, 16 px. Shown in [The scale](#the-scale).
+
+</Details>
+
+<Details title="A value is ported by its size, not by its number">
+
+Look up the source value in pixels, then pick the token here with that pixel size; never copy the step number across from another scale. Shown in [Translating between scales](#translating-between-scales).
+
+<DoDont>
+<Example kind="do" caption="The source value was 16px, so it is the 16px token here.">
+
+```scss
+.panel {
+	padding: var(--unit-8);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The source said 4 and that got copied verbatim.">
+
+```scss
+.panel {
+	padding: var(--unit-4);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

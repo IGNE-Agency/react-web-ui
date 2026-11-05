@@ -1,0 +1,91 @@
+// See `docs/design-system/components.mdx`.
+
+/// The centred modal surface, carrying no elevation because the backdrop already
+/// separates it from the page. Sizes itself to 32rem, capped to the viewport.
+/// Takes its own padding.
+///
+/// @example
+///   @use "../../style/dialog.scss" as dialog;
+///
+///   .popup {
+///       @include dialog.surface;
+///
+///       padding: var(--sys-unit-20);
+///   }
+@mixin surface {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	box-sizing: border-box;
+	inline-size: min(
+		32rem,
+		calc(100dvw - var(--sys-unit-16))
+	);
+	border: none;
+	border-radius: var(--sys-radius-xl);
+	background: var(--sys-color-surface-overlay);
+	color: var(--sys-color-text);
+	transform: translate(-50%, -50%);
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			opacity var(--sys-motion-short)
+				var(--sys-motion-standard),
+			transform var(--sys-motion-short)
+				var(--sys-motion-emphasized);
+	}
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: 0;
+		transform: translate(-50%, -48%) scale(0.96);
+	}
+}
+
+/// A dialog's heading. Pass `$spaced: false` where a `body` region below it
+/// carries the gap instead.
+///
+/// @example
+///   @use "../../style/dialog.scss" as dialog;
+///
+///   .title {
+///       @include dialog.title;
+///   }
+@mixin title($spaced: true) {
+	color: var(--sys-color-text);
+	font: var(--sys-font-heading-small);
+
+	@if $spaced {
+		margin-block-end: var(--sys-unit-8);
+	}
+}
+
+/// A dialog's supporting line under its title.
+///
+/// @example
+///   @use "../../style/dialog.scss" as dialog;
+///
+///   .description {
+///       @include dialog.description;
+///   }
+@mixin description {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-medium);
+}
+
+/// The trailing row of buttons that closes a dialog out, wrapping where there is
+/// no room to seat them side by side.
+///
+/// @example
+///   @use "../../style/dialog.scss" as dialog;
+///
+///   .actions {
+///       @include dialog.actions;
+///   }
+@mixin actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: end;
+	gap: var(--sys-unit-8);
+	margin-block-start: var(--sys-unit-20);
+}

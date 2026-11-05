@@ -1,0 +1,21 @@
+@use "./drawing";
+
+.grid {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-hot-muted);
+}
+
+.tile {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-hot-vivid) 55%,
+		var(--drawing-paper)
+	);
+}
+
+.picked {
+	fill: var(--drawing-paper);
+}

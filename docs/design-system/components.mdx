@@ -1,0 +1,154 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../src/components/button/index.ts";
+import styles from "./components.module.scss";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { ComponentsDrawing } from "./components-drawing";
+
+<Meta title="Design system/Components" />
+
+# Components
+
+A product is built from a small set of parts used over and over: a button, a field, a chip, a menu. Each one holds dozens of decisions, about its size, its colours, how it answers a pointer and what a screen reader hears, and those decisions only stay made if every job has one part. Every component listed in the sidebar already exists: extend it rather than writing a parallel version.
+
+<Illustration caption="One fitted slot per part: one button, one field, one checkbox, one switch, one chip. A second version has no slot to go in.">
+	<ComponentsDrawing />
+</Illustration>
+
+## One of each
+
+Every product sooner or later grows a second button. Someone needs one that is slightly different, writing it is quicker than extending the first, and on its own screen it looks fine. That is the most expensive kind of drift, because both versions look right in isolation. Nobody notices until they disagree on a radius, a hover colour and a focus ring, and from then on every fix has to be made twice and usually isn't.
+
+The same goes for the parts of a component nobody thinks of as components: a shape, a size, a table of tones. Written once and shared, a change lands everywhere at the same moment. Copied, it lands in one place, and the copies quietly fall behind.
+
+So this product has exactly one button, one text-entry treatment and one chip.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The form's submit button is the design-system button."
+		visual={
+			<div className={`sb-unstyled ${styles.visual}`}>
+				<div className={styles.row}>
+					<Button>Cancel</Button>
+					<Button variant="primary" type="submit">
+						Submit
+					</Button>
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="A second button that will diverge on the next change."
+		visual={
+			<div className={`sb-unstyled ${styles.visual}`}>
+				<div className={styles.row}>
+					<Button>Cancel</Button>
+					<button
+						type="button"
+						className={styles.adHocButton}>
+						Submit
+					</button>
+				</div>
+			</div>
+		}
+	/>
+</DoDont>
+
+When a part from the primitive library has to be one of ours, like the close part of a dialog, it renders our component in its place instead of being restyled into a lookalike. And where it can't be our component at all, such as a foreign control that has to sit in a row and read as one of its siblings, it borrows our component's shell rather than restating it. One definition of the shape means a lookalike can't drift away from the thing it sits next to.
+
+## Families of components
+
+Most components belong to a family that shares a job: the fields you type in, the labels pinned to things, the navigation that frames every page, and the surfaces that float above it. A family's shared rules live on Patterns, where every member of it can find them: [fields](?path=/docs/design-system-patterns--docs#where-you-type), [chips, badges and tags](?path=/docs/design-system-patterns--docs#labels-pinned-to-things), [navigation](?path=/docs/design-system-patterns--docs#finding-your-way) and [the surfaces above the page](?path=/docs/design-system-patterns--docs#above-the-page).
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Each job has one component, extended rather than copied">
+
+There is one button, one text-entry treatment and one chip. A variant that's missing is added to the component, never written beside it. Shown in [One of each](#one-of-each).
+
+<DoDont>
+<Example kind="do" caption="The form's submit button is the design-system button.">
+
+```tsx
+<Button variant="primary" type="submit">
+	{m.submit()}
+</Button>
+```
+
+</Example>
+<Example kind="dont" caption="A second button that will diverge on the next change.">
+
+```tsx
+<button className={style.submitButton}>{m.submit()}</button>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A library part that must be one of ours renders our component instead of being restyled">
+
+Use the part's `render` prop. Explained in [One of each](#one-of-each).
+
+<DoDont>
+<Example kind="do" caption="The dialog's close part renders as the design-system button.">
+
+```tsx
+<AlertDialog.Close
+	render={<Button variant="tertiary">{cancelLabel}</Button>}
+/>
+```
+
+</Example>
+<Example kind="dont" caption="The close part is restyled into a lookalike of the button.">
+
+```tsx
+<AlertDialog.Close className={styles.myOwnCancelButton}>
+	{cancelLabel}
+</AlertDialog.Close>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A control that can't be our component borrows its shell instead of restating it">
+
+Include the component's shell mixin on the foreign element, so both read one definition of the shape. Explained in [One of each](#one-of-each).
+
+<DoDont>
+<Example kind="do" caption="A third-party tag and our own chip are one definition.">
+
+```scss
+.list :global(.react-aria-Tag) {
+	@include chip.shell("chip");
+}
+```
+
+</Example>
+<Example kind="dont" caption="A parallel copy that will diverge on the next size change.">
+
+```scss
+.list :global(.react-aria-Tag) {
+	min-block-size: var(--unit-14);
+	padding: var(--unit-2) var(--unit-6);
+	font: var(--sys-font-label-small);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+</DetailsList>

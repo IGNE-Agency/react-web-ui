@@ -1,0 +1,35 @@
+@use "./drawing";
+
+.drawing {
+	text-rendering: geometricPrecision;
+
+	@include drawing.palette("neutral");
+}
+
+.field {
+	fill: var(--drawing-neighbour-vivid);
+}
+
+.rule {
+	@include drawing.rule;
+
+	stroke: var(--drawing-neighbour-muted);
+}
+
+.heading {
+	font: var(--sys-font-heading-large);
+	font-size: 540px;
+}
+
+.body {
+	font: var(--sys-font-body-medium);
+	font-size: 540px;
+}
+
+.accent {
+	fill: var(--drawing-neighbour-muted);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}

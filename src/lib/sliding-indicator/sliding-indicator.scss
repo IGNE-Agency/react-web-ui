@@ -1,0 +1,101 @@
+// The pill that slides onto the active item of a segmented control, a tab list
+// or a nav bar. Position comes from four custom properties under one prefix:
+// `useSlidingIndicator` writes `--active-item-*`, base-ui's `Tabs.Indicator`
+// publishes `--active-tab-*`.
+
+/// The pill itself: absolutely placed over the active item, sliding between
+/// items, landing in place with a pop when it arrives from nothing
+/// (`[data-jump]`), and shrinking away while nothing is active
+/// (`[data-empty]`). Its parent must be positioned. `$slack` is how far it
+/// reaches past the item on every side, so no seam shows at its edge; an
+/// indicator inside a scroller sets it to `0px`, so it never overflows.
+///
+/// @example
+///   @use "../../lib/sliding-indicator/sliding-indicator.scss" as indicator;
+///
+///   .indicator {
+///       @include indicator.pill("--active-tab");
+///       background: var(--tabs-indicator-bg, var(--sys-color-primary));
+///   }
+@mixin pill($prefix: "--active-item", $slack: 0.5px) {
+	--_indicator-slack: var(
+		--sliding-indicator-slack,
+		#{$slack}
+	);
+	--_indicator-slide: var(--sys-motion-short)
+		var(--sys-motion-emphasized);
+
+	position: absolute;
+	inset-inline-start: calc(
+		var(#{$prefix}-left, 0) - var(--_indicator-slack)
+	);
+	inset-block-start: calc(
+		var(#{$prefix}-top, 0) - var(--_indicator-slack)
+	);
+	overflow: hidden;
+	inline-size: calc(
+		var(#{$prefix}-width, 0) + 2 * var(--_indicator-slack)
+	);
+	block-size: calc(
+		var(#{$prefix}-height, 0) + 2 * var(--_indicator-slack)
+	);
+	opacity: 1;
+	scale: 1;
+	pointer-events: none;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			inset-inline-start var(--_indicator-slide),
+			inset-block-start var(--_indicator-slide),
+			inline-size var(--_indicator-slide),
+			block-size var(--_indicator-slide),
+			opacity var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			scale var(--sys-motion-short)
+				var(--sys-motion-overshoot);
+	}
+
+	&[data-jump] {
+		--_indicator-slide: 0s;
+	}
+
+	&[data-empty] {
+		opacity: 0;
+		scale: 0;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				opacity var(--sys-motion-instant)
+					var(--sys-motion-standard),
+				scale var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+	}
+}
+
+/// A second copy of the items' labels inside the pill, offset so that only the
+/// active one shows through it. The ink changes colour as the pill arrives,
+/// rather than the instant the value does. The copy must lay its items out
+/// exactly as the real ones, from the parent's padding edge.
+///
+/// @example
+///   .indicatorLabels {
+///       @include indicator.ink-copy;
+///   }
+@mixin ink-copy($prefix: "--active-item") {
+	position: absolute;
+	inset-inline-start: calc(
+		var(--_indicator-slack) - var(#{$prefix}-left, 0)
+	);
+	inset-block-start: calc(
+		var(--_indicator-slack) - var(#{$prefix}-top, 0)
+	);
+	display: flex;
+	inline-size: max-content;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			inset-inline-start var(--_indicator-slide),
+			inset-block-start var(--_indicator-slide);
+	}
+}

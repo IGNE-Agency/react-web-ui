@@ -1,0 +1,115 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+
+@layer kit.components {
+	.viewport {
+		position: fixed;
+		inset-block: auto
+			var(--toast-viewport-inset, var(--sys-unit-16));
+		inset-inline: auto
+			var(--toast-viewport-inset, var(--sys-unit-16));
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-8);
+		inline-size: var(
+			--toast-width,
+			min(24rem, calc(100vw - 2rem))
+		);
+
+		@include focus.ring;
+	}
+
+	.toast {
+		--_toast-fg: var(--sys-color-text);
+		--_toast-bg: var(--sys-color-surface-overlay-high);
+
+		box-sizing: border-box;
+		border-radius: var(
+			--toast-radius,
+			var(--sys-radius-md)
+		);
+		background: var(--toast-bg, var(--_toast-bg));
+		box-shadow: var(--sys-elevation-2);
+		padding: var(--sys-unit-8);
+		color: var(--toast-fg, var(--_toast-fg));
+		font: var(--sys-font-body-medium);
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				opacity var(--sys-motion-short)
+					var(--sys-motion-standard),
+				scale var(--sys-motion-short)
+					var(--sys-motion-emphasized);
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			opacity: 0;
+			scale: 0.8;
+		}
+
+		@each $tone in (success, error, warning, info) {
+			&[data-tone="#{$tone}"] {
+				--_toast-fg: var(--sys-color-#{$tone}-fg);
+				--_toast-bg: var(--sys-color-#{$tone}-bg);
+			}
+		}
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-6);
+	}
+
+	.header {
+		display: flex;
+		align-items: center;
+		gap: var(--sys-unit-6);
+	}
+
+	.headingMain {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		gap: var(--sys-unit-4);
+		min-inline-size: 0;
+	}
+
+	.title {
+		font: var(--sys-font-label-medium);
+	}
+
+	.description {
+		font: var(--sys-font-body-medium);
+		text-wrap: pretty;
+	}
+
+	.actions {
+		display: flex;
+		gap: var(--sys-unit-4);
+		margin-block-start: var(--sys-unit-2);
+	}
+
+	.closeButton {
+		--btn-fg: var(--toast-fg, var(--_toast-fg));
+
+		flex-shrink: 0;
+	}
+
+	.action {
+		&[data-variant="primary"] {
+			--btn-bg: var(--toast-fg, var(--_toast-fg));
+			--btn-fg: var(--toast-bg, var(--_toast-bg));
+		}
+
+		&[data-variant="secondary"] {
+			--btn-bg: var(--sys-color-surface-overlay-high);
+			--btn-fg: var(--toast-fg, var(--_toast-fg));
+		}
+
+		&[data-variant="tertiary"] {
+			--btn-fg: var(--toast-fg, var(--_toast-fg));
+		}
+	}
+}

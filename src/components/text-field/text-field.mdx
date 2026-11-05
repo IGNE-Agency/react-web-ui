@@ -1,0 +1,97 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import styles from "../../../docs/design-system/components.module.scss";
+import { DoDont } from "../../../docs/design-system/do-dont";
+import { Example } from "../../../docs/design-system/example";
+import { Icon } from "../icon/icon.tsx";
+import { TextField } from "./text-field.tsx";
+import * as TextFieldStories from "./text-field.stories.tsx";
+
+export const ignore = () => undefined;
+
+<Meta of={TextFieldStories} />
+
+<DocsPage>
+
+## Rules
+
+### Clear appears once the field holds a value, and never on one that cannot change
+
+`Clear` decides for itself when it exists: once the field holds a value, and never while the field is disabled or read-only, because a control that cannot change does not offer to be emptied. It carries [a tooltip and an accessible name like any icon-only control](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), and it sits in the group's padding so a clearable field is no taller than a plain one beside it. Clearing unmounts the button under the pointer, so the same handler puts focus back on the input; see [focus returns after a part removes itself](?path=/docs/design-system-principles-accessibility--docs#focus-returns-after-a-part-removes-itself).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The part owns when it appears and where focus goes."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.card}>
+        <TextField label="Empty" optionalLabel="optional" value="" onValueChange={ignore} clearable clearLabel="Clear" />
+        <TextField label="Filled" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} clearable clearLabel="Clear" />
+        <TextField label="Read-only" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} readOnly clearable clearLabel="Clear" />
+      </div>
+    </div>
+  }>
+
+```tsx
+<TextInput.Group>
+	<TextInput.Input />
+	<TextInput.Clear label={clearLabel} />
+</TextInput.Group>
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Offered on an empty and on a read-only field, and focus is gone once it acts."
+  visual={
+    <div className={`sb-unstyled ${styles.visual}`}>
+      <div className={styles.card}>
+        <div className={styles.field}>
+          <span className={styles.label}>Empty</span>
+          <span className={styles.box}>
+            <span className={styles.grow} />
+            <span className={`${styles.glyph} ${styles.glyphInPadding}`}>
+              <Icon svg={CloseIcon} label="" />
+            </span>
+          </span>
+        </div>
+        <div className={styles.field}>
+          <span className={styles.label}>Filled</span>
+          <span className={styles.box}>
+            <span className={styles.grow}>DEC-0412</span>
+            <span className={`${styles.glyph} ${styles.glyphInPadding}`}>
+              <Icon svg={CloseIcon} label="" />
+            </span>
+          </span>
+        </div>
+        <div className={styles.field}>
+          <span className={styles.label}>Read-only</span>
+          <span className={`${styles.box} ${styles.boxReadonly}`}>
+            <span className={styles.grow}>DEC-0412</span>
+            <span className={`${styles.glyph} ${styles.glyphInPadding}`}>
+              <Icon svg={CloseIcon} label="" />
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  }>
+
+```tsx
+<TextInput.Group>
+	<TextInput.Input />
+	<Button
+		iconOnly
+		icon={CloseIcon}
+		label={clearLabel}
+		onClick={() => setValue("")}
+	/>
+</TextInput.Group>
+```
+
+</Example>
+</DoDont>
+
+</DocsPage>

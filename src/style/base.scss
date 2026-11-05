@@ -1,0 +1,90 @@
+@use "sass:meta";
+@use "./layers.scss";
+@use "./focus.scss" as focus;
+
+@layer kit.reset {
+	@include meta.load-css("the-new-css-reset/css/reset.css");
+}
+
+@layer kit.base {
+	#root {
+		isolation: isolate;
+	}
+
+	body {
+		position: relative;
+		background-color: var(--sys-color-bg);
+		color: var(--sys-color-text);
+		font: var(--sys-font-body-medium);
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				background-color var(--sys-motion-medium)
+					var(--sys-motion-standard),
+				color var(--sys-motion-medium)
+					var(--sys-motion-standard);
+		}
+	}
+
+	button,
+	select,
+	summary,
+	a[href],
+	[type="button"],
+	[type="checkbox"],
+	[type="color"],
+	[type="file"],
+	[type="image"],
+	[type="radio"],
+	[type="range"],
+	[type="reset"],
+	[type="submit"],
+	[role="button"],
+	[role="checkbox"],
+	[role="menuitem"],
+	[role="menuitemcheckbox"],
+	[role="menuitemradio"],
+	[role="option"],
+	[role="radio"],
+	[role="switch"],
+	[role="tab"] {
+		cursor: pointer;
+	}
+
+	:disabled,
+	[aria-disabled="true"],
+	[data-disabled] {
+		cursor: not-allowed;
+	}
+
+	[aria-readonly="true"]:not(
+		:where(input, textarea, [contenteditable])
+	),
+	[data-readonly]:not(
+		:where(input, textarea, [contenteditable])
+	) {
+		cursor: default;
+	}
+
+	:where(input[aria-hidden="true"][tabindex="-1"]) {
+		inset-block-start: 0;
+		inset-inline-start: 0;
+	}
+
+	::selection {
+		background-color: var(--sys-color-selection-bg);
+		color: var(--sys-color-selection-fg);
+	}
+
+	:where(a[href]) {
+		color: var(--sys-color-primary);
+		text-decoration: underline;
+		text-underline-offset: var(--sys-unit-1);
+
+		@include focus.ring;
+
+		&:hover {
+			color: var(--sys-color-on-primary-container);
+		}
+	}
+}

@@ -1,0 +1,165 @@
+@use "./focus.scss" as focus;
+@use "./state-layer.scss" as state;
+
+// See `docs/design-system/components.mdx`.
+
+/// The nav entry shell: the full-height pill every navigation destination
+/// shares, in the rail, in the overflow sheet and in the compact bottom bar.
+/// The current destination carries `data-active="true"` or
+/// `aria-current="page"`. Reads `--nav-item-min-size` and `--nav-item-fg`.
+///
+/// @example
+///   @use "../../style/nav-item.scss" as nav;
+///
+///   .item {
+///       @include nav.shell;
+///   }
+@mixin shell {
+	display: flex;
+	gap: var(--sys-unit-6);
+	align-items: center;
+	box-sizing: border-box;
+	inline-size: 100%;
+	min-block-size: var(
+		--nav-item-min-size,
+		var(--sys-unit-24)
+	);
+	padding: var(--sys-unit-4) var(--sys-unit-8);
+	border-radius: var(--sys-radius-full);
+	color: var(--nav-item-fg, var(--sys-color-text));
+	font: var(--sys-font-label-medium);
+	text-align: start;
+	text-decoration: none;
+
+	@include focus.ring;
+	@include state.layer;
+
+	@media not (prefers-reduced-motion) {
+		transition:
+			background-color var(--sys-motion-short)
+				var(--sys-motion-standard),
+			color var(--sys-motion-short)
+				var(--sys-motion-standard);
+	}
+
+	&[data-active="true"],
+	&[aria-current="page"] {
+		background-color: var(--sys-color-primary-container);
+		color: var(--sys-color-on-primary-container);
+		font: var(--sys-font-label-medium-strong);
+	}
+}
+
+/// The container the compact entries subgrid into: a column per entry over two
+/// shared rows — icons, then labels. Columns are `minmax(min-content, 1fr)`, not
+/// `minmax(0, 1fr)`: a nav label may not be broken mid-word, so equal columns
+/// would let a long word spill over its neighbour instead of wrapping. The cost
+/// is that a word too wide for the narrowest phone widens the bar.
+///
+/// @example
+///   @use "../../style/nav-item.scss" as nav;
+///
+///   .bar {
+///       @include nav.bar;
+///   }
+@mixin bar {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(min-content, 1fr);
+	grid-template-rows: auto auto;
+	gap: var(--sys-unit-2) var(--sys-unit-1);
+}
+
+/// The compact variant, for the bottom bar: the icon over a smaller label, with
+/// the selected fill on the icon (see `icon-slot-selected`). Only valid inside a
+/// container carrying the `bar` mixin, whose two rows the entry subgrids.
+///
+/// @example
+///   .item[data-layout="stack"] {
+///       @include nav.compact;
+///   }
+@mixin compact {
+	& {
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+		gap: var(--sys-unit-2);
+		justify-items: center;
+		align-items: start;
+		min-inline-size: 0;
+		padding: var(--sys-unit-2);
+		border-radius: var(--sys-radius-md);
+		font: var(--sys-font-label-small);
+		text-align: center;
+	}
+
+	&[data-active="true"],
+	&[aria-current="page"] {
+		background-color: transparent;
+		color: var(--sys-color-on-primary-container);
+		font: var(--sys-font-label-small-strong);
+	}
+}
+
+/// A nav entry's label. Folds at a word boundary, or at a hyphenation point when
+/// one word is longer than its box. A container that resizes around its labels
+/// sets `--nav-label-wrap: nowrap` instead.
+///
+/// @example
+///   .label {
+///       @include nav.label;
+///   }
+@mixin label {
+	min-inline-size: 0;
+	overflow-wrap: normal;
+	hyphens: auto;
+	white-space: var(--nav-label-wrap, normal);
+}
+
+/// The icon's own box inside a nav entry. Inert in the rail; the compact bar
+/// grows it into the active indicator.
+///
+/// @example
+///   .iconSlot {
+///       @include nav.icon-slot;
+///   }
+@mixin icon-slot {
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+}
+
+/// The compact bar's active indicator: a pill around the icon, capped so it
+/// still fits an entry on the narrowest phone.
+///
+/// @example
+///   .item[data-layout="stack"] > .iconSlot {
+///       @include nav.icon-slot-compact;
+///   }
+@mixin icon-slot-compact {
+	& {
+		inline-size: 100%;
+		max-inline-size: var(--sys-unit-24);
+		block-size: var(--sys-unit-16);
+		border-radius: var(--sys-radius-full);
+	}
+
+	@media not (prefers-reduced-motion) {
+		& {
+			transition: background-color var(--sys-motion-short)
+				var(--sys-motion-standard);
+		}
+	}
+}
+
+/// The selected state of a compact entry's icon slot. Apply from the entry,
+/// which is what carries `data-active`.
+///
+/// @example
+///   .item[data-layout="stack"][data-active="true"] .iconSlot {
+///       @include nav.icon-slot-selected;
+///   }
+@mixin icon-slot-selected {
+	background-color: var(--sys-color-primary-container);
+}

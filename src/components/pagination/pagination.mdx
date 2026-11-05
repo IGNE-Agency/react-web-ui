@@ -1,0 +1,54 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as PaginationStories from "./pagination.stories.tsx";
+
+<Meta of={PaginationStories} />
+
+<DocsPage>
+
+## Rules
+
+### The pager knows where the list stands, not where it came from
+
+`Pagination.Root` takes four numbers, `pageIndex` (counted from 0), `pageCount`, `pageSize` and `pageSizes`, and reports a new page or page size through `onPageIndexChange` and `onPageSizeChange`. It reads no table and no API response. The list it pages, a table, a server query or an array in memory, maps its own state onto those props, and resets its page when the size changes if it wants to.
+
+```tsx
+<Pagination.Root
+	pageIndex={pageIndex}
+	pageCount={pageCount}
+	pageSize={pageSize}
+	pageSizes={[10, 20, 50]}
+	onPageIndexChange={setPageIndex}
+	onPageSizeChange={setPageSize}>
+	<Pagination.PageSize label="Rows per page" />
+	<Pagination.Index
+		label={({ pageIndex, pageCount }) =>
+			`Page ${pageIndex + 1} of ${pageCount}`
+		}
+	/>
+	<Pagination.Controls
+		firstLabel="First page"
+		previousLabel="Previous page"
+		nextLabel="Next page"
+		lastLabel="Last page"
+	/>
+</Pagination.Root>
+```
+
+### Compose only the parts the list has room for
+
+`PageSize`, `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes.
+
+### The page size in effect is always on offer
+
+A `pageSize` that is not one of the `pageSizes` is offered alongside them, in order, so the field always shows the size the list is on.
+
+### A button at the end of the list keeps its focus
+
+At the first page, first and previous do nothing; at the last, next and last do nothing. They stay in the tab order, marked `aria-disabled`, so pressing next onto the last page leaves focus on the button instead of dropping it to the page. Each button is icon-only and carries its name as a tooltip and an `aria-label`.
+
+### The index is announced when the page changes
+
+`Pagination.Index` is a polite live region. After next or previous, a screen reader hears the new index without focus moving. Its text is the app's own, from `label`, which receives the root's numbers.
+
+</DocsPage>

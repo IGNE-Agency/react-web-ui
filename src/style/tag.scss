@@ -1,0 +1,85 @@
+@use "./focus.scss" as focus;
+@use "./tone.scss" as tone;
+
+// See `docs/design-system/components.mdx`.
+
+/// The tag shell: the tone tokens plus the pill shape and size every tag,
+/// removable or not, shares. Emits `--<$prefix>-{bg,fg,border}` through
+/// `tone.variants`.
+///
+/// @example
+///   @use "../../style/tag.scss" as tag;
+///
+///   .root {
+///       @include tag.shell("tag");
+///   }
+@mixin shell($prefix) {
+	@include tone.variants($prefix);
+
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sys-unit-3);
+	box-sizing: border-box;
+	min-block-size: var(--sys-unit-14);
+	border: 1px solid var(--#{$prefix}-border);
+	border-radius: var(--sys-radius-full);
+	background: var(--#{$prefix}-bg);
+	padding: var(--sys-unit-2) var(--sys-unit-6);
+	color: var(--#{$prefix}-fg);
+	font: var(--sys-font-label-small);
+
+	@include focus.ring;
+
+	&[data-focus-visible] {
+		@include focus.ring-shown;
+	}
+}
+
+/// The round remove control that sits at the end of a removable tag. Tints on
+/// hover and press from the tag's own ink, so it works in every tone.
+///
+/// @example
+///   @use "../../style/tag.scss" as tag;
+///
+///   .remove {
+///       @include tag.remove;
+///   }
+@mixin remove {
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--sys-unit-10);
+	block-size: var(--sys-unit-10);
+	margin-block: calc(-1 * var(--sys-unit-1));
+	margin-inline-start: var(--sys-unit-1);
+	margin-inline-end: calc(-1 * var(--sys-unit-2));
+	border: 0;
+	border-radius: var(--sys-radius-circle);
+	background: none;
+	padding: 0;
+	color: inherit;
+
+	@include focus.ring;
+
+	@media not (prefers-reduced-motion) {
+		transition: background var(--sys-motion-instant)
+			var(--sys-motion-standard);
+	}
+
+	&:hover {
+		background: color-mix(
+			in oklch,
+			currentcolor calc(var(--sys-state-hover) * 100%),
+			transparent
+		);
+	}
+
+	&:active {
+		background: color-mix(
+			in oklch,
+			currentcolor calc(var(--sys-state-pressed) * 100%),
+			transparent
+		);
+	}
+}

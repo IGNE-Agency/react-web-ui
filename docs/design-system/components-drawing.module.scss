@@ -1,0 +1,44 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.tray,
+.paper {
+	fill: var(--drawing-paper);
+}
+
+.slot {
+	fill: var(--ref-green-50);
+}
+
+.deep {
+	fill: var(--drawing-deep);
+}
+
+.tint {
+	fill: var(--drawing-pale);
+}
+
+.input {
+	@include drawing.outline;
+
+	fill: var(--drawing-paper);
+}
+
+.check {
+	fill: none;
+	stroke: var(--drawing-paper);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 14;
+}

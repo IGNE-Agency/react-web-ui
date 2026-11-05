@@ -1,0 +1,57 @@
+@use "../../src/style/focus.scss" as focus;
+@use "../../src/style/state-layer.scss" as state;
+
+.tiles {
+	display: grid;
+	gap: var(--sys-unit-8);
+	min-inline-size: 0;
+}
+
+a.tile.tile {
+	display: grid;
+	grid-template-columns: 8rem minmax(0, 1fr);
+	align-items: center;
+	column-gap: var(--sys-unit-16);
+	border-radius: var(--sys-radius-lg);
+	background: var(--sys-color-surface-high);
+	padding: var(--sys-unit-8) var(--sys-unit-16)
+		var(--sys-unit-8) var(--sys-unit-8);
+	color: var(--sys-color-text);
+	text-decoration: none;
+
+	@include state.layer;
+	@include focus.ring;
+
+	&:hover {
+		color: var(--sys-color-text);
+	}
+}
+
+.art {
+	display: block;
+	aspect-ratio: 2;
+	overflow: hidden;
+	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface-highest);
+
+	> svg {
+		display: block;
+		inline-size: 100%;
+		block-size: auto;
+	}
+}
+
+.text {
+	display: grid;
+	row-gap: var(--sys-unit-2);
+	min-inline-size: 0;
+}
+
+.title.title {
+	font: var(--sys-font-heading-small);
+}
+
+.description.description {
+	color: var(--sys-color-text-muted);
+	font: var(--sys-font-body-medium);
+}

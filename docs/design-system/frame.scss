@@ -1,0 +1,12 @@
+/// The ground every figure in the guide stands on, so an example or a drawing
+/// never reads as part of the page around it.
+///
+/// @example
+///   .frame {
+///       @include frame.plate;
+///   }
+@mixin plate {
+	background: var(--sys-color-surface-high);
+	padding: var(--sys-unit-24)
+		clamp(var(--sys-unit-8), 5%, var(--sys-unit-24));
+}

@@ -1,0 +1,48 @@
+@use "./drawing";
+
+.figure {
+	@include drawing.palette("inverted");
+
+	--f-field: var(--drawing-cool-muted);
+	--f-tone: var(--drawing-cool-vivid);
+}
+
+.field {
+	fill: var(--f-field);
+}
+
+.toneA {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 72%,
+		var(--f-field)
+	);
+}
+
+.toneB {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 60%,
+		var(--f-field)
+	);
+}
+
+.toneC {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 84%,
+		var(--f-field)
+	);
+}
+
+.toneD {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 50%,
+		var(--f-field)
+	);
+}
+
+.picked {
+	fill: var(--drawing-paper);
+}

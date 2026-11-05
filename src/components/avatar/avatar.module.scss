@@ -1,0 +1,43 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.avatar {
+		--_avatar-bg: var(--sys-color-primary-container);
+		--_avatar-fg: var(--sys-color-on-primary-container);
+
+		position: relative;
+		display: inline-flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--sys-radius-circle);
+		background-color: var(--avatar-bg, var(--_avatar-bg));
+		color: var(--avatar-fg, var(--_avatar-fg));
+		font-weight: 600;
+		line-height: 1;
+		text-transform: uppercase;
+		overflow: hidden;
+
+		@for $tone from 1 through 4 {
+			&[data-tone="#{$tone}"] {
+				--_avatar-bg: var(--sys-color-identity-#{$tone}-bg);
+				--_avatar-fg: var(--sys-color-identity-#{$tone}-fg);
+			}
+		}
+	}
+
+	.image {
+		inline-size: 100%;
+		block-size: 100%;
+		border-radius: inherit;
+		object-fit: cover;
+	}
+
+	.fallback {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		inline-size: 100%;
+		block-size: 100%;
+	}
+}

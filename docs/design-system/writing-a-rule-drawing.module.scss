@@ -1,0 +1,63 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("saturated");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.card {
+	@include drawing.outline;
+
+	fill: var(--drawing-paper);
+}
+
+.heading {
+	fill: var(--drawing-deep);
+}
+
+.line {
+	fill: var(--drawing-pale);
+}
+
+.tile {
+	fill: var(--drawing-field);
+}
+
+.pill {
+	fill: var(--drawing-paper);
+}
+
+.pillOutline {
+	@include drawing.outline(var(--drawing-paper));
+}
+
+.note {
+	@include drawing.outline;
+
+	stroke-dasharray: 10 10;
+}
+
+.code {
+	fill: var(--drawing-mid);
+}
+
+.leader {
+	@include drawing.outline(var(--drawing-deep));
+}
+
+.callout {
+	fill: var(--drawing-deep);
+}
+
+.numeral {
+	fill: var(--drawing-paper);
+	font: var(--sys-font-heading-large);
+	font-size: 40px;
+}

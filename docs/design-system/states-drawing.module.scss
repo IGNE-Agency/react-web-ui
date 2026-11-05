@@ -1,0 +1,37 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("inverted");
+}
+
+.field {
+	fill: var(--drawing-cool-muted);
+}
+
+.control {
+	fill: color-mix(
+		in oklab,
+		var(--drawing-cool-vivid) 40%,
+		var(--drawing-cool-muted)
+	);
+}
+
+.focused {
+	fill: var(--drawing-paper);
+}
+
+.ring {
+	fill: none;
+	stroke: var(--drawing-hot-vivid);
+}
+
+.mark {
+	fill: var(--drawing-cool-muted);
+}
+
+.markStroke {
+	fill: none;
+	stroke: var(--drawing-cool-muted);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}

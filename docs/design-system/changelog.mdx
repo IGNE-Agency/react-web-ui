@@ -1,0 +1,37 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ChangelogDrawing } from "./changelog-drawing";
+import { Illustration } from "./illustration";
+
+<Meta title="Design system/Working on the system/Changelog" />
+
+# Changelog
+
+Two kinds of change, newest first: a design decision, and a change to the system itself, in where it lives, what it covers or how it changes. A change to one component, or to how these pages are written, laid out or linked, is in git history. A date is the day the change landed.
+
+<Illustration caption="One sheet of release notes, newest on top under the bookmark: each release a version over what was added, changed and removed.">
+	<ChangelogDrawing />
+</Illustration>
+
+## October 2026
+
+- **12 October.** The guide groups its pages into the [foundation](?path=/docs/design-system-foundation-token-architecture--docs), which holds the values, and [the principles](?path=/docs/design-system-principles-overview--docs), which hold the decisions that put those values to use. The state layer and the focus ring become a foundation of their own, [States](?path=/docs/design-system-foundation-states--docs).
+- **9 October.** [The layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares), declared as a token.
+- **9 October.** [A component answers to its own width](?path=/docs/design-system-principles-responsiveness--docs#a-component-answers-to-its-own-width-not-the-viewports), not the viewport's.
+- **9 October.** [Content and popups keep one gutter](?path=/docs/design-system-principles-responsiveness--docs#content-and-popups-keep-one-gutter-from-the-screens-edge) from the screen's edge, narrower below the breakpoint.
+- **9 October.** [A drawer carries no Cancel beside its actions](?path=/docs/design-system-patterns--docs#a-dismissable-surface-says-so-on-its-titles-line); a dialog that asks a question keeps Cancel as the answer no.
+- **9 October.** A component's rules live on its own docs page.
+- **8 October.** Tokens live in W3C design-token files, and the CSS is built from them.
+- **8 October.** The system covers brand, iconography, language and patterns.
+- **8 October.** [The circle radius](?path=/docs/design-system-foundation-shape--docs#the-radii) is the full radius on a square.
+- **8 October.** [Elevation has three levels](?path=/docs/design-system-foundation-elevation--docs#levels): the flat page, popups and tooltips, and toasts. In the dark theme a toast is a step lighter than a popup.
+- **5 October.** Identity tones are turned from the brand container.
+- **5 October.** Muted text is graded at APCA's minimum for content text.
+- **5 October.** Every modal shares one blurred backdrop.
+- **3 October.** The palette is approved against APCA.
+- **3 October.** [The system has a process for changing it](?path=/docs/design-system-working-on-the-system-contributing--docs).
+- **2 October.** [Colour contrast is judged by APCA](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2).
+- **2 October.** The design document moves into Storybook, beside the components it governs.
+
+## August 2026
+
+- **19 August.** The first design document.

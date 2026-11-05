@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"types": ["vite/client", "vite-plugin-svgr/client"],
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"allowImportingTsExtensions": true,
+		"rewriteRelativeImportExtensions": true,
+		"skipLibCheck": true,
+		"allowJs": false,
+		"isolatedDeclarations": true,
+		"declaration": true,
+		"declarationMap": true,
+		"noEmit": true
+	},
+	"include": ["src", ".storybook/**/*", "docs", "tests"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

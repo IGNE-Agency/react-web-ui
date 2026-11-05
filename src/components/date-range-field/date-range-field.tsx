@@ -1,0 +1,199 @@
+import { type ReactNode, useRef } from "react";
+import type { CalendarLabels } from "../../lib/calendar/temporal.tsx";
+import {
+	dayRangeToIso,
+	type IsoDateRange,
+	isoToDay,
+	isoToDayRange,
+} from "../../lib/calendar/temporal-value.ts";
+import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
+import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
+import type {
+	FieldProps,
+	FieldState,
+} from "../field/index.ts";
+import { useFormDisabled } from "../form/index.ts";
+import { useTimeZone } from "../time-zone-provider/index.ts";
+import { DateRangeInput } from "./date-range-input.tsx";
+
+export type DateRangeFieldProps = FieldProps &
+	CalendarLabels &
+	Readonly<{
+		/** Accessible name of the button that opens the calendar, such as "Open calendar". */
+		openCalendarLabel: string;
+
+		/**
+		 * Inclusive ISO plain dates, such as `{ start: "2026-07-01", end: "2026-07-31" }`.
+		 * A date-time or an instant is read as the day it falls on in the
+		 * `TimeZoneProvider`'s zone.
+		 */
+		value?: IsoDateRange | null;
+
+		/** The same, for an uncontrolled control. */
+		defaultValue?: IsoDateRange | null;
+
+		/** Called with the inclusive ISO plain dates picked or typed, or `null` once cleared. */
+		onValueChange?: (value: IsoDateRange | null) => void;
+
+		onBlur?: () => void;
+
+		/** Earliest selectable ISO plain date. */
+		minValue?: string;
+
+		/** Latest selectable ISO plain date. */
+		maxValue?: string;
+
+		/**
+		 * Months the calendar shows side by side. The caller decides, for
+		 * instance one on a narrow viewport. @default 1
+		 */
+		visibleMonths?: number;
+
+		/** Form field name for the start date. */
+		startName?: string;
+
+		/** Form field name for the end date. */
+		endName?: string;
+
+		disabled?: boolean;
+		readOnly?: boolean;
+
+		/** Applied to the field wrapper, so callers can size the control. */
+		className?: string;
+	}>;
+
+/**
+ * A labelled start and end date, typed or picked from one range calendar. Its
+ * value is a pair of inclusive ISO plain-date strings;
+ * `isoDateRangeToInstants` turns it into query bounds.
+ *
+ * @example
+ * <DateRangeField
+ * 	label="Declaration period"
+ * 	optionalLabel="optional"
+ * 	openCalendarLabel="Open calendar"
+ * 	{...calendarLabels}
+ * 	visibleMonths={narrow ? 1 : 2}
+ * 	value={period}
+ * 	onValueChange={setPeriod}
+ * />
+ */
+export const DateRangeField = ({
+	label,
+	description,
+	errors,
+	requiredness,
+	optionalLabel,
+	dirty,
+	touched,
+	pending,
+	openCalendarLabel,
+	previousMonthLabel,
+	nextMonthLabel,
+	monthLabel,
+	yearLabel,
+	noMatchingYearLabel,
+	value,
+	defaultValue,
+	onValueChange,
+	onBlur,
+	minValue,
+	maxValue,
+	visibleMonths,
+	startName,
+	endName,
+	disabled,
+	readOnly,
+	className,
+}: DateRangeFieldProps): ReactNode => {
+	const triggerRef = useRef<HTMLButtonElement>(null);
+	const timeZone = useTimeZone();
+	const range = isoToDayRange(value, timeZone);
+	const formDisabled = useFormDisabled();
+	const phase = useBusyPhase({ busy: pending === true });
+	const invalid = normalizeFieldErrors(errors).length > 0;
+
+	const fieldState: FieldState = {
+		disabled: disabled === true || formDisabled,
+		readonly: readOnly,
+		requiredness,
+		invalid,
+		valid: touched === true && !invalid,
+		dirty,
+		touched,
+		pending: phase !== "fresh",
+		filled: range !== null,
+	};
+
+	return (
+		<DateRangeInput.Frame
+			label={label}
+			description={description}
+			errors={errors}
+			requiredness={requiredness}
+			optionalLabel={optionalLabel}
+			dirty={dirty}
+			touched={touched}
+			className={className}>
+			{({ labelId, describedBy, controlId }) => (
+				<DateRangeInput.Root
+					state={fieldState}
+					aria-labelledby={labelId}
+					aria-describedby={describedBy}
+					value={value === undefined ? undefined : range}
+					defaultValue={
+						isoToDayRange(defaultValue, timeZone) ??
+						undefined
+					}
+					onChange={next =>
+						onValueChange?.(dayRangeToIso(next))
+					}
+					onBlur={onBlur}
+					minValue={
+						isoToDay(minValue, timeZone) ?? undefined
+					}
+					maxValue={
+						isoToDay(maxValue, timeZone) ?? undefined
+					}
+					startName={startName ?? `${controlId}-start`}
+					endName={endName ?? `${controlId}-end`}
+					isDisabled={disabled}
+					isReadOnly={readOnly}
+					isRequired={requiredness === "required"}
+					isInvalid={invalid}>
+					{({ isFocusWithin }) => (
+						<>
+							<DateRangeInput.Group
+								state={{
+									...fieldState,
+									focused: isFocusWithin,
+								}}>
+								<DateRangeInput.Input slot="start" />
+								<DateRangeInput.Separator />
+								<DateRangeInput.Input slot="end" />
+								<DateRangeInput.Spacer />
+								{phase !== "fresh" && (
+									<DateRangeInput.Pending />
+								)}
+								<DateRangeInput.Trigger
+									label={openCalendarLabel}
+									ref={triggerRef}
+								/>
+							</DateRangeInput.Group>
+							<DateRangeInput.Popup triggerRef={triggerRef}>
+								<DateRangeInput.Calendar
+									visibleMonths={visibleMonths}
+									previousMonthLabel={previousMonthLabel}
+									nextMonthLabel={nextMonthLabel}
+									monthLabel={monthLabel}
+									yearLabel={yearLabel}
+									noMatchingYearLabel={noMatchingYearLabel}
+								/>
+							</DateRangeInput.Popup>
+						</>
+					)}
+				</DateRangeInput.Root>
+			)}
+		</DateRangeInput.Frame>
+	);
+};

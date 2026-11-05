@@ -1,0 +1,38 @@
+@use "./drawing";
+
+.drawing {
+	@include drawing.palette("pale");
+}
+
+.field {
+	fill: var(--drawing-field);
+}
+
+.rule {
+	@include drawing.rule;
+}
+
+.track {
+	fill: none;
+	stroke: var(--drawing-deep);
+	stroke-linecap: round;
+	stroke-width: 24;
+}
+
+.card {
+	@include drawing.outline;
+
+	fill: var(--drawing-paper);
+}
+
+.pale {
+	fill: var(--drawing-pale);
+}
+
+.mark {
+	fill: var(--drawing-deep);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}

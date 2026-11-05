@@ -1,0 +1,204 @@
+@use "../../style/layers.scss";
+@use "../../style/visually-hidden.scss" as a11y;
+
+@layer kit.components {
+	.root {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		gap: var(--conversation-gap, var(--sys-unit-12));
+	}
+
+	.group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-4);
+	}
+
+	.groupSeparator {
+		position: sticky;
+		top: 0;
+		align-self: center;
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--conversation-separator-bg,
+			var(--sys-color-surface-high)
+		);
+		padding: var(--sys-unit-2) var(--sys-unit-6);
+		color: var(
+			--conversation-muted-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(--sys-font-label-small);
+	}
+
+	.message {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-2);
+		max-inline-size: min(72ch, 80%);
+	}
+
+	.message + .message {
+		margin-block-start: var(--sys-unit-6);
+	}
+
+	.message,
+	.messageAuthor {
+		&[data-side="own"],
+		&[data-side="colleague"] {
+			align-self: flex-end;
+			align-items: flex-end;
+		}
+
+		&[data-side="other"] {
+			align-self: flex-start;
+			align-items: flex-start;
+		}
+	}
+
+	.messageBubble {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sys-unit-2);
+		border-radius: var(
+			--conversation-bubble-radius,
+			var(--sys-radius-lg)
+		);
+		background: var(
+			--conversation-bubble-bg,
+			var(--sys-color-surface-high)
+		);
+		padding: var(--sys-unit-6) var(--sys-unit-8);
+		color: var(
+			--conversation-bubble-fg,
+			var(--sys-color-text)
+		);
+	}
+
+	.message[data-side="own"] .messageBubble,
+	.message[data-side="colleague"] .messageBubble {
+		border-start-end-radius: var(
+			--conversation-bubble-point-radius,
+			var(--sys-radius-xs)
+		);
+	}
+
+	.message[data-side="other"] .messageBubble {
+		border-start-start-radius: var(
+			--conversation-bubble-point-radius,
+			var(--sys-radius-xs)
+		);
+	}
+
+	.message[data-side="own"] .messageBubble {
+		background: var(
+			--conversation-bubble-own-bg,
+			var(--sys-color-primary-container)
+		);
+		color: var(
+			--conversation-bubble-own-fg,
+			var(--sys-color-on-primary-container)
+		);
+	}
+
+	.messageAuthor {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--sys-unit-4);
+		padding-inline: var(--sys-unit-8);
+		font: var(--sys-font-label-small);
+	}
+
+	.message + .messageAuthor {
+		margin-block-start: var(--sys-unit-12);
+	}
+
+	.messageAvatar {
+		flex-shrink: 0;
+	}
+
+	.messageTimestamp {
+		color: var(
+			--conversation-muted-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(--sys-font-body-medium);
+		font-size: 0.75em;
+	}
+
+	.messageReadIndicator {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--sys-unit-2);
+		color: var(
+			--conversation-muted-fg,
+			var(--sys-color-text-muted)
+		);
+		font-size: 0.75em;
+	}
+
+	.statusDot {
+		inline-size: var(--sys-unit-4);
+		block-size: var(--sys-unit-4);
+		border-radius: var(--sys-radius-circle);
+		background: transparent;
+	}
+
+	.messageReadIndicator[data-status="unread"] .statusDot {
+		background: var(
+			--conversation-unread-bg,
+			var(--sys-color-primary)
+		);
+	}
+
+	.messageContent {
+		overflow-wrap: anywhere;
+		white-space: pre-wrap;
+
+		&[data-clamped] {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: var(--line-clamp);
+			line-clamp: var(--line-clamp);
+			overflow: hidden;
+		}
+	}
+
+	.messageFiles {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--sys-unit-4);
+	}
+
+	.message[data-side="own"] .messageFiles {
+		justify-content: flex-end;
+	}
+
+	.scrollToBottom {
+		position: absolute;
+		inset-block-end: var(--sys-unit-8);
+		inset-inline-end: var(--sys-unit-8);
+	}
+
+	.emptyState {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sys-unit-6);
+		color: var(
+			--conversation-muted-fg,
+			var(--sys-color-text-muted)
+		);
+	}
+
+	.visuallyHidden {
+		@include a11y.visually-hidden;
+	}
+}

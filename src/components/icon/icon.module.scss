@@ -1,0 +1,10 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.icon {
+		display: inline-block;
+		flex-shrink: 0;
+		vertical-align: middle;
+		fill: var(--icon-color, currentcolor);
+	}
+}

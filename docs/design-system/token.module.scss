@@ -1,0 +1,37 @@
+.token {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sys-unit-2);
+	vertical-align: middle;
+	border-radius: var(--sys-radius-full);
+	background: var(
+		--token-bg,
+		var(--sys-color-surface-high)
+	);
+	padding: var(--sys-unit-1) var(--sys-unit-4)
+		var(--sys-unit-1) var(--sys-unit-2);
+	max-inline-size: 100%;
+	color: var(--token-ink, var(--sys-color-text));
+}
+
+.dot {
+	flex: none;
+	border-radius: var(--sys-radius-full);
+	background: var(--dot);
+	box-shadow: inset 0 0 0 1px
+		var(--token-edge, var(--sys-color-border));
+	block-size: 0.75rem;
+	inline-size: 0.75rem;
+}
+
+.path {
+	overflow: hidden;
+	font:
+		0.6875rem / 1.4 ui-monospace,
+		"Cascadia Code",
+		Menlo,
+		Consolas,
+		monospace;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

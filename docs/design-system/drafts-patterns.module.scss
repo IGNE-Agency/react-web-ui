@@ -1,0 +1,80 @@
+@use "./drawing";
+
+@mixin -figure($family, $field, $tone) {
+	@include drawing.palette($family);
+
+	--f-field: #{$field};
+	--f-tone: #{$tone};
+}
+
+.openerA {
+	@include -figure(
+		"neutral",
+		var(--drawing-cool-muted),
+		var(--drawing-cool-vivid)
+	);
+}
+
+.openerB {
+	@include -figure(
+		"neutral",
+		var(--drawing-hot-vivid),
+		var(--drawing-hot-muted)
+	);
+}
+
+.openerC {
+	@include -figure(
+		"neutral",
+		var(--drawing-hot-muted),
+		var(--drawing-hot-vivid)
+	);
+}
+
+.openerD {
+	@include -figure(
+		"neutral",
+		var(--drawing-cool-muted),
+		var(--drawing-cool-vivid)
+	);
+}
+
+.openerE {
+	@include -figure(
+		"neutral",
+		var(--drawing-cool-muted),
+		var(--drawing-cool-vivid)
+	);
+}
+
+.field {
+	fill: var(--f-field);
+}
+
+.toneA {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 50%,
+		var(--f-field)
+	);
+}
+
+.toneB {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 72%,
+		var(--f-field)
+	);
+}
+
+.toneC {
+	fill: color-mix(
+		in oklab,
+		var(--f-tone) 36%,
+		var(--f-field)
+	);
+}
+
+.paper {
+	fill: var(--drawing-paper);
+}

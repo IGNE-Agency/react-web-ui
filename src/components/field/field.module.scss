@@ -1,0 +1,56 @@
+@use "../../style/layers.scss";
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: var(--field-gap, var(--sys-unit-4));
+		inline-size: 100%;
+	}
+
+	.label {
+		@include form.label;
+	}
+
+	.optional {
+		@include form.optional-suffix;
+	}
+
+	.inlineText {
+		grid-area: text;
+	}
+
+	.inlineOptional {
+		grid-area: optional;
+	}
+
+	.required {
+		display: inline-block;
+		vertical-align: middle;
+		translate: 0 -1px;
+		inline-size: 0.625rem;
+		block-size: 0.625rem;
+		background-color: var(
+			--field-required-fg,
+			var(--sys-color-primary)
+		);
+		mask: url("../../assets/required.svg") center / contain
+			no-repeat;
+	}
+
+	.description {
+		color: var(
+			--field-description-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--field-description-font,
+			var(--sys-font-body-medium)
+		);
+	}
+
+	.pending {
+		@include form.inlay;
+	}
+}

@@ -1,0 +1,134 @@
+@use "../../style/layers.scss";
+@use "../../style/checkbox.scss" as checkbox;
+@use "../../style/focus.scss" as focus;
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.root {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--switch-gap, var(--sys-unit-8));
+	}
+
+	.label {
+		@include checkbox.inline-label(".control");
+
+		min-block-size: var(--sys-unit-20);
+	}
+
+	.control {
+		--_switch-track-inline-size: var(
+			--switch-track-inline-size,
+			var(--sys-unit-26)
+		);
+		--_switch-track-block-size: var(
+			--switch-track-block-size,
+			var(--sys-unit-16)
+		);
+		--_switch-track-inset: calc(1px + var(--sys-unit-2));
+		--_switch-thumb-size: calc(
+			var(--_switch-track-block-size) - 2 *
+				var(--_switch-track-inset)
+		);
+		--_switch-travel: calc(
+			var(--_switch-track-inline-size) - 2 *
+				var(--_switch-track-inset) -
+				var(--_switch-thumb-size)
+		);
+		--_switch-thumb-bg: var(
+			--switch-thumb-bg,
+			var(--sys-color-outline)
+		);
+		--_switch-on-bg: var(
+			--switch-on-bg,
+			var(--sys-color-primary)
+		);
+
+		position: relative;
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		grid-area: control;
+		align-self: center;
+		justify-self: center;
+		box-sizing: border-box;
+		inline-size: var(--_switch-track-inline-size);
+		block-size: var(--_switch-track-block-size);
+		border: 1px solid
+			var(--switch-border, var(--sys-color-border));
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--switch-track-bg,
+			var(--sys-color-surface)
+		);
+		padding: var(--sys-unit-2);
+		color: var(
+			--switch-on-thumb-bg,
+			var(--sys-color-on-primary)
+		);
+
+		@include focus.ring-projected;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				background var(--sys-motion-instant)
+					var(--sys-motion-standard),
+				border-color var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+
+		&[data-focused] {
+			border-color: var(--_switch-on-bg);
+		}
+
+		&[data-checked] {
+			border-color: var(--_switch-on-bg);
+			background: var(--_switch-on-bg);
+		}
+
+		&[data-invalid] {
+			@include form.invalid;
+
+			--_switch-thumb-bg: var(--sys-color-error-outline);
+
+			&[data-checked] {
+				background: var(--sys-color-error-fg);
+				color: var(--sys-color-error-bg);
+			}
+		}
+
+		&[data-readonly] {
+			@include form.readonly;
+
+			&[data-checked] {
+				background: var(--sys-color-primary-container);
+			}
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+	}
+
+	.thumb {
+		inline-size: var(--_switch-thumb-size);
+		block-size: var(--_switch-thumb-size);
+		border-radius: var(--sys-radius-circle);
+		background: var(--_switch-thumb-bg);
+		translate: 0;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				translate var(--sys-motion-short)
+					var(--sys-motion-emphasized),
+				background var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+
+		&[data-checked] {
+			background: currentcolor;
+			translate: var(--_switch-travel);
+		}
+	}
+}

@@ -1,0 +1,57 @@
+// See `docs/design-system/interaction.mdx`.
+
+/// Declares the ring at 0-width so a broad `transition` grows it in from the
+/// brand colour. Do not unwrap the `& {}`: it keeps the declarations in source
+/// order when this is included after nested rules.
+///
+/// @example
+///   @use "../../style/focus.scss" as focus;
+///
+///   .my-thing {
+///       @include focus.ring-idle;
+///   }
+@mixin ring-idle {
+	& {
+		outline: 0 solid var(--sys-color-focus-ring);
+		outline-offset: var(--sys-focus-ring-offset);
+	}
+}
+
+/// Widens an idle ring into view. Pair with `ring-idle` to drive one element's
+/// ring from another element's focus state.
+@mixin ring-shown {
+	outline-width: var(--sys-focus-ring-width);
+}
+
+/// The keyboard focus ring. Every focusable element needs this.
+///
+/// @example
+///   @use "../../style/focus.scss" as focus;
+///
+///   .my-button {
+///       @include focus.ring;
+///   }
+@mixin ring {
+	@include ring-idle;
+
+	&:focus-visible {
+		@include ring-shown;
+	}
+}
+
+/// The focus ring for anything that publishes its own state, which is every
+/// form control: it reads `[data-focus-visible]` rather than a selector, so a
+/// bare control and a wrapper whose focus lands on a descendant are written the
+/// same way, and focus that has moved into a portalled popup still counts.
+///
+/// @example
+///   .my-control {
+///       @include focus.ring-projected;
+///   }
+@mixin ring-projected {
+	@include ring-idle;
+
+	&[data-focus-visible] {
+		@include ring-shown;
+	}
+}

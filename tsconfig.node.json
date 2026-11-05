@@ -1,0 +1,21 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"composite": true,
+		"isolatedDeclarations": false,
+		"noEmit": false,
+		"emitDeclarationOnly": true,
+		"outDir": "node_modules/.cache/tsconfig.node",
+		"lib": ["ESNext"],
+		"types": ["bun"]
+	},
+	"include": [
+		"*.ts",
+		"package.json",
+		".storybook/vite.config.ts",
+		"tools",
+		"src/terrazzo"
+	],
+	"exclude": ["tools/fixtures"],
+	"references": []
+}

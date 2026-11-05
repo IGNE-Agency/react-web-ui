@@ -1,0 +1,361 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Beside } from "./beside";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import styles from "./token-architecture.module.scss";
+import { Illustration } from "./illustration";
+import { TokenArchitectureDrawing } from "./token-architecture-drawing";
+import {
+	NameDrawing,
+	RelationDrawing,
+	ThemeDrawing,
+} from "./token-figures";
+
+<Meta title="Design system/Foundation/Token architecture" />
+
+# Token architecture
+
+A token is a design decision with a name. Instead of writing a colour, a size or a speed straight into a screen, you decide it once, give it a name, and use the name everywhere. Change the decision, and every screen follows, in the design file and in the code.
+
+<Illustration caption="Three layers, each resting only on the one below: the whole ramp as the floor, three roles cut from it, and one component standing on the roles, its edges on their seams.">
+	<TokenArchitectureDrawing />
+</Illustration>
+
+## A shared vocabulary
+
+A colour on its own doesn't say much. Is it the brand? Something that went well? A link? A name does: "primary" is the colour of the most important action on a screen. When designers and engineers talk in names instead of values, a design file and its code can't quietly drift apart.
+
+<Illustration caption="Name a colour once, and everything that uses it follows: the button, the focus ring, the checkbox, the toggle, the radio and the slider all wear it.">
+	<NameDrawing />
+</Illustration>
+
+Decisions come in kinds, too. Some are about raw material, like which greens exist at all. Some are about meaning, like which green is the brand. And some belong to one component, like what colour a button is. Give each kind its own layer, and every question has exactly one place to be answered: you can rethink what success looks like without opening a single component.
+
+Because names point at other names, the relationships between them are part of the design. A success badge pairs a light and a dark green from the same family, and that pairing still holds when the brand colour changes. Think in relationships rather than swatches, and a whole theme, like dark mode, becomes one change instead of a redesign.
+
+<Illustration caption="Each colour family pairs a light fill with a dark mark of its own kind. Turn the hue and the pairing holds.">
+	<RelationDrawing />
+</Illustration>
+
+## Three layers
+
+Every product that follows our approach builds its tokens this way. It's not the place to get creative: when every product shares one architecture, people and agents move between them without learning anything twice.
+
+1. **Reference.** Raw material: [colour ramps](?path=/docs/design-system-foundation-colour--docs#ramps), and the type scale. Nothing outside layer 2 may read it.
+2. **System.** [Colour roles](?path=/docs/design-system-foundation-colour--docs#roles). A brand fill and its ink, surface tiers, body and muted ink, a border, an outline, a focus ring, status containers. Everything a component reads.
+3. **Component.** A component's own knobs, declared at the top of its root rule and re-pointed by its variants.
+
+## Speaking in roles
+
+A component asks for a role, like the background of a success badge, never for a particular shade. A component that picks its own shade stops following the theme, and breaks without anyone noticing when dark mode re-points the roles. The same goes for type: a component names [a type role instead of a size](?path=/docs/design-system-foundation-type--docs#roles).
+
+<Illustration caption="A chip that reads its roles crosses into dark mode and changes with the page, without anyone touching the chip.">
+	<ThemeDrawing />
+</Illustration>
+
+## One home for every value
+
+Every colour is declared once, in the token files, and everything else points at it by name. A colour written anywhere else is missed when [the dark theme re-points the roles](?path=/docs/design-system-foundation-colour--docs#a-theme-re-points-the-roles-and-touches-nothing-else), and will be wrong in dark mode.
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="Every design decision is a named token, and design and code use the same name">
+
+A colour, a size or a speed is decided once, named, and used by its name everywhere, in the design file and in the code. Explained in [A shared vocabulary](#a-shared-vocabulary).
+
+</Details>
+
+<Details title="There are three layers, and each reads only the one below">
+
+Layer 1, reference, holds the raw material: the colour ramps and the type scale. Layer 2, system, holds the roles, and is the only layer that reads layer 1. Layer 3, component, holds a component's own knobs and reads only layer 2. Explained in [Three layers](#three-layers).
+
+</Details>
+
+<Details title="The non-colour scales and shared mixins sit beside the roles">
+
+The non-colour scales (spacing, radius, elevation, motion, type roles) sit alongside layer 2 and are read directly. Shared mixins sit there too: they are layer 3 written once, so two components that are the same object include one definition instead of each keeping a copy.
+
+</Details>
+
+<Details title="A component reads a role, never a step">
+
+A component reads system tokens, never reference tokens, so it follows the theme when the roles are re-pointed. The same goes for type: it names a type role, not a size. Explained in [Speaking in roles](#speaking-in-roles).
+
+<DoDont>
+<Example
+  kind="do"
+  caption="The chip names a role, so the dark theme re-points it with everything else."
+  visual={
+    <div className={styles.themes}>
+      <div className={`${styles.stage} ${styles.stageLight}`}>
+        <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
+      </div>
+      <div className={`${styles.stage} ${styles.stageDark}`}>
+        <span className={`${styles.chip} ${styles.chipDark}`}>Approved</span>
+      </div>
+    </div>
+  }>
+
+```scss
+.chip {
+	background: var(--sys-color-success-bg);
+	color: var(--sys-color-success-fg);
+}
+```
+
+</Example>
+<Example
+  kind="dont"
+  caption="Pinned to a light step, the chip glares on a dark page."
+  visual={
+    <div className={styles.themes}>
+      <div className={`${styles.stage} ${styles.stageLight}`}>
+        <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
+      </div>
+      <div className={`${styles.stage} ${styles.stageDark}`}>
+        <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
+      </div>
+    </div>
+  }>
+
+```scss
+.chip {
+	background: var(--ref-green-50);
+	color: var(--ref-green-700);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A colour value appears only in the tokens files">
+
+Every colour is declared once, in `tokens/`, and everything else points at it by name. Explained in [One home for every value](#one-home-for-every-value).
+
+</Details>
+
+<Details title="Above the reference layer, every value is a var()">
+
+Layers 2 and 3 are pure `var()`.
+
+<DoDont>
+<Example kind="do" caption="Every colour is a role, so the panel re-themes.">
+
+```scss
+.panel {
+	background: var(--sys-color-surface);
+	color: var(--sys-color-text);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A colour written outside the tokens files cannot be re-themed and will be wrong in dark mode.">
+
+```scss
+.panel {
+	background: #ffffff;
+	color: rgba(0, 0, 0, 0.87);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Every shared token names its layer">
+
+A prefix marks a token as part of the system rather than a component's knob or a library's published property. The segment after it says which layer it belongs to. The names are longer than one app on one page needs. What they buy is that the layer rules are visible at the call site and checkable by a script: a reference token used outside the token files is a violation you can grep for.
+
+<DoDont>
+<Example kind="do" caption="The badge reads its status roles from the system layer.">
+
+```scss
+.badge {
+	background: var(--sys-color-success-bg);
+	color: var(--sys-color-success-fg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Layer 1 read straight from a component.">
+
+```scss
+.badge {
+	background: var(--ref-green-50);
+	color: var(--ref-green-700);
+}
+```
+
+</Example>
+</DoDont>
+
+Only the shared layers are prefixed, which has three consequences.
+
+A component's own tokens carry no prefix, and the absence is the marker: a bare token is local to the file that declares it, and a prefixed token is never declared in a component stylesheet.
+
+<DoDont>
+<Example kind="do" caption="The bare name says the knob belongs to this file.">
+
+```scss
+.button {
+	--btn-bg: var(--sys-color-primary);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A prefixed name declared in a component passes for a shared token that no shared file defines.">
+
+```scss
+.button {
+	--sys-button-bg: var(--sys-color-primary);
+}
+```
+
+</Example>
+</DoDont>
+
+A bare token that a consumer is meant to set is never declared at all. Write the default into the `var()` fallback and read it there. A declared token has to be out-specified to be changed, and across CSS Modules the winner is decided by emission order, which no file controls; an undeclared one has nothing to out-specify, so setting it anywhere above the component works, at any specificity. Repeat the fallback rather than resolving it into a local token in the same rule, or derive one on a descendant that still reads the public name.
+
+<DoDont>
+<Example kind="do" caption="Any ancestor can set it, and nothing has to win a specificity argument.">
+
+```scss
+.skeleton {
+	background-color: var(
+		--skeleton-bg,
+		var(--sys-color-surface-highest)
+	);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Only a rule that both out-specifies this one and is emitted later wins.">
+
+```scss
+.skeleton {
+	--skeleton-bg: var(--sys-color-surface-highest);
+
+	background-color: var(--skeleton-bg);
+}
+```
+
+</Example>
+</DoDont>
+
+Neither are a library's published properties. A headless UI library hands you anchor widths, available heights, transform origins and swipe progress. Read those and never rename them. They look local because they effectively are.
+
+<DoDont>
+<Example kind="do" caption="The library's property is read under the name its documentation uses.">
+
+```scss
+.popup {
+	max-block-size: var(--available-height);
+	transform-origin: var(--transform-origin);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Renamed on the way in, so the next reader cannot find where it is set.">
+
+```scss
+.popup {
+	--popup-max-height: var(--available-height);
+
+	max-block-size: var(--popup-max-height);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A component's own tokens are declared at the top of its root rule">
+
+Declaring the knobs first makes the variants below readable as a table of what changes.
+
+<DoDont>
+<Example kind="do" caption="The knobs come first, so the variant below reads as a table of what changes.">
+
+```scss
+.button {
+	--btn-bg: transparent;
+	--btn-fg: var(--sys-color-text);
+
+	background: var(--btn-bg);
+	color: var(--btn-fg);
+}
+
+.button[data-variant="primary"] {
+	--btn-bg: var(--sys-color-primary);
+	--btn-fg: var(--sys-color-on-primary);
+}
+```
+
+</Example>
+<Example kind="dont" caption="The variant restates the property instead of re-pointing the knob.">
+
+```scss
+.button {
+	background: transparent;
+	color: var(--sys-color-text);
+}
+
+.button[data-variant="primary"] {
+	background: var(--sys-color-primary);
+	color: var(--sys-color-on-primary);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Tokens are design-token JSON in tokens/, built with bun run tokens">
+
+Three files hold the layers: `ref.tokens.json` has the ramps and the type scale, `sys.tokens.json` has the roles, and `dark.tokens.json` has the roles' values for the dark theme. `bun run tokens` turns them into custom properties named after the token's path, so `sys.color.primary` becomes `--sys-color-primary`.
+
+<Beside>
+
+A dotted path is not a CSS name. Custom property names are dashed idents, so `--a.b.c` is a parse error. The dots belong to the token's path in the JSON, and flatten to hyphens on the way out.
+
+<Example kind="caution" caption="A dotted token name is a parse error in CSS; the dots flatten to hyphens on the way out.">
+
+```scss
+--a.b.c
+```
+
+</Example>
+
+</Beside>
+
+</Details>
+
+<Details title="Every token says what it's for in its $description">
+
+Each token in the JSON carries a `$description` that says what it's for. When you're not sure which role to reach for, read the descriptions before you guess from the names.
+
+</Details>
+
+<Details title="Dark values re-point the roles and leave the ramps alone">
+
+`dark.tokens.json` only overrides roles. The ramps are the same in both themes, so the dark theme is a different choice of steps, not a different set of colours. The build writes the dark values under `html[data-theme="dark"]`, and under the dark colour-scheme preference when no theme is pinned.
+
+</Details>
+
+<Details title="Breakpoints and gutters belong to the app, not to the kit's tokens">
+
+The kit's token files hold no `breakpoint` or `gutter` group. Where the page bends and how far content sits from the edge are the app's layout, and a media query can't read a custom property anyway. An app declares its breakpoint as a Sass variable and a script constant of its own, and sets its gutter on the kit's knobs, such as `--popup-edge-padding`. See [the layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares).
+
+</Details>
+
+</DetailsList>

@@ -1,0 +1,61 @@
+@use "../../style/layers.scss";
+@use "../../style/popup.scss" as popup;
+
+@layer kit.components {
+	.editor {
+		position: relative;
+		flex: 1;
+		min-inline-size: 0;
+		overflow: hidden auto;
+	}
+
+	.content {
+		outline: none;
+		padding: var(--composer-editor-pad, var(--sys-unit-6));
+		min-block-size: calc(
+			var(--composer-min-lines) * 1lh +
+				var(--composer-editor-pad, var(--sys-unit-6))
+		);
+		max-block-size: calc(
+			var(--composer-max-lines) * 1lh +
+				var(--composer-editor-pad, var(--sys-unit-6))
+		);
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
+	.placeholder {
+		position: absolute;
+		inset-block-start: var(
+			--composer-editor-pad,
+			var(--sys-unit-6)
+		);
+		inset-inline-start: var(
+			--composer-editor-pad,
+			var(--sys-unit-6)
+		);
+		color: var(
+			--composer-placeholder-fg,
+			var(--sys-color-text-muted)
+		);
+		pointer-events: none;
+		user-select: none;
+	}
+
+	.menu {
+		@include popup.surface;
+
+		inline-size: max-content;
+		min-inline-size: 16rem;
+		max-inline-size: 24rem;
+		max-block-size: 20rem;
+		margin: 0;
+		overflow: hidden auto;
+	}
+
+	.menuItem {
+		@include popup.item;
+
+		list-style: none;
+	}
+}

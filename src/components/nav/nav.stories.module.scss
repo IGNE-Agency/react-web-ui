@@ -1,0 +1,58 @@
+@use "../../style/nav-item.scss" as nav;
+
+.sidebar {
+	--rail-width: 20rem;
+	--nav-label-wrap: nowrap;
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--sys-unit-8);
+	box-sizing: border-box;
+	inline-size: var(--rail-width);
+	min-block-size: 100dvh;
+	overflow: hidden;
+	padding: var(--sys-unit-8);
+	background-color: var(--sys-color-surface);
+
+	@media not (prefers-reduced-motion) {
+		transition: inline-size var(--sys-motion-short)
+			var(--sys-motion-standard);
+	}
+
+	&[data-collapsed="true"] {
+		--rail-width: var(--sys-unit-40);
+	}
+}
+
+.grow {
+	flex: 1;
+}
+
+.barItem {
+	display: contents;
+}
+
+.spacer {
+	flex: 1;
+	min-block-size: var(--sys-unit-6);
+}
+
+.bar {
+	@include nav.bar;
+
+	box-sizing: border-box;
+	inline-size: 100%;
+	padding: var(--sys-unit-2);
+	padding-block-end: max(
+		var(--sys-unit-2),
+		env(safe-area-inset-bottom)
+	);
+	background-color: var(--sys-color-surface);
+}
+
+.sheet {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sys-unit-8);
+	padding: var(--sys-unit-12);
+}

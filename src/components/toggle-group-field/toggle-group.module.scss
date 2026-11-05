@@ -1,0 +1,167 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/form.scss" as form;
+
+@layer kit.components {
+	.group {
+		--_toggle-group-fill: var(
+			--toggle-group-fill,
+			var(--sys-color-primary)
+		);
+		--_toggle-group-on-fill: var(
+			--toggle-group-on-fill,
+			var(--sys-color-on-primary)
+		);
+
+		position: relative;
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-self: flex-start;
+		gap: var(--toggle-group-gap, var(--sys-unit-4));
+		box-sizing: border-box;
+		max-inline-size: 100%;
+		isolation: isolate;
+
+		&[data-orientation="vertical"] {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+
+		&[data-invalid] {
+			--_toggle-group-fill: var(--sys-color-error-fg);
+			--_toggle-group-on-fill: var(--sys-color-error-bg);
+		}
+	}
+
+	.option {
+		position: relative;
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sys-unit-3);
+		box-sizing: border-box;
+		min-block-size: var(
+			--toggle-group-chip-block-size,
+			var(--sys-unit-20)
+		);
+		border: #{form.$field-border} solid transparent;
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--toggle-group-chip-bg,
+			var(--sys-color-surface-high)
+		);
+		padding-inline: var(
+			--toggle-group-chip-padding-inline,
+			var(--sys-unit-10)
+		);
+		color: var(
+			--toggle-group-chip-fg,
+			var(--sys-color-text)
+		);
+		font: var(
+			--toggle-group-font,
+			var(--sys-font-label-medium)
+		);
+		cursor: pointer;
+
+		@include focus.ring-projected;
+
+		@media not (prefers-reduced-motion) {
+			transition:
+				color var(--sys-motion-short)
+					var(--sys-motion-standard),
+				background-color var(--sys-motion-instant)
+					var(--sys-motion-standard);
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			z-index: -1;
+			inset: calc(-1 * #{form.$field-border} - 0.5px);
+			border-radius: inherit;
+			background: var(--_toggle-group-fill);
+			opacity: 0;
+			scale: 0;
+
+			@media not (prefers-reduced-motion) {
+				transition:
+					opacity var(--sys-motion-instant)
+						var(--sys-motion-standard),
+					scale var(--sys-motion-instant)
+						var(--sys-motion-standard);
+			}
+		}
+
+		&:hover:not(
+				[data-pressed],
+				[data-disabled],
+				[data-readonly]
+			) {
+			background-color: var(
+				--toggle-group-chip-hover-bg,
+				var(--sys-color-surface-highest)
+			);
+		}
+
+		&[data-pressed] {
+			background-color: var(--_toggle-group-fill);
+			color: var(--_toggle-group-on-fill);
+
+			@media not (prefers-reduced-motion) {
+				transition:
+					color var(--sys-motion-short)
+						var(--sys-motion-standard),
+					background-color 0s linear var(--sys-motion-short);
+			}
+
+			&::before {
+				opacity: 1;
+				scale: 1;
+
+				@media not (prefers-reduced-motion) {
+					transition:
+						opacity var(--sys-motion-instant)
+							var(--sys-motion-standard),
+						scale var(--sys-motion-short)
+							var(--sys-motion-overshoot);
+				}
+			}
+		}
+
+		.group[data-invalid] &:not([data-pressed]) {
+			@include form.invalid;
+		}
+
+		&[data-readonly] {
+			@include form.readonly;
+
+			pointer-events: none;
+
+			&[data-pressed] {
+				--_toggle-group-fill: var(
+					--sys-color-primary-container
+				);
+				--_toggle-group-on-fill: var(
+					--sys-color-on-primary-container
+				);
+
+				background: var(--_toggle-group-fill);
+				color: var(--_toggle-group-on-fill);
+
+				&::before {
+					content: none;
+				}
+			}
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+	}
+}

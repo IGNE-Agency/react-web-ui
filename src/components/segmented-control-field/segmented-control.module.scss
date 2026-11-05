@@ -1,0 +1,138 @@
+@use "../../style/layers.scss";
+@use "../../style/focus.scss" as focus;
+@use "../../style/form.scss" as form;
+@use "../../style/state-layer.scss" as state;
+@use "../../lib/sliding-indicator/sliding-indicator.scss" as
+	indicator;
+
+@layer kit.components {
+	.group {
+		@include form.ink;
+
+		--field-fg: var(
+			--segmented-control-fg,
+			var(--sys-color-on-primary-container)
+		);
+		--_segmented-control-fill: var(
+			--segmented-control-fill,
+			var(--sys-color-primary)
+		);
+		--_segmented-control-on-fill: var(
+			--segmented-control-on-fill,
+			var(--sys-color-on-primary)
+		);
+
+		position: relative;
+		display: inline-flex;
+		align-self: flex-start;
+		box-sizing: border-box;
+		max-inline-size: 100%;
+		gap: 0;
+		border: #{form.$field-border} solid transparent;
+		border-radius: var(--sys-radius-full);
+		background: var(
+			--segmented-control-track-bg,
+			var(--sys-color-primary-container)
+		);
+
+		&[data-orientation="vertical"] {
+			flex-direction: column;
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+
+		&[data-readonly] {
+			@include form.readonly;
+
+			--_segmented-control-fill: var(
+				--sys-color-primary-container
+			);
+			--_segmented-control-on-fill: var(
+				--sys-color-on-primary-container
+			);
+
+			pointer-events: none;
+		}
+
+		&[data-invalid] {
+			@include form.invalid;
+
+			--_segmented-control-fill: var(--sys-color-error-fg);
+			--_segmented-control-on-fill: var(
+				--sys-color-error-bg
+			);
+		}
+	}
+
+	.option {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sys-unit-3);
+		box-sizing: border-box;
+		min-block-size: var(
+			--segmented-control-option-block-size,
+			var(--sys-unit-20)
+		);
+		border: 0;
+		border-radius: var(--sys-radius-full);
+		background: none;
+		padding-inline: var(
+			--segmented-control-option-padding-inline,
+			var(--sys-unit-10)
+		);
+		color: var(--field-fg);
+		font: var(
+			--segmented-control-font,
+			var(--sys-font-label-medium)
+		);
+		cursor: pointer;
+
+		@include focus.ring-projected;
+		@include state.layer;
+
+		outline-offset: calc(-1 * var(--sys-focus-ring-width));
+
+		@media not (prefers-reduced-motion) {
+			transition: color var(--sys-motion-short)
+				var(--sys-motion-standard);
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+		}
+	}
+
+	.indicator {
+		@include indicator.pill;
+		@include focus.ring-idle;
+
+		border-radius: var(--sys-radius-full);
+		background: var(--_segmented-control-fill);
+	}
+
+	.option[data-pressed][data-focus-visible] ~ .indicator {
+		@include focus.ring-shown;
+	}
+
+	.indicatorLabels {
+		@include indicator.ink-copy;
+
+		.group[data-orientation="vertical"] & {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.option {
+			color: var(--_segmented-control-on-fill);
+			cursor: default;
+
+			&::after {
+				content: none;
+			}
+		}
+	}
+}

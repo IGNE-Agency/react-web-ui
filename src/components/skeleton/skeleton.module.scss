@@ -1,0 +1,21 @@
+@use "../../style/layers.scss";
+@use "../../style/loading-motion.scss" as loading;
+
+@layer kit.components {
+	@include loading.pulse-keyframes;
+
+	.skeleton {
+		display: block;
+		border-radius: var(
+			--skeleton-radius,
+			var(--sys-radius-xs)
+		);
+		background-color: var(
+			--skeleton-bg,
+			var(--sys-color-surface-highest)
+		);
+		block-size: 1em;
+
+		@include loading.pulse(var(--skeleton-rest, 0.75));
+	}
+}
