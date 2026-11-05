@@ -118,6 +118,21 @@ This works the same over the kit's `tokens.css` and over a theme the preset buil
 
 The kit owns no breakpoints and no gutters; those are the app's layout.
 
+## Icons
+
+The kit renders no icons and depends on no icon set. Wherever a component shows one, it leaves a slot the app fills from its own set: a part's children, or, on a ready-made component, a prop named for the icon's job (`icon`, `closeIcon`, `expandIcon`). The slot sizes the glyph to its text and colours it, so an SVG drawn at `1em` in `currentColor` fits as is. A slot is required only where the icon is all the control shows, such as a close button's cross; anywhere else, left out, nothing renders.
+
+```tsx
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import { Select } from "@igne-agency/react-web-ui/select-field";
+
+<Select.Icon>
+	<ExpandMoreIcon />
+</Select.Icon>;
+```
+
+`Icon`, from `./icon`, sizes and labels any SVG component: `label=""` hides a glyph that stands beside its word, and a label names one that stands alone.
+
 ## Providers
 
 The kit has no catch-all provider. Wrap the app in the ones it uses:
