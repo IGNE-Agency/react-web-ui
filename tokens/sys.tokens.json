@@ -230,7 +230,7 @@
 			"text-muted": {
 				"$description": "Captions, help text and anything passive",
 				"$type": "color",
-				"$value": "{ref.neutral.400}"
+				"$value": "{ref.neutral.450}"
 			},
 			"text-placeholder": {
 				"$description": "The hint text an empty field shows",

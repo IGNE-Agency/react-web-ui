@@ -102,7 +102,7 @@
 			},
 			"text-placeholder": {
 				"$type": "color",
-				"$value": "{ref.neutral.400}"
+				"$value": "{ref.neutral.150}"
 			},
 			"text-inverse": {
 				"$type": "color",
