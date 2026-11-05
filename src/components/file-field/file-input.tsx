@@ -124,7 +124,9 @@ const FileInputTrigger = ({
 			icon={AttachIcon}
 			ref={buttonRef}
 			aria-describedby={describedBy}
-			{...fieldStateAttributes({ invalid })}
+			{...fieldStateAttributes({
+				validity: invalid === true ? "invalid" : undefined,
+			})}
 			render={<AriaButton isDisabled={disabled} />}>
 			{label}
 		</Button>

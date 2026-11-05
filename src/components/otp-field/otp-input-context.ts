@@ -1,7 +1,10 @@
 import type { OTPField as BaseOTPField } from "@base-ui/react/otp-field";
 import { type Context, createContext } from "react";
 import { useRequiredContext } from "../../lib/use-required-context.ts";
-import type { FieldState } from "../field/index.ts";
+import type {
+	FieldBlurHandler,
+	FieldState,
+} from "../field/index.ts";
 
 /** The behavioural props a caller hands `Root`, which `Group` passes on to base-ui. */
 export type OtpInputBaseProps = Pick<
@@ -14,17 +17,15 @@ export type OtpInputBaseProps = Pick<
 	| "readOnly"
 	| "name"
 	| "id"
-	| "onBlur"
->;
+> &
+	Readonly<{
+		onBlur?: FieldBlurHandler;
+	}>;
 
 /** What an OTP input's `Root` hands its parts. */
 export type OtpInputContextValue = Readonly<{
 	/** Projected by `Root`; every part reads it, none of them own it. */
 	state: FieldState;
-	/** The errors `Root` was given, which `Error` renders. */
-	errors: unknown;
-	/** The word an optional field's label trails. */
-	optionalLabel: string;
 	length: number;
 	base: OtpInputBaseProps &
 		Readonly<{

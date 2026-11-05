@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { FieldProps } from "../field/index.ts";
+import type {
+	FieldBlurHandler,
+	FieldProps,
+} from "../field/index.ts";
 import { Icon, type SvgComponent } from "../icon/index.ts";
 import {
 	TextInput,
@@ -54,10 +57,10 @@ export type TextFieldBaseProps = FieldProps &
 		| "inputMode"
 		| "enterKeyHint"
 		| "spellCheck"
-		| "onBlur"
 		| "onFocus"
 	> &
 	Readonly<{
+		onBlur?: FieldBlurHandler;
 		/** Keeps the label in the accessibility tree but out of view. */
 		labelHidden?: boolean;
 		/** Decorative leading icon inside the group. */

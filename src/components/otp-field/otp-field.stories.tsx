@@ -5,6 +5,7 @@ import {
 	expect,
 	fn,
 	userEvent,
+	waitFor,
 	type within,
 } from "storybook/test";
 import {
@@ -121,6 +122,17 @@ export const Invalid: Story = {
 	args: {
 		value: SAMPLE_CODE,
 		errors: ["This code is incorrect."],
+	},
+};
+
+export const Pending: Story = {
+	args: { value: SAMPLE_CODE, pending: true },
+	play: async ({ canvasElement }) => {
+		await waitFor(() =>
+			expect(
+				canvasElement.querySelector("svg"),
+			).not.toBeNull(),
+		);
 	},
 };
 

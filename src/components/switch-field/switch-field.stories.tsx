@@ -1,6 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
-import { expect, fn, userEvent } from "storybook/test";
+import {
+	expect,
+	fn,
+	userEvent,
+	waitFor,
+} from "storybook/test";
+import { BusyForm } from "../../lib/storybook/busy-form.tsx";
+import {
+	PENDING_TOGGLE_LABEL,
+	PendingToggle,
+	pendingOnPress,
+} from "../../lib/storybook/pending.tsx";
 import {
 	SwitchField,
 	type SwitchFieldProps,
@@ -186,6 +197,47 @@ export const Touch: Story = {
 		await expect(checkedChange).toHaveBeenCalledWith(
 			true,
 			expect.anything(),
+		);
+	},
+};
+
+const BusyFormSwitchField = (args: SwitchFieldProps) => (
+	<BusyForm>
+		<SwitchField {...args} />
+	</BusyForm>
+);
+
+export const InBusyForm: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: BusyFormSwitchField,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("switch", { name: LABEL }),
+		).toHaveAttribute("data-disabled");
+	},
+};
+
+const PendingSwitchField = (args: SwitchFieldProps) => (
+	<PendingToggle>
+		{pending => <SwitchField {...args} pending={pending} />}
+	</PendingToggle>
+);
+
+export const PendingWaits: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: PendingSwitchField,
+	play: async ({ canvas, canvasElement }) => {
+		const toggle = canvas.getByRole("button", {
+			name: PENDING_TOGGLE_LABEL,
+		});
+
+		await expect(
+			await pendingOnPress(toggle, canvasElement),
+		).toBe(false);
+		await waitFor(() =>
+			expect(
+				canvasElement.querySelector("[data-pending]"),
+			).not.toBeNull(),
 		);
 	},
 };

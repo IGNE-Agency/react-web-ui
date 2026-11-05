@@ -1,22 +1,20 @@
 import type { QueryKey } from "@tanstack/react-query";
 import {
-	type FocusEventHandler,
 	type ReactNode,
 	use,
 	useEffect,
 	useRef,
 	useState,
 } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/index.ts";
 import {
 	detachHiddenInput,
 	Field,
+	type FieldBlurHandler,
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/index.ts";
 import { Combobox } from "./combobox.tsx";
 import {
 	type ComboboxItems,
@@ -63,7 +61,7 @@ export type ComboboxFieldChrome = FieldProps &
 		/** The form field's name. */
 		name?: string;
 		/** Called when focus leaves the control. */
-		onBlur?: FocusEventHandler<HTMLDivElement>;
+		onBlur?: FieldBlurHandler;
 		/** Whether trying a failed load again can help. @default always */
 		retryable?: (error: unknown) => boolean;
 		/** Debounce before a search reaches `onSearchChange`, in ms. @default 300 */
@@ -150,12 +148,19 @@ const FieldBody = <TItem,>({
 		derivations.itemToStringLabel ?? itemKey;
 	const ids = Field.useIds();
 	const anchorRef = useRef<HTMLDivElement>(null);
-	const formDisabled = useFormDisabled();
-	const disabled = chrome.disabled === true || formDisabled;
-	const phase = useBusyPhase({ busy: pending });
-	const invalid = normalizeFieldErrors(errors).length > 0;
 	const items = itemsOf(source);
 	const load = loadOf(source, retryable);
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled: chrome.disabled,
+		readOnly,
+		filled: values.length > 0,
+	});
+	const { disabled } = field;
 	const [search, setSearch] = useState("");
 	const searchTimer = useRef<
 		ReturnType<typeof setTimeout> | undefined
@@ -179,14 +184,10 @@ const FieldBody = <TItem,>({
 	};
 
 	const fieldState: FieldState = {
-		disabled,
-		readonly: readOnly,
-		requiredness,
-		invalid,
-		dirty,
-		touched,
-		filled: values.length > 0,
-		pending: phase !== "fresh" || load.status === "pending",
+		...field.state,
+		pending:
+			field.state.pending === true ||
+			load.status === "pending",
 	};
 	const nameOf = (state: ValueState<TItem>) =>
 		valueStateName(state, itemLabel, labels);
@@ -321,7 +322,7 @@ const FieldBody = <TItem,>({
 		<Field.Root
 			className={className}
 			disabled={disabled}
-			invalid={invalid}
+			invalid={field.invalid}
 			dirty={dirty}
 			touched={touched}
 			{...fieldStateAttributes(fieldState)}>

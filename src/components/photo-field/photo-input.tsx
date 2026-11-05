@@ -9,7 +9,10 @@ import {
 	useState,
 } from "react";
 import { Button } from "../button/index.ts";
-import { fieldStateAttributes } from "../field/index.ts";
+import {
+	type FieldBlurHandler,
+	fieldStateAttributes,
+} from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
 import style from "./photo-input.module.scss";
 
@@ -66,7 +69,7 @@ export type PhotoInputProps = Readonly<{
 	/** Background work, such as an upload, is in flight. */
 	pending?: boolean;
 
-	onBlur?: () => void;
+	onBlur?: FieldBlurHandler;
 
 	/** The picked photo's alternative text, such as "Preview". */
 	previewLabel: string;
@@ -208,7 +211,7 @@ export const PhotoInput = ({
 				}}
 				data-dragover={dragOver || undefined}
 				{...fieldStateAttributes({
-					invalid,
+					validity: invalid ? "invalid" : undefined,
 					filled,
 					pending,
 				})}>

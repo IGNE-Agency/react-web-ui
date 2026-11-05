@@ -8,6 +8,12 @@ import {
 	waitFor,
 	within,
 } from "storybook/test";
+import { BusyForm } from "../../lib/storybook/busy-form.tsx";
+import {
+	PENDING_TOGGLE_LABEL,
+	PendingToggle,
+	pendingOnPress,
+} from "../../lib/storybook/pending.tsx";
 import {
 	SegmentedControlField,
 	type SegmentedControlFieldProps,
@@ -109,6 +115,57 @@ export const Filled: Story = {
 
 export const Disabled: Story = {
 	args: { value: SENT.value, disabled: true },
+};
+
+const BusyFormSegmentedControlField = (
+	args: SegmentedControlFieldProps,
+) => (
+	<BusyForm>
+		<SegmentedControlField {...args} />
+	</BusyForm>
+);
+
+export const InBusyForm: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: BusyFormSegmentedControlField,
+	play: async ({ canvas }) => {
+		await Promise.all(
+			STATUS_OPTIONS.map(({ label }) =>
+				expect(
+					canvas.getByRole("button", { name: label }),
+				).toHaveAttribute("data-disabled"),
+			),
+		);
+	},
+};
+
+const PendingSegmentedControlField = (
+	args: SegmentedControlFieldProps,
+) => (
+	<PendingToggle>
+		{pending => (
+			<SegmentedControlField {...args} pending={pending} />
+		)}
+	</PendingToggle>
+);
+
+export const PendingWaits: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: PendingSegmentedControlField,
+	play: async ({ canvas, canvasElement }) => {
+		const toggle = canvas.getByRole("button", {
+			name: PENDING_TOGGLE_LABEL,
+		});
+
+		await expect(
+			await pendingOnPress(toggle, canvasElement),
+		).toBe(false);
+		await waitFor(() =>
+			expect(
+				canvasElement.querySelector("[data-pending]"),
+			).not.toBeNull(),
+		);
+	},
 };
 
 export const DisabledOption: Story = {

@@ -6,13 +6,16 @@ const flagged = "";
  */
 export type Requiredness = "required" | "optional";
 
+/** What the validator says of a field's value. */
+export type FieldValidity = "valid" | "invalid";
+
 /** The states a form control projects onto its markup. */
 export type FieldState = Readonly<{
 	disabled?: boolean;
 	readonly?: boolean;
 	requiredness?: Requiredness;
-	invalid?: boolean;
-	valid?: boolean;
+	/** Absent while the validator has said nothing. */
+	validity?: FieldValidity;
 	dirty?: boolean;
 	touched?: boolean;
 	filled?: boolean;
@@ -48,7 +51,7 @@ export type FieldStateAttributes = Readonly<{
  * anything else is left out.
  *
  * @example
- * <div {...fieldStateAttributes({ invalid: true, disabled: false })} />
+ * <div {...fieldStateAttributes({ validity: "invalid", disabled: false })} />
  * // <div data-invalid="" />
  */
 export const fieldStateAttributes = (
@@ -66,10 +69,12 @@ export const fieldStateAttributes = (
 	...(state.requiredness === "optional" && {
 		"data-optional": flagged,
 	}),
-	...(state.invalid === true && {
+	...(state.validity === "invalid" && {
 		"data-invalid": flagged,
 	}),
-	...(state.valid === true && { "data-valid": flagged }),
+	...(state.validity === "valid" && {
+		"data-valid": flagged,
+	}),
 	...(state.dirty === true && { "data-dirty": flagged }),
 	...(state.touched === true && {
 		"data-touched": flagged,

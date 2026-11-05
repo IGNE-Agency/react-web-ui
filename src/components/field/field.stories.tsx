@@ -48,7 +48,8 @@ const textFieldOf =
 				required={requiredness === "required"}
 				{...fieldStateAttributes({
 					requiredness,
-					invalid: errors !== undefined,
+					validity:
+						errors === undefined ? undefined : "invalid",
 					disabled: args.disabled,
 				})}
 			/>

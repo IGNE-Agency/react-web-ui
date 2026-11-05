@@ -12,6 +12,7 @@ import {
 	FieldsetRoot,
 	type FieldsetRootProps,
 } from "../field/fieldset.tsx";
+import { useFormDisabled } from "../form/form-context.ts";
 import style from "./toggle-group.module.scss";
 
 export type ToggleGroupRootProps = FieldsetRootProps;
@@ -31,21 +32,28 @@ const ToggleGroupGroup = ({
 	className,
 	readOnly,
 	invalid,
+	disabled = false,
 	onValueChange,
 	children,
 	...props
-}: ToggleGroupGroupProps): ReactNode => (
-	<BaseToggleGroup
-		multiple
-		className={clsx(style.group, className)}
-		onValueChange={
-			readOnly === true ? undefined : onValueChange
-		}
-		{...fieldStateAttributes({ invalid })}
-		{...props}>
-		{children}
-	</BaseToggleGroup>
-);
+}: ToggleGroupGroupProps): ReactNode => {
+	const formDisabled = useFormDisabled();
+	return (
+		<BaseToggleGroup
+			multiple
+			className={clsx(style.group, className)}
+			onValueChange={
+				readOnly === true ? undefined : onValueChange
+			}
+			disabled={disabled || formDisabled}
+			{...fieldStateAttributes({
+				validity: invalid === true ? "invalid" : undefined,
+			})}
+			{...props}>
+			{children}
+		</BaseToggleGroup>
+	);
+};
 
 export type ToggleGroupOptionProps = BaseToggle.Props &
 	Readonly<{

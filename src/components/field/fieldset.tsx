@@ -1,6 +1,5 @@
 import { Fieldset as BaseFieldset } from "@base-ui/react/fieldset";
 import type { ReactNode } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import {
 	Field,
 	type FieldLabelProps,
@@ -8,6 +7,7 @@ import {
 	type FieldRootProps,
 } from "./field.tsx";
 import { fieldStateAttributes } from "./field-state.ts";
+import { useFieldState } from "./use-field-state.ts";
 
 /** What the fieldset root of a group of choices takes. */
 export type FieldsetRootProps = FieldRootProps &
@@ -42,24 +42,24 @@ export const FieldsetRoot = ({
 	disabled,
 	...props
 }: FieldsetRootProps): ReactNode => {
-	const invalid = normalizeFieldErrors(errors).length > 0;
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled,
+	});
 	return (
 		<Field.Root
 			render={<BaseFieldset.Root />}
-			disabled={disabled}
-			invalid={invalid}
+			disabled={field.disabled}
+			invalid={field.invalid}
 			dirty={dirty}
 			touched={touched}
-			{...fieldStateAttributes({
-				disabled,
-				readonly: readOnly,
-				requiredness,
-				invalid,
-				dirty,
-				touched,
-				pending,
-				filled,
-			})}
+			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>
 	);

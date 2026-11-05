@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import {
 	Field,
 	type FieldProps,
 	useFieldIds,
+	useFieldState,
 } from "../field/index.ts";
 import {
 	PhotoInput,
@@ -56,7 +56,15 @@ export const PhotoField = ({
 }: PhotoFieldProps): ReactNode => {
 	const ids = useFieldIds();
 	const { labelId, descriptionId, errorId } = ids;
-	const invalid = normalizeFieldErrors(errors).length > 0;
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		readOnly,
+	});
+	const { invalid } = field;
 
 	return (
 		<Field.Root
@@ -81,7 +89,7 @@ export const PhotoField = ({
 				)}
 				readOnly={readOnly}
 				invalid={invalid}
-				pending={pending}
+				pending={field.state.pending}
 			/>
 			<Field.Description id={descriptionId}>
 				{description}

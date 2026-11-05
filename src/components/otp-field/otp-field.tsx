@@ -37,6 +37,7 @@ export const OtpField = ({
 		<OtpInput.Label>{label}</OtpInput.Label>
 		<OtpInput.Group>
 			<OtpInput.Slots slotLabel={slotLabel} />
+			<OtpInput.Pending />
 		</OtpInput.Group>
 		<OtpInput.Description>
 			{description}

@@ -3,27 +3,29 @@ import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/index.ts";
 import { Button } from "../button/index.ts";
 import {
 	detachHiddenInput,
 	Field,
-	type FieldErrorProps,
-	type FieldLabelProps,
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
 	focusControlOnRim,
 	useFieldFocus,
+	useFieldState,
 	withFieldFocus,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/form-context.ts";
-import { useLocale } from "../locale-provider/index.ts";
 import {
-	NumberInputContext,
-	useNumberInputContext,
-} from "./number-input-context.ts";
+	InputError,
+	type InputErrorProps,
+	InputLabel,
+	type InputLabelProps,
+	InputPartsContext,
+	InputPending,
+	type InputPendingProps,
+	useInputPartsContext,
+} from "../field/input-parts.tsx";
+import { useLocale } from "../locale-provider/index.ts";
 import style from "./number-field.module.scss";
 
 export type NumberInputRootProps = Omit<
@@ -71,37 +73,33 @@ const NumberInputRoot = ({
 }: NumberInputRootProps): ReactNode => {
 	const ids = Field.useIds();
 	const locale = useLocale();
-	const phase = useBusyPhase({ busy: pending });
-	const formDisabled = useFormDisabled();
-	const invalid = normalizeFieldErrors(errors).length > 0;
-
-	const fieldState: FieldState = {
-		disabled: disabled === true || formDisabled,
-		readonly: readOnly,
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
 		dirty,
 		touched,
+		pending,
+		disabled,
+		readOnly,
 		filled: value !== null,
-		pending: phase !== "fresh",
-		...state,
-	};
+		state,
+	});
 
 	return (
-		<NumberInputContext
+		<InputPartsContext
 			value={{
-				state: fieldState,
+				state: field.state,
 				errors,
 				optionalLabel,
-				phase,
+				phase: field.phase,
 			}}>
 			<Field.Root
-				disabled={disabled}
-				invalid={invalid}
+				disabled={field.disabled}
+				invalid={field.invalid}
 				dirty={dirty}
 				touched={touched}
 				className={clsx(style.root, className)}
-				{...fieldStateAttributes(fieldState)}>
+				{...fieldStateAttributes(field.state)}>
 				<BaseNumberField.Root
 					value={value}
 					onValueChange={onValueChange}
@@ -110,7 +108,7 @@ const NumberInputRoot = ({
 					min={min}
 					max={max}
 					step={step}
-					disabled={disabled}
+					disabled={field.disabled}
 					readOnly={readOnly}
 					required={requiredness === "required"}
 					name={name ?? ids.controlId}
@@ -120,29 +118,11 @@ const NumberInputRoot = ({
 					{children}
 				</BaseNumberField.Root>
 			</Field.Root>
-		</NumberInputContext>
+		</InputPartsContext>
 	);
 };
 
-export type NumberInputLabelProps = Omit<
-	FieldLabelProps,
-	"requiredness" | "optionalLabel"
->;
-
-const NumberInputLabel = ({
-	children,
-	...props
-}: NumberInputLabelProps): ReactNode => {
-	const { state, optionalLabel } = useNumberInputContext();
-	return (
-		<Field.Label
-			requiredness={state.requiredness}
-			optionalLabel={optionalLabel}
-			{...props}>
-			{children}
-		</Field.Label>
-	);
-};
+export type NumberInputLabelProps = InputLabelProps;
 
 export type NumberInputGroupProps = Omit<
 	BaseNumberField.Group.Props,
@@ -155,7 +135,7 @@ const NumberInputGroup = ({
 	children,
 	...props
 }: NumberInputGroupProps): ReactNode => {
-	const { state } = useNumberInputContext();
+	const { state } = useInputPartsContext();
 	const focus = useFieldFocus(props);
 	return (
 		<BaseNumberField.Group
@@ -244,45 +224,23 @@ const NumberInputIncrement = ({
 	/>
 );
 
-export type NumberInputPendingProps = Readonly<{
-	className?: string;
-}>;
+export type NumberInputPendingProps = InputPendingProps;
 
-const NumberInputPending = ({
-	className,
-}: NumberInputPendingProps): ReactNode => {
-	const { phase } = useNumberInputContext();
-	if (phase === "fresh") {
-		return null;
-	}
-	return <Field.Pending className={className} />;
-};
-
-export type NumberInputErrorProps = Omit<
-	FieldErrorProps,
-	"children"
->;
-
-const NumberInputError = (
-	props: NumberInputErrorProps,
-): ReactNode => {
-	const { errors } = useNumberInputContext();
-	return <Field.Error {...props}>{errors}</Field.Error>;
-};
+export type NumberInputErrorProps = InputErrorProps;
 
 /** The parts of a number input. */
 export type NumberInputParts = Readonly<{
 	Root: typeof NumberInputRoot;
-	Label: typeof NumberInputLabel;
+	Label: typeof InputLabel;
 	Group: typeof NumberInputGroup;
 	Inlay: typeof NumberInputInlay;
 	Affix: typeof NumberInputAffix;
 	Input: typeof NumberInputInput;
 	Decrement: typeof NumberInputDecrement;
 	Increment: typeof NumberInputIncrement;
-	Pending: typeof NumberInputPending;
+	Pending: typeof InputPending;
 	Description: typeof Field.Description;
-	Error: typeof NumberInputError;
+	Error: typeof InputError;
 }>;
 
 /**
@@ -305,14 +263,14 @@ export type NumberInputParts = Readonly<{
  */
 export const NumberInput: NumberInputParts = {
 	Root: NumberInputRoot,
-	Label: NumberInputLabel,
+	Label: InputLabel,
 	Group: NumberInputGroup,
 	Inlay: NumberInputInlay,
 	Affix: NumberInputAffix,
 	Input: NumberInputInput,
 	Decrement: NumberInputDecrement,
 	Increment: NumberInputIncrement,
-	Pending: NumberInputPending,
+	Pending: InputPending,
 	Description: Field.Description,
-	Error: NumberInputError,
+	Error: InputError,
 };

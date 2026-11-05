@@ -5,6 +5,7 @@ import {
 	fieldStateAttributes,
 	useFieldFocus,
 } from "../field/index.ts";
+import { useFormDisabled } from "../form/form-context.ts";
 import { CheckboxGlyph } from "./checkbox-glyph.tsx";
 import style from "./checkbox.module.scss";
 
@@ -23,13 +24,16 @@ export type CheckboxProps = BaseCheckbox.Root.Props;
 export const Checkbox = ({
 	className,
 	indeterminate,
+	disabled = false,
 	...props
 }: CheckboxProps): ReactNode => {
 	const focus = useFieldFocus(props);
+	const formDisabled = useFormDisabled();
 	return (
 		<BaseCheckbox.Root
 			className={clsx(style.control, className)}
 			indeterminate={indeterminate}
+			disabled={disabled || formDisabled}
 			{...fieldStateAttributes(focus)}
 			{...props}
 			{...focus.props}>

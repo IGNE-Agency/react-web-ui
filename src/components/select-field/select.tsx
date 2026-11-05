@@ -85,7 +85,9 @@ const SelectTrigger = ({
 	const focus = useFieldFocus(props);
 	return (
 		<BaseSelect.Trigger
-			aria-invalid={state.invalid === true || undefined}
+			aria-invalid={
+				state.validity === "invalid" || undefined
+			}
 			className={clsx(style.trigger, className)}
 			{...fieldStateAttributes(
 				withFieldFocus(state, focus),

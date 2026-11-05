@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { FieldProps } from "../field/index.ts";
+import type {
+	FieldBlurHandler,
+	FieldProps,
+} from "../field/index.ts";
 import {
 	NumberInput,
 	type NumberInputInputProps,
@@ -16,10 +19,10 @@ export type NumberFieldProps = FieldProps &
 		| "placeholder"
 		| "autoComplete"
 		| "enterKeyHint"
-		| "onBlur"
 		| "onFocus"
 	> &
 	Readonly<{
+		onBlur?: FieldBlurHandler;
 		/** Static leading text, such as a currency sign. */
 		prefix?: ReactNode;
 		/** Static trailing text, such as a unit. */

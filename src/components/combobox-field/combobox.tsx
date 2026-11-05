@@ -144,7 +144,9 @@ const ComboboxControl = ({
 			)}
 			<BaseCombobox.Trigger
 				data-combobox-trigger=""
-				aria-invalid={state.invalid === true || undefined}
+				aria-invalid={
+					state.validity === "invalid" || undefined
+				}
 				aria-busy={busy}
 				className={style.trigger}
 				onKeyDown={event => {

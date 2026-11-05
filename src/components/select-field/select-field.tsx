@@ -1,16 +1,15 @@
 import { type ReactNode, useRef } from "react";
-import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import {
 	detachHiddenInput,
 	Field,
+	type FieldBlurHandler,
 	type FieldProps,
 	type FieldState,
 	OPTIONS_LOADED,
 	type OptionsLoad,
 	type OptionsLoadLabels,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/index.ts";
 import { Select, type SelectRootProps } from "./select.tsx";
 import style from "./select.module.scss";
 
@@ -24,7 +23,7 @@ export type SelectFieldProps<T extends string> =
 			/** How far the options have loaded, when they come from a query. */
 			load?: OptionsLoad;
 			/** Called once focus has left the field, its popup included. */
-			onBlur?: () => void;
+			onBlur?: FieldBlurHandler;
 			/** Applied to the trigger, so callers can size the control. */
 			className?: string;
 		}>;
@@ -70,57 +69,66 @@ export const SelectField = <T extends string>({
 	...rootProps
 }: SelectFieldProps<T>): ReactNode => {
 	const ids = Select.useIds();
-	const messages = normalizeFieldErrors(errors);
-	const invalid = messages.length > 0;
-	const formDisabled = useFormDisabled();
-	const phase = useBusyPhase({ busy: pending });
 	const open = useRef(false);
 	const focused = useRef(false);
-	const disabled =
-		rootProps.disabled === true || formDisabled;
-
-	const fieldState: FieldState = {
-		disabled,
-		readonly: rootProps.readOnly,
+	const inside = useRef(false);
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
 		dirty,
 		touched,
-		pending: phase !== "fresh" || load.status === "pending",
+		pending,
+		disabled: rootProps.disabled,
+		readOnly: rootProps.readOnly,
 		filled:
 			rootProps.value !== undefined &&
 			rootProps.value !== null &&
 			rootProps.value !== "",
+	});
+	const fieldState: FieldState = {
+		...field.state,
+		pending:
+			field.state.pending === true ||
+			load.status === "pending",
 	};
 	const describedBy = ids.describedBy(
 		description !== undefined,
-		invalid,
+		field.invalid,
 	);
+	const leave = () => {
+		if (
+			inside.current &&
+			!open.current &&
+			!focused.current
+		) {
+			inside.current = false;
+			onBlur?.();
+		}
+	};
 
 	return (
 		<Field.Root
 			className={style.field}
-			invalid={invalid}
+			invalid={field.invalid}
 			dirty={dirty}
 			touched={touched}>
 			<Select.Root<T>
 				name={ids.controlId}
 				inputRef={detachHiddenInput}
 				{...rootProps}
-				disabled={disabled}
+				disabled={field.disabled}
 				required={requiredness === "required"}
 				onOpenChange={(next, details) => {
 					open.current = next;
+					if (next) {
+						inside.current = true;
+					}
 					onOpenChange?.(next, details);
 				}}
 				onOpenChangeComplete={next => {
 					onOpenChangeComplete?.(next);
 					if (!next) {
-						requestAnimationFrame(() => {
-							if (!open.current && !focused.current) {
-								onBlur?.();
-							}
-						});
+						requestAnimationFrame(leave);
 					}
 				}}>
 				<Select.Label>
@@ -143,12 +151,11 @@ export const SelectField = <T extends string>({
 					aria-describedby={describedBy}
 					onFocus={() => {
 						focused.current = true;
+						inside.current = true;
 					}}
 					onBlur={() => {
 						focused.current = false;
-						if (!open.current) {
-							onBlur?.();
-						}
+						leave();
 					}}
 				/>
 			</Select.Root>
@@ -156,9 +163,7 @@ export const SelectField = <T extends string>({
 			<Select.Description id={ids.descriptionId}>
 				{description}
 			</Select.Description>
-			<Select.Error id={ids.errorId}>
-				{messages}
-			</Select.Error>
+			<Select.Error id={ids.errorId}>{errors}</Select.Error>
 		</Field.Root>
 	);
 };
