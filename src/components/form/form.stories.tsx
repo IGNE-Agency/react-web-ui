@@ -1,4 +1,18 @@
+import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
+import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
+import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { revalidateLogic } from "@tanstack/react-form";
 import {
 	expect,
@@ -118,6 +132,7 @@ const ExampleForm = (props: ExampleFormProps) => {
 						label={EMAIL_LABEL}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
+						icon={<Icon svg={MailIcon} label="" />}
 					/>
 				)}
 			</form.AppField>
@@ -139,6 +154,12 @@ const ExampleForm = (props: ExampleFormProps) => {
 						optionalLabel={OPTIONAL_LABEL}
 						showPasswordLabel={SHOW_PASSWORD_LABEL}
 						hidePasswordLabel={HIDE_PASSWORD_LABEL}
+						showPasswordIcon={
+							<Icon svg={VisibilityIcon} label="" />
+						}
+						hidePasswordIcon={
+							<Icon svg={VisibilityOffIcon} label="" />
+						}
 						autoComplete="new-password"
 					/>
 				)}
@@ -159,6 +180,8 @@ const ExampleForm = (props: ExampleFormProps) => {
 						requiredness="optional"
 						optionalLabel={OPTIONAL_LABEL}
 						clearLabel={CLEAR_LABEL}
+						clearIcon={<Icon svg={CloseIcon} label="" />}
+						icon={<Icon svg={SearchIcon} label="" />}
 					/>
 				)}
 			</form.AppField>
@@ -170,6 +193,10 @@ const ExampleForm = (props: ExampleFormProps) => {
 						optionalLabel={OPTIONAL_LABEL}
 						decrementLabel={DECREMENT_LABEL}
 						incrementLabel={INCREMENT_LABEL}
+						decrementIcon={
+							<Icon svg={RemoveIcon} label="" />
+						}
+						incrementIcon={<Icon svg={AddIcon} label="" />}
 						roleDescription={NUMBER_ROLE}
 						min={0}
 					/>
@@ -820,6 +847,13 @@ const CALENDAR_COPY = {
 	noMatchingYearLabel: "No matching year.",
 };
 
+const CALENDAR_ICONS = {
+	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
+};
+
 const FILE_COPY = {
 	dropTargetLabel: "Drop zone for attachments",
 	dropHint: "Drag files here",
@@ -897,7 +931,11 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 						label={TREATED_ON_LABEL}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
+						openCalendarIcon={
+							<Icon svg={CalendarTodayIcon} label="" />
+						}
 						{...CALENDAR_COPY}
+						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>
@@ -908,7 +946,11 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 						visibleMonths={2}
+						openCalendarIcon={
+							<Icon svg={DateRangeIcon} label="" />
+						}
 						{...CALENDAR_COPY}
+						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>

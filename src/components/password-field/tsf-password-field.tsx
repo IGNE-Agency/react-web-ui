@@ -21,7 +21,7 @@ export type TSFPasswordFieldProps = Omit<
  *
  * @example
  * <form.AppField name="password">
- * 	{field => <field.PasswordField label="Password" optionalLabel="optional" showPasswordLabel="Show password" hidePasswordLabel="Hide password" />}
+ * 	{field => <field.PasswordField label="Password" optionalLabel="optional" showPasswordLabel="Show password" hidePasswordLabel="Hide password" showPasswordIcon={<VisibilityIcon />} hidePasswordIcon={<VisibilityOffIcon />} />}
  * </form.AppField>
  */
 export const TSFPasswordField = (

@@ -346,9 +346,9 @@ export type FieldIds = Readonly<{
  * wire `aria-labelledby` and `aria-describedby` themselves.
  *
  * @example
- * const { labelId, errorId } = useFieldIds();
+ * const { labelId, errorId } = Field.useIds();
  */
-export const useFieldIds = (): FieldIds => {
+const useFieldIds = (): FieldIds => {
 	const id = useId();
 	const groupLineIds = useFieldGroupLineIds();
 	const descriptionId = `${id}description`;

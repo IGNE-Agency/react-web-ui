@@ -1,4 +1,10 @@
+import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import {
 	expect,
 	fn,
@@ -57,6 +63,13 @@ const meta = {
 		label: "Appointment date",
 		optionalLabel: "optional",
 		openCalendarLabel: OPEN_CALENDAR,
+		openCalendarIcon: (
+			<Icon svg={CalendarTodayIcon} label="" />
+		),
+		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
+		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 		previousMonthLabel: "Previous month",
 		nextMonthLabel: NEXT_MONTH,
 		monthLabel: "Month",

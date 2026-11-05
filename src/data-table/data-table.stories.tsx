@@ -1,4 +1,7 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../components/icon/index.ts";
 import {
 	QueryClient,
 	queryOptions,
@@ -412,6 +415,8 @@ const DataViewTable = ({
 				<FilterBar.Search
 					label="Search by client"
 					clearLabel="Clear search"
+					clearIcon={<Icon svg={CloseIcon} label="" />}
+					icon={<Icon svg={SearchIcon} label="" />}
 					optionalLabel="optional"
 				/>
 				<FilterBar.Drawer

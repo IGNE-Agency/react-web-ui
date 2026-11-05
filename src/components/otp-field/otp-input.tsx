@@ -46,6 +46,13 @@ export type OtpInputRootProps = Omit<
 		children?: ReactNode;
 	}>;
 
+/**
+ * The field frame around an OTP input, holding its value and length and
+ * projecting its state onto every part.
+ *
+ * @example
+ * <OtpInput.Root value={code} onValueChange={setCode} optionalLabel="optional">…</OtpInput.Root>
+ */
 const OtpInputRoot = ({
 	length = DEFAULT_LENGTH,
 	requiredness,
@@ -116,6 +123,12 @@ export type OtpInputGroupProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/**
+ * The row of character slots, bound to `Root`'s value.
+ *
+ * @example
+ * <OtpInput.Group><OtpInput.Slots slotLabel={slotLabel} /></OtpInput.Group>
+ */
 const OtpInputGroup = ({
 	className,
 	...props
@@ -137,6 +150,12 @@ export type OtpInputInputProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/**
+ * One character slot.
+ *
+ * @example
+ * <OtpInput.Input aria-label="character 2 of 6" />
+ */
 const OtpInputInput = ({
 	className,
 	...props
@@ -161,6 +180,12 @@ export type OtpInputSeparatorProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/**
+ * A divider between groups of slots.
+ *
+ * @example
+ * <OtpInput.Separator />
+ */
 const OtpInputSeparator = ({
 	className,
 	...props

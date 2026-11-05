@@ -1,5 +1,9 @@
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Button } from "../../src/components/button/index.ts";
@@ -43,6 +47,16 @@ export const dateLabels = {
 	monthLabel: "Month",
 	yearLabel: "Year",
 	noMatchingYearLabel: "No matching year.",
+};
+
+export const dateIcons = {
+	openCalendarIcon: (
+		<Icon svg={CalendarTodayIcon} label="" />
+	),
+	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 };
 
 <Meta title="Design system/Patterns" />
@@ -236,6 +250,7 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 					<div className={componentStyles.card}>
 						<DateField
 							{...dateLabels}
+							{...dateIcons}
 							label="Treatment date"
 							defaultValue="2026-10-02"
 						/>
@@ -485,6 +500,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 						/>
 						<DateField
 							{...dateLabels}
+							{...dateIcons}
 							label="Treatment date"
 							defaultValue="2026-10-02"
 							readOnly
@@ -646,6 +662,7 @@ A field's height comes from the field, never from its parts. The group has a flo
 							onValueChange={ignore}
 							clearable
 							clearLabel="Clear"
+							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 						<TextField
 							optionalLabel="optional"
@@ -654,6 +671,7 @@ A field's height comes from the field, never from its parts. The group has a flo
 							onValueChange={ignore}
 							clearable
 							clearLabel="Clear"
+							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -820,6 +838,7 @@ Invalid reaches the field's ink, not its buttons. The field's ink is set once, a
 							errors={["An amount can't be negative."]}
 							clearable
 							clearLabel="Clear"
+							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -1743,7 +1762,9 @@ The clear affordance, a password reveal, a calendar trigger and a copy-to-clipbo
 <TextInput.Group>
 	<TextInput.Affix>{"€"}</TextInput.Affix>
 	<TextInput.Input inputMode="decimal" />
-	<TextInput.Clear />
+	<TextInput.Clear label={clearLabel}>
+		<CloseIcon />
+	</TextInput.Clear>
 </TextInput.Group>
 ```
 

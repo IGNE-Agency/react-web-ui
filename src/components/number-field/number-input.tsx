@@ -1,5 +1,3 @@
-import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
@@ -50,6 +48,13 @@ export type NumberInputRootProps = Omit<
 		children?: ReactNode;
 	}>;
 
+/**
+ * The field frame around a number input, holding its value, format and bounds
+ * and projecting its state onto every part.
+ *
+ * @example
+ * <NumberInput.Root value={hours} onValueChange={setHours} optionalLabel="optional">…</NumberInput.Root>
+ */
 const NumberInputRoot = ({
 	value,
 	onValueChange,
@@ -130,6 +135,12 @@ export type NumberInputGroupProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/**
+ * The bordered box holding the control, its stepper buttons and its inlays.
+ *
+ * @example
+ * <NumberInput.Group><NumberInput.Input /></NumberInput.Group>
+ */
 const NumberInputGroup = ({
 	className,
 	children,
@@ -151,6 +162,12 @@ const NumberInputGroup = ({
 	);
 };
 
+/**
+ * A slot beside the control inside the group, such as an icon.
+ *
+ * @example
+ * <NumberInput.Inlay aria-hidden="true"><EuroIcon /></NumberInput.Inlay>
+ */
 const NumberInputInlay = ({
 	className,
 	...props
@@ -161,6 +178,12 @@ const NumberInputInlay = ({
 	/>
 );
 
+/**
+ * Static text beside the control, such as a unit. Decoration only.
+ *
+ * @example
+ * <NumberInput.Affix>kg</NumberInput.Affix>
+ */
 const NumberInputAffix = ({
 	className,
 	...props
@@ -178,6 +201,12 @@ export type NumberInputInputProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/**
+ * The bare control, formatting and parsing `Root`'s value.
+ *
+ * @example
+ * <NumberInput.Input aria-roledescription="Number field" />
+ */
 const NumberInputInput = ({
 	className,
 	...props
@@ -192,15 +221,24 @@ export type NumberInputStepProps = Readonly<{
 	/** Accessible name and tooltip hint, such as "Increase". */
 	label: string;
 	className?: string;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
+/**
+ * The icon-only button that steps the value down.
+ *
+ * @example
+ * <NumberInput.Decrement label="Decrease"><RemoveIcon /></NumberInput.Decrement>
+ */
 const NumberInputDecrement = ({
 	label,
 	className,
+	children,
 }: NumberInputStepProps): ReactNode => (
 	<Button
 		iconOnly
-		icon={RemoveIcon}
+		icon={children}
 		label={label}
 		variant="tertiary"
 		size="sm"
@@ -209,13 +247,20 @@ const NumberInputDecrement = ({
 	/>
 );
 
+/**
+ * The icon-only button that steps the value up.
+ *
+ * @example
+ * <NumberInput.Increment label="Increase"><AddIcon /></NumberInput.Increment>
+ */
 const NumberInputIncrement = ({
 	label,
 	className,
+	children,
 }: NumberInputStepProps): ReactNode => (
 	<Button
 		iconOnly
-		icon={AddIcon}
+		icon={children}
 		label={label}
 		variant="tertiary"
 		size="sm"
@@ -254,9 +299,13 @@ export type NumberInputParts = Readonly<{
  * <NumberInput.Root value={hours} onValueChange={setHours} optionalLabel="optional">
  * 	<NumberInput.Label>Hours</NumberInput.Label>
  * 	<NumberInput.Group>
- * 		<NumberInput.Decrement label="Decrease" />
+ * 		<NumberInput.Decrement label="Decrease">
+ * 			<RemoveIcon />
+ * 		</NumberInput.Decrement>
  * 		<NumberInput.Input aria-roledescription="Number field" />
- * 		<NumberInput.Increment label="Increase" />
+ * 		<NumberInput.Increment label="Increase">
+ * 			<AddIcon />
+ * 		</NumberInput.Increment>
  * 	</NumberInput.Group>
  * 	<NumberInput.Error />
  * </NumberInput.Root>

@@ -1,4 +1,7 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -51,6 +54,7 @@ const meta = {
 	args: {
 		label: LABEL,
 		optionalLabel: OPTIONAL_LABEL,
+		icon: <Icon svg={MailIcon} label="" />,
 		value: "",
 		onValueChange: fn(),
 	},
@@ -109,6 +113,7 @@ export const Clearable: Story = {
 		value: VALID,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 

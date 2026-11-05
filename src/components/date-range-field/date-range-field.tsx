@@ -1,5 +1,8 @@
 import { type ReactNode, useRef } from "react";
-import type { CalendarLabels } from "../../lib/calendar/temporal.tsx";
+import type {
+	CalendarIcons,
+	CalendarLabels,
+} from "../../lib/calendar/temporal.tsx";
 import {
 	dayRangeToIso,
 	type IsoDateRange,
@@ -16,9 +19,13 @@ import { DateRangeInput } from "./date-range-input.tsx";
 
 export type DateRangeFieldProps = FieldProps &
 	CalendarLabels &
+	CalendarIcons &
 	Readonly<{
 		/** Accessible name of the button that opens the calendar, such as "Open calendar". */
 		openCalendarLabel: string;
+
+		/** The icon of the button that opens the calendar. */
+		openCalendarIcon: ReactNode;
 
 		/**
 		 * Inclusive ISO plain dates, such as `{ start: "2026-07-01", end: "2026-07-31" }`.
@@ -70,7 +77,9 @@ export type DateRangeFieldProps = FieldProps &
  * 	label="Declaration period"
  * 	optionalLabel="optional"
  * 	openCalendarLabel="Open calendar"
+ * 	openCalendarIcon={<DateRangeIcon />}
  * 	{...calendarLabels}
+ * 	{...calendarIcons}
  * 	visibleMonths={narrow ? 1 : 2}
  * 	value={period}
  * 	onValueChange={setPeriod}
@@ -91,6 +100,11 @@ export const DateRangeField = ({
 	monthLabel,
 	yearLabel,
 	noMatchingYearLabel,
+	openCalendarIcon,
+	previousIcon,
+	nextIcon,
+	checkIcon,
+	expandIcon,
 	value,
 	defaultValue,
 	onValueChange,
@@ -172,8 +186,9 @@ export const DateRangeField = ({
 								)}
 								<DateRangeInput.Trigger
 									label={openCalendarLabel}
-									ref={triggerRef}
-								/>
+									ref={triggerRef}>
+									{openCalendarIcon}
+								</DateRangeInput.Trigger>
 							</DateRangeInput.Group>
 							<DateRangeInput.Popup triggerRef={triggerRef}>
 								<DateRangeInput.Calendar
@@ -183,6 +198,10 @@ export const DateRangeField = ({
 									monthLabel={monthLabel}
 									yearLabel={yearLabel}
 									noMatchingYearLabel={noMatchingYearLabel}
+									previousIcon={previousIcon}
+									nextIcon={nextIcon}
+									checkIcon={checkIcon}
+									expandIcon={expandIcon}
 								/>
 							</DateRangeInput.Popup>
 						</>

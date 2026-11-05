@@ -1,5 +1,3 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import {
@@ -10,9 +8,9 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { Icon } from "../../components/icon/index.ts";
 import { useLocale } from "../../components/locale-provider/index.ts";
 import { usePopupEdgePadding } from "../popup-edge-padding.ts";
+import type { CalendarNavigationIcons } from "./calendar-navigation.tsx";
 import {
 	type CalendarNavigationState,
 	eraYears,
@@ -42,15 +40,16 @@ const useYearRows = (
 	};
 };
 
-export type CalendarYearProps = Readonly<{
-	state: CalendarNavigationState;
-	/** Holds the popup, so it stays inside the calendar's own popover. */
-	container: RefObject<HTMLDivElement | null>;
-	/** Accessible name of the year input, such as "Year". */
-	label: string;
-	/** What the list says when no year matches the typed text. */
-	noMatchLabel: string;
-}>;
+export type CalendarYearProps = CalendarNavigationIcons &
+	Readonly<{
+		state: CalendarNavigationState;
+		/** Holds the popup, so it stays inside the calendar's own popover. */
+		container: RefObject<HTMLDivElement | null>;
+		/** Accessible name of the year input, such as "Year". */
+		label: string;
+		/** What the list says when no year matches the typed text. */
+		noMatchLabel: string;
+	}>;
 
 /**
  * The year control in a calendar header: every year in the focused date's era,
@@ -58,13 +57,15 @@ export type CalendarYearProps = Readonly<{
  * and filtered by typing.
  *
  * @example
- * <CalendarYear state={state} container={containerRef} label="Year" noMatchLabel="No matching year." />
+ * <CalendarYear state={state} container={containerRef} label="Year" noMatchLabel="No matching year." checkIcon={<CheckIcon />} />
  */
 export const CalendarYear = ({
 	state,
 	container,
 	label,
 	noMatchLabel,
+	checkIcon,
+	expandIcon,
 }: CalendarYearProps): ReactNode => {
 	const locale = useLocale();
 	const { ref, collisionPadding } = usePopupEdgePadding();
@@ -143,16 +144,18 @@ export const CalendarYear = ({
 					className={style.navInput}
 					onFocus={event => event.currentTarget.select()}
 				/>
-				<BaseCombobox.Icon
-					className={style.navChevron}
-					onMouseDown={event => {
-						event.preventDefault();
-						event.stopPropagation();
-						inputRef.current?.focus();
-						setOpen(!open);
-					}}>
-					<Icon svg={ExpandMoreIcon} label="" />
-				</BaseCombobox.Icon>
+				{expandIcon !== undefined && (
+					<BaseCombobox.Icon
+						className={style.navChevron}
+						onMouseDown={event => {
+							event.preventDefault();
+							event.stopPropagation();
+							inputRef.current?.focus();
+							setOpen(!open);
+						}}>
+						{expandIcon}
+					</BaseCombobox.Icon>
+				)}
 			</BaseCombobox.InputGroup>
 
 			<BaseCombobox.Portal
@@ -195,10 +198,7 @@ export const CalendarYear = ({
 													className={style.yearIndicator}
 													aria-hidden="true">
 													<BaseCombobox.ItemIndicator>
-														<Icon
-															svg={CheckIcon}
-															label=""
-														/>
+														{checkIcon}
 													</BaseCombobox.ItemIndicator>
 												</span>
 												<span className={style.yearValue}>

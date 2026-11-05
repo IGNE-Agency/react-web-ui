@@ -3,7 +3,6 @@ import type {
 	FieldBlurHandler,
 	FieldProps,
 } from "../field/index.ts";
-import { Icon, type SvgComponent } from "../icon/index.ts";
 import {
 	TextInput,
 	type TextInputInputProps,
@@ -16,12 +15,15 @@ export type TextFieldClearProps =
 	| Readonly<{
 			clearable?: false;
 			clearLabel?: undefined;
+			clearIcon?: undefined;
 	  }>
 	| Readonly<{
 			/** Adds the clear button once the field holds a value. */
 			clearable: true;
 			/** The clear button's accessible name and tooltip, such as "Clear". */
 			clearLabel: string;
+			/** The clear button's icon. */
+			clearIcon: ReactNode;
 	  }>;
 
 /** The copy-to-clipboard button: off, or on with the copy it shows. */
@@ -31,6 +33,9 @@ export type TextFieldCopyProps =
 			copyLabel?: undefined;
 			copiedLabel?: undefined;
 			copyFailedLabel?: undefined;
+			copyIcon?: undefined;
+			copiedIcon?: undefined;
+			copyFailedIcon?: undefined;
 	  }>
 	| Readonly<{
 			/** Adds a copy-to-clipboard button once the field holds a value. */
@@ -41,6 +46,12 @@ export type TextFieldCopyProps =
 			copiedLabel: string;
 			/** Announced when copying failed and the text is selected instead. */
 			copyFailedLabel: string;
+			/** The copy button's icon. */
+			copyIcon: ReactNode;
+			/** The copy button's icon once the value is on the clipboard. Left out, it keeps `copyIcon`. */
+			copiedIcon?: ReactNode;
+			/** The copy button's icon once copying failed. Left out, it keeps `copyIcon`. */
+			copyFailedIcon?: ReactNode;
 	  }>;
 
 /** Every `TextField` prop but the optional clear and copy buttons. */
@@ -64,7 +75,7 @@ export type TextFieldBaseProps = FieldProps &
 		/** Keeps the label in the accessibility tree but out of view. */
 		labelHidden?: boolean;
 		/** Decorative leading icon inside the group. */
-		icon?: SvgComponent;
+		icon?: ReactNode;
 		/** Static leading text, such as a currency sign. */
 		prefix?: ReactNode;
 		/** Static trailing text, such as a unit. */
@@ -100,10 +111,14 @@ export const TextField = ({
 	suffix,
 	clearable,
 	clearLabel,
+	clearIcon,
 	copyable,
 	copyLabel,
 	copiedLabel,
 	copyFailedLabel,
+	copyIcon,
+	copiedIcon,
+	copyFailedIcon,
 	value,
 	onValueChange,
 	disabled,
@@ -138,8 +153,8 @@ export const TextField = ({
 		</TextInput.Label>
 		<TextInput.Group>
 			{icon !== undefined && (
-				<TextInput.Inlay>
-					<Icon svg={icon} label="" />
+				<TextInput.Inlay aria-hidden="true">
+					{icon}
 				</TextInput.Inlay>
 			)}
 			{prefix !== undefined && (
@@ -151,14 +166,19 @@ export const TextField = ({
 			)}
 			<TextInput.Pending />
 			{clearable === true && (
-				<TextInput.Clear label={clearLabel} />
+				<TextInput.Clear label={clearLabel}>
+					{clearIcon}
+				</TextInput.Clear>
 			)}
 			{copyable === true && (
 				<TextInput.Copy
 					label={copyLabel}
 					copiedLabel={copiedLabel}
 					failedLabel={copyFailedLabel}
-				/>
+					copiedIcon={copiedIcon}
+					failedIcon={copyFailedIcon}>
+					{copyIcon}
+				</TextInput.Copy>
 			)}
 		</TextInput.Group>
 		<TextInput.Counter />
