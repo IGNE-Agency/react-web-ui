@@ -9,5 +9,5 @@ export {
 	type SelectionColumnOptions,
 	selectionColumn,
 } from "./data-table-selection.tsx";
-export type { QueryStatus } from "./resolve-view.ts";
+export type { DataTableStatus } from "./resolve-view.ts";
 export * from "./table-features.ts";

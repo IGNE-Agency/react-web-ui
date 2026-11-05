@@ -23,6 +23,7 @@ import { ActiveFilters } from "../components/active-filters/active-filters.tsx";
 import { Button } from "../components/button/button.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
+import type { PaginationPage } from "../components/pagination/pagination.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
 import {
 	type DataViewQueryParams,
@@ -62,13 +63,15 @@ const CLIENT_FILTER_LABEL = "Client";
 const REOPEN_LABEL = "Reopen the table";
 
 const EMPTY_STATE = "No declarations yet.";
-const ERROR_STATE = "The declarations could not be loaded.";
-const LOADING_STATE = "Loading declarations";
+const ERROR_LABEL = "The declarations could not be loaded.";
+const LOADING_LABEL = "Loading declarations";
 const SLOW_LABEL = "This is taking longer than usual.";
 const RETRY_LABEL = "Try again";
 const PAGE_SIZE_LABEL = "Rows per page";
-const PREVIOUS_PAGE_LABEL = "Previous page";
-const NEXT_PAGE_LABEL = "Next page";
+const FIRST_LABEL = "First page";
+const PREVIOUS_LABEL = "Previous page";
+const NEXT_LABEL = "Next page";
+const LAST_LABEL = "Last page";
 const SELECT_PAGE_LABEL = "Select page";
 const SELECT_ROW_LABEL = "Select row";
 const CLEAR_SELECTION_LABEL = "Clear selection";
@@ -77,8 +80,13 @@ const FILTERS_TITLE = "Filter declarations";
 const APPLY_LABEL = "Apply";
 const CLEAR_ALL_LABEL = "Clear filters";
 
-const pageStatusLabel = (page: number, pageCount: number) =>
+const pageText = (page: number, pageCount: number) =>
 	`Page ${page} of ${pageCount}`;
+
+const indexLabel = ({
+	pageIndex,
+	pageCount,
+}: PaginationPage) => pageText(pageIndex + 1, pageCount);
 
 const selectedLabel = (selected: number, total: number) =>
 	`${selected} of ${total} selected`;
@@ -186,8 +194,8 @@ const dataViewColumns = [
 const TableContent = () => (
 	<DataTable.Content
 		emptyState={EMPTY_STATE}
-		errorState={ERROR_STATE}
-		loadingState={LOADING_STATE}
+		errorLabel={ERROR_LABEL}
+		loadingLabel={LOADING_LABEL}
 		slowLabel={SLOW_LABEL}
 		retryLabel={RETRY_LABEL}
 	/>
@@ -196,9 +204,11 @@ const TableContent = () => (
 const TablePagination = () => (
 	<DataTable.Pagination
 		pageSizeLabel={PAGE_SIZE_LABEL}
-		pageStatusLabel={pageStatusLabel}
-		previousPageLabel={PREVIOUS_PAGE_LABEL}
-		nextPageLabel={NEXT_PAGE_LABEL}
+		indexLabel={indexLabel}
+		firstLabel={FIRST_LABEL}
+		previousLabel={PREVIOUS_LABEL}
+		nextLabel={NEXT_LABEL}
+		lastLabel={LAST_LABEL}
 	/>
 );
 
@@ -402,6 +412,7 @@ const DataViewTable = ({
 				<FilterBar.Search
 					label="Search by client"
 					clearLabel="Clear search"
+					optionalLabel="optional"
 				/>
 				<FilterBar.Drawer
 					swipeDirection="right"
@@ -500,12 +511,20 @@ const pageCheckbox = (canvas: Canvas) =>
 		name: SELECT_PAGE_LABEL,
 	});
 
+const selectionBarStatus = (canvas: Canvas) => {
+	const [status] = canvas.getAllByRole("status");
+	if (status === undefined) {
+		throw new Error("The table renders no selection bar.");
+	}
+	return status;
+};
+
 const selectionStatus = (
 	canvas: Canvas,
 	selected: number,
 ) =>
 	waitFor(() =>
-		expect(canvas.getByRole("status")).toHaveTextContent(
+		expect(selectionBarStatus(canvas)).toHaveTextContent(
 			selectedLabel(selected, DECLARATIONS.length),
 		),
 	);
@@ -520,10 +539,14 @@ const clientHeader = (canvas: Canvas) =>
 		name: CLIENT_HEADER,
 	});
 
-const pageStatus = (canvas: Canvas, page: number) =>
-	expect(
-		canvas.getByText(pageStatusLabel(page, 3)),
-	).toBeVisible();
+const pageStatus = async (canvas: Canvas, page: number) => {
+	const index = canvas.getByText(pageText(page, 3));
+	await expect(index).toBeVisible();
+	await expect(index).toHaveAttribute("role", "status");
+};
+
+const unavailable = (button: HTMLElement) =>
+	expect(button).toHaveAttribute("aria-disabled", "true");
 
 const tableRows = (canvas: Canvas) =>
 	within(canvas.getByRole("table"))
@@ -546,7 +569,7 @@ const everyRowIs = (canvas: Canvas, client: string) =>
 
 const totalIs = (canvas: Canvas, count: number) =>
 	waitFor(() =>
-		expect(canvas.getByRole("status")).toHaveTextContent(
+		expect(selectionBarStatus(canvas)).toHaveTextContent(
 			declarationsTotal(count),
 		),
 	);
@@ -606,6 +629,7 @@ const meta = {
 				section:
 					"Inert beats disabled for content that is only stale",
 			},
+			{ component: "components/pagination" },
 		],
 	},
 	component: DataTable.Root,
@@ -648,7 +672,7 @@ export const Loading: Story = {
 			"true",
 		);
 		await expect(
-			canvas.getByText(LOADING_STATE),
+			canvas.getByText(LOADING_LABEL),
 		).toBeInTheDocument();
 	},
 };
@@ -668,7 +692,7 @@ export const Failed: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert"),
-		).toHaveTextContent(ERROR_STATE);
+		).toHaveTextContent(ERROR_LABEL);
 	},
 };
 
@@ -711,7 +735,7 @@ export const RefreshFailed: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert"),
-		).toHaveTextContent(ERROR_STATE);
+		).toHaveTextContent(ERROR_LABEL);
 		await expect(bodyRows(canvas)).toHaveLength(PAGE_SIZE);
 
 		await userEvent.click(
@@ -728,7 +752,7 @@ export const Selectable: Story = {
 	render: SelectableDataTable,
 	play: async ({ canvas }) => {
 		await expect(
-			canvas.getByRole("status"),
+			selectionBarStatus(canvas),
 		).toHaveTextContent(
 			declarationsTotal(DECLARATIONS.length),
 		);
@@ -760,7 +784,7 @@ export const SelectMouse: Story = {
 
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: NEXT_PAGE_LABEL,
+				name: NEXT_LABEL,
 			}),
 		);
 		await expect(rowCheckbox(canvas, "1011")).toBeChecked();
@@ -774,7 +798,7 @@ export const SelectMouse: Story = {
 			}),
 		);
 		await waitFor(() =>
-			expect(canvas.getByRole("status")).toHaveTextContent(
+			expect(selectionBarStatus(canvas)).toHaveTextContent(
 				declarationsTotal(DECLARATIONS.length),
 			),
 		);
@@ -884,13 +908,14 @@ export const SortTouch: Story = {
 export const Paging: Story = {
 	tags: ["!dev", "!autodocs"],
 	play: async ({ canvas }) => {
-		const previous = canvas.getByRole("button", {
-			name: PREVIOUS_PAGE_LABEL,
-		});
-		const next = canvas.getByRole("button", {
-			name: NEXT_PAGE_LABEL,
-		});
-		await expect(previous).toBeDisabled();
+		const pageButton = (name: string) =>
+			canvas.getByRole("button", { name });
+		const first = pageButton(FIRST_LABEL);
+		const previous = pageButton(PREVIOUS_LABEL);
+		const next = pageButton(NEXT_LABEL);
+		const last = pageButton(LAST_LABEL);
+		await unavailable(first);
+		await unavailable(previous);
 
 		await userEvent.click(next);
 		await pageStatus(canvas, 2);
@@ -900,7 +925,15 @@ export const Paging: Story = {
 
 		await userEvent.click(next);
 		await pageStatus(canvas, 3);
-		await expect(next).toBeDisabled();
+		await unavailable(next);
+		await unavailable(last);
+		await expect(next).toHaveFocus();
+
+		await userEvent.click(first);
+		await pageStatus(canvas, 1);
+
+		await userEvent.click(last);
+		await pageStatus(canvas, 3);
 
 		await userEvent.click(previous);
 		await pageStatus(canvas, 2);
@@ -915,7 +948,7 @@ export const Paging: Story = {
 		);
 		await waitFor(() =>
 			expect(
-				canvas.getByText(pageStatusLabel(1, 2)),
+				canvas.getByText(pageText(1, 2)),
 			).toBeVisible(),
 		);
 		await expect(bodyRows(canvas)).toHaveLength(25);
@@ -1005,7 +1038,7 @@ export const FilterResetsPageAndIsStored: Story = {
 		await showsRows(canvas, PAGE_SIZE);
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: NEXT_PAGE_LABEL,
+				name: NEXT_LABEL,
 			}),
 		);
 		await waitFor(() => pageStatus(canvas, 2));
@@ -1014,7 +1047,7 @@ export const FilterResetsPageAndIsStored: Story = {
 
 		await everyRowIs(canvas, DAAN);
 		await expect(
-			canvas.getByText(pageStatusLabel(1, 1)),
+			canvas.getByText(pageText(1, 1)),
 		).toBeVisible();
 
 		await reopen(canvas);
@@ -1045,13 +1078,13 @@ export const PageFails: Story = {
 		await showsRows(canvas, PAGE_SIZE);
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: NEXT_PAGE_LABEL,
+				name: NEXT_LABEL,
 			}),
 		);
 
 		await expect(
 			await canvas.findByRole("alert"),
-		).toHaveTextContent(ERROR_STATE);
+		).toHaveTextContent(ERROR_LABEL);
 		await expect(
 			canvas.getByRole("button", {
 				name: RETRY_LABEL,

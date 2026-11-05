@@ -959,6 +959,23 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 </Beside>
 
+### The pager is the kit's pagination
+
+`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
+
+```tsx
+<DataTable.Pagination
+	pageSizeLabel="Rows per page"
+	indexLabel={({ pageIndex, pageCount }) =>
+		`Page ${pageIndex + 1} of ${pageCount}`
+	}
+	firstLabel="First page"
+	previousLabel="Previous page"
+	nextLabel="Next page"
+	lastLabel="Last page"
+/>
+```
+
 ### Rows that are on screen never unmount
 
 Rows that are on screen never unmount. Paging, sorting and filtering are all new server queries, and replacing the body with a spinner or an empty state on each one makes the page jump under whoever is reading it. Keep the previous result while the next one loads, hold the last settled page so the rows outlive a failed fetch, and report the transition around the rows rather than in place of them: a dim while fetching, [an error strip above the table when a refresh fails](?path=/docs/design-system-patterns--docs#a-failure-keeps-what-is-already-on-screen). Only [a first load](#a-loading-table-is-the-table), with nothing to keep, draws something else.

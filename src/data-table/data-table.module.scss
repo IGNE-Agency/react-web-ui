@@ -360,22 +360,8 @@
 	}
 
 	.pagination {
-		display: flex;
 		flex-shrink: 0;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: flex-end;
-		gap: var(--sys-unit-8);
-	}
-
-	.pageSize {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--sys-unit-6);
-	}
-
-	.pageSizeSelect {
-		min-inline-size: var(--sys-unit-40);
+		align-self: flex-end;
 	}
 
 	.selectionContainer {
@@ -601,10 +587,5 @@
 		.selectionActions {
 			flex-wrap: wrap;
 		}
-	}
-
-	.pageStatus {
-		color: var(--sys-color-text-muted);
-		font: var(--sys-font-body-medium);
 	}
 }
