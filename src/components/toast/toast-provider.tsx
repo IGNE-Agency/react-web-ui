@@ -246,6 +246,7 @@ export type ToastProviderProps = Readonly<{
 	viewportLabel: string;
 	/** Draws each toast from the `Toast` parts, in place of the default. */
 	renderToast?: (toast: ToastObject) => ReactNode;
+	/** The app, which the viewport renders beside. */
 	children: ReactNode;
 }>;
 

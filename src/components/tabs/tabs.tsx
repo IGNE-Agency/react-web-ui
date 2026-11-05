@@ -15,21 +15,28 @@ export type TabsRootProps = Omit<
 	| "defaultValue"
 	| "onValueChange"
 	| "orientation"
+	| "children"
 > &
-	Readonly<{ className?: string }> &
+	Readonly<{
+		/** The `Tabs.List` and the `Tabs.Panel`s it opens. */
+		children: ReactNode;
+		className?: string;
+	}> &
+	Readonly<{
+		/** The open tab's `value`, when controlled. */
+		value?: string;
+		/** The tab open at first, when uncontrolled. */
+		defaultValue?: string;
+		/** Called with the `value` of the tab picked. */
+		onValueChange?: (value: string) => void;
+	}> &
 	(
 		| Readonly<{
-				/** The open tab's `value`, when controlled. */
 				value: string;
 				onValueChange: (value: string) => void;
 				defaultValue?: never;
 		  }>
-		| Readonly<{
-				value?: never;
-				/** The tab open at first, when uncontrolled. */
-				defaultValue?: string;
-				onValueChange?: (value: string) => void;
-		  }>
+		| Readonly<{ value?: never }>
 	);
 
 /** The tabs and the panels they open. */

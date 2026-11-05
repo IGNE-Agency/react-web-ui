@@ -75,7 +75,26 @@ const CheckboxLabel = ({
 	/>
 );
 
-export type CheckboxControlProps = BaseCheckbox.Root.Props;
+export type CheckboxControlProps = Omit<
+	BaseCheckbox.Root.Props,
+	| "checked"
+	| "defaultChecked"
+	| "onCheckedChange"
+	| "indeterminate"
+	| "disabled"
+> &
+	Readonly<{
+		/** Whether the box is checked, when controlled. */
+		checked?: boolean;
+		/** Whether the box starts checked, when uncontrolled. */
+		defaultChecked?: boolean;
+		/** Called with the new checked state when the box is toggled. */
+		onCheckedChange?: BaseCheckbox.Root.Props["onCheckedChange"];
+		/** The box shows neither checked nor unchecked, for a parent over a mixed set. */
+		indeterminate?: boolean;
+		/** Whether the box ignores input. A busy form disables it too. @default false */
+		disabled?: boolean;
+	}>;
 
 /** The box itself, which takes a `Checkbox.Indicator` as its child. */
 const CheckboxControl = ({
