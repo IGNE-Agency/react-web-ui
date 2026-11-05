@@ -15,7 +15,9 @@
 	"avatar": ["avatar/avatar"],
 	"avatar-group": [
 		"avatar-group/avatar-group",
-		"avatar/avatar"
+		"avatar/avatar",
+		"popover/popover",
+		"skeleton/skeleton"
 	],
 	"badge": ["badge/badge"],
 	"breadcrumbs": [
@@ -86,6 +88,7 @@
 		"error-text/error-text",
 		"field/field",
 		"icon/icon",
+		"pagination/pagination",
 		"select-field/select",
 		"skeleton/skeleton",
 		"spinner/spinner",
