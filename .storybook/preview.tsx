@@ -20,7 +20,6 @@ import { themeOf } from "./theme-global.ts";
 import { ThemedDocsContainer } from "./themed-docs-container.tsx";
 import "../src/style/tokens.gen.css";
 import "../src/style/base.scss";
-import "./fonts.scss";
 import "./docs.scss";
 
 configure({ asyncUtilTimeout: 30_000 });
@@ -31,7 +30,12 @@ axe.reset = () => {
 	registerContrastChecks();
 };
 
-const docgenInfo = z.object({ description: z.string() });
+const docgenInfo = z.object({
+	description: z.string(),
+	namespace: z
+		.object({ description: z.string() })
+		.optional(),
+});
 
 const applyTheme = (payload: unknown) => {
 	const theme = themeOf(payload);
@@ -60,9 +64,21 @@ const preview: Preview = {
 								component["__docgenInfo"],
 							)
 						: undefined;
-				return info?.success === true
-					? docCommentOf(info.data.description).markdown
-					: null;
+				if (info?.success !== true) {
+					return null;
+				}
+				const markdown = [
+					info.data.namespace?.description,
+					info.data.description,
+				]
+					.flatMap(text =>
+						text === undefined
+							? []
+							: [docCommentOf(text).markdown],
+					)
+					.filter(text => text !== "")
+					.join("\n\n");
+				return markdown === "" ? null : markdown;
 			},
 		},
 		options: {
@@ -72,7 +88,6 @@ const preview: Preview = {
 					[
 						"Introduction",
 						"Getting started",
-						"Brand",
 						"Foundation",
 						[
 							"Token architecture",

@@ -3,9 +3,9 @@ import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import FilterAltIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import LogoIcon from "./logo.svg?react";
-import RequiredIcon from "../../src/assets/required.svg?react";
-import SpinnerIcon from "../../src/assets/spinner.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import type { SvgComponent } from "../../src/components/icon/index.ts";
 import { Icon } from "../../src/components/icon/index.ts";
 import styles from "./icon-gallery.module.scss";
@@ -17,7 +17,7 @@ const GROUPS: readonly Readonly<{
 	glyphs: readonly Glyph[];
 }>[] = [
 	{
-		title: "From the set",
+		title: "Beside a word",
 		glyphs: [
 			{ name: "description", svg: DescriptionIcon },
 			{ name: "search", svg: SearchIcon },
@@ -27,18 +27,18 @@ const GROUPS: readonly Readonly<{
 		],
 	},
 	{
-		title: "Our own",
+		title: "In a slot",
 		glyphs: [
-			{ name: "logo", svg: LogoIcon },
-			{ name: "required", svg: RequiredIcon },
-			{ name: "spinner", svg: SpinnerIcon },
+			{ name: "close", svg: CloseIcon },
+			{ name: "expand_more", svg: ExpandMoreIcon },
+			{ name: "check", svg: CheckIcon },
 		],
 	},
 ];
 
 /**
- * A fixed sample of the outlined icon set, and the three glyphs the product
- * draws itself, each at the size a bottom bar draws it under its name.
+ * A fixed sample of Material's outlined icons, the example set these docs fill
+ * the kit's slots from, each at the size a bottom bar draws it under its name.
  *
  * @example
  * <IconGallery />

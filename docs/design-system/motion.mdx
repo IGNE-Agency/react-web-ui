@@ -1,6 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Button } from "../../src/components/button/index.ts";
-import { LogoMark } from "./logo-mark";
 import { Spinner } from "../../src/components/spinner/index.ts";
 import { Skeleton } from "../../src/components/skeleton/index.ts";
 import { Details, DetailsList } from "./details";
@@ -197,7 +196,7 @@ Here, a busy state waits a moment before it appears, and once it's there it stay
 	/>
 </DoDont>
 
-The indicators come from a shared set: a spinner sized to the text of the control it sits in, and the logo mark for a whole view. That's [one component per job](?path=/docs/design-system-components--docs#each-job-has-one-component-extended-rather-than-copied), because a hand-rolled indicator has to redo its motion, its timing and its announcement, and one of the three always goes missing.
+The indicators come from a shared set: a spinner sized to the text of the control it sits in, and a loading message for a whole view. That's [one component per job](?path=/docs/design-system-components--docs#each-job-has-one-component-extended-rather-than-copied), because a hand-rolled indicator has to redo its motion, its timing and its announcement, and one of the three always goes missing.
 
 <DoDont>
 	<Example
@@ -238,7 +237,7 @@ The indicators come from a shared set: a spinner sized to the text of the contro
 		visual={
 			<span className={styles.field}>
 				<span className={styles.fieldMark}>
-					<LogoMark />
+					<Spinner size={4} />
 				</span>
 				Clients
 			</span>
@@ -251,19 +250,19 @@ Asking for less motion doesn't switch an indicator off, because that person stil
 <DoDont>
 	<Example
 		kind="do"
-		caption="The mark keeps changing for as long as the wait does, as a slow pulse under reduced motion."
+		caption="The indicator keeps changing for as long as the wait does, as a slow pulse under reduced motion."
 		visual={
 			<span className={styles.mark}>
-				<LogoMark />
+				<span className={styles.indicator} />
 			</span>
 		}
 	/>
 	<Example
 		kind="dont"
-		caption="A reduced-motion user gets a frozen mark, and the rest get one turn."
+		caption="A reduced-motion user gets a frozen indicator, and the rest get one turn."
 		visual={
 			<span className={`${styles.mark} ${styles.once}`}>
-				<LogoMark />
+				<span className={styles.indicator} />
 			</span>
 		}
 	/>
@@ -527,13 +526,16 @@ An inline indicator, sized in `em`, for a control or a widget, so it sits on the
 Rotation and translation give way to a slow opacity pulse, which carries no vestibular cost. The same pulse is the only motion a skeleton needs. Explained in [The art of waiting](#the-art-of-waiting).
 
 <DoDont>
-<Example kind="do" caption="The mark keeps changing for as long as the wait does, as a slow pulse under reduced motion.">
+<Example kind="do" caption="The indicator keeps changing for as long as the wait does, as a slow pulse under reduced motion.">
 
 ```scss
 @include loading.pulse-keyframes;
 
-.logo {
-	@include logo.tick(infinite);
+.indicator {
+	@media not (prefers-reduced-motion) {
+		animation: turn 0.9s var(--sys-motion-emphasized)
+			infinite;
+	}
 
 	@media (prefers-reduced-motion) {
 		@include loading.pulse;
@@ -542,12 +544,12 @@ Rotation and translation give way to a slow opacity pulse, which carries no vest
 ```
 
 </Example>
-<Example kind="dont" caption="A reduced-motion user gets a frozen mark, and the rest get one turn.">
+<Example kind="dont" caption="A reduced-motion user gets a frozen indicator, and the rest get one turn.">
 
 ```scss
-.logo {
+.indicator {
 	@media not (prefers-reduced-motion) {
-		animation: logo-tick 0.9s var(--motion-emphasized) 1;
+		animation: turn 0.9s var(--sys-motion-emphasized) 1;
 	}
 }
 ```

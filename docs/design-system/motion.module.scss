@@ -1,4 +1,14 @@
+@use "../../src/style/loading-motion.scss" as loading;
+
 $cycle: 6s;
+
+@include loading.pulse-keyframes;
+
+@keyframes indicator-turn {
+	to {
+		rotate: 1turn;
+	}
+}
 
 @keyframes tab-indicator {
 	0%,
@@ -285,7 +295,25 @@ $cycle: 6s;
 	inline-size: 5rem;
 }
 
-.once svg {
+.indicator {
+	display: block;
+	inline-size: 3rem;
+	aspect-ratio: 1;
+	border: 0.375rem solid var(--sys-color-primary);
+	border-block-start-color: transparent;
+	border-radius: 50%;
+
+	@media not (prefers-reduced-motion) {
+		animation: indicator-turn 0.9s
+			var(--sys-motion-emphasized) infinite;
+	}
+
+	@media (prefers-reduced-motion) {
+		@include loading.pulse;
+	}
+}
+
+.once .indicator {
 	@media not (prefers-reduced-motion) {
 		animation-iteration-count: 1;
 	}

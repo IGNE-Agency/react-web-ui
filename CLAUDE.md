@@ -17,7 +17,7 @@ You are working in a published TypeScript + React component kit for the web, `@i
 | Styling | CSS Modules + SCSS (`sass-embedded`), in cascade layers |
 | Forms | `@tanstack/react-form`; apps register bridges through `createAppForm` from `./forms`, stories through `src/lib/storybook/app-form.tsx` |
 | Dates and times | `temporal-polyfill`; `@internationalized/date` inside the react-aria pickers only |
-| Icons | `@material-design-icons/svg` |
+| Icons | None shipped: the app fills every icon slot. Stories and docs use `@material-design-icons/svg` (a dev dependency) through SVGR |
 | Tokens | DTCG 2025.10 in `tokens/`, built by Terrazzo 2 |
 | Docs and tests | Storybook 10 with Vitest (render, axe and APCA per story, light and dark) |
 | Lint and format | `oxlint` (type-aware) and `oxfmt` |
@@ -30,10 +30,10 @@ The kit ships built JavaScript, one module per source file, and one plain `.css`
 
 - Vite library mode with `preserveModules` (`preserveModulesRoot: "src"`), `cssCodeSplit` and `vite-plugin-lib-inject-css`, so a module imports its own CSS and an app that imports one component gets only that component's CSS. `@vitejs/plugin-react` runs with `compiler: true`.
 - SCSS modules are emitted as `.css`, never `.module.css`: a consumer's Vite drops `.module.css` imports whose exports go unused.
-- SVG icons are imported as components (`…svg?react`) and compiled by SVGR at kit build time. A package's SVG, such as a Material icon, is emitted under `dist/vendor/`, because npm never packs a `node_modules` folder.
+- No module under `src/` outside stories imports an SVG or an icon set; lint rejects `@material-design-icons/*` and `*.svg?react` everywhere but `*.stories.tsx`, `docs/` and `.storybook/`. SVGR runs only in Storybook (`.storybook/svgr.ts`), never in the library build.
 - Every `dependencies` and `peerDependencies` package is external. `sideEffects` is `["**/*.css"]`.
 - Declarations come from `tsc -p tsconfig.build.json`. `isolatedDeclarations` is on: every exported value carries a type the declaration emitter can read without inference. Annotate component return types, and type namespace objects explicitly.
-- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/`, `.storybook/`, `*.stories.*` or `*.mdx` is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server.
+- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/` or `.storybook/`, no `*.stories.*`, `*.mdx` or `.svg` and no `vendor/` folder is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server.
 - The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`, `lexical`). Those have their own entry: `./composer`, `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`.
 - The public lib modules have subpaths of their own too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`.
 - `./terrazzo` is the token preset, built for Node with `tsconfig.terrazzo.json`. `./base.css` and `./tokens.css` are the reset and the default theme. `./tokens/*` are the DTCG files an app's resolver layers.
@@ -89,6 +89,7 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 - **A component reads only `--sys-*`.** Never `--ref-*`, and never a hard-coded colour, size or duration that a role covers. A token's use is its `$description`.
 - The kit owns no breakpoints and no gutters. They are app layout, and a media query cannot read a custom property. Where a component would react to the viewport, it takes the answer from the caller or from a knob.
 - The token files hold the same values as the native kit's (`@igne-agency/react-native-ui`). A change to one is made in both.
+- The kit loads no font and names no typeface. Typography tokens carry no `fontFamily`; the preset gives a heading role `var(--sys-font-family-heading)` and every other role `var(--sys-font-family-body)`, which defaults to `system-ui, sans-serif` (the heading family follows it). An app sets either on `:root` and loads its own font. Storybook loads none either.
 
 ### Cascade layers
 
@@ -145,6 +146,14 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 - The React Compiler memoizes elements on their props. An object that mutates behind a stable reference (a TanStack Table instance, a library store) therefore signals nothing when it changes: pass the state it holds alongside it. Symptom: a control does nothing until an unrelated prop moves.
 - A link-like part spreads the props it is given and forwards its ref, so a router's `createLink` can wrap it.
 
+### Icons
+
+- The kit renders no icons and depends on no icon set. Every place a component shows an icon is a slot the app fills: a part's children (preferred), or on a prefab a `ReactNode` prop named for its job, `icon` or `<job>Icon` (`closeIcon`, `expandIcon`, `clearIcon`, `checkIcon`, `previousIcon`, `nextIcon`, `sortAscendingIcon`, …; `separator` for breadcrumbs).
+- A slot is required only when the icon is the control's only visible content: an icon-only button (close, clear, remove, stepper, copy, send, pagination arrows), a checkbox's mark, a selected-item mark that is the only sign of selection. Every other slot is optional, and a slot left empty renders nothing, no empty wrapper.
+- The kit still sizes and colours the slot: its part sets the size through a knob and `color`, so an SVG drawn at `1em` in `currentColor` fits. Rotation for an open state stays the kit's styling.
+- Shapes are not icons: a radio's dot, a switch's thumb, a spinner, a skeleton and a focus ring stay the kit's own.
+- `Icon` sizes and labels any SVG component an app passes. Stories and docs fill slots with Material icons imported in each file.
+
 ### Copy, locale and time zone
 
 - The kit has no messages and no hard-coded copy. Every string a component shows or announces is a required prop named for what it says (`clearLabel`, `showPasswordLabel`, `retryLabel`, `optionalLabel`).
@@ -170,7 +179,8 @@ tools/            build- and lint-time scripts
 ```
 
 - A component folder is `src/components/<kebab-name>/` and becomes the `./<kebab-name>` export. When you add one, add its line to `src/index.ts` (`export * from "./components/<name>/index.ts"`, unless it needs an optional peer) and its entry to `package.json` `exports`, `types` first. Keep both lists sorted.
-- A compound component is one namespace object of parts. Parts that need no styling pass through untouched.
+- A compound component is one namespace object of parts. Parts are the API: every part takes `className` and spreads its props (`useRender` / `render` where the part is one element), so callers own the markup. Parts that are pure wiring (Portal + Positioner + Popup) may be bundled into one part, with the unbundled parts still exported.
+- A compound gets a prefab (the namespace is the prefab function with the parts hanging off it, like `AvatarGroup`) only when it saves real work: logic the parts don't run (overflow math, page ranges, a promise flow), or accessibility wiring a caller would repeat and could get wrong (the `*Field` tier, `Tooltip`). A prefab is never the parts re-expressed as props or an `items` array.
 - Hooks live in `src/lib/hooks/` and are re-exported from the root barrel and from `./hooks`.
 
 ### Form controls: three tiers
@@ -201,7 +211,7 @@ Every component has a colocated `*.stories.tsx` next to it. Each story is also a
 - A controlled component gets its state through `useArgs`, in a module-level arrow component passed as `render`. An inline `render: args => …` trips `rules-of-hooks`, and a component nested inside the story breaks Storybook's preview hooks.
 - A play story that asserts a change callback renders the plain component as `render`, uncontrolled (`value: undefined`) where the component supports it, else from a fixed value. `updateArgs` does nothing in the test run, and in the UI its re-render clears the `fn()` calls.
 - An options load state is an argTypes `mapping` from a name to the state, with `failed`'s `retry` as a logged action (`fn()`). A story sets the key through `mappedArg(mapping, "failed")` (`src/lib/storybook/mapped-arg`).
-- The meta's `component` is the real component, or a compound component's root part, and its args are that component's real props. A docs table never lists a story wrapper's knobs: a demo variant is its own story with its own `render`, and a spy a play function asserts on is a module-level `fn()`, cleared by `parameters: { test: { clearMocks: true } }` on the meta.
+- The meta's `component` is the real component, or the part (or prefab) a caller starts from, and its args are that component's real props. Docs are extracted by `.storybook/docgen.ts`, not Storybook's own react-docgen: it documents every component a module under `src/` declares at its top level, exported or not, reads props through `Readonly<{…}>`, intersections, unions, `Omit` and `Pick` with each prop's doc comment, and shows a part's or prefab's namespace doc comment above its own. For that to work the meta's `component` is a kit-defined arrow function (a `const` at the top level of the component's module, not a primitive passed through, such as `BaseDialog.Root`), its props are a type literal or alias the module or a relative import declares, the namespace is an exported `const` whose value is the object of parts or `Object.assign(Prefab, parts)`, and the namespace, prefab, every part and every own prop carry a doc comment. Props a primitive declares (`ComponentProps<typeof Base…>`) are not listed. A docs table never lists a story wrapper's knobs: a demo variant is its own story with its own `render`, and a spy a play function asserts on is a module-level `fn()`, cleared by `parameters: { test: { clearMocks: true } }` on the meta.
 - A story that drives input is a test, not a page: it carries `tags: ["!dev", "!autodocs"]`, which keeps it out of the sidebar and the docs page while `bun run test` still runs it. A story that renders a popup already open carries `tags: ["!autodocs"]`: it stays in the sidebar, but on the docs page it would move focus and scroll.
 - Storybook is English only. Every story renders inside `StoryProviders` (`src/lib/storybook/`), built from the kit's own providers: locale `en-US`, time zone `Europe/Amsterdam`, the toast and tooltip providers, and a fresh `QueryClient` per story for data stories. Story copy (labels, fixture values, demo content, and every label prop a component requires) is plain English in the story file.
 - A play function asserts on the copy the story passes in, never on copy the component makes up: the component has none.

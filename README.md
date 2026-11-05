@@ -100,9 +100,38 @@ export default defineConfig({
 });
 ```
 
-The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters.
+The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters. Typography tokens name no family, so the preset narrows Terrazzo's `core/valid-typography` rule to `fontSize`, `fontWeight` and `lineHeight`.
+
+### Typeface
+
+The kit names no typeface and loads no font. Every type role reads its family from one of two custom properties: `--sys-font-family-heading` for headings and `--sys-font-family-body` for everything else. The body family defaults to `system-ui, sans-serif`, and the heading family follows the body family. To use a typeface, load it the way the app loads any font, then name it on `:root` in unlayered CSS:
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+	--sys-font-family-heading:
+		"Satoshi", system-ui, sans-serif;
+}
+```
+
+This works the same over the kit's `tokens.css` and over a theme the preset builds.
 
 The kit owns no breakpoints and no gutters; those are the app's layout.
+
+## Icons
+
+The kit renders no icons and depends on no icon set. Wherever a component shows one, it leaves a slot the app fills from its own set: a part's children, or, on a ready-made component, a prop named for the icon's job (`icon`, `closeIcon`, `expandIcon`). The slot sizes the glyph to its text and colours it, so an SVG drawn at `1em` in `currentColor` fits as is. A slot is required only where the icon is all the control shows, such as a close button's cross; anywhere else, left out, nothing renders.
+
+```tsx
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import { Select } from "@igne-agency/react-web-ui/select-field";
+
+<Select.Icon>
+	<ExpandMoreIcon />
+</Select.Icon>;
+```
+
+`Icon`, from `./icon`, sizes and labels any SVG component: `label=""` hides a glyph that stands beside its word, and a label names one that stands alone.
 
 ## Providers
 
