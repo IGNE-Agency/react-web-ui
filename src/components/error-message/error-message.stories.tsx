@@ -6,7 +6,7 @@ import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "../button/button.tsx";
 import { ErrorMessage } from "./error-message.tsx";
 
-const TITLE = "The declarations could not be loaded";
+const TITLE = "The invoices could not be loaded";
 const RETRYABLE =
 	"Check your connection, then try again in a moment.";
 const BROKEN =
@@ -20,7 +20,7 @@ const ACTIONS = {
 	retry: (
 		<Button
 			variant="primary"
-			icon={RestartIcon}
+			icon={<RestartIcon />}
 			onClick={fn()}>
 			{RETRY}
 		</Button>

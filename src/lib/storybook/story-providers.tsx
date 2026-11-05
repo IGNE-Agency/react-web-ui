@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -40,6 +41,7 @@ export const StoryProviders = ({
 					<Tooltip.Provider>
 						<ToastProvider
 							closeLabel={STORY_TOAST_CLOSE_LABEL}
+							closeIcon={<CloseIcon />}
 							viewportLabel={STORY_TOAST_VIEWPORT_LABEL}>
 							{children}
 						</ToastProvider>

@@ -113,6 +113,7 @@ import { LocaleProvider } from "@igne-agency/react-web-ui/locale-provider";
 import { TimeZoneProvider } from "@igne-agency/react-web-ui/time-zone-provider";
 import { ToastProvider } from "@igne-agency/react-web-ui/toast";
 import { Tooltip } from "@igne-agency/react-web-ui/tooltip";
+import CloseIcon from "./icons/close.svg?react";
 
 export const Providers = ({
 	children,
@@ -122,6 +123,7 @@ export const Providers = ({
 			<Tooltip.Provider>
 				<ToastProvider
 					closeLabel="Close"
+					closeIcon={<CloseIcon />}
 					viewportLabel="Notifications">
 					{children}
 				</ToastProvider>

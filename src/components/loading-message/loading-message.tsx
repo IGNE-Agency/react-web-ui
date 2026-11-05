@@ -4,7 +4,7 @@ import { Spinner } from "../spinner/spinner.tsx";
 import { StatusMessage } from "../status-message/status-message.tsx";
 
 export type LoadingMessageProps = Readonly<{
-	/** What the wait says and is announced as, such as "Loading your declarations". */
+	/** What the wait says and is announced as, such as "Loading your invoices". */
 	title: string;
 	/** A line under the title, such as what the wait is for. */
 	description?: string;
@@ -22,7 +22,7 @@ export type LoadingMessageProps = Readonly<{
  * announced once.
  *
  * @example
- * <LoadingMessage title="Loading your declarations" illustration={<Logo />} />
+ * <LoadingMessage title="Loading your invoices" illustration={<Logo />} />
  */
 export const LoadingMessage = ({
 	title,

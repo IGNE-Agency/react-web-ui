@@ -152,6 +152,17 @@
 
 	.groupToggle {
 		--btn-pad-y: var(--sys-unit-8);
+
+		svg {
+			@media not (prefers-reduced-motion) {
+				transition: rotate var(--sys-motion-short)
+					var(--sys-motion-standard);
+			}
+		}
+
+		&[data-panel-open] svg {
+			rotate: 180deg;
+		}
 	}
 
 	.groupPanel {

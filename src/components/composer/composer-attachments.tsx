@@ -1,4 +1,4 @@
-import AttachIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import {
 	Button as AriaButton,
@@ -25,12 +25,17 @@ export type ComposerAttachButtonProps = Readonly<{
 	label: string;
 	/** The MIME types and extensions the file picker offers. */
 	accept?: readonly string[];
+	/** The attach glyph. */
+	children: ReactNode;
+	className?: string;
 }>;
 
-/** An icon button that opens the file picker and stages what is picked. */
+/** An icon button, its children the glyph, that opens the file picker and stages what is picked. */
 export const ComposerAttachButton = ({
 	label,
 	accept,
+	children,
+	className,
 }: ComposerAttachButtonProps): ReactNode => {
 	const { addFiles, disabled } = useComposerContext();
 
@@ -44,10 +49,11 @@ export const ComposerAttachButton = ({
 				}
 			}}>
 			<Button
+				className={className}
 				variant="tertiary"
 				size="md"
 				iconOnly
-				icon={AttachIcon}
+				icon={children}
 				disabled={disabled}
 				label={label}
 				render={<AriaButton isDisabled={disabled} />}
@@ -61,8 +67,13 @@ export type ComposerAttachmentsProps = Readonly<{
 	label: string;
 	/** Each tile's remove button's accessible name, such as "Remove". */
 	removeLabel: string;
+	/** Each tile's remove glyph. */
+	removeIcon: ReactNode;
+	/** A tile's file-type glyph. Left out, a tile that is not an image shows only the file's extension. */
+	fileIcon?: ReactNode;
 	/** A tile's tooltip, from the file's name and formatted size. */
 	fileHint: (name: string, size: string) => string;
+	className?: string;
 }>;
 
 /**
@@ -72,7 +83,10 @@ export type ComposerAttachmentsProps = Readonly<{
 export const ComposerAttachments = ({
 	label,
 	removeLabel,
+	removeIcon,
+	fileIcon,
 	fileHint,
+	className,
 }: ComposerAttachmentsProps): ReactNode => {
 	const locale = useLocale();
 	const {
@@ -103,7 +117,7 @@ export const ComposerAttachments = ({
 		<AriaTagGroup aria-label={label} onRemove={remove}>
 			<AriaTagList
 				items={attachments}
-				className={style.attachments}>
+				className={clsx(style.attachments, className)}>
 				{attachment => (
 					<AttachmentTile
 						id={attachment.id}
@@ -113,6 +127,8 @@ export const ComposerAttachments = ({
 							formatBytes(attachment.file.size, locale),
 						)}
 						removeLabel={removeLabel}
+						removeIcon={removeIcon}
+						icon={fileIcon}
 						invalid={isOversized(
 							attachment.file,
 							maxFileSize,

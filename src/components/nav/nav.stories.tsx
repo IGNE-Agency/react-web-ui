@@ -1,5 +1,6 @@
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
 import LogoutIcon from "@material-design-icons/svg/outlined/logout.svg?react";
 import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
@@ -31,9 +32,9 @@ import { NavItemView } from "./nav-item-view.tsx";
 import styles from "./nav.stories.module.scss";
 
 const NAV_LABEL = "Main";
-const TABS_LABEL = "Declarations";
+const TABS_LABEL = "Invoices";
 const HOME = "Home";
-const DECLARATIONS = "Declarations";
+const INVOICES = "Invoices";
 const INCOMPLETE = "Incomplete";
 const OUTSTANDING = "Outstanding";
 const SENT = "Sent";
@@ -46,10 +47,10 @@ const MORE = "More";
 const CLOSE_MORE = "Close more";
 const TOGGLE_RAIL = "Collapse or expand the navigation";
 
-const START = "/declarations/incomplete";
+const START = "/invoices/incomplete";
 const SETTINGS_PATH = "/settings";
-const OUTSTANDING_PATH = "/declarations/outstanding";
-const SENT_PATH = "/declarations/sent";
+const OUTSTANDING_PATH = "/invoices/outstanding";
+const SENT_PATH = "/invoices/sent";
 
 const { history, decorator, reset } =
 	createStoryRouter(START);
@@ -68,8 +69,8 @@ type Destination = Readonly<{
 const DESTINATIONS: readonly Destination[] = [
 	{ to: "/", label: HOME, icon: HomeIcon },
 	{
-		to: "/declarations",
-		label: DECLARATIONS,
+		to: "/invoices",
+		label: INVOICES,
 		icon: DescriptionIcon,
 	},
 	{ to: "/clients", label: CLIENTS, icon: PeopleIcon },
@@ -112,7 +113,7 @@ const DestinationLink = ({
 const RailEntries = ({
 	labelled,
 }: Readonly<{ labelled: boolean }>): ReactElement => {
-	const [home, declarations, ...rest] = DESTINATIONS;
+	const [home, invoices, ...rest] = DESTINATIONS;
 
 	return (
 		<>
@@ -121,26 +122,32 @@ const RailEntries = ({
 					<DestinationLink {...home} labelled={labelled} />
 				</Nav.Item>
 			) : null}
-			{declarations ? (
+			{invoices ? (
 				<Nav.Item>
 					<Nav.Group defaultOpen={labelled}>
 						<Nav.GroupHeader>
 							<DestinationLink
-								{...declarations}
+								{...invoices}
 								labelled={labelled}
 							/>
 							{labelled ? (
-								<Nav.GroupToggle label={SUBPAGES} />
+								<Nav.GroupToggle label={SUBPAGES}>
+									<ExpandMoreIcon />
+								</Nav.GroupToggle>
 							) : null}
 						</Nav.GroupHeader>
 						<Nav.GroupPanel>
-							{SUBPAGE_LINKS.map(link => (
-								<Nav.Item key={link.to}>
-									<NavLink to={link.to} label={link.label}>
-										{link.label}
-									</NavLink>
-								</Nav.Item>
-							))}
+							<Nav.GroupList>
+								{SUBPAGE_LINKS.map(link => (
+									<Nav.Item key={link.to}>
+										<NavLink
+											to={link.to}
+											label={link.label}>
+											{link.label}
+										</NavLink>
+									</Nav.Item>
+								))}
+							</Nav.GroupList>
 						</Nav.GroupPanel>
 					</Nav.Group>
 				</Nav.Item>
@@ -223,7 +230,7 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			<Button
 				variant="tertiary"
 				iconOnly
-				icon={collapsed ? MenuIcon : MenuOpenIcon}
+				icon={collapsed ? <MenuIcon /> : <MenuOpenIcon />}
 				label={TOGGLE_RAIL}
 				onClick={() => setCollapsed(current => !current)}
 			/>
@@ -425,7 +432,7 @@ export const Vertical: Story = {
 			canvas.getByRole("navigation", { name: NAV_LABEL }),
 		).toBeInTheDocument();
 		await current(link(canvas, INCOMPLETE));
-		await current(link(canvas, DECLARATIONS));
+		await current(link(canvas, INVOICES));
 		await expect(
 			link(canvas, SETTINGS),
 		).not.toHaveAttribute("aria-current");

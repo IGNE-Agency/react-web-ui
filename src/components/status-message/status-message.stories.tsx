@@ -15,13 +15,13 @@ import {
 	type StatusMessageRootProps,
 } from "./status-message.tsx";
 
-const EMPTY_TITLE = "No declarations yet";
-const EMPTY_BODY = "Declarations you send show up here.";
-const ERROR_TITLE = "The declarations could not be loaded";
+const EMPTY_TITLE = "No invoices yet";
+const EMPTY_BODY = "Invoices you send show up here.";
+const ERROR_TITLE = "The invoices could not be loaded";
 const ERROR_BODY =
 	"Check your connection, then try again in a moment.";
 const RETRY = "Try again";
-const WELCOME_TITLE = "Welcome to your declarations";
+const WELCOME_TITLE = "Welcome to your invoices";
 const SHOW = "Show the message";
 
 const retried = fn();
@@ -69,7 +69,7 @@ const CONTENT = {
 			<StatusMessage.Action>
 				<Button
 					variant="primary"
-					icon={RestartIcon}
+					icon={<RestartIcon />}
 					onClick={retried}>
 					{RETRY}
 				</Button>

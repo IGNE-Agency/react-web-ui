@@ -8,7 +8,7 @@ import {
 
 /** What a status preset such as `EmptyMessage` or `ErrorMessage` shows. */
 export type StatusPresetProps = Readonly<{
-	/** What the region says, such as "No declarations yet". */
+	/** What the region says, such as "No invoices yet". */
 	title: string;
 	/** What would change it, or who can help. */
 	description?: string;
@@ -23,7 +23,7 @@ export type StatusPresetProps = Readonly<{
  * A status message announced as `live`, with its icon on a `tone` disc.
  *
  * @example
- * <StatusPreset live="status" tone="neutral" title="No declarations yet" />
+ * <StatusPreset live="status" tone="neutral" title="No invoices yet" />
  */
 export const StatusPreset = ({
 	live,

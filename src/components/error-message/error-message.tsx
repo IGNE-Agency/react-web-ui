@@ -12,7 +12,7 @@ export type ErrorMessageProps = StatusPresetProps;
  *
  * @example
  * <ErrorMessage
- * 	title="The declarations could not be loaded"
+ * 	title="The invoices could not be loaded"
  * 	description="Check your connection and try again."
  * 	action={<Button onClick={refetch}>Try again</Button>}
  * />

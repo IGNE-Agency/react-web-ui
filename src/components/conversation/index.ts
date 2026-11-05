@@ -1,5 +1,4 @@
 export type {
-	ConversationMessageContextValue,
 	ConversationMessageSide,
 	ConversationMessageStatus,
 } from "./conversation.context.ts";
