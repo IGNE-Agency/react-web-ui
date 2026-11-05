@@ -111,15 +111,19 @@ export const loadOf = <TItem>(
  * A paged query's progress once it holds data, else nothing.
  *
  * @example
- * pagedProgress({ items: statuses }); // undefined
+ * pagedProgress(undefined); // undefined
  */
-export const pagedProgress = <TItem>(
-	source: ComboboxItems<TItem>,
+export const pagedProgress = (
+	query:
+		| Pick<
+				PagedQuery<unknown>,
+				"data" | "isFetchingNextPage"
+		  >
+		| undefined,
 ): PagedProgress | undefined =>
-	source.query?.data === undefined
+	query?.data === undefined
 		? undefined
 		: {
-				totalCount:
-					source.query.data.pages.at(0)?.totalCount,
-				isFetchingNextPage: source.query.isFetchingNextPage,
+				totalCount: query.data.pages.at(0)?.totalCount,
+				isFetchingNextPage: query.isFetchingNextPage,
 			};

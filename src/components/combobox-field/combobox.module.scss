@@ -155,6 +155,10 @@
 		@include checkbox.indicator;
 		@include checkbox.indicator-hidden;
 
+		font-size: calc(
+			var(--checkbox-size, #{checkbox.$size}) * 0.7
+		);
+
 		&[data-selected] {
 			@include checkbox.indicator-shown;
 		}

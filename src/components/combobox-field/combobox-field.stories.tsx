@@ -1,3 +1,7 @@
+import BlockIcon from "@material-design-icons/svg/outlined/block.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	queryOptions,
@@ -21,6 +25,7 @@ import {
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
+import { Icon } from "../icon/index.ts";
 import {
 	ComboboxField,
 	type ComboboxFieldProps,
@@ -48,12 +53,17 @@ const COPY = {
 	searchLabel: SEARCH_LABEL,
 	loadingMoreLabel: "Loading more options…",
 	resultsLabel: (count: number) => `${count} results`,
+	icon: <Icon svg={ExpandMoreIcon} label="" />,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
 } as const;
 
 const MULTIPLE_COPY = {
 	selectedLabel: SELECTED_LABEL,
 	removeLabel: "Remove",
 	removeHint: (itemLabel: string) => `Remove ${itemLabel}`,
+	removeIcon: (
+		<Icon svg={CloseIcon} label="" size={0.875} />
+	),
 } as const;
 
 const STATUS_LABEL: Readonly<Record<string, string>> = {
@@ -735,6 +745,7 @@ const LookedUpPeople = (): ReactElement => (
 			retryable={error => !(error instanceof GoneError)}
 			itemQuery={personQuery}
 			valueUnavailableLabel={UNAVAILABLE_LABEL}
+			unavailableIcon={<Icon svg={BlockIcon} label="" />}
 			valueUnavailableName={itemLabel =>
 				`${itemLabel}, ${UNAVAILABLE_LABEL}`
 			}

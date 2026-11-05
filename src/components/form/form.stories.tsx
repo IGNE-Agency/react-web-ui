@@ -1,3 +1,10 @@
+import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
+import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { revalidateLogic } from "@tanstack/react-form";
 import {
@@ -13,6 +20,7 @@ import { z } from "zod";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
 import { OPTIONS_LOAD_LABELS } from "../../lib/storybook/options-load.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { Icon } from "../icon/index.ts";
 import { Form, type FormRootProps } from "./index.ts";
 import style from "./form.stories.module.scss";
 
@@ -210,12 +218,17 @@ const OWNER_LABEL = "Owner";
 const OWNER_ERROR = "Choose an owner.";
 const OWNERS = ["Ada", "Grace", "Linus"];
 
+const CHECK_ICON = <Icon svg={CheckIcon} label="" />;
+const EXPAND_ICON = <Icon svg={ExpandMoreIcon} label="" />;
+
 const COMBOBOX_LABELS = {
 	...OPTIONS_LOAD_LABELS,
 	noResultsLabel: "No results.",
 	searchLabel: "Search",
 	loadingMoreLabel: "Loading more options…",
 	resultsLabel: (count: number) => `${count} results`,
+	icon: EXPAND_ICON,
+	checkIcon: CHECK_ICON,
 };
 
 const STATUS_OPTIONS = [
@@ -297,6 +310,10 @@ const ChoiceForm = (props: ExampleFormProps) => {
 				{field => (
 					<field.CheckboxField
 						label={TERMS_LABEL}
+						checkIcon={CHECK_ICON}
+						indeterminateIcon={
+							<Icon svg={RemoveIcon} label="" />
+						}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 					/>
@@ -307,6 +324,7 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.CheckboxGroupField
 						label={STATUSES_LABEL}
 						items={STATUS_ITEMS}
+						checkIcon={CHECK_ICON}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 					/>
@@ -336,6 +354,8 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.SelectField
 						label={STATUS_LABEL}
 						options={STATUS_OPTIONS}
+						icon={EXPAND_ICON}
+						checkIcon={CHECK_ICON}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 						{...OPTIONS_LOAD_LABELS}
@@ -823,9 +843,12 @@ const CALENDAR_COPY = {
 const FILE_COPY = {
 	dropTargetLabel: "Drop zone for attachments",
 	dropHint: "Drag files here",
+	dropIcon: <Icon svg={UploadFileIcon} label="" />,
 	chooseLabel: "Choose files",
+	chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 	filesLabel: "Files for attachments",
 	removeLabel: "Remove",
+	removeIcon: <Icon svg={CloseIcon} label="" />,
 	fileHint: (name: string, size: string) =>
 		`${name} (${size})`,
 	tooLargeError: (name: string, maxSize: string) =>
@@ -839,6 +862,8 @@ const PHOTO_COPY = {
 	photoSetLabel: "Photo set",
 	noPhotoLabel: "No photo",
 	removeLabel: "Remove photo",
+	removeIcon: <Icon svg={CloseIcon} label="" />,
+	icon: <Icon svg={PhotoCameraIcon} label="" />,
 };
 
 const INVOICE = pdfFile("invoice-july.pdf");

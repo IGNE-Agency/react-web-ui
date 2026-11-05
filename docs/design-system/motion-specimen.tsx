@@ -1,3 +1,4 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
 import ReplayIcon from "@material-design-icons/svg/outlined/replay.svg?react";
 import { clsx } from "clsx";
@@ -7,7 +8,6 @@ import {
 	useState,
 } from "react";
 import { Button } from "../../src/components/button/index.ts";
-import { CheckboxGlyph } from "../../src/components/checkbox-field/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
 import { resolver } from "./tokens.gen.js";
 import { variableNameOf } from "../../src/terrazzo/index";
@@ -212,7 +212,7 @@ const CheckboxScene = ({ start }: Stage) => (
 		<span
 			className={styles.indicator}
 			data-checked={present(!start)}>
-			<CheckboxGlyph />
+			<CheckIcon fill="currentColor" aria-hidden="true" />
 		</span>
 	</span>
 );

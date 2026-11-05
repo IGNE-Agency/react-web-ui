@@ -1,6 +1,4 @@
-import BlockIcon from "@material-design-icons/svg/outlined/block.svg?react";
 import type { ReactNode } from "react";
-import { Icon } from "../icon/index.ts";
 import type {
 	ValueState,
 	ValueStateLabels,
@@ -27,6 +25,8 @@ type ValueStateViewProps<TItem> = Readonly<{
 	renderItem: (item: TItem) => ReactNode;
 	itemLabel: (item: TItem) => string;
 	labels: ValueStateLabels | undefined;
+	/** Marks an unavailable value, beside its label. */
+	icon?: ReactNode;
 }>;
 
 /**
@@ -34,20 +34,25 @@ type ValueStateViewProps<TItem> = Readonly<{
  * marked unavailable, read as `valueStateName`.
  *
  * @example
- * <ValueStateView state={state} renderItem={renderItem} itemLabel={itemLabel} labels={labels} />
+ * <ValueStateView state={state} renderItem={renderItem} itemLabel={itemLabel} labels={labels} icon={<BlockIcon />} />
  */
 export const ValueStateView = <TItem,>({
 	state,
 	renderItem,
 	itemLabel,
 	labels,
+	icon,
 }: ValueStateViewProps<TItem>): ReactNode =>
 	state.status === "unavailable" && labels !== undefined ? (
 		<span className={style.muted}>
 			<span aria-hidden="true" className={style.item}>
 				{renderItem(state.item)}
 			</span>
-			<Icon svg={BlockIcon} label="" />
+			{icon === undefined ? null : (
+				<span aria-hidden="true" className={style.icon}>
+					{icon}
+				</span>
+			)}
 			<span aria-hidden="true">
 				{labels.valueUnavailableLabel}
 			</span>

@@ -1,5 +1,3 @@
-import AttachIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import UploadIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import { Fieldset as BaseFieldset } from "@base-ui/react/fieldset";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode, Ref } from "react";
@@ -22,7 +20,6 @@ import {
 	type FieldState,
 	fieldStateAttributes,
 } from "../field/index.ts";
-import { Icon } from "../icon/index.ts";
 import style from "./file-field.module.scss";
 
 export type FileInputRootProps = FieldRootProps &
@@ -31,6 +28,7 @@ export type FileInputRootProps = FieldRootProps &
 		state?: FieldState;
 	}>;
 
+/** The fieldset around the file input, which projects its state as `data-*` attributes. */
 const FileInputRoot = ({
 	state,
 	disabled,
@@ -44,6 +42,7 @@ const FileInputRoot = ({
 	/>
 );
 
+/** The legend that names the fieldset. */
 const FileInputLegend = (
 	props: FieldLabelProps,
 ): ReactNode => (
@@ -68,6 +67,7 @@ export type FileInputDropTargetProps = Omit<
 		className?: string;
 	}>;
 
+/** The area files are dropped on, holding the hint, the picker button and the staged files. */
 const FileInputDropTarget = ({
 	state,
 	className,
@@ -80,13 +80,25 @@ const FileInputDropTarget = ({
 	/>
 );
 
+export type FileInputHintProps = ComponentProps<"p"> &
+	Readonly<{
+		/** Drawn above the prompt, such as an upload icon. */
+		icon?: ReactNode;
+	}>;
+
+/** The prompt inside the drop target, with an optional `icon` above it. */
 const FileInputHint = ({
 	className,
+	icon,
 	children,
 	...props
-}: ComponentProps<"p">): ReactNode => (
+}: FileInputHintProps): ReactNode => (
 	<p className={clsx(style.hint, className)} {...props}>
-		<Icon svg={UploadIcon} label="" size={1.5} />
+		{icon === undefined ? null : (
+			<span aria-hidden="true" className={style.hintIcon}>
+				{icon}
+			</span>
+		)}
 		{children}
 	</p>
 );
@@ -105,21 +117,25 @@ export type FileInputTriggerProps = Omit<
 		buttonRef?: Ref<HTMLButtonElement>;
 		/** Marks the picker button as the field's invalid control. */
 		invalid?: boolean;
+		/** Drawn before the button's label, such as an attach icon. */
+		icon?: ReactNode;
 	}>;
 
+/** The button that opens the file dialog. */
 const FileInputTrigger = ({
 	label,
 	disabled,
 	describedBy,
 	buttonRef,
 	invalid,
+	icon,
 	...props
 }: FileInputTriggerProps): ReactNode => (
 	<AriaFileTrigger {...props}>
 		<Button
 			variant="secondary"
 			size="sm"
-			icon={AttachIcon}
+			icon={icon}
 			ref={buttonRef}
 			aria-describedby={describedBy}
 			{...fieldStateAttributes({
@@ -143,6 +159,7 @@ export type FileInputListProps = Readonly<{
 	className?: string;
 }>;
 
+/** The staged files, as a group of removable tiles. */
 const FileInputList = ({
 	label,
 	onRemove,
@@ -155,6 +172,19 @@ const FileInputList = ({
 		</AriaTagList>
 	</AriaTagGroup>
 );
+
+/** A tile's remove button: its name and icon together, or neither for a fixed tile. */
+export type FileInputItemRemoval =
+	| Readonly<{
+			/** Accessible name for the remove button. */
+			removeLabel: string;
+			/** The remove button's icon, such as a cross. */
+			removeIcon: ReactNode;
+	  }>
+	| Readonly<{
+			removeLabel?: undefined;
+			removeIcon?: undefined;
+	  }>;
 
 export type FileInputItemProps = Readonly<{
 	/** Key the surrounding list removes this file by. */
@@ -170,25 +200,21 @@ export type FileInputItemProps = Readonly<{
 
 	disabled?: boolean;
 
-	/** Accessible name for the remove button; without one the tile is fixed. */
-	removeLabel?: string;
-}>;
+	/** Drawn on a tile that has no image preview, such as a file icon. */
+	icon?: ReactNode;
+}> &
+	FileInputItemRemoval;
 
+/** One staged file as an `AttachmentTile`. */
 const FileInputItem = ({
-	id,
-	file,
-	hint,
 	invalid = false,
 	disabled = false,
-	removeLabel,
+	...props
 }: FileInputItemProps): ReactNode => (
 	<AttachmentTile
-		id={id}
-		file={file}
-		hint={hint}
-		removeLabel={removeLabel}
 		invalid={invalid}
 		disabled={disabled}
+		{...props}
 	/>
 );
 
@@ -216,10 +242,10 @@ export type FileInputParts = Readonly<{
  * <FileInput.Root state={{ requiredness: "optional" }}>
  * 	<FileInput.Legend optionalLabel="optional">Attachments</FileInput.Legend>
  * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
- * 		<FileInput.Hint>Drag files here</FileInput.Hint>
- * 		<FileInput.Trigger label="Choose files" onSelect={onSelect} />
+ * 		<FileInput.Hint icon={<UploadFileIcon />}>Drag files here</FileInput.Hint>
+ * 		<FileInput.Trigger label="Choose files" icon={<AttachFileIcon />} onSelect={onSelect} />
  * 		<FileInput.List label="Files for attachments" onRemove={onRemove}>
- * 			<FileInput.Item id={id} file={file} hint="invoice.pdf (12 kB)" removeLabel="Remove" />
+ * 			<FileInput.Item id={id} file={file} hint="invoice.pdf (12 kB)" removeLabel="Remove" removeIcon={<CloseIcon />} />
  * 		</FileInput.List>
  * 	</FileInput.DropTarget>
  * </FileInput.Root>

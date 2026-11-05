@@ -1,24 +1,26 @@
-import { Field as BaseField } from "@base-ui/react/field";
-import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
-	fieldStateAttributes,
-	useFieldState,
 } from "../field/index.ts";
 import { detachHiddenInput } from "../field/hidden-input.ts";
 import {
 	Checkbox,
-	type CheckboxProps,
+	type CheckboxControlProps,
 } from "./checkbox.tsx";
-import style from "./checkbox.module.scss";
 
 export type CheckboxFieldProps = FieldProps &
-	Omit<CheckboxProps, "className" | "onBlur"> &
+	Omit<
+		CheckboxControlProps,
+		"className" | "onBlur" | "children"
+	> &
 	Readonly<{
 		onBlur?: FieldBlurHandler;
+		/** The mark the box shows while checked, such as a tick. */
+		checkIcon: ReactNode;
+		/** The mark the box shows while indeterminate, such as a dash. */
+		indeterminateIcon: ReactNode;
 		/** Applied to the field wrapper, so callers can place the row. */
 		className?: string;
 	}>;
@@ -31,6 +33,8 @@ export type CheckboxFieldProps = FieldProps &
  * <CheckboxField
  * 	label="I agree to the terms"
  * 	optionalLabel="optional"
+ * 	checkIcon={<CheckIcon />}
+ * 	indeterminateIcon={<RemoveIcon />}
  * 	checked={agreed}
  * 	onCheckedChange={setAgreed}
  * />
@@ -46,44 +50,46 @@ export const CheckboxField = ({
 	pending,
 	name,
 	className,
+	checkIcon,
+	indeterminateIcon,
 	...props
 }: CheckboxFieldProps): ReactNode => {
 	const ids = Field.useIds();
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		disabled: props.disabled,
-		readOnly: props.readOnly,
-		filled: props.checked === true,
-	});
 
 	return (
-		<Field.Root
+		<Checkbox.Root
 			name={name}
-			className={clsx(style.root, className)}
-			disabled={field.disabled}
-			invalid={field.invalid}
+			className={className}
+			disabled={props.disabled}
+			readOnly={props.readOnly}
+			errors={errors}
+			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
-			{...fieldStateAttributes(field.state)}>
-			<BaseField.Label className={style.label}>
-				<Checkbox
+			pending={pending}
+			filled={props.checked === true}>
+			<Checkbox.Label>
+				<Checkbox.Control
 					name={ids.controlId}
 					inputRef={detachHiddenInput}
 					required={requiredness === "required"}
-					{...props}
-				/>
+					{...props}>
+					<Checkbox.Indicator>
+						{props.indeterminate === true
+							? indeterminateIcon
+							: checkIcon}
+					</Checkbox.Indicator>
+				</Checkbox.Control>
 				<Field.InlineLabelText
 					label={label}
 					requiredness={requiredness}
 					optionalLabel={optionalLabel}
 				/>
-			</BaseField.Label>
-			<Field.Description>{description}</Field.Description>
-			<Field.Error>{errors}</Field.Error>
-		</Field.Root>
+			</Checkbox.Label>
+			<Checkbox.Description>
+				{description}
+			</Checkbox.Description>
+			<Checkbox.Error>{errors}</Checkbox.Error>
+		</Checkbox.Root>
 	);
 };
