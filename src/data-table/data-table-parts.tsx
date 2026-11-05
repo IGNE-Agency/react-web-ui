@@ -4,6 +4,7 @@ import type {
 	Header as TableHeader,
 	Row as TableRow,
 	SortDirection,
+	SortingState,
 } from "@tanstack/react-table";
 import { clsx } from "clsx";
 import type {
@@ -45,6 +46,20 @@ const ariaSort = (
 	sorted: false | SortDirection,
 ): "ascending" | "descending" | undefined =>
 	sorted === false ? undefined : ARIA_SORT[sorted];
+
+/**
+ * Which way a column sorts, read from the table's sorting state.
+ *
+ * @example
+ * sortOf([{ id: "amount", desc: true }], "amount"); // -> "desc"
+ */
+const sortOf = (
+	sorting: SortingState,
+	columnId: string,
+): false | SortDirection => {
+	const entry = sorting.find(sort => sort.id === columnId);
+	return entry === undefined ? false : entry.desc ? "desc" : "asc";
+};
 
 type Pin = Readonly<{
 	side: "start" | "end";
@@ -350,7 +365,7 @@ export const HeaderCell = <
 	children,
 	...props
 }: DataTableHeaderCellProps<TData>): ReactElement => {
-	const { table } = useDataTable<TData>();
+	const { table, sorting } = useDataTable<TData>();
 	return useRender({
 		defaultTagName: "th",
 		render,
@@ -358,7 +373,9 @@ export const HeaderCell = <
 		props: {
 			scope: "col",
 			colSpan: header.colSpan,
-			"aria-sort": ariaSort(header.column.getIsSorted()),
+			"aria-sort": ariaSort(
+				sortOf(sorting, header.column.id),
+			),
 			...props,
 			...cellProps(
 				header.column.columnDef.meta,
@@ -412,8 +429,8 @@ export const SortButton = <
 	onClick,
 	...props
 }: DataTableSortButtonProps<TData>): ReactNode => {
-	const { table } = useDataTable<TData>();
-	const sorted = header.column.getIsSorted();
+	const { table, sorting } = useDataTable<TData>();
+	const sorted = sortOf(sorting, header.column.id);
 	const icon =
 		sorted === "asc"
 			? sortAscendingIcon

@@ -75,6 +75,7 @@ const Root = <TData extends Record<string, unknown>>({
 	<DataTableContext
 		value={{
 			table,
+			sorting: table.state.sorting,
 			selection,
 			status,
 			isFetching,
