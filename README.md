@@ -187,8 +187,8 @@ const SignUp = () => {
 Related fields, such as the parts of an address, share one legend and one error in a field group, which lines them up side by side. Register `TSFFieldGroup` as a form component and name the fields whose errors it shows:
 
 ```ts
-import { TSFFieldGroup } from "@maanlamp/react-web-ui/fieldset";
-import { TSFTextField } from "@maanlamp/react-web-ui/text-field";
+import { TSFFieldGroup } from "@igne-agency/react-web-ui/fieldset";
+import { TSFTextField } from "@igne-agency/react-web-ui/text-field";
 
 export const { useAppForm, withForm, withFieldGroup } =
 	createAppForm(

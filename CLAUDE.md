@@ -179,7 +179,7 @@ A form control family is named after its Field tier and lives in `src/components
 
 1. **The raw compound**, exported as `<Raw>` (`TextInput`, `Select`, `Checkbox`). Raw text-like controls are named `*Input`.
 2. **The shorthand**, `<Control>Field` (`TextField`, `SelectField`), which composes the raw parts with `Field`.
-3. **The TanStack Form bridge**, `TSF<Control>Field`. An app registers the bridges it uses through `createAppForm(fields)` from `./forms`, which returns `useAppForm`, `withForm` and `withFieldGroup`; `./forms` also exports `useFieldContext` and `useFormContext`. Stories and tests use the full registry in `src/lib/storybook/app-form.tsx`.
+3. **The TanStack Form bridge**, `TSF<Control>Field`. An app registers the bridges it uses through `createAppForm(fieldComponents, formComponents?)` from `./forms`: field bridges as field components, and form-level bridges that read several fields, such as `TSFFieldGroup`, as form components. It returns `useAppForm`, `withForm` and `withFieldGroup`; `./forms` also exports `useFieldContext` and `useFormContext`. Stories and tests use the full registry in `src/lib/storybook/app-form.tsx`.
 
 Presets (`EmailField`, `PhoneField`, `SearchField`, `PasswordField`) get tiers 2 and 3 only, and reuse another control's raw tier.
 
