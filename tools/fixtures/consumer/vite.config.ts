@@ -15,7 +15,7 @@ const subpaths: readonly string[] = (
 
 /** The specifier an app imports a subpath of the kit by. */
 const specifier = (subpath: string): string =>
-	`@maanlamp/react-web-ui/${subpath}`;
+	`@igne-agency/react-web-ui/${subpath}`;
 
 /** An app module per kit subpath, `kit-entry:<subpath>`, that imports everything the subpath exports. */
 const subpathEntries = (): Plugin => ({

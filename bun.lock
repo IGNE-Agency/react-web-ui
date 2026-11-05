@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@maanlamp/react-web-ui",
+      "name": "@igne-agency/react-web-ui",
       "dependencies": {
         "@material-design-icons/svg": "^0.14.15",
         "@tanstack/react-virtual": "^3.14.26",

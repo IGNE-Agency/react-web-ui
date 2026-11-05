@@ -1,5 +1,5 @@
-import { createAppForm } from "@maanlamp/react-web-ui/forms";
-import { TSFTextField } from "@maanlamp/react-web-ui/text-field";
+import { createAppForm } from "@igne-agency/react-web-ui/forms";
+import { TSFTextField } from "@igne-agency/react-web-ui/text-field";
 import { createRoot } from "react-dom/client";
 
 const { useAppForm } = createAppForm({

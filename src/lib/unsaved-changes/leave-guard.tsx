@@ -115,7 +115,7 @@ export const leaveGuardOf = (
  * without knowing the router: the browser asks before a reload or a close, and
  * whatever blocks an in-app leave hands it to `hold`. `when` defaults to
  * whether anything reports unsaved changes, which every `Form.Root` does.
- * `@maanlamp/react-web-ui/unsaved-changes/tanstack-router` wires it to
+ * `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` wires it to
  * TanStack Router.
  *
  * @example

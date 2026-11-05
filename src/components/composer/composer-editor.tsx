@@ -79,7 +79,7 @@ export const ComposerEditor = ({
 
 	const [extension] = useState(() =>
 		defineExtension({
-			name: "@maanlamp/react-web-ui/Composer",
+			name: "@igne-agency/react-web-ui/Composer",
 			namespace: "composer",
 			dependencies: [
 				PlainTextExtension,

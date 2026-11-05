@@ -1,4 +1,4 @@
-import { Button } from "@maanlamp/react-web-ui/button";
+import { Button } from "@igne-agency/react-web-ui/button";
 import { createRoot } from "react-dom/client";
 
 createRoot(document.body).render(

@@ -125,10 +125,10 @@ export const $isMentionNode = (
  */
 export const MentionExtension: LexicalExtension<
 	ExtensionConfigBase,
-	"@maanlamp/react-web-ui/Mention",
+	"@igne-agency/react-web-ui/Mention",
 	unknown,
 	unknown
 > = defineExtension({
-	name: "@maanlamp/react-web-ui/Mention",
+	name: "@igne-agency/react-web-ui/Mention",
 	nodes: [MentionNode],
 });
