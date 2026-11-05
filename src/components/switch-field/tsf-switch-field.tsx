@@ -29,7 +29,7 @@ export const TSFSwitchField = (
 	props: TSFSwitchFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<boolean>();
+		useConnectedField<boolean>(props.label);
 
 	return (
 		<SwitchField

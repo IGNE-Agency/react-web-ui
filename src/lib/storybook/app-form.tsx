@@ -6,6 +6,7 @@ import type { TSFDateFieldProps } from "../../components/date-field/tsf-date-fie
 import type { TSFDateRangeFieldProps } from "../../components/date-range-field/tsf-date-range-field.tsx";
 import type { TSFEmailFieldProps } from "../../components/email-field/tsf-email-field.tsx";
 import type { TSFFileFieldProps } from "../../components/file-field/tsf-file-field.tsx";
+import { TSFFieldGroup } from "../../components/fieldset/tsf-field-group.tsx";
 import type { TSFNumberFieldProps } from "../../components/number-field/tsf-number-field.tsx";
 import type { TSFOtpFieldProps } from "../../components/otp-field/tsf-otp-field.tsx";
 import { TSFPasswordField } from "../../components/password-field/tsf-password-field.tsx";
@@ -139,12 +140,20 @@ const fieldComponents: FieldComponents = {
 	ToggleGroupField: TSFToggleGroupField,
 };
 
-const appForm: AppForm<FieldComponents> =
-	createAppForm(fieldComponents);
+type FormComponents = Readonly<{
+	FieldGroup: typeof TSFFieldGroup;
+}>;
+
+const formComponents: FormComponents = {
+	FieldGroup: TSFFieldGroup,
+};
+
+const appForm: AppForm<FieldComponents, FormComponents> =
+	createAppForm(fieldComponents, formComponents);
 
 /**
  * The form hook of the kit's stories and tests, with every field's bridge
- * registered under its plain name.
+ * registered under its plain name, and `TSFFieldGroup` as `form.FieldGroup`.
  *
  * @example
  * const form = useAppForm({
@@ -152,5 +161,7 @@ const appForm: AppForm<FieldComponents> =
  * 	onSubmit: ({ value }) => save(value),
  * });
  */
-export const useAppForm: AppForm<FieldComponents>["useAppForm"] =
-	appForm.useAppForm;
+export const useAppForm: AppForm<
+	FieldComponents,
+	FormComponents
+>["useAppForm"] = appForm.useAppForm;

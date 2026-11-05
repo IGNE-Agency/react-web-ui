@@ -184,6 +184,45 @@ const SignUp = () => {
 };
 ```
 
+Related fields, such as the parts of an address, share one legend and one error in a field group, which lines them up side by side. Register `TSFFieldGroup` as a form component and name the fields whose errors it shows:
+
+```ts
+import { TSFFieldGroup } from "@igne-agency/react-web-ui/fieldset";
+import { TSFTextField } from "@igne-agency/react-web-ui/text-field";
+
+export const { useAppForm, withForm, withFieldGroup } =
+	createAppForm(
+		{ TextField: TSFTextField },
+		{ FieldGroup: TSFFieldGroup },
+	);
+```
+
+```tsx
+<form.FieldGroup
+	legend="Address"
+	optionalLabel="optional"
+	names={["postalCode", "houseNumber"]}>
+	<form.AppField name="postalCode">
+		{field => (
+			<field.TextField
+				label="Postal code"
+				requiredness="required"
+				optionalLabel="optional"
+			/>
+		)}
+	</form.AppField>
+	<form.AppField name="houseNumber">
+		{field => (
+			<field.TextField
+				label="House number"
+				requiredness="required"
+				optionalLabel="optional"
+			/>
+		)}
+	</form.AppField>
+</form.FieldGroup>
+```
+
 Every field takes `requiredness` (`"required"`, `"optional"`, or left out to show neither mark) and `errors`, which accepts strings and anything with a string `message`, such as Standard Schema issues. Validation is the app's own, through Standard Schema; the kit ships no validators.
 
 `Form.Root` reports unsaved changes to the page's leave guards (`useLeaveGuard`, or `useRouterLeaveGuard` from `./unsaved-changes/tanstack-router`) while its `leaveGuard` policy returns true for the form's live state. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. Pass `never` for a form whose edits need not survive leaving, or any `(state) => boolean`:

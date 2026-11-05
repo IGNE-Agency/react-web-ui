@@ -27,7 +27,7 @@ export const TSFNumberField = (
 ): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		number | null
-	>();
+	>(props.label);
 	return (
 		<NumberField
 			{...props}

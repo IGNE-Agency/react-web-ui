@@ -28,7 +28,7 @@ export const TSFPasswordField = (
 	props: TSFPasswordFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<string>();
+		useConnectedField<string>(props.label);
 	return (
 		<PasswordField
 			{...props}

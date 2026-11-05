@@ -35,7 +35,7 @@ export const TSFDateRangeField = (
 	const {
 		field,
 		props: { name, ...connected },
-	} = useConnectedField<IsoDateRange | null>();
+	} = useConnectedField<IsoDateRange | null>(props.label);
 
 	return (
 		<DateRangeField

@@ -27,7 +27,7 @@ export const connectTextPreset = <TExtra extends object>(
 		props: TSFTextPresetProps<TExtra>,
 	): ReactNode => {
 		const { field, props: connected } =
-			useConnectedField<string>();
+			useConnectedField<string>(props.label);
 		return (
 			<Preset
 				{...props}

@@ -7,6 +7,35 @@
 		flex-direction: column;
 		gap: var(--field-gap, var(--sys-unit-4));
 		inline-size: 100%;
+
+		&[data-field-group-member] {
+			> * {
+				grid-row: extra;
+				margin-block-start: var(
+					--field-gap,
+					var(--sys-unit-4)
+				);
+			}
+
+			> .label {
+				grid-row: label;
+				margin-block: 0 var(--field-gap, var(--sys-unit-4));
+			}
+
+			> :first-child:not(.label),
+			> .label + * {
+				grid-row: control;
+				margin-block-start: 0;
+			}
+
+			> .description {
+				grid-row: description;
+			}
+
+			> .error {
+				grid-row: error;
+			}
+		}
 	}
 
 	.label {

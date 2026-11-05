@@ -11,7 +11,7 @@ import {
 	FieldsetLegend,
 	FieldsetRoot,
 	type FieldsetRootProps,
-} from "../field/fieldset.tsx";
+} from "../fieldset/fieldset-root.tsx";
 import { useFormDisabled } from "../form/form-context.ts";
 import style from "./toggle-group.module.scss";
 

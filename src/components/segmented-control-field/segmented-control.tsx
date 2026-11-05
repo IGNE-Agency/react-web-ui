@@ -12,7 +12,7 @@ import {
 	FieldsetLegend,
 	FieldsetRoot,
 	type FieldsetRootProps,
-} from "../field/fieldset.tsx";
+} from "../fieldset/fieldset-root.tsx";
 import { useFormDisabled } from "../form/form-context.ts";
 import { useSlidingIndicator } from "../../lib/sliding-indicator/index.ts";
 import style from "./segmented-control.module.scss";

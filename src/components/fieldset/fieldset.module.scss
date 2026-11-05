@@ -1,0 +1,32 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.description {
+		color: var(
+			--fieldset-description-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--fieldset-description-font,
+			var(--sys-font-body-medium)
+		);
+	}
+
+	.fields {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+		grid-template-rows:
+			[label] auto [control] auto [extra] auto
+			[description] auto [error] auto;
+		grid-template-columns: var(--field-group-columns, none);
+		column-gap: var(--field-group-gap, var(--sys-unit-8));
+
+		> [data-field-group-member] {
+			display: grid;
+			grid-row: 1 / -1;
+			grid-template-rows: subgrid;
+			row-gap: 0;
+		}
+	}
+}

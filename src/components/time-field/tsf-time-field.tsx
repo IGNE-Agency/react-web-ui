@@ -30,7 +30,7 @@ export const TSFTimeField = (
 ): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		string | null
-	>();
+	>(props.label);
 
 	return (
 		<TimeField

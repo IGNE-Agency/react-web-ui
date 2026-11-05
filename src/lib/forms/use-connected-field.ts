@@ -1,4 +1,6 @@
+import { useContext, useLayoutEffect } from "react";
 import type { FieldBlurHandler } from "../../components/field/field.tsx";
+import { FieldGroupContext } from "../../components/field/field-group-context.ts";
 import { useFieldContext } from "./context.tsx";
 
 /** The field props a bridge passes at the top level, read off its field. */
@@ -18,24 +20,38 @@ export type ConnectedField<TValue> = Readonly<{
 }>;
 
 /**
- * The field a bridge renders for, and the props every field takes from it:
- * its name, its errors as the validators returned them, `dirty`, `touched`,
- * `pending` while it validates, and the blur handler. The value and its change
- * handler are the control's own.
+ * The TanStack Form field a control renders in, and the props every field
+ * takes from it: its name, its errors as the validators returned them,
+ * `dirty`, `touched`, `pending` while it validates, and the blur handler. The
+ * value and its change handler are the control's own. Given the field's
+ * label, it tells an enclosing field group, whose `formatError` receives it.
  *
  * @example
- * const { field, props } = useConnectedField<string>();
- * <TextField {...props} value={field.state.value} onValueChange={field.handleChange} label={label} optionalLabel={optionalLabel} />
+ * const { field, props: { name, onBlur, ...state } } = useConnectedField<string>(label);
+ * <TextInput.Root {...state} value={field.state.value} onValueChange={field.handleChange} optionalLabel="optional">
+ * 	<TextInput.Input name={name} onBlur={onBlur} />
+ * </TextInput.Root>
  */
-export const useConnectedField = <
-	TValue,
->(): ConnectedField<TValue> => {
+export const useConnectedField = <TValue>(
+	label?: string,
+): ConnectedField<TValue> => {
 	const field = useFieldContext<TValue>();
+	const registerLabel = useContext(
+		FieldGroupContext,
+	)?.registerLabel;
+	const { name } = field;
 	const { meta } = field.state;
+	useLayoutEffect(
+		() =>
+			registerLabel === undefined || label === undefined
+				? undefined
+				: registerLabel(name, label),
+		[registerLabel, name, label],
+	);
 	return {
 		field,
 		props: {
-			name: field.name,
+			name,
 			errors: meta.errors,
 			dirty: meta.isDirty,
 			touched: meta.isTouched,

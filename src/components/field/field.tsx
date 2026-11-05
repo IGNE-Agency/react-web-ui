@@ -3,11 +3,16 @@ import { clsx } from "clsx";
 import {
 	type ComponentProps,
 	type ReactNode,
+	useContext,
 	useId,
 } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { ErrorText } from "../error-text/index.ts";
 import { Spinner } from "../spinner/index.ts";
+import {
+	FieldRowContext,
+	useFieldGroupLineIds,
+} from "./field-group-context.ts";
 import type { Requiredness } from "./field-state.ts";
 import style from "./field.module.scss";
 
@@ -138,19 +143,28 @@ export type FieldRootProps = BaseField.Root.Props &
 
 /**
  * The field frame: label, control, description and error stacked full width.
+ * In a field group's row its parts share the row's tracks with its neighbours.
  *
  * @example
  * <Field.Root name="email" invalid={invalid}>…</Field.Root>
  */
 const FieldRoot = ({
 	className,
+	children,
 	...props
-}: FieldRootProps): ReactNode => (
-	<BaseField.Root
-		className={clsx(style.field, className)}
-		{...props}
-	/>
-);
+}: FieldRootProps): ReactNode => {
+	const inRow = useContext(FieldRowContext);
+	return (
+		<BaseField.Root
+			className={clsx(style.field, className)}
+			data-field-group-member={inRow ? "" : undefined}
+			{...props}>
+			<FieldRowContext value={false}>
+				{children}
+			</FieldRowContext>
+		</BaseField.Root>
+	);
+};
 
 export type FieldLabelProps = Omit<
 	BaseField.Label.Props,
@@ -234,6 +248,8 @@ const FieldDescription = ({
 		</BaseField.Description>
 	);
 
+const Unrendered = (): null => null;
+
 export type FieldErrorProps = Omit<
 	BaseField.Error.Props,
 	"match" | "render" | "children"
@@ -247,7 +263,9 @@ export type FieldErrorProps = Omit<
  * The one error part every control renders, after the description. Normalises
  * its errors to lines with `normalizeFieldErrors` and renders nothing when
  * there are none. It is the field's only live region, so a control must not
- * announce the same message a second time.
+ * announce the same message a second time. In a field group that collects
+ * the field, the group's error shows the lines instead, and the control is
+ * described by them.
  *
  * @example
  * <Field.Error>{errors}</Field.Error>
@@ -256,13 +274,31 @@ const FieldError = ({
 	children: errors,
 	...props
 }: FieldErrorProps): ReactNode => {
+	const groupLineIds = useFieldGroupLineIds();
+	if (groupLineIds !== undefined) {
+		return groupLineIds.map(lineId => (
+			<BaseField.Error
+				key={lineId}
+				match
+				id={lineId}
+				render={<Unrendered />}
+			/>
+		));
+	}
 	const messages = normalizeFieldErrors(errors);
 	return messages.length === 0 ? null : (
 		<BaseField.Error
 			match
 			{...props}
 			render={renderProps => (
-				<ErrorText el="span" role="alert" {...renderProps}>
+				<ErrorText
+					el="span"
+					role="alert"
+					{...renderProps}
+					className={clsx(
+						style.error,
+						renderProps.className,
+					)}>
 					{messages}
 				</ErrorText>
 			)}
@@ -298,7 +334,7 @@ export type FieldIds = Readonly<{
 	errorId: string;
 	/** A stable id and name for the control. */
 	controlId: string;
-	/** The control's `aria-describedby`: the description and the error that are shown. */
+	/** The control's `aria-describedby`: the description and the error that are shown, or the field's lines in a field group that collects it. */
 	describedBy: (
 		hasDescription: boolean,
 		invalid: boolean,
@@ -314,6 +350,7 @@ export type FieldIds = Readonly<{
  */
 export const useFieldIds = (): FieldIds => {
 	const id = useId();
+	const groupLineIds = useFieldGroupLineIds();
 	const descriptionId = `${id}description`;
 	const errorId = `${id}error`;
 	return {
@@ -324,7 +361,7 @@ export const useFieldIds = (): FieldIds => {
 		describedBy: (hasDescription, invalid) =>
 			[
 				hasDescription ? descriptionId : "",
-				invalid ? errorId : "",
+				...(groupLineIds ?? [invalid ? errorId : ""]),
 			]
 				.filter(part => part !== "")
 				.join(" ") || undefined,

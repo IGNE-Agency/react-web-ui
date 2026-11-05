@@ -12,41 +12,63 @@ export type AppFieldComponents = Readonly<
 	Record<string, Bridge>
 >;
 
-type FormComponents = Readonly<Record<string, never>>;
+/** The bridges that read a whole form rather than one field, such as `TSFFieldGroup`, by the name a form reaches each under. */
+export type AppFormComponents = Readonly<
+	Record<string, Bridge>
+>;
 
-type AppFormHook<TFields extends AppFieldComponents> =
-	ReturnType<
-		typeof createFormHook<TFields, FormComponents>
-	>;
+/** A form hook's form components when it registers none. */
+export type NoFormComponents = Readonly<
+	Record<string, never>
+>;
+
+type AppFormHook<
+	TFields extends AppFieldComponents,
+	TForms extends AppFormComponents,
+> = ReturnType<typeof createFormHook<TFields, TForms>>;
 
 /** The form hook `createAppForm` builds, with the form and field-group helpers bound to it. */
-export type AppForm<TFields extends AppFieldComponents> =
-	Readonly<
-		Pick<
-			AppFormHook<TFields>,
-			"useAppForm" | "withForm" | "withFieldGroup"
-		>
-	>;
+export type AppForm<
+	TFields extends AppFieldComponents,
+	TForms extends AppFormComponents = NoFormComponents,
+> = Readonly<
+	Pick<
+		AppFormHook<TFields, TForms>,
+		"useAppForm" | "withForm" | "withFieldGroup"
+	>
+>;
 
-const formComponents: FormComponents = {};
+/** `createAppForm`, with or without form components. */
+export type CreateAppForm = {
+	<TFields extends AppFieldComponents>(
+		fieldComponents: TFields,
+	): AppForm<TFields>;
+	<
+		TFields extends AppFieldComponents,
+		TForms extends AppFormComponents,
+	>(
+		fieldComponents: TFields,
+		formComponents: TForms,
+	): AppForm<TFields, TForms>;
+};
+
+const noFormComponents: NoFormComponents = {};
 
 /**
- * The app's form hook, with only the bridges it registers. A form reaches each
- * through `form.AppField` under its key, and a failed submit focuses the first
+ * A form hook over the given bridges, whose failed submit focuses the first
  * invalid control of the `Form.Root` the form renders in.
  *
  * @example
- * export const { useAppForm, withForm, withFieldGroup } = createAppForm({
- * 	TextField: TSFTextField,
- * 	SelectField: TSFSelectField,
- * });
+ * const { useAppForm } = buildAppForm({ TextField: TSFTextField }, {});
  */
-export const createAppForm = <
+const buildAppForm = <
 	TFields extends AppFieldComponents,
+	TForms extends AppFormComponents,
 >(
 	fieldComponents: TFields,
-): AppForm<TFields> => {
-	const hook = createFormHook<TFields, FormComponents>({
+	formComponents: TForms,
+): AppForm<TFields, TForms> => {
+	const hook = createFormHook<TFields, TForms>({
 		fieldContext,
 		formContext,
 		fieldComponents,
@@ -65,3 +87,26 @@ export const createAppForm = <
 		withFieldGroup: hook.withFieldGroup,
 	};
 };
+
+/**
+ * The app's form hook, with only the bridges it registers. A form reaches each
+ * field bridge through `form.AppField` under its key, and each form component,
+ * such as `TSFFieldGroup`, as `form.<key>`. A failed submit focuses the first
+ * invalid control of the `Form.Root` the form renders in.
+ *
+ * @example
+ * export const { useAppForm, withForm, withFieldGroup } = createAppForm(
+ * 	{ TextField: TSFTextField, SelectField: TSFSelectField },
+ * 	{ FieldGroup: TSFFieldGroup },
+ * );
+ */
+export const createAppForm: CreateAppForm = <
+	TFields extends AppFieldComponents,
+	TForms extends AppFormComponents,
+>(
+	fieldComponents: TFields,
+	formComponents?: TForms,
+) =>
+	formComponents === undefined
+		? buildAppForm(fieldComponents, noFormComponents)
+		: buildAppForm(fieldComponents, formComponents);
