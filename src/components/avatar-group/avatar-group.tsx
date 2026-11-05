@@ -61,16 +61,16 @@ const Root = ({
 
 export type AvatarGroupAvatarProps = Omit<
 	useRender.ComponentProps<"span">,
-	"children"
+	"children" | "aria-label"
 > &
 	Readonly<{
-		/** Display name, drawn as initials. */
+		/** Display name, drawn as initials and announced as the avatar's name. */
 		name: string;
 		/** Portrait to show in place of the initials, where there is one. */
 		src?: string;
 	}>;
 
-/** One member of the stack, overlapping the one before it. */
+/** One member of the stack, overlapping the one before it: an image named for its person. */
 const Avatar = ({
 	name,
 	src,
@@ -86,7 +86,9 @@ const Avatar = ({
 		render,
 		ref,
 		props: {
+			role: "img",
 			...props,
+			"aria-label": name,
 			className: clsx(style.member, className),
 			children: (
 				<KitAvatar name={name} src={src} size={size} />

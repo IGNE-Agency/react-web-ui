@@ -121,6 +121,13 @@ export const NoOverflow: Story = {
 		await expect(
 			canvas.queryByRole("button"),
 		).not.toBeInTheDocument();
+		await Promise.all(
+			PEOPLE.slice(0, 3).map(person =>
+				expect(
+					canvas.getByRole("img", { name: person.name }),
+				).toBeVisible(),
+			),
+		);
 	},
 };
 
