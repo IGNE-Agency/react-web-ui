@@ -5,10 +5,12 @@ import {
 import { clsx } from "clsx";
 import {
 	type ComponentPropsWithRef,
+	createContext,
 	Fragment,
 	type ReactNode,
 	useEffect,
 } from "react";
+import { useRequiredContext } from "../../lib/use-required-context.ts";
 import { Button } from "../button/button.tsx";
 import {
 	flushBufferedToasts,
@@ -30,18 +32,22 @@ export type ToastRootProps = Omit<
 		className?: string;
 	}>;
 
+const ToastIdContext = createContext<string | null>(null);
+
 /** A toast's frame, in its tone: a dialog that holds the other parts. */
 const Root = ({
 	toast,
 	className,
 	...props
 }: ToastRootProps): ReactNode => (
-	<BaseToast.Root
-		toast={toast}
-		data-tone={toast.data?.tone}
-		{...props}
-		className={clsx(styles.toast, className)}
-	/>
+	<ToastIdContext value={toast.id}>
+		<BaseToast.Root
+			toast={toast}
+			data-tone={toast.data?.tone}
+			{...props}
+			className={clsx(styles.toast, className)}
+		/>
+	</ToastIdContext>
 );
 
 export type ToastIconProps = ComponentPropsWithRef<"span">;
@@ -119,22 +125,32 @@ export type ToastCloseProps = Readonly<{
 	className?: string;
 }>;
 
-/** The icon-only button that closes the toast. */
+/** The icon-only button that closes the toast, named for every input. */
 const Close = ({
 	label,
 	children,
 	className,
-}: ToastCloseProps): ReactNode => (
-	<Button
-		className={clsx(styles.close, className)}
-		variant="tertiary"
-		size="sm"
-		iconOnly
-		icon={children}
-		label={label}
-		render={<BaseToast.Close />}
-	/>
-);
+}: ToastCloseProps): ReactNode => {
+	const id = useRequiredContext(
+		ToastIdContext,
+		"Toast.Close must be rendered inside <Toast.Root>.",
+	);
+	const { close } = BaseToast.useToastManager();
+
+	return (
+		<Button
+			className={clsx(styles.close, className)}
+			variant="tertiary"
+			size="sm"
+			iconOnly
+			icon={children}
+			label={label}
+			onClick={() => {
+				close(id);
+			}}
+		/>
+	);
+};
 
 /** The parts of a toast, for `ToastProvider`'s `renderToast`. */
 export type ToastParts = Readonly<{
