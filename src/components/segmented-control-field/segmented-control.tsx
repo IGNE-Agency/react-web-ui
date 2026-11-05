@@ -13,6 +13,7 @@ import {
 	FieldsetRoot,
 	type FieldsetRootProps,
 } from "../field/fieldset.tsx";
+import { useFormDisabled } from "../form/form-context.ts";
 import { useSlidingIndicator } from "../../lib/sliding-indicator/index.ts";
 import style from "./segmented-control.module.scss";
 
@@ -33,23 +34,28 @@ const SegmentedControlGroup = ({
 	className,
 	readOnly,
 	invalid,
+	disabled = false,
 	onValueChange,
 	children,
 	...props
-}: SegmentedControlGroupProps): ReactNode => (
-	<BaseToggleGroup
-		className={clsx(style.group, className)}
-		onValueChange={
-			readOnly === true ? undefined : onValueChange
-		}
-		{...fieldStateAttributes({
-			readonly: readOnly,
-			invalid,
-		})}
-		{...props}>
-		{children}
-	</BaseToggleGroup>
-);
+}: SegmentedControlGroupProps): ReactNode => {
+	const formDisabled = useFormDisabled();
+	return (
+		<BaseToggleGroup
+			className={clsx(style.group, className)}
+			onValueChange={
+				readOnly === true ? undefined : onValueChange
+			}
+			disabled={disabled || formDisabled}
+			{...fieldStateAttributes({
+				readonly: readOnly,
+				validity: invalid === true ? "invalid" : undefined,
+			})}
+			{...props}>
+			{children}
+		</BaseToggleGroup>
+	);
+};
 
 export type SegmentedControlOptionProps = BaseToggle.Props;
 

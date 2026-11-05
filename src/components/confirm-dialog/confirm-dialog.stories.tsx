@@ -108,7 +108,7 @@ const meta = {
 		description: DESCRIPTION,
 		confirmLabel: CONFIRM_LABEL,
 		cancelLabel: CANCEL_LABEL,
-		destructive: true,
+		tone: "danger",
 		onConfirm: fn(),
 		onOpenChange: fn(),
 	},
@@ -144,7 +144,7 @@ export const Open: Story = {
 
 export const NotDestructive: Story = {
 	args: {
-		destructive: false,
+		tone: "brand",
 		title: SEND_TITLE,
 		description: undefined,
 		confirmLabel: SEND_CONFIRM_LABEL,

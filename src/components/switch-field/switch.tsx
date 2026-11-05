@@ -8,8 +8,8 @@ import {
 	type FieldRootProps,
 	fieldStateAttributes,
 	useFieldFocus,
+	useFieldState,
 } from "../field/index.ts";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import style from "./switch.module.scss";
 
 export type SwitchRootProps = FieldRootProps &
@@ -39,24 +39,24 @@ const SwitchRoot = ({
 	className,
 	...props
 }: SwitchRootProps): ReactNode => {
-	const invalid = normalizeFieldErrors(errors).length > 0;
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled,
+	});
 	return (
 		<Field.Root
 			className={clsx(style.root, className)}
-			disabled={disabled}
-			invalid={invalid}
+			disabled={field.disabled}
+			invalid={field.invalid}
 			dirty={dirty}
 			touched={touched}
-			{...fieldStateAttributes({
-				disabled,
-				readonly: readOnly,
-				requiredness,
-				invalid,
-				dirty,
-				touched,
-				pending,
-				filled,
-			})}
+			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>
 	);

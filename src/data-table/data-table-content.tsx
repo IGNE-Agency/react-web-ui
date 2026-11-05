@@ -108,12 +108,12 @@ export type DataTableContentProps<
 	renderSubRow?: (
 		row: Row<DataTableFeatures, TData>,
 	) => ReactNode;
-	/** The body when the query matched nothing, such as "No declarations yet." */
+	/** The body when the query matched nothing, such as "No declarations yet." or an `EmptyMessage`. */
 	emptyState: ReactNode;
 	/** What a failed fetch says, as the body or above rows still on screen, such as "The declarations could not be loaded." */
-	errorState: ReactNode;
+	errorLabel: string;
 	/** What is announced while the first page loads, as the table's caption, such as "Loading declarations". */
-	loadingState: ReactNode;
+	loadingLabel: string;
 	/** What the overlay says when a refresh runs long, such as "This is taking longer than usual." */
 	slowLabel: ReactNode;
 	/** The retry's label, such as "Try again". */
@@ -131,8 +131,8 @@ export const DataTableContent = <
 >({
 	renderSubRow,
 	emptyState,
-	errorState,
-	loadingState,
+	errorLabel,
+	loadingLabel,
 	slowLabel,
 	retryLabel,
 	className,
@@ -163,7 +163,7 @@ export const DataTableContent = <
 		<>
 			{refreshFailed ? (
 				<div className={style.refreshFailed} role="alert">
-					<span>{errorState}</span>
+					<span>{errorLabel}</span>
 					{onRetry ? (
 						<Button
 							variant="tertiary"
@@ -190,7 +190,7 @@ export const DataTableContent = <
 								}>
 								{view === "loading" ? (
 									<caption className={style.busyCaption}>
-										{loadingState}
+										{loadingLabel}
 									</caption>
 								) : null}
 								<thead className={style.thead}>
@@ -330,7 +330,7 @@ export const DataTableContent = <
 												<StateBody
 													view={view}
 													emptyState={emptyState}
-													errorState={errorState}
+													errorLabel={errorLabel}
 												/>
 											</td>
 										</tr>
@@ -398,19 +398,19 @@ const PlaceholderRows = ({
 
 type StateBodyProps = Readonly<{
 	view: "error" | "empty";
-	emptyState?: ReactNode;
-	errorState?: ReactNode;
+	emptyState: ReactNode;
+	errorLabel: string;
 }>;
 
 const StateBody = ({
 	view,
 	emptyState,
-	errorState,
+	errorLabel,
 }: StateBodyProps) => {
 	if (view === "error") {
 		return (
 			<span className={style.errorState} role="alert">
-				{errorState}
+				{errorLabel}
 			</span>
 		);
 	}

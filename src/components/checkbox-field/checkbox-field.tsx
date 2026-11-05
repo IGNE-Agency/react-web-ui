@@ -1,13 +1,14 @@
 import { Field as BaseField } from "@base-ui/react/field";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import {
 	Field,
+	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 	fieldStateAttributes,
+	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import {
 	Checkbox,
 	type CheckboxProps,
@@ -15,8 +16,9 @@ import {
 import style from "./checkbox.module.scss";
 
 export type CheckboxFieldProps = FieldProps &
-	Omit<CheckboxProps, "className"> &
+	Omit<CheckboxProps, "className" | "onBlur"> &
 	Readonly<{
+		onBlur?: FieldBlurHandler;
 		/** Applied to the field wrapper, so callers can place the row. */
 		className?: string;
 	}>;
@@ -47,26 +49,26 @@ export const CheckboxField = ({
 	...props
 }: CheckboxFieldProps): ReactNode => {
 	const ids = Field.useIds();
-	const invalid = normalizeFieldErrors(errors).length > 0;
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled: props.disabled,
+		readOnly: props.readOnly,
+		filled: props.checked === true,
+	});
 
 	return (
 		<Field.Root
 			name={name}
 			className={clsx(style.root, className)}
-			disabled={props.disabled}
-			invalid={invalid}
+			disabled={field.disabled}
+			invalid={field.invalid}
 			dirty={dirty}
 			touched={touched}
-			{...fieldStateAttributes({
-				disabled: props.disabled,
-				readonly: props.readOnly,
-				requiredness,
-				invalid,
-				dirty,
-				touched,
-				pending,
-				filled: props.checked === true,
-			})}>
+			{...fieldStateAttributes(field.state)}>
 			<BaseField.Label className={style.label}>
 				<Checkbox
 					name={ids.controlId}

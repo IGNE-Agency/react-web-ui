@@ -90,6 +90,12 @@ const dropShadows: Transform = (
 const light = (contents: string): string =>
 	`:root {\n\tcolor-scheme: light;\n${contents}\n}`;
 
+const LAYER_ORDER =
+	"@layer kit.reset, kit.base, kit.components;";
+
+const layered = (contents: string): string =>
+	`${LAYER_ORDER}\n\n@layer kit.base {\n${contents.trimEnd()}\n}\n`;
+
 const dark = (contents: string): string =>
 	`html[data-theme="dark"] {\n\tcolor-scheme: dark;\n${contents}\n}\n\n@media (prefers-color-scheme: dark) {\n\thtml:not([data-theme="light"]) {\n\t\tcolor-scheme: dark;\n${contents}\n\t}\n}`;
 
@@ -97,7 +103,8 @@ const dark = (contents: string): string =>
  * A Terrazzo plugin that builds a resolver's tokens into the custom properties
  * the kit's components read: `--ref-*` and `--sys-*`, the `light` theme on
  * `:root` and the `dark` theme's `sys` roles on `html[data-theme="dark"]`, and
- * under `prefers-color-scheme: dark` unless `data-theme="light"`. A shadow
+ * under `prefers-color-scheme: dark` unless `data-theme="light"`, all in the
+ * `kit.base` cascade layer after the kit's layer order. A shadow
  * tagged `$extensions["nl.igne.css"].property: "filter"` is written as
  * `drop-shadow()` filters.
  *
@@ -114,8 +121,8 @@ const dark = (contents: string): string =>
  */
 const kitTokens = (
 	options: KitTokensOptions = {},
-): Plugin =>
-	css({
+): Plugin => {
+	const plugin = css({
 		filename: options.filename ?? "tokens.css",
 		variableName,
 		transform: dropShadows,
@@ -128,5 +135,21 @@ const kitTokens = (
 			},
 		],
 	});
+	return {
+		...plugin,
+		build: hook =>
+			plugin.build?.({
+				...hook,
+				outputFile: (filename, contents) => {
+					hook.outputFile(
+						filename,
+						typeof contents === "string"
+							? layered(contents)
+							: contents,
+					);
+				},
+			}),
+	};
+};
 
 export default kitTokens;

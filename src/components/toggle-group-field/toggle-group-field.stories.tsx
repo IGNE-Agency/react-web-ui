@@ -4,8 +4,15 @@ import {
 	expect,
 	fn,
 	userEvent,
+	waitFor,
 	within,
 } from "storybook/test";
+import { BusyForm } from "../../lib/storybook/busy-form.tsx";
+import {
+	PENDING_TOGGLE_LABEL,
+	PendingToggle,
+	pendingOnPress,
+} from "../../lib/storybook/pending.tsx";
 import {
 	ToggleGroupField,
 	type ToggleGroupFieldProps,
@@ -89,6 +96,57 @@ export const Filled: Story = {
 
 export const Disabled: Story = {
 	args: { value: [SENT.value], disabled: true },
+};
+
+const BusyFormToggleGroupField = (
+	args: ToggleGroupFieldProps,
+) => (
+	<BusyForm>
+		<ToggleGroupField {...args} />
+	</BusyForm>
+);
+
+export const InBusyForm: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: BusyFormToggleGroupField,
+	play: async ({ canvas }) => {
+		await Promise.all(
+			STATUS_OPTIONS.map(({ label }) =>
+				expect(
+					canvas.getByRole("button", { name: label }),
+				).toHaveAttribute("data-disabled"),
+			),
+		);
+	},
+};
+
+const PendingToggleGroupField = (
+	args: ToggleGroupFieldProps,
+) => (
+	<PendingToggle>
+		{pending => (
+			<ToggleGroupField {...args} pending={pending} />
+		)}
+	</PendingToggle>
+);
+
+export const PendingWaits: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: PendingToggleGroupField,
+	play: async ({ canvas, canvasElement }) => {
+		const toggle = canvas.getByRole("button", {
+			name: PENDING_TOGGLE_LABEL,
+		});
+
+		await expect(
+			await pendingOnPress(toggle, canvasElement),
+		).toBe(false);
+		await waitFor(() =>
+			expect(
+				canvasElement.querySelector("[data-pending]"),
+			).not.toBeNull(),
+		);
+	},
 };
 
 export const DisabledOption: Story = {

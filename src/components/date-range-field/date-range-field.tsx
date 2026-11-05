@@ -6,13 +6,11 @@ import {
 	isoToDay,
 	isoToDayRange,
 } from "../../lib/calendar/temporal-value.ts";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
-import type {
-	FieldProps,
-	FieldState,
+import {
+	type FieldBlurHandler,
+	type FieldProps,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import { DateRangeInput } from "./date-range-input.tsx";
 
@@ -35,7 +33,7 @@ export type DateRangeFieldProps = FieldProps &
 		/** Called with the inclusive ISO plain dates picked or typed, or `null` once cleared. */
 		onValueChange?: (value: IsoDateRange | null) => void;
 
-		onBlur?: () => void;
+		onBlur?: FieldBlurHandler;
 
 		/** Earliest selectable ISO plain date. */
 		minValue?: string;
@@ -109,21 +107,18 @@ export const DateRangeField = ({
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const timeZone = useTimeZone();
 	const range = isoToDayRange(value, timeZone);
-	const formDisabled = useFormDisabled();
-	const phase = useBusyPhase({ busy: pending === true });
-	const invalid = normalizeFieldErrors(errors).length > 0;
-
-	const fieldState: FieldState = {
-		disabled: disabled === true || formDisabled,
-		readonly: readOnly,
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
-		valid: touched === true && !invalid,
 		dirty,
 		touched,
-		pending: phase !== "fresh",
+		pending,
+		disabled,
+		readOnly,
 		filled: range !== null,
-	};
+	});
+	const { phase } = field;
+	const fieldState = field.state;
 
 	return (
 		<DateRangeInput.Frame
@@ -157,10 +152,10 @@ export const DateRangeField = ({
 					}
 					startName={startName ?? `${controlId}-start`}
 					endName={endName ?? `${controlId}-end`}
-					isDisabled={disabled}
+					isDisabled={field.disabled}
 					isReadOnly={readOnly}
 					isRequired={requiredness === "required"}
-					isInvalid={invalid}>
+					isInvalid={field.invalid}>
 					{({ isFocusWithin }) => (
 						<>
 							<DateRangeInput.Group

@@ -386,3 +386,49 @@ export const BlurOnPressAway: Story = {
 		);
 	},
 };
+
+const nextFrame = () =>
+	new Promise(resolve => {
+		requestAnimationFrame(resolve);
+	});
+
+const blurOnceClosed = (control: HTMLElement) =>
+	new Promise<void>(resolve => {
+		const observer = new MutationObserver(() => {
+			if (
+				screen.queryByRole("listbox") === null &&
+				document.activeElement === control
+			) {
+				observer.disconnect();
+				control.blur();
+				resolve();
+			}
+		});
+		observer.observe(document.body, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+		});
+	});
+
+export const BlurInTheFrameItCloses: Story = {
+	tags: ["!dev", "!autodocs"],
+	args: { value: undefined },
+	render: PlainSelectField,
+	play: async ({ canvas }) => {
+		const control = trigger(canvas);
+
+		await userEvent.click(control);
+		const option = await screen.findByRole("option", {
+			name: PAID_LABEL,
+		});
+		const left = blurOnceClosed(control);
+		await userEvent.click(option);
+		await left;
+		await nextFrame();
+		await nextFrame();
+
+		await expect(control).not.toHaveFocus();
+		await expect(blurred).toHaveBeenCalledOnce();
+	},
+};

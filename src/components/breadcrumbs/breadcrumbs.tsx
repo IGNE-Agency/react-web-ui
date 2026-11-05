@@ -283,7 +283,7 @@ export type Crumb = Readonly<{
 
 export type BreadcrumbsProps = Readonly<{
 	/** The landmark's name, such as "Breadcrumbs". */
-	"aria-label": string;
+	label: string;
 	/** The overflow button's name, such as "Show more". */
 	overflowLabel: string;
 	/** The trail, outermost first; the last crumb is the current page. */
@@ -314,7 +314,7 @@ const Ancestor = ({
  * and the current page stay. Renders nothing for a trail of one.
  */
 const Trail = ({
-	"aria-label": label,
+	label,
 	overflowLabel,
 	crumbs,
 	className,
@@ -399,7 +399,7 @@ type BreadcrumbsParts = typeof Trail &
  *
  * @example
  * <Breadcrumbs
- * 	aria-label="Breadcrumbs"
+ * 	label="Breadcrumbs"
  * 	overflowLabel="Show more"
  * 	crumbs={[
  * 		{ id: "home", label: "Home", render: <Link to="/" /> },

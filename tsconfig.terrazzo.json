@@ -9,7 +9,8 @@
 		"types": [],
 		"outDir": "dist/terrazzo",
 		"rootDir": "src/terrazzo",
-		"declarationMap": false
+		"declaration": true,
+		"isolatedDeclarations": true
 	},
 	"include": ["src/terrazzo"],
 	"exclude": [],

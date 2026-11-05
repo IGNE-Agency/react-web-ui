@@ -1,10 +1,10 @@
-import ChevronLeft from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRight from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import type { ReactTable } from "@tanstack/react-table";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import { Button } from "../components/button/button.tsx";
-import { Select } from "../components/select-field/select.tsx";
+import {
+	Pagination,
+	type PaginationIndexProps,
+} from "../components/pagination/pagination.tsx";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
 import { DataTableContent } from "./data-table-content.tsx";
 import {
@@ -12,7 +12,7 @@ import {
 	useDataTable,
 } from "./data-table-context.tsx";
 import { DataTableSelectionBar } from "./data-table-selection.tsx";
-import type { QueryStatus } from "./resolve-view.ts";
+import type { DataTableStatus } from "./resolve-view.ts";
 import {
 	type DataTableFeatures,
 	PAGE_SIZE_OPTIONS,
@@ -30,7 +30,7 @@ export type DataTableRootProps<
 	 */
 	selection?: RowSelectionView;
 	/** Injected query lifecycle status (TanStack Query `status`). */
-	status: QueryStatus;
+	status: DataTableStatus;
 	/**
 	 * Whether a fetch is in flight. With keep-previous-data this drives the
 	 * "stale" affordance while previous rows stay visible. @default false
@@ -83,94 +83,64 @@ const Toolbar = ({
 export type DataTablePaginationProps = Readonly<{
 	/** The page-size select's label, such as "Rows per page". */
 	pageSizeLabel: string;
-	/** Where the reader is, such as "Page 2 of 3". */
-	pageStatusLabel: (
-		page: number,
-		pageCount: number,
-	) => string;
-	/** The previous-page button's name and tooltip, such as "Previous page". */
-	previousPageLabel: string;
-	/** The next-page button's name and tooltip, such as "Next page". */
-	nextPageLabel: string;
+	/** What the index says, such as `Page 3 of 12`, from where the table stands. */
+	indexLabel: PaginationIndexProps["label"];
+	/** The first-page button's name, such as "First page". */
+	firstLabel: string;
+	/** The previous-page button's name, such as "Previous page". */
+	previousLabel: string;
+	/** The next-page button's name, such as "Next page". */
+	nextLabel: string;
+	/** The last-page button's name, such as "Last page". */
+	lastLabel: string;
 	className?: string;
 }>;
 
 /**
- * Prev/next + page-size controls driven by the instance's pagination API
- * (built with `manualPagination` + server `rowCount`). The page sizes come
- * from the table's `meta.pageSizeOptions`, and picking one returns to the
- * first page.
+ * The kit's `Pagination`, driven by the instance's pagination API (built with
+ * `manualPagination` + server `rowCount`). The page sizes come from the
+ * table's `meta.pageSizeOptions`, and picking one returns to the first page.
  */
-const Pagination = ({
+const DataTablePagination = ({
 	pageSizeLabel,
-	pageStatusLabel,
-	previousPageLabel,
-	nextPageLabel,
+	indexLabel,
+	firstLabel,
+	previousLabel,
+	nextLabel,
+	lastLabel,
 	className,
 }: DataTablePaginationProps): ReactNode => {
 	const { table } = useDataTable();
 	const { pageIndex, pageSize } = table.state.pagination;
-	const pageCount = Math.max(table.getPageCount(), 1);
-	const sizeOptions = (
-		table.options.meta?.pageSizeOptions ?? PAGE_SIZE_OPTIONS
-	).map(size => ({
-		value: String(size),
-		label: String(size),
-	}));
 
 	return (
-		<div className={clsx(style.pagination, className)}>
-			<Select.Root
-				options={sizeOptions}
-				value={String(pageSize)}
-				onValueChange={next => {
-					table.setPagination({
-						pageIndex: 0,
-						pageSize: Number(next),
-					});
-				}}>
-				<div className={style.pageSize}>
-					<Select.Label>{pageSizeLabel}</Select.Label>
-					<Select.Trigger
-						className={style.pageSizeSelect}
-					/>
-					<Select.Portal>
-						<Select.Positioner>
-							<Select.Popup>
-								<Select.List>
-									<Select.Items />
-								</Select.List>
-							</Select.Popup>
-						</Select.Positioner>
-					</Select.Portal>
-				</div>
-			</Select.Root>
-
-			<span className={style.pageStatus} aria-live="polite">
-				{pageStatusLabel(pageIndex + 1, pageCount)}
-			</span>
-
-			<Button
-				variant="tertiary"
-				iconOnly
-				icon={ChevronLeft}
-				label={previousPageLabel}
-				disabled={!table.getCanPreviousPage()}
-				onClick={() => {
-					table.previousPage();
-				}}
+		<Pagination.Root
+			className={clsx(style.pagination, className)}
+			pageIndex={pageIndex}
+			pageCount={Math.max(table.getPageCount(), 1)}
+			pageSize={pageSize}
+			pageSizes={
+				table.options.meta?.pageSizeOptions ??
+				PAGE_SIZE_OPTIONS
+			}
+			onPageIndexChange={next => {
+				table.setPageIndex(next);
+			}}
+			onPageSizeChange={next => {
+				table.setPagination({
+					pageIndex: 0,
+					pageSize: next,
+				});
+			}}>
+			<Pagination.PageSize label={pageSizeLabel} />
+			<Pagination.Index label={indexLabel} />
+			<Pagination.Controls
+				firstLabel={firstLabel}
+				previousLabel={previousLabel}
+				nextLabel={nextLabel}
+				lastLabel={lastLabel}
 			/>
-			<Button
-				variant="tertiary"
-				iconOnly
-				icon={ChevronRight}
-				label={nextPageLabel}
-				disabled={!table.getCanNextPage()}
-				onClick={() => {
-					table.nextPage();
-				}}
-			/>
-		</div>
+		</Pagination.Root>
 	);
 };
 
@@ -178,7 +148,7 @@ type DataTableParts = Readonly<{
 	Root: typeof Root;
 	Toolbar: typeof Toolbar;
 	Content: typeof DataTableContent;
-	Pagination: typeof Pagination;
+	Pagination: typeof DataTablePagination;
 	SelectionBar: typeof DataTableSelectionBar;
 }>;
 
@@ -195,16 +165,18 @@ type DataTableParts = Readonly<{
  * 	</DataTable.Toolbar>
  * 	<DataTable.Content
  * 		emptyState="No declarations yet."
- * 		errorState="The declarations could not be loaded."
- * 		loadingState="Loading declarations"
+ * 		errorLabel="The declarations could not be loaded."
+ * 		loadingLabel="Loading declarations"
  * 		slowLabel="This is taking longer than usual."
  * 		retryLabel="Try again"
  * 	/>
  * 	<DataTable.Pagination
  * 		pageSizeLabel="Rows per page"
- * 		pageStatusLabel={(page, count) => `Page ${page} of ${count}`}
- * 		previousPageLabel="Previous page"
- * 		nextPageLabel="Next page"
+ * 		indexLabel={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`}
+ * 		firstLabel="First page"
+ * 		previousLabel="Previous page"
+ * 		nextLabel="Next page"
+ * 		lastLabel="Last page"
  * 	/>
  * </DataTable.Root>
  */
@@ -212,6 +184,6 @@ export const DataTable: DataTableParts = {
 	Root,
 	Toolbar,
 	Content: DataTableContent,
-	Pagination,
+	Pagination: DataTablePagination,
 	SelectionBar: DataTableSelectionBar,
 };

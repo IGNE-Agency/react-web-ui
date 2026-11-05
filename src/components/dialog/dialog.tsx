@@ -1,8 +1,10 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import { Button } from "../button/button.tsx";
+import {
+	type CloseButtonProps,
+	CloseButton as KitCloseButton,
+} from "../button/close-button.tsx";
 import styles from "./dialog.module.scss";
 
 const Backdrop = ({
@@ -52,20 +54,17 @@ const Header = ({
 	</div>
 );
 
-export type DialogCloseButtonProps = Readonly<{
-	/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
-	label: string;
-}>;
+export type DialogCloseButtonProps = Pick<
+	CloseButtonProps,
+	"closeLabel"
+>;
 
 /** The icon-only way out, for a header or a footer. */
 const CloseButton = ({
-	label,
+	closeLabel,
 }: DialogCloseButtonProps): ReactNode => (
-	<Button
-		variant="tertiary"
-		iconOnly
-		icon={CloseIcon}
-		label={label}
+	<KitCloseButton
+		closeLabel={closeLabel}
 		render={<BaseDialog.Close />}
 	/>
 );
@@ -118,7 +117,7 @@ type DialogParts = Readonly<{
  *     <Dialog.Popup>
  *       <Dialog.Header>
  *         <Dialog.Title>Discard changes?</Dialog.Title>
- *         <Dialog.CloseButton label="Close" />
+ *         <Dialog.CloseButton closeLabel="Close" />
  *       </Dialog.Header>
  *       <Dialog.Body>
  *         <Dialog.Description>Your edits will be lost.</Dialog.Description>

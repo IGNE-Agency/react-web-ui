@@ -13,22 +13,27 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/index.ts";
 import { lengthTone } from "../../lib/text-length.ts";
 import { Button } from "../button/index.ts";
 import {
 	Field,
-	type FieldErrorProps,
-	type FieldLabelProps,
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
-	focusControlOnRim,
 	useFieldFocus,
-	withFieldFocus,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/form-context.ts";
+import {
+	InputError,
+	type InputErrorProps,
+	InputLabel,
+	type InputLabelProps,
+	InputPartsContext,
+	InputPending,
+	type InputPendingProps,
+} from "../field/input-parts.tsx";
+import { focusControlOnRim } from "../field/rim-focus.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import type { SvgComponent } from "../icon/index.ts";
 import {
 	TextInputContext,
@@ -73,73 +78,56 @@ const TextInputRoot = ({
 	children,
 }: TextInputRootProps): ReactNode => {
 	const controlRef = useRef<TextInputControl | null>(null);
-	const phase = useBusyPhase({ busy: pending });
-	const formDisabled = useFormDisabled();
-	const invalid = normalizeFieldErrors(errors).length > 0;
-
-	const fieldState: FieldState = {
-		disabled: disabled === true || formDisabled,
-		readonly: readOnly,
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
 		dirty,
 		touched,
+		pending,
+		disabled,
+		readOnly,
 		filled: value !== "",
-		pending: phase !== "fresh",
-		...state,
-	};
+		state,
+	});
 
 	return (
-		<TextInputContext
+		<InputPartsContext
 			value={{
-				state: fieldState,
-				value,
-				setValue: onValueChange,
+				state: field.state,
 				errors,
 				optionalLabel,
-				setControl: control => {
-					controlRef.current = control;
-				},
-				focusControl: () => controlRef.current?.focus(),
-				selectControl: () => {
-					controlRef.current?.focus();
-					controlRef.current?.select();
-				},
-				maxLength,
-				phase,
+				phase: field.phase,
 			}}>
-			<Field.Root
-				disabled={disabled}
-				invalid={invalid}
-				dirty={dirty}
-				touched={touched}
-				className={clsx(style.root, className)}
-				{...fieldStateAttributes(fieldState)}>
-				{children}
-			</Field.Root>
-		</TextInputContext>
+			<TextInputContext
+				value={{
+					state: field.state,
+					value,
+					setValue: onValueChange,
+					setControl: control => {
+						controlRef.current = control;
+					},
+					focusControl: () => controlRef.current?.focus(),
+					selectControl: () => {
+						controlRef.current?.focus();
+						controlRef.current?.select();
+					},
+					maxLength,
+				}}>
+				<Field.Root
+					disabled={field.disabled}
+					invalid={field.invalid}
+					dirty={dirty}
+					touched={touched}
+					className={clsx(style.root, className)}
+					{...fieldStateAttributes(field.state)}>
+					{children}
+				</Field.Root>
+			</TextInputContext>
+		</InputPartsContext>
 	);
 };
 
-export type TextInputLabelProps = Omit<
-	FieldLabelProps,
-	"requiredness" | "optionalLabel"
->;
-
-const TextInputLabel = ({
-	children,
-	...props
-}: TextInputLabelProps): ReactNode => {
-	const { state, optionalLabel } = useTextInputContext();
-	return (
-		<Field.Label
-			requiredness={state.requiredness}
-			optionalLabel={optionalLabel}
-			{...props}>
-			{children}
-		</Field.Label>
-	);
-};
+export type TextInputLabelProps = InputLabelProps;
 
 const TextInputGroup = ({
 	className,
@@ -357,36 +345,14 @@ const TextInputCounter = ({
 	);
 };
 
-export type TextInputPendingProps = Readonly<{
-	className?: string;
-}>;
+export type TextInputPendingProps = InputPendingProps;
 
-const TextInputPending = ({
-	className,
-}: TextInputPendingProps): ReactNode => {
-	const { phase } = useTextInputContext();
-	if (phase === "fresh") {
-		return null;
-	}
-	return <Field.Pending className={className} />;
-};
-
-export type TextInputErrorProps = Omit<
-	FieldErrorProps,
-	"children"
->;
-
-const TextInputError = (
-	props: TextInputErrorProps,
-): ReactNode => {
-	const { errors } = useTextInputContext();
-	return <Field.Error {...props}>{errors}</Field.Error>;
-};
+export type TextInputErrorProps = InputErrorProps;
 
 /** The parts of a text input. */
 export type TextInputParts = Readonly<{
 	Root: typeof TextInputRoot;
-	Label: typeof TextInputLabel;
+	Label: typeof InputLabel;
 	Group: typeof TextInputGroup;
 	Bar: typeof TextInputBar;
 	Inlay: typeof TextInputInlay;
@@ -395,9 +361,9 @@ export type TextInputParts = Readonly<{
 	Clear: typeof TextInputClear;
 	Copy: typeof TextInputCopy;
 	Counter: typeof TextInputCounter;
-	Pending: typeof TextInputPending;
+	Pending: typeof InputPending;
 	Description: typeof Field.Description;
-	Error: typeof TextInputError;
+	Error: typeof InputError;
 }>;
 
 /**
@@ -420,7 +386,7 @@ export type TextInputParts = Readonly<{
  */
 export const TextInput: TextInputParts = {
 	Root: TextInputRoot,
-	Label: TextInputLabel,
+	Label: InputLabel,
 	Group: TextInputGroup,
 	Bar: TextInputBar,
 	Inlay: TextInputInlay,
@@ -429,7 +395,7 @@ export const TextInput: TextInputParts = {
 	Clear: TextInputClear,
 	Copy: TextInputCopy,
 	Counter: TextInputCounter,
-	Pending: TextInputPending,
+	Pending: InputPending,
 	Description: Field.Description,
-	Error: TextInputError,
+	Error: InputError,
 };

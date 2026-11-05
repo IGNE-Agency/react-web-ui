@@ -4,8 +4,8 @@ import { Button } from "../button/index.ts";
 import {
 	type OptionsLoad,
 	type OptionsLoadLabels,
-	optionsLoadMessage,
 } from "../field/index.ts";
+import { optionsLoadMessage } from "../field/options-load.ts";
 import { Spinner } from "../spinner/index.ts";
 import { Combobox } from "./combobox.tsx";
 import type {
@@ -92,7 +92,7 @@ export const ComboboxPopupBody = <TItem,>({
 		<>
 			<Combobox.Search
 				ref={searchRef}
-				label={copy.searchLabel}
+				aria-label={copy.searchLabel}
 			/>
 			<Combobox.StatusArea>
 				<Combobox.Status>

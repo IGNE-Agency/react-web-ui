@@ -43,6 +43,7 @@
 		"typescript/no-unnecessary-condition": "error",
 		"react/rules-of-hooks": "error",
 		"react/exhaustive-deps": "off",
+		"react/jsx-no-constructed-context-values": "off",
 		"react/react-in-jsx-scope": "off",
 		"react/error-boundaries": "error",
 		"react/globals": "error",
@@ -100,7 +101,6 @@
 			"rules": {
 				"oxc/no-accumulating-spread": "off",
 				"oxc/no-map-spread": "off",
-				"react/jsx-no-constructed-context-values": "off",
 				"react/no-array-index-key": "off"
 			}
 		},

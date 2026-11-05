@@ -1,8 +1,10 @@
 import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import { Button } from "../button/button.tsx";
+import {
+	type CloseButtonProps,
+	CloseButton as KitCloseButton,
+} from "../button/close-button.tsx";
 import styles from "./drawer.module.scss";
 
 const Backdrop = ({
@@ -80,20 +82,17 @@ const Header = ({
 	</div>
 );
 
-export type DrawerCloseButtonProps = Readonly<{
-	/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
-	label: string;
-}>;
+export type DrawerCloseButtonProps = Pick<
+	CloseButtonProps,
+	"closeLabel"
+>;
 
 /** The icon-only way out, for a header or a footer. */
 const CloseButton = ({
-	label,
+	closeLabel,
 }: DrawerCloseButtonProps): ReactNode => (
-	<Button
-		variant="tertiary"
-		iconOnly
-		icon={CloseIcon}
-		label={label}
+	<KitCloseButton
+		closeLabel={closeLabel}
 		render={<BaseDrawer.Close />}
 	/>
 );

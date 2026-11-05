@@ -22,8 +22,8 @@ import {
 	type FieldState,
 	fieldStateAttributes,
 	useFieldFocus,
-	withFieldFocus,
 } from "../field/index.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import { Icon } from "../icon/index.ts";
 import { Tooltip } from "../tooltip/index.ts";
 import style from "./combobox.module.scss";
@@ -144,7 +144,9 @@ const ComboboxControl = ({
 			)}
 			<BaseCombobox.Trigger
 				data-combobox-trigger=""
-				aria-invalid={state.invalid === true || undefined}
+				aria-invalid={
+					state.validity === "invalid" || undefined
+				}
 				aria-busy={busy}
 				className={style.trigger}
 				onKeyDown={event => {
@@ -295,7 +297,7 @@ export type ComboboxSearchProps = Omit<
 > &
 	Readonly<{
 		/** The search box's accessible name. */
-		label: string;
+		"aria-label": string;
 	}>;
 
 /**
@@ -305,11 +307,9 @@ export type ComboboxSearchProps = Omit<
  */
 const ComboboxSearch = ({
 	className,
-	label,
 	...props
 }: ComboboxSearchProps): ReactNode => (
 	<BaseCombobox.Input
-		aria-label={label}
 		aria-labelledby={undefined}
 		className={clsx(style.search, className)}
 		{...props}
@@ -435,7 +435,7 @@ export type ComboboxParts = Omit<
  * 	<Combobox.Portal>
  * 		<Combobox.Positioner anchor={anchorRef}>
  * 			<Combobox.Popup>
- * 				<Combobox.Search label="Search" />
+ * 				<Combobox.Search aria-label="Search" />
  * 				<Combobox.List>
  * 					{(status: string) => <Combobox.Option key={status} value={status}>{status}</Combobox.Option>}
  * 				</Combobox.List>

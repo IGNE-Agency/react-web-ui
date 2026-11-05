@@ -11,7 +11,7 @@ export type RowSelectionRequest =
 /** The marked row ids: selected ones, or, while `allMatching`, excluded ones. */
 export type SelectionState = Readonly<{
 	allMatching: boolean;
-	rowSelection: Readonly<Record<string, boolean>>;
+	rowSelection: Readonly<Record<string, true>>;
 }>;
 
 export type SelectionAction =
@@ -54,9 +54,8 @@ export const selectionReducer = (
 			([id]) => id !== action.rowId,
 		),
 	);
-	const rowSelection = marked
-		? { ...others, [action.rowId]: true }
-		: others;
+	const rowSelection: SelectionState["rowSelection"] =
+		marked ? { ...others, [action.rowId]: true } : others;
 	if (
 		state.allMatching &&
 		Object.keys(rowSelection).length >= action.totalRows
@@ -68,10 +67,7 @@ export const selectionReducer = (
 
 const markedIds = (
 	state: SelectionState,
-): readonly string[] =>
-	Object.keys(state.rowSelection).filter(
-		id => state.rowSelection[id],
-	);
+): readonly string[] => Object.keys(state.rowSelection);
 
 /**
  * How many rows a selection holds, out of `totalRows` matching rows.
@@ -136,10 +132,13 @@ export const useRowSelection = (): RowSelectionView => {
 
 	return {
 		allMatching: state.allMatching,
-		isRowSelected: rowId =>
-			state.allMatching
-				? !state.rowSelection[rowId]
-				: Boolean(state.rowSelection[rowId]),
+		isRowSelected: rowId => {
+			const marked = Object.hasOwn(
+				state.rowSelection,
+				rowId,
+			);
+			return state.allMatching ? !marked : marked;
+		},
 		toggleRow: (rowId, selected, totalRows) => {
 			dispatch({
 				type: "toggleRow",

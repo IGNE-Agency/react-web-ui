@@ -83,11 +83,19 @@ export type SentAttachmentTileProps = Readonly<{
 	name: string;
 	/** Tooltip text for the tile. */
 	hint: string;
-	/** Image source; without one the tile shows a glyph and the extension. */
-	src: string | undefined;
-	/** Whether an image source is still being produced. */
-	pending?: boolean;
 }> &
+	(
+		| Readonly<{
+				/** Image source; without one the tile shows a glyph and the extension. */
+				src: string;
+				pending?: false;
+		  }>
+		| Readonly<{
+				src?: undefined;
+				/** Whether an image source is still being produced. */
+				pending?: boolean;
+		  }>
+	) &
 	(
 		| Readonly<{
 				/** Where the stored file is served from. */

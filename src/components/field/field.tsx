@@ -34,6 +34,12 @@ export type FieldProps = Readonly<{
 	pending?: boolean;
 }>;
 
+/**
+ * What a field calls once focus has left it, such as a form library's blur
+ * handler. Every `<Control>Field` and its bridge take this one type.
+ */
+export type FieldBlurHandler = () => void;
+
 const isEmpty = (children: ReactNode): boolean =>
 	children === undefined ||
 	children === null ||

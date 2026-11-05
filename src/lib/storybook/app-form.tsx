@@ -1,4 +1,3 @@
-import { createFormHook } from "@tanstack/react-form";
 import type { ReactNode } from "react";
 import { TSFCheckboxField } from "../../components/checkbox-field/tsf-checkbox-field.tsx";
 import { TSFCheckboxGroupField } from "../../components/checkbox-group-field/tsf-checkbox-group-field.tsx";
@@ -21,14 +20,11 @@ import { TSFTextField } from "../../components/text-field/tsf-text-field.tsx";
 import type { TSFTextareaFieldProps } from "../../components/textarea-field/tsf-textarea-field.tsx";
 import type { TSFTimeFieldProps } from "../../components/time-field/tsf-time-field.tsx";
 import { TSFToggleGroupField } from "../../components/toggle-group-field/tsf-toggle-group-field.tsx";
-import { fieldContext, formContext } from "./context.tsx";
+import {
+	type AppForm,
+	createAppForm,
+} from "../forms/create-app-form.ts";
 import { deferred } from "./deferred.tsx";
-import { focusFirstInvalidField } from "./failed-submit.tsx";
-
-export {
-	useFieldContext,
-	useFormContext,
-} from "./context.tsx";
 
 const DateField: (props: TSFDateFieldProps) => ReactNode =
 	deferred(() =>
@@ -143,61 +139,18 @@ const fieldComponents: FieldComponents = {
 	ToggleGroupField: TSFToggleGroupField,
 };
 
-type FormComponents = Readonly<Record<string, never>>;
-
-const formComponents: FormComponents = {};
-
-type AppFormHook = ReturnType<
-	typeof createFormHook<FieldComponents, FormComponents>
->;
-
-const hook: AppFormHook = createFormHook<
-	FieldComponents,
-	FormComponents
->({
-	fieldContext,
-	formContext,
-	fieldComponents,
-	formComponents,
-});
+const appForm: AppForm<FieldComponents> =
+	createAppForm(fieldComponents);
 
 /**
- * The kit's form hook: every registered field reaches its control through
- * `form.AppField`, under the plain name of its bridge. A failed submit focuses
- * the first invalid control of the `Form.Root` the form renders in.
+ * The form hook of the kit's stories and tests, with every field's bridge
+ * registered under its plain name.
  *
  * @example
  * const form = useAppForm({
  * 	defaultValues: { email: "" },
- * 	validationLogic: revalidateLogic(),
- * 	validators: { onDynamic: loginSchema },
- * 	onSubmit: ({ value }) => login.mutateAsync(value),
+ * 	onSubmit: ({ value }) => save(value),
  * });
  */
-export const useAppForm: AppFormHook["useAppForm"] =
-	options =>
-		hook.useAppForm({
-			...options,
-			onSubmitInvalid: props => {
-				options.onSubmitInvalid?.(props);
-				focusFirstInvalidField(props.formApi);
-			},
-		});
-
-/**
- * A component that takes a form made by `useAppForm`, typed by its options.
- *
- * @example
- * const Address = withForm({ ...addressFormOptions, render: ({ form }) => <form.AppField name="street">…</form.AppField> });
- */
-export const withForm: AppFormHook["withForm"] =
-	hook.withForm;
-
-/**
- * A group of fields reused across forms, bound to a subset of a form's values.
- *
- * @example
- * const Period = withFieldGroup({ defaultValues: { start: "", end: "" }, render: ({ group }) => … });
- */
-export const withFieldGroup: AppFormHook["withFieldGroup"] =
-	hook.withFieldGroup;
+export const useAppForm: AppForm<FieldComponents>["useAppForm"] =
+	appForm.useAppForm;

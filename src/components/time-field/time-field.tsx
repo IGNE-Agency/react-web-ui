@@ -3,13 +3,11 @@ import {
 	isoToTimeOfDay,
 	timeOfDayToIso,
 } from "../../lib/calendar/temporal-value.ts";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
-import type {
-	FieldProps,
-	FieldState,
+import {
+	type FieldBlurHandler,
+	type FieldProps,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/index.ts";
 import { TimeInput } from "./time-input.tsx";
 
 export type TimeFieldProps = FieldProps &
@@ -23,7 +21,7 @@ export type TimeFieldProps = FieldProps &
 		/** Called with the `"HH:mm"` typed, or `null` once cleared. */
 		onValueChange?: (value: string | null) => void;
 
-		onBlur?: () => void;
+		onBlur?: FieldBlurHandler;
 
 		name?: string;
 		disabled?: boolean;
@@ -60,21 +58,18 @@ export const TimeField = ({
 	className,
 }: TimeFieldProps): ReactNode => {
 	const time = isoToTimeOfDay(value);
-	const formDisabled = useFormDisabled();
-	const phase = useBusyPhase({ busy: pending === true });
-	const invalid = normalizeFieldErrors(errors).length > 0;
-
-	const fieldState: FieldState = {
-		disabled: disabled === true || formDisabled,
-		readonly: readOnly,
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
-		valid: touched === true && !invalid,
 		dirty,
 		touched,
-		pending: phase !== "fresh",
+		pending,
+		disabled,
+		readOnly,
 		filled: time !== null,
-	};
+	});
+	const { phase } = field;
+	const fieldState = field.state;
 
 	return (
 		<TimeInput.Frame
@@ -100,10 +95,10 @@ export const TimeField = ({
 					}
 					onBlur={onBlur}
 					name={name ?? controlId}
-					isDisabled={disabled}
+					isDisabled={field.disabled}
 					isReadOnly={readOnly}
 					isRequired={requiredness === "required"}
-					isInvalid={invalid}>
+					isInvalid={field.invalid}>
 					<TimeInput.Group
 						role="presentation"
 						state={fieldState}>

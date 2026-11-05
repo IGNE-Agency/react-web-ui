@@ -6,13 +6,22 @@ import type { Tone, ToneVariant } from "../../lib/tone.ts";
  * whole field; `tone`/`variant` colour the chip.
  */
 export type ActiveFilterDescriptor = Readonly<{
-	content: ReactNode;
-	/** A short plain-text label, required when `content` is not a string. */
-	textValue?: string;
 	tone?: Tone;
 	variant?: ToneVariant;
 	onRemove?: () => void;
-}>;
+}> &
+	(
+		| Readonly<{
+				content: string;
+				/** A short plain-text label, where it differs from `content`. */
+				textValue?: string;
+		  }>
+		| Readonly<{
+				content: ReactNode;
+				/** A short plain-text label for content that is not a string. */
+				textValue: string;
+		  }>
+	);
 
 /**
  * Per-field renderers for active-filter chips. Each receives the committed

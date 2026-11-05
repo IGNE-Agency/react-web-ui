@@ -1,6 +1,6 @@
 {
 	"name": "@maanlamp/react-web-ui",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "IGNE's React web component kit: primitives and the presets over them, form controls in three tiers with a TanStack Form bridge, and DTCG tokens themed per app.",
 	"license": "MIT",
 	"repository": {
@@ -157,6 +157,14 @@
 			"types": "./dist/components/form/index.d.ts",
 			"default": "./dist/components/form/index.js"
 		},
+		"./forms": {
+			"types": "./dist/lib/forms/index.d.ts",
+			"default": "./dist/lib/forms/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/lib/hooks/index.d.ts",
+			"default": "./dist/lib/hooks/index.js"
+		},
 		"./icon": {
 			"types": "./dist/components/icon/index.d.ts",
 			"default": "./dist/components/icon/index.js"
@@ -245,9 +253,17 @@
 			"types": "./dist/components/status-message/index.d.ts",
 			"default": "./dist/components/status-message/index.js"
 		},
+		"./storage": {
+			"types": "./dist/lib/storage.d.ts",
+			"default": "./dist/lib/storage.js"
+		},
 		"./switch-field": {
 			"types": "./dist/components/switch-field/index.d.ts",
 			"default": "./dist/components/switch-field/index.js"
+		},
+		"./table-storage": {
+			"types": "./dist/lib/table-storage.d.ts",
+			"default": "./dist/lib/table-storage.js"
 		},
 		"./tabs": {
 			"types": "./dist/components/tabs/index.d.ts",
@@ -291,9 +307,17 @@
 		},
 		"./tokens.css": "./dist/tokens.css",
 		"./tokens/*": "./tokens/*",
+		"./tone": {
+			"types": "./dist/lib/tone.d.ts",
+			"default": "./dist/lib/tone.js"
+		},
 		"./tooltip": {
 			"types": "./dist/components/tooltip/index.d.ts",
 			"default": "./dist/components/tooltip/index.js"
+		},
+		"./unsaved-changes": {
+			"types": "./dist/lib/unsaved-changes/index.d.ts",
+			"default": "./dist/lib/unsaved-changes/index.js"
 		},
 		"./unsaved-changes/tanstack-router": {
 			"types": "./dist/lib/unsaved-changes/tanstack-router.d.ts",
@@ -313,9 +337,6 @@
 		"docs:links": "bun .storybook/docs-links/report.ts"
 	},
 	"dependencies": {
-		"@lexical/history": "^0.53.0",
-		"@lexical/plain-text": "^0.53.0",
-		"@lexical/react": "^0.53.0",
 		"@material-design-icons/svg": "^0.14.15",
 		"@tanstack/react-virtual": "^3.14.26",
 		"@zxcvbn-ts/core": "^4.2.0",
@@ -323,12 +344,14 @@
 		"@zxcvbn-ts/language-en": "^4.1.1",
 		"@zxcvbn-ts/language-nl-be": "^4.1.1",
 		"clsx": "^2.1.1",
-		"lexical": "^0.53.0",
 		"react-error-boundary": "^6.1.6"
 	},
 	"devDependencies": {
 		"@base-ui/react": "^1.9.0",
 		"@internationalized/date": "^3.12.4",
+		"@lexical/history": "^0.53.0",
+		"@lexical/plain-text": "^0.53.0",
+		"@lexical/react": "^0.53.0",
 		"@shikijs/rehype": "^4.6.0",
 		"@storybook/addon-a11y": "^10.6.5",
 		"@storybook/addon-docs": "^10.6.5",
@@ -355,6 +378,7 @@
 		"axe-core": "^4.14.0",
 		"eslint-plugin-compat": "^7.0.2",
 		"github-slugger": "^2.0.0",
+		"lexical": "^0.53.0",
 		"oxc-transform-react": "^0.157.0",
 		"oxfmt": "^0.76.0",
 		"oxlint": "^1.91.0",
@@ -383,17 +407,30 @@
 	"peerDependencies": {
 		"@base-ui/react": "^1.9.0",
 		"@internationalized/date": "^3.12.4",
+		"@lexical/history": "^0.53.0",
+		"@lexical/plain-text": "^0.53.0",
+		"@lexical/react": "^0.53.0",
 		"@tanstack/react-form": "^1.33.5",
 		"@tanstack/react-query": "^5.105.3",
 		"@tanstack/react-router": "^1.170.46",
 		"@tanstack/react-table": "^9.3.1",
 		"@terrazzo/plugin-css": "^2.10.0",
+		"lexical": "^0.53.0",
 		"react": "^19.3.1",
 		"react-aria-components": "^1.22.1",
 		"react-dom": "^19.3.1",
 		"temporal-polyfill": "^1.0.7"
 	},
 	"peerDependenciesMeta": {
+		"@lexical/history": {
+			"optional": true
+		},
+		"@lexical/plain-text": {
+			"optional": true
+		},
+		"@lexical/react": {
+			"optional": true
+		},
 		"@tanstack/react-query": {
 			"optional": true
 		},
@@ -404,6 +441,9 @@
 			"optional": true
 		},
 		"@terrazzo/plugin-css": {
+			"optional": true
+		},
+		"lexical": {
 			"optional": true
 		}
 	},

@@ -6,11 +6,11 @@ import {
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { formatBytes } from "../../lib/format-bytes.ts";
 import {
+	type FieldBlurHandler,
 	type FieldProps,
-	type FieldState,
 	useFieldIds,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { FileInput } from "./file-input.tsx";
 import {
@@ -27,7 +27,7 @@ export type FileFieldProps = FieldProps &
 		onValueChange: (files: readonly File[]) => void;
 
 		/** Called when focus leaves the whole field, not when it moves within it. */
-		onBlur?: () => void;
+		onBlur?: FieldBlurHandler;
 
 		/** Per-file size limit in bytes, set by the endpoint the files post to. */
 		maxFileSize: number;
@@ -137,23 +137,21 @@ export const FileField = ({
 		),
 	];
 
-	const formDisabled = useFormDisabled();
-
-	const fieldState: FieldState = {
-		disabled: disabled === true || formDisabled,
-		readonly: readOnly,
+	const field = useFieldState({
+		errors: messages,
 		requiredness,
 		dirty,
 		touched,
 		pending,
+		disabled,
+		readOnly,
 		filled: value.length > 0,
-		invalid: messages.length > 0,
-		valid: touched === true && messages.length === 0,
-	};
+	});
+	const fieldState = field.state;
 
 	const describedBy = ids.describedBy(
 		description !== undefined,
-		messages.length > 0,
+		field.invalid,
 	);
 
 	const add = (incoming: readonly File[]) => {
@@ -231,9 +229,9 @@ export const FileField = ({
 			</FileInput.Legend>
 
 			<FileInput.DropTarget
-				label={dropTargetLabel}
+				aria-label={dropTargetLabel}
 				state={fieldState}
-				isDisabled={disabled === true}
+				isDisabled={field.disabled}
 				getDropOperation={
 					readOnly === true ? () => "cancel" : undefined
 				}
@@ -251,10 +249,10 @@ export const FileField = ({
 						<FileInput.Hint>{dropHint}</FileInput.Hint>
 						<FileInput.Trigger
 							label={chooseLabel}
-							disabled={disabled}
+							disabled={field.disabled}
 							describedBy={describedBy}
 							buttonRef={triggerRef}
-							invalid={fieldState.invalid}
+							invalid={field.invalid}
 							allowsMultiple={multiple}
 							acceptedFileTypes={accept}
 							onSelect={files =>
@@ -264,7 +262,7 @@ export const FileField = ({
 					</>
 				)}
 				{tiles}
-				{pending === true && <FileInput.Pending />}
+				{field.phase !== "fresh" && <FileInput.Pending />}
 			</FileInput.DropTarget>
 
 			<FileInput.Description id={ids.descriptionId}>

@@ -1,10 +1,10 @@
 import type { CheckboxGroup as BaseCheckboxGroup } from "@base-ui/react/checkbox-group";
 import type { ReactNode } from "react";
-import type { CheckboxProps } from "../checkbox-field/index.ts";
 import {
+	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { CheckboxGroup } from "./checkbox-group.tsx";
 
 /** One box of a checkbox group. */
@@ -24,7 +24,7 @@ export type CheckboxGroupFieldProps = FieldProps &
 		readOnly?: boolean;
 		/** Prefixes each box's id, so ids stay stable across renders. */
 		name?: string;
-		onBlur?: CheckboxProps["onBlur"];
+		onBlur?: FieldBlurHandler;
 		/** Applied to the fieldset, so callers can place the group. */
 		className?: string;
 	}>;

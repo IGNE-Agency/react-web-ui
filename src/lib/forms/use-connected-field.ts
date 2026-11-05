@@ -1,3 +1,4 @@
+import type { FieldBlurHandler } from "../../components/field/field.tsx";
 import { useFieldContext } from "./context.tsx";
 
 /** The field props a bridge passes at the top level, read off its field. */
@@ -7,7 +8,7 @@ export type ConnectedFieldProps = Readonly<{
 	dirty: boolean;
 	touched: boolean;
 	pending: boolean;
-	onBlur: () => void;
+	onBlur: FieldBlurHandler;
 }>;
 
 /** What `useConnectedField` reads off its field. */

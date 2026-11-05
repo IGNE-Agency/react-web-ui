@@ -45,4 +45,8 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 
 A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. The spinner itself is hidden from assistive tech.
 
+### Every control reads its states through `useFieldState`
+
+`useFieldState` reads each state from its owner: invalid from the errors, disabled from the control's own prop or a busy `Form.Root`, and pending through `useBusyPhase`, so a wait shows only once it has lasted. A control projects what it returns with `fieldStateAttributes` and never assembles the states by hand. Validity is one state, `"valid"` or `"invalid"`, so a field can never claim both.
+
 </DocsPage>

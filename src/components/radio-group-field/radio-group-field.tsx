@@ -1,10 +1,11 @@
 import type { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 import type { ReactNode } from "react";
 import {
+	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 	type ChoiceOption,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { RadioGroup } from "./radio-group.tsx";
 
 export type RadioGroupFieldProps = FieldProps &
@@ -13,13 +14,13 @@ export type RadioGroupFieldProps = FieldProps &
 		| "value"
 		| "defaultValue"
 		| "onValueChange"
-		| "onBlur"
 		| "disabled"
 		| "readOnly"
 	> &
 	Readonly<{
 		/** The mutually exclusive choices, in the order they read. */
 		options: readonly ChoiceOption[];
+		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
 		/** Applied to the fieldset, so callers can size the group. */

@@ -49,7 +49,7 @@ const PopoverParts = ({
 						loading={loading}
 						loadingLabel={LOADING}>
 						<Popover.Arrow />
-						<Popover.Heading>{CLIENT_NAME}</Popover.Heading>
+						<Popover.Title>{CLIENT_NAME}</Popover.Title>
 						<Popover.Rows>
 							<Popover.Row numeric label="Policy:">
 								12345678

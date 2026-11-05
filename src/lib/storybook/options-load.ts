@@ -1,8 +1,6 @@
 import { fn } from "storybook/test";
-import {
-	OPTIONS_LOADED,
-	type OptionsLoadLabels,
-} from "../../components/field/index.ts";
+import { type OptionsLoadLabels } from "../../components/field/index.ts";
+import { OPTIONS_LOADED } from "../../components/field/options-load.ts";
 
 /**
  * The options loads a select or combobox story maps its `load` arg from, with

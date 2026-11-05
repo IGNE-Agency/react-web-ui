@@ -1,19 +1,24 @@
 import { OTPField as BaseOTPField } from "@base-ui/react/otp-field";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { useBusyPhase } from "../../lib/hooks/index.ts";
 import {
 	Field,
-	type FieldErrorProps,
-	type FieldLabelProps,
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
 	useFieldFocus,
-	withFieldFocus,
+	useFieldState,
 } from "../field/index.ts";
-import { useFormDisabled } from "../form/form-context.ts";
+import {
+	InputError,
+	type InputErrorProps,
+	InputLabel,
+	type InputLabelProps,
+	InputPartsContext,
+	InputPending,
+	type InputPendingProps,
+} from "../field/input-parts.tsx";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import {
 	type OtpInputBaseProps,
 	OtpInputContext,
@@ -54,63 +59,51 @@ const OtpInputRoot = ({
 	children,
 	...base
 }: OtpInputRootProps): ReactNode => {
-	const formDisabled = useFormDisabled();
-	const phase = useBusyPhase({ busy: pending });
-	const invalid = normalizeFieldErrors(errors).length > 0;
-
-	const fieldState: FieldState = {
-		disabled: base.disabled === true || formDisabled,
-		readonly: base.readOnly,
+	const field = useFieldState({
+		errors,
 		requiredness,
-		invalid,
 		dirty,
 		touched,
+		pending,
+		disabled: base.disabled,
+		readOnly: base.readOnly,
 		filled: base.value !== "",
-		pending: phase !== "fresh",
-		...state,
-	};
+		state,
+	});
 
 	return (
-		<OtpInputContext
+		<InputPartsContext
 			value={{
-				state: fieldState,
+				state: field.state,
 				errors,
 				optionalLabel,
-				length,
-				base: { ...base, length },
+				phase: field.phase,
 			}}>
-			<Field.Root
-				disabled={base.disabled}
-				invalid={invalid}
-				dirty={dirty}
-				touched={touched}
-				className={clsx(style.root, className)}
-				{...fieldStateAttributes(fieldState)}>
-				{children}
-			</Field.Root>
-		</OtpInputContext>
+			<OtpInputContext
+				value={{
+					state: field.state,
+					length,
+					base: {
+						...base,
+						disabled: field.disabled,
+						length,
+					},
+				}}>
+				<Field.Root
+					disabled={field.disabled}
+					invalid={field.invalid}
+					dirty={dirty}
+					touched={touched}
+					className={clsx(style.root, className)}
+					{...fieldStateAttributes(field.state)}>
+					{children}
+				</Field.Root>
+			</OtpInputContext>
+		</InputPartsContext>
 	);
 };
 
-export type OtpInputLabelProps = Omit<
-	FieldLabelProps,
-	"requiredness" | "optionalLabel"
->;
-
-const OtpInputLabel = ({
-	children,
-	...props
-}: OtpInputLabelProps): ReactNode => {
-	const { state, optionalLabel } = useOtpInputContext();
-	return (
-		<Field.Label
-			requiredness={state.requiredness}
-			optionalLabel={optionalLabel}
-			{...props}>
-			{children}
-		</Field.Label>
-	);
-};
+export type OtpInputLabelProps = InputLabelProps;
 
 export type OtpInputGroupProps = Omit<
 	BaseOTPField.Root.Props,
@@ -212,52 +205,48 @@ const OtpInputSlots = ({
 	));
 };
 
-export type OtpInputErrorProps = Omit<
-	FieldErrorProps,
-	"children"
->;
+export type OtpInputPendingProps = InputPendingProps;
 
-const OtpInputError = (
-	props: OtpInputErrorProps,
-): ReactNode => {
-	const { errors } = useOtpInputContext();
-	return <Field.Error {...props}>{errors}</Field.Error>;
-};
+export type OtpInputErrorProps = InputErrorProps;
 
 /** The parts of an OTP input. */
 export type OtpInputParts = Readonly<{
 	Root: typeof OtpInputRoot;
-	Label: typeof OtpInputLabel;
+	Label: typeof InputLabel;
 	Group: typeof OtpInputGroup;
 	Slots: typeof OtpInputSlots;
 	Input: typeof OtpInputInput;
 	Separator: typeof OtpInputSeparator;
+	Pending: typeof InputPending;
 	Description: typeof Field.Description;
-	Error: typeof OtpInputError;
+	Error: typeof InputError;
 }>;
 
 /**
  * The parts of a one-time-code input: the field frame, a group of character
  * slots, and the slots themselves. For the ordinary case, use the `OtpField`
- * shorthand, which is assembled from exactly these parts. `Error` renders the
- * errors `Root` was given.
+ * shorthand, which is assembled from exactly these parts. `Pending` shows once
+ * the `Root`'s wait is worth showing, and `Error` renders the errors `Root` was
+ * given.
  *
  * @example
  * <OtpInput.Root value={code} onValueChange={setCode} optionalLabel="optional">
  * 	<OtpInput.Label>Verification code</OtpInput.Label>
  * 	<OtpInput.Group>
  * 		<OtpInput.Slots slotLabel={(index, total) => `character ${index} of ${total}`} />
+ * 		<OtpInput.Pending />
  * 	</OtpInput.Group>
  * 	<OtpInput.Error />
  * </OtpInput.Root>
  */
 export const OtpInput: OtpInputParts = {
 	Root: OtpInputRoot,
-	Label: OtpInputLabel,
+	Label: InputLabel,
 	Group: OtpInputGroup,
 	Slots: OtpInputSlots,
 	Input: OtpInputInput,
 	Separator: OtpInputSeparator,
+	Pending: InputPending,
 	Description: Field.Description,
-	Error: OtpInputError,
+	Error: InputError,
 };

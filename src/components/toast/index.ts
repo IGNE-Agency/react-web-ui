@@ -6,6 +6,5 @@ export {
 	type ToastTone,
 	toast,
 	toastManager,
-	useToast,
 } from "./toast.ts";
 export * from "./toast-provider.tsx";

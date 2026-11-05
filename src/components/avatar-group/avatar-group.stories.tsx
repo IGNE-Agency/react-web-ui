@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactElement } from "react";
 import {
 	expect,
 	screen,
@@ -11,6 +12,10 @@ import { AvatarGroup } from "./avatar-group.tsx";
 
 const LABEL = "Invitees";
 const YOU = "(you)";
+const ORGANISER = "(organiser)";
+
+const overflowLabel = (count: number) =>
+	`+${count}, show all invitees`;
 
 const PEOPLE = [
 	{ id: "1", name: "Ada Lovelace" },
@@ -22,12 +27,12 @@ const PEOPLE = [
 	{ id: "7", name: "Alan Turing" },
 ];
 
+const SHOWN = 2;
+
 type Canvas = ReturnType<typeof within>;
 
-const group = (canvas: Canvas) =>
-	canvas.getByRole("button", {
-		name: (name: string) => name.startsWith(LABEL),
-	});
+const overflowButton = (canvas: Canvas) =>
+	canvas.getByRole("button", { name: overflowLabel(3) });
 
 const listShowsEveryone = async () => {
 	const list = await screen.findByRole("dialog", {
@@ -44,6 +49,30 @@ const listShowsEveryone = async () => {
 	);
 };
 
+const ComposedGroup = (): ReactElement => (
+	<AvatarGroup.Root label={LABEL} size={2}>
+		{PEOPLE.slice(0, SHOWN).map(person => (
+			<AvatarGroup.Avatar
+				key={person.id}
+				name={person.name}
+			/>
+		))}
+		<AvatarGroup.Overflow
+			count={PEOPLE.length - SHOWN}
+			label={overflowLabel(PEOPLE.length - SHOWN)}>
+			<AvatarGroup.List>
+				{PEOPLE.slice(SHOWN).map((person, index) => (
+					<AvatarGroup.ListItem
+						key={person.id}
+						name={person.name}
+						suffix={index === 0 ? ORGANISER : undefined}
+					/>
+				))}
+			</AvatarGroup.List>
+		</AvatarGroup.Overflow>
+	</AvatarGroup.Root>
+);
+
 const meta = {
 	parameters: {
 		designSystem: [
@@ -57,13 +86,14 @@ const meta = {
 					"Every popup floats on the overlay surface at the first level, with no outline",
 			},
 			{ component: "components/avatar" },
+			{ component: "components/popover" },
 		],
 	},
 	component: AvatarGroup,
 	args: {
-		people: PEOPLE.slice(0, 3),
+		people: PEOPLE,
 		label: LABEL,
-		currentUser: { id: "1", label: YOU },
+		overflowLabel,
 	},
 } satisfies Meta<typeof AvatarGroup>;
 
@@ -74,30 +104,74 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	play: async ({ canvas }) => {
 		await expect(
-			canvas.getByRole("button", { name: LABEL }),
+			canvas.getByRole("group", { name: LABEL }),
 		).toBeVisible();
+		await expect(overflowButton(canvas)).toHaveTextContent(
+			"+3",
+		);
 	},
 };
 
-export const Overflow: Story = {
-	args: { people: PEOPLE },
+export const NoOverflow: Story = {
+	args: { people: PEOPLE.slice(0, 3) },
 	play: async ({ canvas }) => {
 		await expect(
-			canvas.getByRole("button", { name: `${LABEL} +3` }),
+			canvas.getByRole("group", { name: LABEL }),
 		).toBeVisible();
+		await expect(
+			canvas.queryByRole("button"),
+		).not.toBeInTheDocument();
+		await Promise.all(
+			PEOPLE.slice(0, 3).map(person =>
+				expect(
+					canvas.getByRole("img", { name: person.name }),
+				).toBeVisible(),
+			),
+		);
 	},
+};
+
+export const CurrentUser: Story = {
+	args: { currentUser: { id: "1", label: YOU } },
 };
 
 export const Large: Story = {
-	args: { people: PEOPLE, size: 2.5 },
+	args: { size: 2.5 },
+};
+
+export const Composed: Story = {
+	render: ComposedGroup,
+};
+
+export const ComposedOpens: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedGroup,
+	play: async ({ canvas }) => {
+		await userEvent.click(
+			canvas.getByRole("button", {
+				name: overflowLabel(PEOPLE.length - SHOWN),
+			}),
+		);
+		const list = await screen.findByRole("dialog", {
+			name: LABEL,
+		});
+		await expect(list).toHaveTextContent(
+			`${PEOPLE[SHOWN]?.name ?? ""} ${ORGANISER}`,
+		);
+		await expect(list).not.toHaveTextContent(
+			PEOPLE[0]?.name ?? "",
+		);
+		await userEvent.keyboard("{Escape}");
+		await roleGone("dialog");
+	},
 };
 
 export const Keyboard: Story = {
 	tags: ["!dev", "!autodocs"],
-	args: { people: PEOPLE },
+	args: CurrentUser.args,
 	play: async ({ canvas }) => {
 		await userEvent.tab();
-		await expect(group(canvas)).toHaveFocus();
+		await expect(overflowButton(canvas)).toHaveFocus();
 
 		await userEvent.keyboard("{Enter}");
 		await listShowsEveryone();
@@ -109,23 +183,23 @@ export const Keyboard: Story = {
 
 export const Mouse: Story = {
 	tags: ["!dev", "!autodocs"],
-	args: { people: PEOPLE },
+	args: CurrentUser.args,
 	play: async ({ canvas }) => {
-		await userEvent.hover(group(canvas));
+		await userEvent.hover(overflowButton(canvas));
 		await listShowsEveryone();
 
-		await userEvent.unhover(group(canvas));
+		await userEvent.unhover(overflowButton(canvas));
 		await roleGone("dialog");
 	},
 };
 
 export const Touch: Story = {
 	tags: ["!dev", "!autodocs"],
-	args: { people: PEOPLE },
+	args: CurrentUser.args,
 	play: async ({ canvas }) => {
 		await userEvent.pointer({
 			keys: "[TouchA]",
-			target: group(canvas),
+			target: overflowButton(canvas),
 		});
 
 		await listShowsEveryone();

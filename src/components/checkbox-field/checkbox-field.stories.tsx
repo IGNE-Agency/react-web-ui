@@ -1,6 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
-import { expect, fn, userEvent } from "storybook/test";
+import {
+	expect,
+	fn,
+	userEvent,
+	waitFor,
+} from "storybook/test";
+import { BusyForm } from "../../lib/storybook/busy-form.tsx";
+import {
+	PENDING_TOGGLE_LABEL,
+	PendingToggle,
+	pendingOnPress,
+} from "../../lib/storybook/pending.tsx";
 import {
 	CheckboxField,
 	type CheckboxFieldProps,
@@ -185,6 +196,51 @@ export const Touch: Story = {
 		await expect(checkedChange).toHaveBeenCalledWith(
 			true,
 			expect.anything(),
+		);
+	},
+};
+
+const BusyFormCheckboxField = (
+	args: CheckboxFieldProps,
+) => (
+	<BusyForm>
+		<CheckboxField {...args} />
+	</BusyForm>
+);
+
+export const InBusyForm: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: BusyFormCheckboxField,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("checkbox", { name: LABEL }),
+		).toHaveAttribute("data-disabled");
+	},
+};
+
+const PendingCheckboxField = (args: CheckboxFieldProps) => (
+	<PendingToggle>
+		{pending => (
+			<CheckboxField {...args} pending={pending} />
+		)}
+	</PendingToggle>
+);
+
+export const PendingWaits: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: PendingCheckboxField,
+	play: async ({ canvas, canvasElement }) => {
+		const toggle = canvas.getByRole("button", {
+			name: PENDING_TOGGLE_LABEL,
+		});
+
+		await expect(
+			await pendingOnPress(toggle, canvasElement),
+		).toBe(false);
+		await waitFor(() =>
+			expect(
+				canvasElement.querySelector("[data-pending]"),
+			).not.toBeNull(),
 		);
 	},
 };

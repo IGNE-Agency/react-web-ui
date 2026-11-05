@@ -1,5 +1,8 @@
-/** The lifecycle status of the injected query, mirroring TanStack Query. */
-export type QueryStatus = "pending" | "error" | "success";
+/** The lifecycle status of the query a `DataTable` shows, as TanStack Query reports it. */
+export type DataTableStatus =
+	| "pending"
+	| "error"
+	| "success";
 
 /** Which body state `DataTable.Content` should render. */
 export type TableView =
@@ -36,7 +39,7 @@ export const resolveView = ({
 	isFetching,
 	hasRows,
 }: Readonly<{
-	status: QueryStatus;
+	status: DataTableStatus;
 	isFetching: boolean;
 	hasRows: boolean;
 }>): ResolvedView => {

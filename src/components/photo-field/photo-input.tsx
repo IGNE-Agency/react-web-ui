@@ -9,7 +9,10 @@ import {
 	useState,
 } from "react";
 import { Button } from "../button/index.ts";
-import { fieldStateAttributes } from "../field/index.ts";
+import {
+	type FieldBlurHandler,
+	fieldStateAttributes,
+} from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
 import style from "./photo-input.module.scss";
 
@@ -31,55 +34,65 @@ const usePreviewSource = (
 		[file],
 	);
 
-export type PhotoInputProps = Readonly<{
-	/** The picked file, or nothing while the stored photo stands. */
-	value: File | undefined;
+/** What the circle shows until a photo is picked: a placeholder, or the stored photo. */
+export type PhotoInputPreviewProps =
+	| Readonly<{
+			/** Shown until a photo is picked, such as a placeholder. */
+			defaultPreview?: ReactNode;
+			/** Whether `defaultPreview` is a stored photo rather than a placeholder. */
+			hasStoredImage?: false;
+	  }>
+	| Readonly<{
+			/** The stored photo, shown until another is picked. */
+			defaultPreview: NonNullable<ReactNode>;
+			/** Whether `defaultPreview` is a stored photo rather than a placeholder. */
+			hasStoredImage: true;
+	  }>;
 
-	/** Called with a picked or dropped file, or with nothing once it is removed. */
-	onValueChange?: (
-		file: File | undefined,
-	) => Promise<void> | void;
+export type PhotoInputProps = PhotoInputPreviewProps &
+	Readonly<{
+		/** The picked file, or nothing while the stored photo stands. */
+		value: File | undefined;
 
-	/** Shown until a photo is picked, typically the stored one. */
-	defaultPreview?: ReactNode;
+		/** Called with a picked or dropped file, or with nothing once it is removed. */
+		onValueChange?: (
+			file: File | undefined,
+		) => Promise<void> | void;
 
-	/** Whether `defaultPreview` is a stored photo rather than a placeholder. */
-	hasStoredImage?: boolean;
+		/** Mime types, wildcards or extensions the file dialog offers. @default ["image/*"] */
+		accept?: readonly string[];
 
-	/** Mime types, wildcards or extensions the file dialog offers. @default ["image/*"] */
-	accept?: readonly string[];
+		/** The id of the label that names the control. */
+		labelledBy: string;
 
-	/** The id of the label that names the control. */
-	labelledBy: string;
+		/** The ids of the description and error, joined. */
+		describedBy?: string;
 
-	/** The ids of the description and error, joined. */
-	describedBy?: string;
+		/** Submits the picked file under this name. */
+		name?: string;
 
-	/** Submits the picked file under this name. */
-	name?: string;
+		/** Shows the photo without letting it be changed. */
+		readOnly?: boolean;
 
-	/** Shows the photo without letting it be changed. */
-	readOnly?: boolean;
+		invalid?: boolean;
 
-	invalid?: boolean;
+		/** Background work, such as an upload, is in flight. */
+		pending?: boolean;
 
-	/** Background work, such as an upload, is in flight. */
-	pending?: boolean;
+		onBlur?: FieldBlurHandler;
 
-	onBlur?: () => void;
+		/** The picked photo's alternative text, such as "Preview". */
+		previewLabel: string;
 
-	/** The picked photo's alternative text, such as "Preview". */
-	previewLabel: string;
+		/** What the control announces while a photo is set, such as "Photo set". */
+		photoSetLabel: string;
 
-	/** What the control announces while a photo is set, such as "Photo set". */
-	photoSetLabel: string;
+		/** What the control announces while no photo is set, such as "No photo". */
+		noPhotoLabel: string;
 
-	/** What the control announces while no photo is set, such as "No photo". */
-	noPhotoLabel: string;
-
-	/** Accessible name of the button that removes a picked photo, such as "Remove photo". */
-	removeLabel: string;
-}>;
+		/** Accessible name of the button that removes a picked photo, such as "Remove photo". */
+		removeLabel: string;
+	}>;
 
 /**
  * The bare photo picker: a circle showing the photo, which is itself the
@@ -208,7 +221,7 @@ export const PhotoInput = ({
 				}}
 				data-dragover={dragOver || undefined}
 				{...fieldStateAttributes({
-					invalid,
+					validity: invalid ? "invalid" : undefined,
 					filled,
 					pending,
 				})}>

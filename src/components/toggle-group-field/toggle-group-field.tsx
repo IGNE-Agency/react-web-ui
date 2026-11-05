@@ -1,6 +1,7 @@
 import type { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
-import type { FocusEventHandler, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type {
+	FieldBlurHandler,
 	ChoiceOption,
 	FieldProps,
 } from "../field/index.ts";
@@ -14,7 +15,7 @@ export type ToggleGroupFieldProps = FieldProps &
 		/** The chosen values. */
 		value: readonly string[];
 		onValueChange: (value: readonly string[]) => void;
-		onBlur?: FocusEventHandler<HTMLDivElement>;
+		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
 		disabled?: boolean;

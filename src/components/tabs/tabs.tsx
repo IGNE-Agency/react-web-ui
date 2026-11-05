@@ -26,14 +26,23 @@ const useTabs = (): readonly Tab[] =>
 
 export type TabsRootProps = Readonly<{
 	tabs: readonly Tab[];
-	/** The open tab's `value`, when controlled. */
-	value?: string;
-	/** The tab open at first, when uncontrolled. */
-	defaultValue?: string;
-	onValueChange?: (value: string) => void;
 	className?: string;
 	children: ReactNode;
-}>;
+}> &
+	(
+		| Readonly<{
+				/** The open tab's `value`, when controlled. */
+				value: string;
+				onValueChange: (value: string) => void;
+				defaultValue?: never;
+		  }>
+		| Readonly<{
+				value?: never;
+				/** The tab open at first, when uncontrolled. */
+				defaultValue?: string;
+				onValueChange?: (value: string) => void;
+		  }>
+	);
 
 const Root = ({
 	tabs,
@@ -73,12 +82,12 @@ const TabContent = ({
 
 export type TabsBarProps = Readonly<{
 	/** What the tabs switch between, such as "Declaration". */
-	"aria-label": string;
+	label: string;
 	className?: string;
 }>;
 
 const Bar = ({
-	"aria-label": label,
+	label,
 	className,
 }: TabsBarProps): ReactNode => {
 	const tabs = useTabs();
@@ -145,7 +154,7 @@ type TabsParts = Readonly<{
  *
  * @example
  * <Tabs.Root tabs={[{ value: "details", label: "Details" }, { value: "history", label: "History", count: 3 }]} defaultValue="details">
- * 	<Tabs.Bar aria-label="Declaration" />
+ * 	<Tabs.Bar label="Declaration" />
  * 	<Tabs.Panel value="details">…</Tabs.Panel>
  * 	<Tabs.Panel value="history">…</Tabs.Panel>
  * </Tabs.Root>

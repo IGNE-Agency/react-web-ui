@@ -19,11 +19,14 @@
 		"rewriteRelativeImportExtensions": true,
 		"skipLibCheck": true,
 		"allowJs": false,
-		"isolatedDeclarations": true,
-		"declaration": true,
-		"declarationMap": true,
 		"noEmit": true
 	},
-	"include": ["src", ".storybook/**/*", "docs", "tests"],
+	"include": [
+		"src",
+		".storybook/**/*",
+		"docs",
+		"tests",
+		"terrazzo.config.ts"
+	],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

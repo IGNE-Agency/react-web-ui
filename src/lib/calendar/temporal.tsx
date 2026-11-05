@@ -37,11 +37,11 @@ import {
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
-	focusControlOnRim,
 	useFieldFocus,
 	useFieldIds,
-	withFieldFocus,
 } from "../../components/field/index.ts";
+import { focusControlOnRim } from "../../components/field/rim-focus.ts";
+import { withFieldFocus } from "../../components/field/use-field-focus.ts";
 import type { SvgComponent } from "../../components/icon/index.ts";
 import { useTimeZone } from "../../components/time-zone-provider/index.ts";
 import { normalizeFieldErrors } from "../forms/errors.ts";

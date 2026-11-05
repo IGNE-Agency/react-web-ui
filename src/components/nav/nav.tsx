@@ -182,13 +182,20 @@ export type NavGroupProps = Omit<
 	ComponentPropsWithRef<"div">,
 	"onToggle"
 > &
-	Readonly<{
-		/** Whether the subpages show, when controlled. */
-		open?: boolean;
-		/** Whether the subpages show at first, when uncontrolled. @default false */
-		defaultOpen?: boolean;
-		onOpenChange?: (open: boolean) => void;
-	}>;
+	(
+		| Readonly<{
+				/** Whether the subpages show, when controlled. */
+				open: boolean;
+				onOpenChange: (open: boolean) => void;
+				defaultOpen?: never;
+		  }>
+		| Readonly<{
+				open?: never;
+				/** Whether the subpages show at first, when uncontrolled. @default false */
+				defaultOpen?: boolean;
+				onOpenChange?: (open: boolean) => void;
+		  }>
+	);
 
 /**
  * A destination with subpages: a `GroupHeader` holding its own `Link` and a

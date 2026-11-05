@@ -43,7 +43,9 @@ const DrawerExample = (props: DrawerExampleProps) => {
 						<Drawer.Content>
 							<Drawer.Header>
 								<Drawer.Title>{TITLE}</Drawer.Title>
-								<Drawer.CloseButton label={CLOSE_LABEL} />
+								<Drawer.CloseButton
+									closeLabel={CLOSE_LABEL}
+								/>
 							</Drawer.Header>
 							<Drawer.Close
 								render={

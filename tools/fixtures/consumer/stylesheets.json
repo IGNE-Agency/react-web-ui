@@ -1,0 +1,387 @@
+{
+	"accordion": ["accordion/accordion", "icon/icon"],
+	"active-filters": [
+		"icon/icon",
+		"tag-group/tag-group",
+		"tooltip/tooltip"
+	],
+	"attachment-tile": [
+		"attachment-tile/attachment-tile",
+		"button/button",
+		"icon/icon",
+		"skeleton/skeleton",
+		"tooltip/tooltip"
+	],
+	"avatar": ["avatar/avatar"],
+	"avatar-group": [
+		"avatar-group/avatar-group",
+		"avatar/avatar",
+		"popover/popover",
+		"skeleton/skeleton"
+	],
+	"badge": ["badge/badge"],
+	"breadcrumbs": [
+		"breadcrumbs/breadcrumbs",
+		"button/button",
+		"icon/icon",
+		"menu/menu",
+		"tooltip/tooltip"
+	],
+	"button": [
+		"button/button",
+		"icon/icon",
+		"tooltip/tooltip"
+	],
+	"checkbox-field": [
+		"checkbox-field/checkbox",
+		"error-text/error-text",
+		"field/field",
+		"spinner/spinner"
+	],
+	"checkbox-group-field": [
+		"checkbox-field/checkbox",
+		"checkbox-group-field/checkbox-group",
+		"error-text/error-text",
+		"field/field",
+		"spinner/spinner"
+	],
+	"collapsible": ["collapsible/collapsible", "icon/icon"],
+	"combobox-field": [
+		"button/button",
+		"combobox-field/combobox",
+		"combobox-field/value-state-view",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"combobox-field/react-query": [],
+	"composer": [
+		"attachment-tile/attachment-tile",
+		"button/button",
+		"composer/composer",
+		"composer/composer-editor",
+		"composer/mention-text",
+		"icon/icon",
+		"skeleton/skeleton",
+		"tooltip/tooltip"
+	],
+	"confirm-dialog": [
+		"button/button",
+		"confirm-dialog/confirm-dialog",
+		"icon/icon",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"conversation": [
+		"avatar/avatar",
+		"button/button",
+		"conversation/conversation",
+		"icon/icon",
+		"tooltip/tooltip"
+	],
+	"data-table": [
+		"button/button",
+		"checkbox-field/checkbox",
+		"data-table/data-table",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"pagination/pagination",
+		"select-field/select",
+		"skeleton/skeleton",
+		"spinner/spinner",
+		"stale/stale",
+		"tooltip/tooltip"
+	],
+	"data-view": [],
+	"date-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"lib/calendar/temporal",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"date-range-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"lib/calendar/temporal",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"detail-list": ["detail-list/detail-list", "icon/icon"],
+	"dialog": [
+		"button/button",
+		"dialog/dialog",
+		"icon/icon",
+		"tooltip/tooltip"
+	],
+	"divider": ["divider/divider"],
+	"drawer": [
+		"button/button",
+		"drawer/drawer",
+		"icon/icon",
+		"tooltip/tooltip"
+	],
+	"email-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"empty-message": [
+		"icon/icon",
+		"status-message/status-message"
+	],
+	"error-boundary": [
+		"button/button",
+		"icon/icon",
+		"status-message/status-message",
+		"tooltip/tooltip"
+	],
+	"error-message": [
+		"icon/icon",
+		"status-message/status-message"
+	],
+	"error-text": ["error-text/error-text"],
+	"field": [
+		"error-text/error-text",
+		"field/field",
+		"spinner/spinner"
+	],
+	"field-placeholder": [
+		"field-placeholder/field-placeholder",
+		"skeleton/skeleton"
+	],
+	"file-field": [
+		"attachment-tile/attachment-tile",
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"file-field/file-field",
+		"icon/icon",
+		"skeleton/skeleton",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"filter-bar": [
+		"badge/badge",
+		"button/button",
+		"drawer/drawer",
+		"error-text/error-text",
+		"field/field",
+		"filter-bar/filter-bar",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"form": [
+		"button/button",
+		"error-text/error-text",
+		"form/form",
+		"icon/icon",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"forms": [],
+	"hooks": [],
+	"icon": ["icon/icon"],
+	"link": ["link/link"],
+	"link-button": ["button/button", "icon/icon"],
+	"loading-message": [
+		"icon/icon",
+		"spinner/spinner",
+		"status-message/status-message"
+	],
+	"locale-provider": [],
+	"menu": [
+		"button/button",
+		"icon/icon",
+		"menu/menu",
+		"tooltip/tooltip"
+	],
+	"nav": [
+		"button/button",
+		"icon/icon",
+		"nav/nav",
+		"tooltip/tooltip"
+	],
+	"number-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"number-field/number-field",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"otp-field": [
+		"error-text/error-text",
+		"field/field",
+		"otp-field/otp-field",
+		"spinner/spinner"
+	],
+	"pagination": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"pagination/pagination",
+		"select-field/select",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"password-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"password-field/password-field",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"phone-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"photo-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"photo-field/photo-input",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"popover": ["popover/popover", "skeleton/skeleton"],
+	"radio-group-field": [
+		"error-text/error-text",
+		"field/field",
+		"radio-group-field/radio-group",
+		"spinner/spinner"
+	],
+	"search-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"segmented-control-field": [
+		"error-text/error-text",
+		"field/field",
+		"segmented-control-field/segmented-control",
+		"spinner/spinner"
+	],
+	"select-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"select-field/select",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"skeleton": ["skeleton/skeleton"],
+	"spinner": ["spinner/spinner"],
+	"stale": [
+		"button/button",
+		"icon/icon",
+		"spinner/spinner",
+		"stale/stale",
+		"tooltip/tooltip"
+	],
+	"status-message": [
+		"icon/icon",
+		"status-message/status-message"
+	],
+	"storage": [],
+	"switch-field": [
+		"error-text/error-text",
+		"field/field",
+		"spinner/spinner",
+		"switch-field/switch"
+	],
+	"table-storage": [],
+	"tabs": ["badge/badge", "tabs/tabs"],
+	"tag": ["icon/icon", "tag/tag"],
+	"tag-group": [
+		"icon/icon",
+		"tag-group/tag-group",
+		"tooltip/tooltip"
+	],
+	"text-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"tooltip/tooltip"
+	],
+	"textarea-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"spinner/spinner",
+		"text-field/text-field",
+		"textarea-field/textarea-field",
+		"tooltip/tooltip"
+	],
+	"time-field": [
+		"button/button",
+		"error-text/error-text",
+		"field/field",
+		"icon/icon",
+		"lib/calendar/temporal",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"time-zone-provider": [],
+	"toast": [
+		"button/button",
+		"icon/icon",
+		"toast/toast-provider",
+		"tooltip/tooltip"
+	],
+	"toggle-group-field": [
+		"error-text/error-text",
+		"field/field",
+		"spinner/spinner",
+		"toggle-group-field/toggle-group"
+	],
+	"tone": [],
+	"tooltip": ["tooltip/tooltip"],
+	"unsaved-changes": [
+		"button/button",
+		"confirm-dialog/confirm-dialog",
+		"icon/icon",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	],
+	"unsaved-changes/tanstack-router": [
+		"button/button",
+		"confirm-dialog/confirm-dialog",
+		"icon/icon",
+		"spinner/spinner",
+		"tooltip/tooltip"
+	]
+}

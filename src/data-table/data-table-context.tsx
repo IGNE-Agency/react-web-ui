@@ -2,7 +2,7 @@ import type { ReactTable } from "@tanstack/react-table";
 import { type Context, createContext } from "react";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
 import { useRequiredContext } from "../lib/use-required-context.ts";
-import type { QueryStatus } from "./resolve-view.ts";
+import type { DataTableStatus } from "./resolve-view.ts";
 import type { DataTableFeatures } from "./table-features.ts";
 
 /**
@@ -12,7 +12,7 @@ import type { DataTableFeatures } from "./table-features.ts";
  */
 export type DataTableContextValue = Readonly<{
 	table: unknown;
-	status: QueryStatus;
+	status: DataTableStatus;
 	isFetching: boolean;
 	/** Refetches; the stale overlay and the refresh-failed notice offer it as a retry. */
 	onRetry?: () => void;

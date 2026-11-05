@@ -4,10 +4,10 @@ import type {
 	UseQueryOptions,
 } from "@tanstack/react-query";
 import {
-	OPTIONS_LOADED,
 	type OptionsLoad,
 	optionsLoad,
 } from "../field/index.ts";
+import { OPTIONS_LOADED } from "../field/options-load.ts";
 
 type Page<TItem> = Readonly<{
 	items?: readonly TItem[] | null;

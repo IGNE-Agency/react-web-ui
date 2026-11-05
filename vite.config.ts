@@ -18,9 +18,6 @@ import manifest from "./package.json" with { type: "json" };
 const root = import.meta.dirname;
 const src = join(root, "src");
 
-const LAYER_ORDER =
-	"@layer kit.reset, kit.base, kit.components;";
-
 const componentEntries = readdirSync(
 	join(src, "components"),
 	{ withFileTypes: true },
@@ -36,8 +33,18 @@ const componentEntries = readdirSync(
 		join(src, "components", entry.name, "index.ts"),
 	);
 
+const libEntries = [
+	"lib/forms/index.ts",
+	"lib/hooks/index.ts",
+	"lib/storage.ts",
+	"lib/table-storage.ts",
+	"lib/tone.ts",
+	"lib/unsaved-changes/index.ts",
+].map(path => join(src, path));
+
 const optionalPeerEntries = [
 	"components/combobox-field/react-query.tsx",
+	"components/composer/index.ts",
 	"data-table/index.ts",
 	"data-view/index.ts",
 	"lib/unsaved-changes/tanstack-router.ts",
@@ -72,7 +79,10 @@ const stylesheets = (): Plugin => ({
 		this.emitFile({
 			type: "asset",
 			fileName: "tokens.css",
-			source: `${LAYER_ORDER}\n\n${readFileSync(join(src, "style", "tokens.gen.css"), "utf8")}`,
+			source: readFileSync(
+				join(src, "style", "tokens.gen.css"),
+				"utf8",
+			),
 		});
 	},
 });
@@ -113,7 +123,10 @@ const config: UserConfig = defineConfig({
 		lib: {
 			entry: [
 				join(src, "index.ts"),
-				...componentEntries,
+				...componentEntries.filter(
+					entry => !optionalPeerEntries.includes(entry),
+				),
+				...libEntries,
 				...optionalPeerEntries,
 			],
 			formats: ["es"],

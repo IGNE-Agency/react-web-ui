@@ -2,9 +2,10 @@ import type { Switch as BaseSwitch } from "@base-ui/react/switch";
 import type { ReactNode } from "react";
 import {
 	Field,
+	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { Switch } from "./switch.tsx";
 
 export type SwitchFieldProps = FieldProps &
@@ -13,13 +14,13 @@ export type SwitchFieldProps = FieldProps &
 		| "checked"
 		| "defaultChecked"
 		| "onCheckedChange"
-		| "onBlur"
 		| "id"
 		| "value"
 		| "disabled"
 		| "readOnly"
 	> &
 	Readonly<{
+		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
 		/** Applied to the field wrapper, so callers can place the row. */
