@@ -8,8 +8,10 @@ The package ships built ESM, one module per source file, each importing only its
 
 ```sh
 bun add @maanlamp/react-web-ui
-bun add react react-dom @base-ui/react react-aria-components @internationalized/date @tanstack/react-form temporal-polyfill
+bun add react react-dom @base-ui/react react-aria-components @internationalized/date @tanstack/react-form temporal-polyfill lexical @lexical/react @lexical/history @lexical/plain-text
 ```
+
+Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
 
 Some entry points need an optional peer as well:
 
@@ -91,7 +93,7 @@ export default defineConfig({
 });
 ```
 
-The resolver needs a `theme` modifier with `light` and `dark` contexts. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters.
+The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters.
 
 The kit owns no breakpoints and no gutters; those are the app's layout.
 
