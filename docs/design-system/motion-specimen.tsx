@@ -1,3 +1,5 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
 import ReplayIcon from "@material-design-icons/svg/outlined/replay.svg?react";
 import { clsx } from "clsx";
@@ -7,7 +9,7 @@ import {
 	useState,
 } from "react";
 import { Button } from "../../src/components/button/index.ts";
-import { CheckboxGlyph } from "../../src/components/checkbox-field/index.ts";
+import { Icon } from "../../src/components/icon/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
 import { resolver } from "./tokens.gen.js";
 import { variableNameOf } from "../../src/terrazzo/index";
@@ -212,7 +214,7 @@ const CheckboxScene = ({ start }: Stage) => (
 		<span
 			className={styles.indicator}
 			data-checked={present(!start)}>
-			<CheckboxGlyph />
+			<CheckIcon fill="currentColor" aria-hidden="true" />
 		</span>
 	</span>
 );
@@ -328,7 +330,7 @@ const Replay = ({
 		variant="tertiary"
 		size="sm"
 		iconOnly
-		icon={ReplayIcon}
+		icon={<Icon svg={ReplayIcon} label="" />}
 		label={label}
 		className={styles.replay}
 		onClick={onClick}
@@ -459,7 +461,8 @@ export const MotionSpecimen = ({
 			: order.length;
 
 	return (
-		<StoryProviders>
+		<StoryProviders
+			toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
 			<div className={styles.motion}>
 				<DurationRow />
 				<div className={styles.easings}>

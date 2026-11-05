@@ -11,8 +11,12 @@
 		@include disclosure.trigger("collapsible");
 	}
 
-	.chevron {
+	.indicator {
 		@include disclosure.chevron;
+
+		display: inline-flex;
+		color: var(--collapsible-indicator-fg, currentcolor);
+		font-size: var(--collapsible-indicator-size, 1.5em);
 	}
 
 	.panel {

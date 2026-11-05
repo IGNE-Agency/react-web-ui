@@ -56,11 +56,9 @@ export type FormRootProps = Omit<
 	}>;
 
 /**
- * The `<form>`: submits through the form instance, leaves validation to it,
- * disables and inerts its fields while busy, and focuses the first invalid
- * control after a failed submit. While its `leaveGuard` policy holds, it
- * reports unsaved changes to the page's leave guards. Its parts read the
- * form from it.
+ * The `<form>`: it submits through the form instance, disables its fields while
+ * busy, focuses the first invalid control after a failed submit, and reports
+ * unsaved changes to the page's leave guards while `leaveGuard` holds.
  *
  * @example
  * <Form.Root form={form}>…</Form.Root>
@@ -172,7 +170,7 @@ export type FormSubmitProps = Omit<
 	}>;
 
 /**
- * The form's submit button. A wait that lasts 150 ms shows a spinner and is
+ * The form's submit button. A wait that lasts 150 ms shows a spinner, is
  * announced as `busyLabel`, and stays shown at least 200 ms.
  *
  * @example

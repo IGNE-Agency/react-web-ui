@@ -12,6 +12,7 @@
 		"*.ts",
 		"package.json",
 		".storybook/vite.config.ts",
+		".storybook/svgr.ts",
 		"tools"
 	],
 	"exclude": ["tools/fixtures", "terrazzo.config.ts"],

@@ -62,6 +62,8 @@
 
 	.iconSlot {
 		@include nav.icon-slot;
+
+		font-size: var(--nav-icon-size, 1em);
 	}
 
 	.item {
@@ -78,6 +80,8 @@
 
 			> .iconSlot {
 				@include nav.icon-slot-compact;
+
+				font-size: var(--nav-icon-size, 1.5em);
 			}
 
 			&[data-active="true"] > .iconSlot,
@@ -152,6 +156,17 @@
 
 	.groupToggle {
 		--btn-pad-y: var(--sys-unit-8);
+
+		svg {
+			@media not (prefers-reduced-motion) {
+				transition: rotate var(--sys-motion-short)
+					var(--sys-motion-standard);
+			}
+		}
+
+		&[data-panel-open] svg {
+			rotate: 180deg;
+		}
 	}
 
 	.groupPanel {

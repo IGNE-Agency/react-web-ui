@@ -1,4 +1,3 @@
-import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import type { ErrorInfo, ReactNode } from "react";
 import {
 	type ErrorBoundaryPropsWithRender,
@@ -6,8 +5,10 @@ import {
 	ErrorBoundary as ReactErrorBoundary,
 } from "react-error-boundary";
 import { Button } from "../button/button.tsx";
-import { ErrorMessage } from "../error-message/error-message.tsx";
-import type { SvgComponent } from "../icon/icon.tsx";
+import {
+	ErrorMessage,
+	type ErrorMessageProps,
+} from "../error-message/error-message.tsx";
 
 type SharedProps = Readonly<{
 	children: ReactNode;
@@ -26,9 +27,11 @@ type DefaultFallbackProps = SharedProps &
 		/** The fallback's description: what to do next, or who can help. */
 		description?: string;
 		/** A glyph on the fallback's error disc. */
-		icon?: SvgComponent;
+		icon?: ErrorMessageProps["icon"];
 		/** The retry button's label; without it, the fallback offers no retry. */
 		retryLabel?: string;
+		/** The retry button's leading glyph, such as the app's restart icon. */
+		retryIcon?: ReactNode;
 		fallbackRender?: never;
 	}>;
 
@@ -40,6 +43,7 @@ type CustomFallbackProps = SharedProps &
 		description?: never;
 		icon?: never;
 		retryLabel?: never;
+		retryIcon?: never;
 	}>;
 
 export type ErrorBoundaryProps =
@@ -52,6 +56,7 @@ const defaultFallback =
 		description,
 		icon,
 		retryLabel,
+		retryIcon,
 	}: DefaultFallbackProps) =>
 	({ resetErrorBoundary }: FallbackProps): ReactNode => (
 		<ErrorMessage
@@ -62,7 +67,7 @@ const defaultFallback =
 				retryLabel === undefined ? undefined : (
 					<Button
 						variant="primary"
-						icon={RestartIcon}
+						icon={retryIcon}
 						onClick={() => resetErrorBoundary()}>
 						{retryLabel}
 					</Button>

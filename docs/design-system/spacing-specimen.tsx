@@ -36,7 +36,7 @@ export const SpacingSpecimen = ({
 						<span className={styles.value}>4</span>
 					</span>
 					<span className={styles.meta}>
-						Physiotherapy · 12 March
+						Design review · 12 March
 					</span>
 				</span>
 			</div>

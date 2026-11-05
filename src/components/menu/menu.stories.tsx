@@ -18,6 +18,7 @@ import {
 	withOverlayFrame,
 } from "../../lib/storybook/overlay-frame.tsx";
 import { Menu } from "./menu.tsx";
+import { Icon } from "../icon/index.ts";
 
 type MenuExampleProps = ComponentProps<typeof Menu.Root>;
 
@@ -39,38 +40,43 @@ const MenuItems = () => {
 	const { container } = useOverlayFrame();
 
 	return (
-		<Menu.Portal container={container}>
-			<Menu.Positioner sideOffset={8}>
-				<Menu.Popup>
-					<Menu.Arrow />
-					<Menu.Item icon={DownloadIcon} onClick={download}>
-						{DOWNLOAD}
-					</Menu.Item>
-					<Menu.Item icon={CommentIcon} onClick={comment}>
-						{ADD_COMMENT}
-					</Menu.Item>
-					<Menu.Item icon={ArchiveIcon} disabled>
-						{ARCHIVE}
-					</Menu.Item>
-					<Menu.Separator />
-					<Menu.Group>
-						<Menu.GroupLabel>{EXPORT}</Menu.GroupLabel>
-						<Menu.Item onClick={exportCsv}>
-							{DOWNLOAD_CSV}
-						</Menu.Item>
-						<Menu.Item onClick={exportPdf}>
-							{DOWNLOAD_PDF}
-						</Menu.Item>
-					</Menu.Group>
-				</Menu.Popup>
-			</Menu.Positioner>
-		</Menu.Portal>
+		<Menu.Content container={container} sideOffset={8}>
+			<Menu.Arrow />
+			<Menu.Item
+				icon={<Icon svg={DownloadIcon} label="" />}
+				onClick={download}>
+				{DOWNLOAD}
+			</Menu.Item>
+			<Menu.Item
+				icon={<Icon svg={CommentIcon} label="" />}
+				onClick={comment}>
+				{ADD_COMMENT}
+			</Menu.Item>
+			<Menu.Item
+				icon={<Icon svg={ArchiveIcon} label="" />}
+				disabled>
+				{ARCHIVE}
+			</Menu.Item>
+			<Menu.Separator />
+			<Menu.Group>
+				<Menu.GroupLabel>{EXPORT}</Menu.GroupLabel>
+				<Menu.Item onClick={exportCsv}>
+					{DOWNLOAD_CSV}
+				</Menu.Item>
+				<Menu.Item onClick={exportPdf}>
+					{DOWNLOAD_PDF}
+				</Menu.Item>
+			</Menu.Group>
+		</Menu.Content>
 	);
 };
 
 const MenuExample = (props: MenuExampleProps) => (
 	<Menu.Root {...props}>
-		<Menu.Trigger icon={MoreVertIcon} label={ROW_ACTIONS} />
+		<Menu.Trigger
+			icon={<Icon svg={MoreVertIcon} label="" />}
+			label={ROW_ACTIONS}
+		/>
 		<MenuItems />
 	</Menu.Root>
 );

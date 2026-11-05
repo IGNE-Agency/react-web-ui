@@ -18,6 +18,7 @@ import {
 import { Specimen } from "./specimen";
 import { TypefaceSpecimen } from "./typeface-specimen";
 import { TypeRoleSpecimen } from "./type-role-specimen";
+import { Icon } from "../../src/components/icon/index.ts";
 
 export const Live = ({ children }) => (
 	<StoryProviders>{children}</StoryProviders>
@@ -57,36 +58,48 @@ The scale is raw material, though. What a screen asks for is a role, named after
 
 ## Two families
 
-This product sets type in two families. The heading family gives titles their character; the body family carries everything that is read or acted on.
+Type is set in two families. The heading family gives titles their character; the body family carries everything that is read or acted on.
 
-<Specimen caption="Satoshi gives titles their character; Roboto carries everything that is read or acted on.">
+The kit names no typeface and loads no font. Each family is a custom property, `--sys-font-family-heading` and `--sys-font-family-body`, and every role's `font` reads one of them. Both default to the system's own interface font, so a screen looks native until the app chooses otherwise, and the heading family follows the body family until it is given a face of its own.
+
+<Specimen caption="Each family in the typeface its custom property names: the system's interface font, until an app sets one.">
 	<TypefaceSpecimen />
 </Specimen>
+
+An app that has a typeface loads it itself, through `@font-face` or its font service, and names it on `:root`. One property swaps every role in that family.
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+	--sys-font-family-heading:
+		"Satoshi", system-ui, sans-serif;
+}
+```
 
 ## Roles
 
 There are three groups of roles. Headings title dialogs and pages. Labels name the things you act on: buttons, tabs, nav items, field labels and chips. Body roles carry copy. A few of them are set in themselves below, with the family, weight, size and line height each resolves to.
 
-<Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in Satoshi; the full set is in the tokens file.">
+<Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in the heading family; the full set is in the tokens file.">
 	<TypeRoleSpecimen
 		groups={[
 			{
 				group: "sys.font.heading",
 				title: "Headings",
-				sample: "Declarations",
+				sample: "Invoices",
 				roles: ["large", "small"],
 			},
 			{
 				group: "sys.font.label",
 				title: "Labels",
-				sample: "Submit declaration",
+				sample: "Submit invoice",
 				roles: ["large", "medium-strong"],
 			},
 			{
 				group: "sys.font.body",
 				title: "Body",
 				sample:
-					"Physiotherapy on 12 March, declared for € 120.",
+					"Design review on 12 March, invoiced at € 120.",
 				roles: ["large", "medium"],
 			},
 		]}
@@ -108,7 +121,7 @@ That's why each label role has a strong twin at exactly the same size, and a sel
 				<span className={styles.navItem}>Inbox</span>
 				<span
 					className={`${styles.navItem} ${styles.navItemStrong}`}>
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.navItem}>Clients</span>
 			</div>
@@ -122,7 +135,7 @@ That's why each label role has a strong twin at exactly the same size, and a sel
 				<span className={styles.navItem}>Inbox</span>
 				<span
 					className={`${styles.navItem} ${styles.navItemLarger}`}>
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.navItem}>Clients</span>
 			</div>
@@ -145,7 +158,7 @@ What's left is folding where the language allows it: between words, and at a hyp
     		<span
     			lang="en"
     			className={`${styles.tile} ${styles.tileUnhyphenated} sb-unstyled`}>
-    			Reimbursement request
+    			Subcontractor invoice
     		</span>
     	}
     />
@@ -160,7 +173,7 @@ What's left is folding where the language allows it: between words, and at a hyp
 			<span
 				lang="en"
 				className={`${styles.tile} ${styles.tileFolded} sb-unstyled`}>
-				{"Reimburse­ment request"}
+				{"Subcon­tractor invoice"}
 			</span>
 		}
 	/>
@@ -172,17 +185,17 @@ What's left is folding where the language allows it: between words, and at a hyp
 				<span
 					lang="en"
 					className={`${styles.tile} ${styles.tileClipped}`}>
-					Reimbursement request
+					Subcontractor invoice
 				</span>
 				<span
 					lang="en"
 					className={`${styles.tile} ${styles.tileMangled}`}>
-					Reimbursement request
+					Subcontractor invoice
 				</span>
 				<span
 					lang="en"
 					className={`${styles.tile} ${styles.tileShrunk}`}>
-					Reimbursement request
+					Subcontractor invoice
 				</span>
 			</div>
 		}
@@ -200,13 +213,17 @@ When the box really can't grow, the words go and something else names the contro
 				<div className={styles.toolbar}>
 					<Button
 						iconOnly
-						icon={DownloadIcon}
+						icon={<Icon svg={DownloadIcon} label="" />}
 						label="Download"
 					/>
-					<Button iconOnly icon={PrintIcon} label="Print" />
 					<Button
 						iconOnly
-						icon={ArchiveIcon}
+						icon={<Icon svg={PrintIcon} label="" />}
+						label="Print"
+					/>
+					<Button
+						iconOnly
+						icon={<Icon svg={ArchiveIcon} label="" />}
 						label="Archive"
 					/>
 				</div>
@@ -296,6 +313,33 @@ Each role is a complete `font` shorthand, so a component sets it in one declarat
 <Details title="Only headings are set in the heading family">
 
 Everything that is read or acted on, labels and body text alike, is set in the body family. Shown in [Two families](#two-families).
+
+</Details>
+
+<Details title="An app sets its typeface through the family properties on the root, and loads the font itself">
+
+The token files name no family, and the kit loads no font. `--sys-font-family-body` defaults to `system-ui, sans-serif`, and `--sys-font-family-heading` follows it. Set either on `:root`, outside the kit's layers, where the roles resolve. Explained in [Two families](#two-families).
+
+<DoDont>
+<Example kind="do" caption="One property per family swaps every role in it.">
+
+```css
+:root {
+	--sys-font-family-body: "Inter", system-ui, sans-serif;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A family set on a component leaves every other role in the old face.">
+
+```css
+.page-title {
+	font-family: "Satoshi";
+}
+```
+
+</Example>
+</DoDont>
 
 </Details>
 
@@ -402,7 +446,7 @@ An icon-only control gets a tooltip and an accessible label, and any longer text
 ```tsx
 <Button
 	iconOnly
-	icon={DownloadIcon}
+	icon={<DownloadIcon />}
 	label={m.invoice_download()}
 />
 ```

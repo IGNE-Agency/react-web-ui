@@ -1,3 +1,5 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -12,6 +14,7 @@ import {
 	PendingToggle,
 	pendingOnPress,
 } from "../../lib/storybook/pending.tsx";
+import { Icon } from "../icon/index.ts";
 import {
 	CheckboxField,
 	type CheckboxFieldProps,
@@ -20,7 +23,7 @@ import {
 const LABEL = "I agree to the terms";
 const OPTIONAL_LABEL = "optional";
 const DESCRIPTION =
-	"The terms apply to every declaration you submit.";
+	"The terms apply to every invoice you submit.";
 const ERROR = "Agree to the terms to continue.";
 
 const checkedChange =
@@ -59,6 +62,7 @@ const meta = {
 	args: {
 		label: LABEL,
 		optionalLabel: OPTIONAL_LABEL,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},
@@ -72,6 +76,13 @@ export const Unchecked: Story = {};
 
 export const Checked: Story = {
 	args: { checked: true },
+};
+
+export const Indeterminate: Story = {
+	args: {
+		indeterminate: true,
+		indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
+	},
 };
 
 export const Disabled: Story = {

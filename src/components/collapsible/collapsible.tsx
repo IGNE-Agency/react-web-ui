@@ -1,8 +1,7 @@
 import { Collapsible as BaseCollapsible } from "@base-ui/react/collapsible";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import { Icon } from "../icon/icon.tsx";
 import style from "./collapsible.module.scss";
 
 export type CollapsibleRootProps = Omit<
@@ -17,9 +16,12 @@ export type CollapsibleTriggerProps = Omit<
 > &
 	Readonly<{
 		className?: string;
-		/** What the panel holds, as the trigger's label. */
+		/** The label naming what the panel holds, then a `Collapsible.Indicator`. */
 		children: ReactNode;
 	}>;
+
+export type CollapsibleIndicatorProps =
+	useRender.ComponentProps<"span">;
 
 export type CollapsiblePanelProps = Omit<
 	BaseCollapsible.Panel.Props,
@@ -27,6 +29,7 @@ export type CollapsiblePanelProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/** The trigger and its panel. */
 const Root = ({
 	className,
 	...props
@@ -37,24 +40,47 @@ const Root = ({
 	/>
 );
 
+/** The button that folds the panel open and shut. */
 const Trigger = ({
 	className,
-	children,
 	...props
 }: CollapsibleTriggerProps): ReactNode => (
 	<BaseCollapsible.Trigger
 		className={clsx(style.trigger, className)}
-		{...props}>
-		{children}
-		<Icon
-			svg={ExpandMoreIcon}
-			label=""
-			size={1.5}
-			className={style.chevron}
-		/>
-	</BaseCollapsible.Trigger>
+		{...props}
+	/>
 );
 
+/**
+ * The trigger's open-state glyph, such as the app's chevron, turned over while
+ * the panel is open. Put it last in the `Trigger`; without children it renders
+ * nothing.
+ */
+const Indicator = ({
+	render,
+	className,
+	children,
+	ref,
+	...props
+}: CollapsibleIndicatorProps): ReactNode => {
+	const element = useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.indicator, className),
+			children,
+		},
+	});
+
+	return children === undefined || children === null
+		? null
+		: element;
+};
+
+/** What the trigger folds, along its height. */
 const Panel = ({
 	className,
 	children,
@@ -70,6 +96,7 @@ const Panel = ({
 type CollapsibleNamespace = Readonly<{
 	Root: typeof Root;
 	Trigger: typeof Trigger;
+	Indicator: typeof Indicator;
 	Panel: typeof Panel;
 }>;
 
@@ -79,12 +106,16 @@ type CollapsibleNamespace = Readonly<{
  *
  * @example
  * <Collapsible.Root>
- * 	<Collapsible.Trigger>Advanced settings</Collapsible.Trigger>
+ * 	<Collapsible.Trigger>
+ * 		Advanced settings
+ * 		<Collapsible.Indicator><ChevronIcon /></Collapsible.Indicator>
+ * 	</Collapsible.Trigger>
  * 	<Collapsible.Panel>{settings}</Collapsible.Panel>
  * </Collapsible.Root>
  */
 export const Collapsible: CollapsibleNamespace = {
 	Root,
 	Trigger,
+	Indicator,
 	Panel,
 };

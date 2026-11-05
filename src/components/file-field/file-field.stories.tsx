@@ -1,3 +1,6 @@
+import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -12,6 +15,7 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { Icon } from "../icon/index.ts";
 import {
 	FileField,
 	type FileFieldProps,
@@ -25,7 +29,7 @@ const tooLarge = (name: string, maxSize: string) =>
 	`${name} is larger than the maximum size of ${maxSize} and must be removed.`;
 const wrongType = (name: string) =>
 	`${name} is not an accepted file type and must be removed.`;
-const SCAN_NAME = "referral-letter.png";
+const SCAN_NAME = "signed-timesheet.png";
 
 const KILOBYTE = 1024;
 
@@ -88,9 +92,12 @@ const meta = {
 		optionalLabel: "optional",
 		dropTargetLabel: DROP_TARGET,
 		dropHint: "Drag files here",
+		dropIcon: <Icon svg={UploadFileIcon} label="" />,
 		chooseLabel: CHOOSE,
+		chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 		filesLabel: "Files for attachments",
 		removeLabel: REMOVE,
+		removeIcon: <Icon svg={CloseIcon} label="" />,
 		fileHint: (name, size) => `${name} (${size})`,
 		tooLargeError: tooLarge,
 		wrongTypeError: wrongType,
@@ -172,7 +179,8 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "Add the invoice and any referral letter.",
+		description:
+			"Add the invoice and any signed timesheet.",
 	},
 };
 

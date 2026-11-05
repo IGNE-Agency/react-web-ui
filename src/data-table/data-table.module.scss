@@ -260,7 +260,13 @@
 		justify-content: flex-end;
 	}
 
-	.sortIconIdle {
+	.sortIcon {
+		display: inline-flex;
+		flex-shrink: 0;
+		font-size: var(--table-sort-icon-size, 1em);
+	}
+
+	.sortIcon[data-sort="none"] {
 		color: color-mix(
 			in oklab,
 			var(--_table-header-fg) 55%,

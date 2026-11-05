@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentProps } from "react";
 import {
@@ -13,6 +14,7 @@ import {
 	textGone,
 } from "../../lib/storybook/waits.ts";
 import { Button } from "../button/button.tsx";
+import { Icon } from "../icon/icon.tsx";
 import {
 	useOpenArg,
 	useOverlayFrame,
@@ -25,7 +27,7 @@ type DialogExampleProps = ComponentProps<
 >;
 
 const OPEN_LABEL = "Open";
-const TITLE = "Edit declaration";
+const TITLE = "Edit invoice";
 const CLOSE_LABEL = "Close";
 const BODY =
 	"A body long enough to sit under the title and show the room around it.";
@@ -42,28 +44,28 @@ const DialogExample = (props: DialogExampleProps) => {
 					<Button variant="secondary">{OPEN_LABEL}</Button>
 				}
 			/>
-			<Dialog.Portal container={container}>
-				<Dialog.Backdrop />
-				<Dialog.Popup>
-					<Dialog.Header>
-						<Dialog.Title>{TITLE}</Dialog.Title>
-						<Dialog.CloseButton closeLabel={CLOSE_LABEL} />
-					</Dialog.Header>
-					<Dialog.Body>
-						<Dialog.Description>{BODY}</Dialog.Description>
-					</Dialog.Body>
-					<Dialog.Footer>
-						<Dialog.Close
-							render={
-								<Button variant="tertiary">
-									{CANCEL_LABEL}
-								</Button>
-							}
-						/>
-						<Button variant="primary">{SAVE_LABEL}</Button>
-					</Dialog.Footer>
-				</Dialog.Popup>
-			</Dialog.Portal>
+			<Dialog.Content container={container}>
+				<Dialog.Header>
+					<Dialog.Title>{TITLE}</Dialog.Title>
+					<Dialog.CloseButton
+						closeLabel={CLOSE_LABEL}
+						icon={<Icon svg={CloseIcon} label="" />}
+					/>
+				</Dialog.Header>
+				<Dialog.Body>
+					<Dialog.Description>{BODY}</Dialog.Description>
+				</Dialog.Body>
+				<Dialog.Footer>
+					<Dialog.Close
+						render={
+							<Button variant="tertiary">
+								{CANCEL_LABEL}
+							</Button>
+						}
+					/>
+					<Button variant="primary">{SAVE_LABEL}</Button>
+				</Dialog.Footer>
+			</Dialog.Content>
 		</Dialog.Root>
 	);
 };

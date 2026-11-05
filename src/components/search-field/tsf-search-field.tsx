@@ -17,7 +17,7 @@ export type TSFSearchFieldProps =
  *
  * @example
  * <form.AppField name="query">
- * 	{field => <field.SearchField label="Search clients" optionalLabel="optional" clearLabel="Clear search" />}
+ * 	{field => <field.SearchField label="Search clients" optionalLabel="optional" clearLabel="Clear search" clearIcon={<CloseIcon />} />}
  * </form.AppField>
  */
 export const TSFSearchField: (

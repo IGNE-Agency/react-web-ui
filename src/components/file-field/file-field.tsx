@@ -8,11 +8,14 @@ import { formatBytes } from "../../lib/format-bytes.ts";
 import {
 	type FieldBlurHandler,
 	type FieldProps,
-	useFieldIds,
+	Field,
 	useFieldState,
 } from "../field/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
-import { FileInput } from "./file-input.tsx";
+import {
+	FileInput,
+	type FileInputItemRemoval,
+} from "./file-input.tsx";
 import {
 	isOversized,
 	oversizedFiles,
@@ -47,14 +50,26 @@ export type FileFieldProps = FieldProps &
 		/** The prompt inside the drop target, such as "Drag files here". */
 		dropHint: string;
 
+		/** Drawn above `dropHint`, such as an upload icon. */
+		dropIcon?: ReactNode;
+
 		/** The picker button's text, such as "Choose files". */
 		chooseLabel: string;
+
+		/** Drawn before `chooseLabel`, such as an attach icon. */
+		chooseIcon?: ReactNode;
 
 		/** Accessible name of the staged files, such as "Files for attachments". */
 		filesLabel: string;
 
 		/** Accessible name of a tile's remove button, such as "Remove". */
 		removeLabel: string;
+
+		/** A tile's remove button icon, such as a cross. */
+		removeIcon: ReactNode;
+
+		/** Drawn on a tile that has no image preview, such as a file icon. */
+		fileIcon?: ReactNode;
 
 		/** A tile's tooltip, such as `` (name, size) => `${name} (${size})` ``. */
 		fileHint: (name: string, size: string) => string;
@@ -90,6 +105,7 @@ export type FileFieldProps = FieldProps &
  * 	chooseLabel="Choose files"
  * 	filesLabel="Files for attachments"
  * 	removeLabel="Remove"
+ * 	removeIcon={<CloseIcon />}
  * 	fileHint={(name, size) => `${name} (${size})`}
  * 	tooLargeError={(name, maxSize) => `${name} is larger than ${maxSize}.`}
  * 	wrongTypeError={name => `${name} is not an accepted file type.`}
@@ -114,16 +130,20 @@ export const FileField = ({
 	readOnly,
 	dropTargetLabel,
 	dropHint,
+	dropIcon,
 	chooseLabel,
+	chooseIcon,
 	filesLabel,
 	removeLabel,
+	removeIcon,
+	fileIcon,
 	fileHint,
 	tooLargeError,
 	wrongTypeError,
 	className,
 }: FileFieldProps): ReactNode => {
 	const locale = useLocale();
-	const ids = useFieldIds();
+	const ids = Field.useIds();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	const maxSize = formatBytes(maxFileSize, locale);
@@ -178,6 +198,9 @@ export const FileField = ({
 		}
 	};
 
+	const removal: FileInputItemRemoval =
+		readOnly === true ? {} : { removeLabel, removeIcon };
+
 	const tiles =
 		value.length === 0 ? null : (
 			<FileInput.List
@@ -197,9 +220,8 @@ export const FileField = ({
 							!isAccepted(file, accept ?? [])
 						}
 						disabled={fieldState.disabled}
-						removeLabel={
-							readOnly === true ? undefined : removeLabel
-						}
+						icon={fileIcon}
+						{...removal}
 					/>
 				))}
 			</FileInput.List>
@@ -246,9 +268,12 @@ export const FileField = ({
 				}}>
 				{readOnly === true ? null : (
 					<>
-						<FileInput.Hint>{dropHint}</FileInput.Hint>
+						<FileInput.Hint icon={dropIcon}>
+							{dropHint}
+						</FileInput.Hint>
 						<FileInput.Trigger
 							label={chooseLabel}
+							icon={chooseIcon}
 							disabled={field.disabled}
 							describedBy={describedBy}
 							buttonRef={triggerRef}

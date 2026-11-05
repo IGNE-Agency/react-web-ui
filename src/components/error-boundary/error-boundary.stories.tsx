@@ -1,3 +1,4 @@
+import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactElement, ReactNode } from "react";
 import {
@@ -7,9 +8,10 @@ import {
 	waitFor,
 } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
+import { Icon } from "../icon/icon.tsx";
 import { ErrorBoundary } from "./error-boundary.tsx";
 
-const CONTENT = "The declaration has loaded.";
+const CONTENT = "The invoice has loaded.";
 const TITLE = "This part could not be shown";
 const DESCRIPTION =
 	"The rest of the page still works. Try again in a moment.";
@@ -20,7 +22,7 @@ const reset = fn();
 const caught = fn();
 
 const Throwing = (): ReactNode => {
-	throw new Error("The declaration could not be rendered.");
+	throw new Error("The invoice could not be rendered.");
 };
 
 const CHILDREN = {
@@ -58,11 +60,13 @@ const meta = {
 		title: TITLE,
 		description: DESCRIPTION,
 		retryLabel: RETRY,
+		retryIcon: <Icon svg={RestartIcon} label="" />,
 		onReset: reset,
 		onError: caught,
 		children: mappedArg(CHILDREN, "healthy"),
 	},
 	argTypes: {
+		retryIcon: { control: false },
 		children: {
 			options: Object.keys(CHILDREN),
 			mapping: CHILDREN,

@@ -16,6 +16,7 @@ export type TooltipTriggerProps =
 			onIntent?: () => void;
 		}>;
 
+/** The element the hint describes, warming what it shows on intent. */
 const TooltipTrigger = ({
 	onIntent,
 	onPointerEnter,
@@ -37,6 +38,7 @@ const TooltipTrigger = ({
 	);
 };
 
+/** Places the hint against its trigger. */
 const TooltipPositioner = ({
 	sideOffset = DEFAULT_SIDE_OFFSET,
 	...props
@@ -47,6 +49,7 @@ const TooltipPositioner = ({
 	/>
 );
 
+/** The hint's surface. */
 const TooltipPopup = ({
 	className,
 	...props
@@ -108,12 +111,9 @@ type TooltipParts = typeof TooltipRoot &
 	}>;
 
 /**
- * A hint on a trigger, which is supplied as `children`. Mount `Tooltip.Provider`
- * once near the app root, so that moving between triggers keeps the hint up
- * instead of waiting out the delay again. Assembled from the parts hanging off
- * it, which stay reachable for a controlled `open`, an `align`, a
- * `collisionPadding`, or a `Handle` shared by a group of triggers. There is no
- * `Arrow`: a tooltip is an unarrowed popup with its own `box-shadow`.
+ * A hint on the trigger given as `children`, wired to describe it. Mount
+ * `Tooltip.Provider` once near the app root; the parts hanging off it build a
+ * tooltip by hand.
  *
  * @example
  * <Tooltip content="Previous page">

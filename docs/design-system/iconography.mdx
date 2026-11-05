@@ -27,6 +27,8 @@ import { Specimen } from "./specimen";
 
 An icon is a word's shorthand. A good one gets a familiar thing found faster: a magnifier where you search, a cog where the settings live. A poor one is a riddle. Icons help most when they stand beside the word they mean, and they are never the only way to learn what something does.
 
+The kit draws none of them. It ships no icon set; every place a component shows an icon is a slot the app fills from its own. What the kit keeps is everything around the glyph: its size, its colour, its label, and when it needs one.
+
 <Illustration caption="One outlined set, drawn on one grid with one line weight: enlarged, a document and a checklist still belong with the small glyphs around them.">
 	<IconographyDrawing />
 </Illustration>
@@ -40,6 +42,22 @@ So an icon keeps its word with it. The word says what the control does, and the 
 <Illustration caption="Search, close and add need no word; a bookmark could mean several things, so it carries one.">
 	<GuessDrawing />
 </Illustration>
+
+## The app brings the icons
+
+A component never decides which glyph an app uses, so it leaves a slot. Most slots are a part's children: the app puts its glyph inside the part, and a part given none renders nothing at all. A ready-made component that bundles several parts takes the glyph as a prop named for its job, such as `icon`, `closeIcon` or `expandIcon`.
+
+```tsx
+<Select.Icon>
+	<ExpandMoreIcon />
+</Select.Icon>
+
+<Pagination.Next aria-label="Next page">
+	<ChevronRightIcon />
+</Pagination.Next>
+```
+
+A slot is optional when the control still works without the glyph: a chevron beside a label, a sort indicator, a magnifier in a search field. Left out, nothing is drawn. A slot is required when the glyph is all the control shows: the cross on a close button, the arrows of a stepper, the tick in a checkbox, the mark beside the chosen option. Without it the control would render blank, so the type check asks for it, next to the label that names the control.
 
 ## One family
 
@@ -55,6 +73,8 @@ An icon's weight belongs to its surroundings too. Thin outlined glyphs sit easil
 
 An icon mostly sits in a line of text, so it is sized like a letter, as tall as the words beside it. A larger label brings a larger icon, and the pair stays balanced at every size. Where an icon stands on its own above a short label, it can afford to be a little larger, because it leads.
 
+The kit sizes the slot, not the glyph. The part that holds an icon sets its size in `em` and its colour, and the glyph inherits both: an SVG drawn at `1em` in `currentColor` fits without a class of its own, and follows the control into its hover, disabled and invalid states, and into the dark theme.
+
 The glyph's size is about reading it. The size of what you tap is a separate question: [a touch target is larger than its glyph](?path=/docs/design-system-principles-responsiveness--docs#a-touch-target-is-larger-than-its-glyph), so a small icon never makes a small target.
 
 <DoDont>
@@ -65,15 +85,15 @@ The glyph's size is about reading it. The size of what you tap is a separate que
 			<div className={styles.sizes}>
 				<span className={styles.small}>
 					<Icon svg={ChecklistIcon} label="" />
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.medium}>
 					<Icon svg={ChecklistIcon} label="" />
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.large}>
 					<Icon svg={ChecklistIcon} label="" />
-					Declarations
+					Invoices
 				</span>
 			</div>
 		}
@@ -85,30 +105,32 @@ The glyph's size is about reading it. The size of what you tap is a separate que
 			<div className={`${styles.sizes} ${styles.fixed}`}>
 				<span className={styles.small}>
 					<ChecklistIcon aria-hidden />
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.medium}>
 					<ChecklistIcon aria-hidden />
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.large}>
 					<ChecklistIcon aria-hidden />
-					Declarations
+					Invoices
 				</span>
 			</div>
 		}
 	/>
 </DoDont>
 
-## The set
+## The example set
 
-This product draws its icons from Google's [Material Icons, in the outlined style](https://fonts.google.com/icons?icon.set=Material+Icons&icon.style=Outlined). Browse it there for a glyph and use the name it gives, because every glyph on that page is already available. The product draws only three glyphs of its own: the mark, the asterisk on a required field and the spinner.
+These docs and the stories fill every slot from Google's [Material Icons, in the outlined style](https://fonts.google.com/icons?icon.set=Material+Icons&icon.style=Outlined), imported through SVGR from `@material-design-icons/svg`. It is an example, not a dependency: the package installs no icon set, and an app is free to pick any set that keeps to one family.
 
-<Specimen caption="A sample of the outlined set, at the size the bottom bar draws it, and the three glyphs the product draws itself: the mark, the required-field asterisk and the spinner.">
+<Specimen caption="A sample of the outlined set, at the size the bottom bar draws it: glyphs that stand beside a word, and glyphs that fill a kit slot.">
 	<IconGallery />
 </Specimen>
 
-Outlined is the resting state everywhere, because its weight matches the hairline borders and one-pixel seams the rest of the system is built from. The filled style is kept for one job: the item you are on. A navigation entry fills its glyph while it is the current page, and goes back to outlined when it isn't. In the bottom bar, where each icon stands above a short label, the icons are half as large again as the text. And a button that carries a word [carries an icon as well](?path=/docs/components-button--docs#a-labelled-button-carries-an-icon-as-well).
+A spinner, a radio's dot, a switch's thumb and the asterisk on a required field are shapes, not icons. The kit draws those itself, because they are part of how the control works rather than a picture of a word.
+
+Whichever set an app picks, outlined is the resting state everywhere, because its weight matches the hairline borders and one-pixel seams the rest of the system is built from. The filled style is kept for one job: the item you are on. A navigation entry fills its glyph while it is the current page, and goes back to outlined when it isn't. In the bottom bar, where each icon stands above a short label, the icons are half as large again as the text. And a button that carries a word [carries an icon as well](?path=/docs/components-button--docs#a-labelled-button-carries-an-icon-as-well).
 
 <DoDont>
 	<Example
@@ -122,7 +144,7 @@ Outlined is the resting state everywhere, because its weight matches the hairlin
 				</span>
 				<span>
 					<DescriptionFilledIcon aria-hidden />
-					Declarations
+					Invoices
 				</span>
 				<span>
 					<PersonIcon aria-hidden />
@@ -146,7 +168,7 @@ Outlined is the resting state everywhere, because its weight matches the hairlin
 				</span>
 				<span>
 					<DescriptionFilledIcon aria-hidden />
-					Declarations
+					Invoices
 				</span>
 				<span>
 					<PersonFilledIcon aria-hidden />
@@ -161,10 +183,6 @@ Outlined is the resting state everywhere, because its weight matches the hairlin
 	/>
 </DoDont>
 
-## Known issues
-
-- Two pairs of glyphs share a meaning: `download` and `file_download`, and `error` and `error_outline`. Which of each pair stays is undecided.
-
 ## Technical rules
 
 Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
@@ -177,9 +195,42 @@ The word says what the control does, and the icon helps it be found. Where only 
 
 </Details>
 
-<Details title="Icons are the outlined set">
+<Details title="The kit renders no icons, and the app fills every icon slot">
 
-Every glyph comes from one set, drawn on one grid at one line weight, and the outlined style is the resting state. The product installs the set from the `@material-design-icons/svg` package, so a glyph found on the Material Icons page imports by the same name. Explained in [One family](#one-family).
+No kit module imports a glyph. An icon goes in a part's children, or in a ready-made component's `icon` or `<job>Icon` prop, and a slot left empty renders nothing. Lint rejects an icon-set or `?react` SVG import outside stories and docs. Explained in [The app brings the icons](#the-app-brings-the-icons).
+
+<DoDont>
+<Example kind="do" caption="The app passes its own glyph into the part.">
+
+```tsx
+<Select.Icon>
+	<ExpandMoreIcon />
+</Select.Icon>
+```
+
+</Example>
+<Example kind="dont" caption="A glyph imported in a kit module ships to every app, from a set the app may not use.">
+
+```tsx
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+
+export const SelectIcon = () => <ExpandMoreIcon />;
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An icon slot is required only when the icon is all the control shows">
+
+An icon-only button, a checkbox's tick and the mark of a chosen option take a required slot, beside the required label that names them. Every other slot is optional. Explained in [The app brings the icons](#the-app-brings-the-icons).
+
+</Details>
+
+<Details title="An app's icons come from one set">
+
+The kit is set-agnostic, so the app picks one set, and every glyph on its screens comes from it: one grid, one line weight, with the outlined style as the resting state. These docs keep to one set throughout, the `@material-design-icons/svg` package, so a glyph found on the Material Icons page imports by the same name. Explained in [One family](#one-family).
 
 ```tsx
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
@@ -213,7 +264,7 @@ import SearchIcon from "@material-design-icons/svg/filled/search.svg?react";
 
 <Details title="An icon is sized in ems, so it follows its text">
 
-The icon is one em square, so it is as tall as the text beside it at every size. Explained in [Sized like a letter](#sized-like-a-letter).
+The icon is one em square, so it is as tall as the text beside it at every size. The slot part sets the size; the glyph sets none of its own. Explained in [Sized like a letter](#sized-like-a-letter).
 
 <DoDont>
 <Example kind="do" caption="The icon is as tall as its text, at every size.">
@@ -233,6 +284,53 @@ The icon is one em square, so it is as tall as the text beside it at every size.
 	inline-size: 24px;
 	block-size: 24px;
 }
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An icon draws in currentColor">
+
+The slot part sets `color`, and the glyph paints with `currentColor`, so it follows the control's state and the theme. Explained in [Sized like a letter](#sized-like-a-letter).
+
+<DoDont>
+<Example kind="do" caption="The glyph takes the colour of the part it sits in.">
+
+```tsx
+<CloseIcon fill="currentColor" />
+```
+
+</Example>
+<Example kind="dont" caption="A painted glyph keeps its colour when the control is disabled or the theme turns dark.">
+
+```tsx
+<CloseIcon fill="#1f1f1f" />
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Icon labels a glyph that stands for a word, and hides one beside its word">
+
+`Icon` sizes any SVG component and takes a required `label`. A glyph that is the only sign of its meaning gets that meaning as its label; a glyph beside its word gets `label=""` and is hidden from the accessibility tree. A glyph inside a labelled control is hidden either way. Explained in [A picture beside a word](#a-picture-beside-a-word).
+
+<DoDont>
+<Example kind="do" caption="The status glyph says what it means; the one beside its word is hidden.">
+
+```tsx
+<Icon svg={ScheduleIcon} label="Overdue" />
+<Icon svg={SearchIcon} label="" />
+```
+
+</Example>
+<Example kind="dont" caption="An unlabelled glyph is read out as an unnamed image, or not at all.">
+
+```tsx
+<ScheduleIcon />
 ```
 
 </Example>

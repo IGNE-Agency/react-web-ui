@@ -15,7 +15,7 @@ import { Button } from "../button/button.tsx";
 import { Tooltip, type TooltipProps } from "./tooltip.tsx";
 
 const TOOLTIP_CONTENT =
-	"Downloads the selected declarations as a spreadsheet.";
+	"Downloads the selected invoices as a spreadsheet.";
 const TRIGGER_LABEL = "Export";
 
 const PAST_HOVER_DELAY_MS = 1000;

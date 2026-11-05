@@ -27,9 +27,9 @@ export const ignore = () => undefined;
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.card}>
-        <TextField label="Empty" optionalLabel="optional" value="" onValueChange={ignore} clearable clearLabel="Clear" />
-        <TextField label="Filled" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} clearable clearLabel="Clear" />
-        <TextField label="Read-only" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} readOnly clearable clearLabel="Clear" />
+        <TextField label="Empty" optionalLabel="optional" value="" onValueChange={ignore} clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
+        <TextField label="Filled" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
+        <TextField label="Read-only" optionalLabel="optional" value="DEC-0412" onValueChange={ignore} readOnly clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
       </div>
     </div>
   }>
@@ -37,7 +37,9 @@ export const ignore = () => undefined;
 ```tsx
 <TextInput.Group>
 	<TextInput.Input />
-	<TextInput.Clear label={clearLabel} />
+	<TextInput.Clear label={clearLabel}>
+		<CloseIcon />
+	</TextInput.Clear>
 </TextInput.Group>
 ```
 
@@ -84,7 +86,7 @@ export const ignore = () => undefined;
 	<TextInput.Input />
 	<Button
 		iconOnly
-		icon={CloseIcon}
+		icon={<CloseIcon />}
 		label={clearLabel}
 		onClick={() => setValue("")}
 	/>

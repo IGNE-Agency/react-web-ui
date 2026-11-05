@@ -19,7 +19,7 @@ import {
 
 const LABEL = "Status";
 const OPTIONAL_LABEL = "optional";
-const DESCRIPTION = "The status the declaration is in now.";
+const DESCRIPTION = "The status the invoice is in now.";
 const ERROR = "Choose a status.";
 
 const OPEN = { value: "open", label: "Open" };

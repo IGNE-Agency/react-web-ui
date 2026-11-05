@@ -1,4 +1,7 @@
-import type { ReactTable } from "@tanstack/react-table";
+import type {
+	ReactTable,
+	SortingState,
+} from "@tanstack/react-table";
 import { type Context, createContext } from "react";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
 import { useRequiredContext } from "../lib/use-required-context.ts";
@@ -12,6 +15,8 @@ import type { DataTableFeatures } from "./table-features.ts";
  */
 export type DataTableContextValue = Readonly<{
 	table: unknown;
+	/** The table's sorting, held beside the instance so a part re-renders when it changes. */
+	sorting: SortingState;
 	status: DataTableStatus;
 	isFetching: boolean;
 	/** Refetches; the stale overlay and the refresh-failed notice offer it as a retry. */
@@ -34,7 +39,7 @@ export type DataTableState<
  * caller's row type. Pass the same `TData` the table was built with.
  *
  * @example
- * const { table } = useDataTable<Appointment>();
+ * const { table } = useDataTable<Invoice>();
  * const rows = table.getRowModel().rows;
  */
 export const useDataTable = <

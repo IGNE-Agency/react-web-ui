@@ -1,27 +1,32 @@
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
-import ScrollDownIcon from "@material-design-icons/svg/outlined/keyboard_arrow_down.svg?react";
 import { clsx } from "clsx";
-import type {
-	ComponentProps,
-	ReactElement,
-	ReactNode,
+import {
+	type ComponentProps,
+	Fragment,
+	type ReactElement,
+	type ReactNode,
 } from "react";
 import {
 	Intl as TemporalIntl,
 	Temporal,
 } from "temporal-polyfill";
-import { Avatar } from "../avatar/index.ts";
+import {
+	Avatar,
+	type AvatarProps,
+} from "../avatar/index.ts";
 import { Button } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
-import {
-	ConversationMessageContext,
-	type ConversationMessageSide,
-	type ConversationMessageStatus,
+import type {
+	ConversationMessageSide,
+	ConversationMessageStatus,
 } from "./conversation.context.ts";
 import style from "./conversation.module.scss";
+import {
+	groupByBurst,
+	groupByDay,
+} from "./group-messages.ts";
 import {
 	type ConversationMoment,
 	toZonedDateTime,
@@ -146,8 +151,8 @@ const Message = ({
 	className,
 	render,
 	...props
-}: ConversationMessageProps): ReactNode => {
-	const element = useRender({
+}: ConversationMessageProps): ReactElement =>
+	useRender({
 		defaultTagName: "div",
 		render,
 		props: {
@@ -156,13 +161,6 @@ const Message = ({
 			"data-side": side,
 		},
 	});
-
-	return (
-		<ConversationMessageContext value={{ side }}>
-			{element}
-		</ConversationMessageContext>
-	);
-};
 
 export type ConversationMessageBubbleProps =
 	useRender.ComponentProps<"div">;
@@ -205,22 +203,18 @@ const MessageAuthor = ({
 		},
 	});
 
-export type ConversationMessageAvatarProps = Readonly<{
-	/** Display name; drives the initials and stable tone of the avatar. */
-	name: string;
-	/** Diameter relative to the surrounding font size (in `em`). @default 1.5 */
-	size?: number;
-}>;
+export type ConversationMessageAvatarProps = AvatarProps;
 
-/** The author's `Avatar`, sized for the author line. */
+/** The author's `Avatar`, sized for the author line: 1.5em unless `size` says otherwise. */
 const MessageAvatar = ({
-	name,
 	size = 1.5,
+	className,
+	...props
 }: ConversationMessageAvatarProps): ReactNode => (
 	<Avatar
-		name={name}
+		{...props}
 		size={size}
-		className={style.messageAvatar}
+		className={clsx(style.messageAvatar, className)}
 	/>
 );
 
@@ -354,12 +348,15 @@ export type ConversationMessageFilesDownloadAllProps =
 	Readonly<{
 		/** The button's accessible name and tooltip, such as "Download all files". */
 		label: string;
+		/** The download glyph. */
+		children: ReactNode;
 	}> &
 		Omit<useRender.ComponentProps<"button">, "children">;
 
-/** An icon button that downloads every file of a message. */
+/** An icon button that downloads every file of a message; its children are the glyph. */
 const MessageFilesDownloadAll = ({
 	label,
+	children,
 	render,
 	...props
 }: ConversationMessageFilesDownloadAllProps): ReactElement =>
@@ -370,22 +367,32 @@ const MessageFilesDownloadAll = ({
 				variant="tertiary"
 				size="sm"
 				iconOnly
-				icon={DownloadIcon}
+				icon={children}
 				label={label}
 			/>
 		),
-		props: mergeProps<"button">({ type: "button" }, props),
+		props: mergeProps<"button">(
+			{
+				type: "button",
+				children:
+					render === undefined ? undefined : children,
+			},
+			props,
+		),
 	});
 
 export type ConversationScrollToBottomProps = Readonly<{
 	/** The button's accessible name and tooltip, such as "Scroll to latest". */
 	label: string;
+	/** The jump glyph, such as a down arrow. */
+	children: ReactNode;
 }> &
 	Omit<useRender.ComponentProps<"button">, "children">;
 
-/** An icon button, pinned to the log's bottom corner, that jumps to the latest message. */
+/** An icon button, pinned to the log's bottom corner, that jumps to the latest message; its children are the glyph. */
 const ScrollToBottom = ({
 	label,
+	children,
 	className,
 	render,
 	...props
@@ -396,7 +403,7 @@ const ScrollToBottom = ({
 			<Button
 				variant="tertiary"
 				iconOnly
-				icon={ScrollDownIcon}
+				icon={children}
 				label={label}
 			/>
 		),
@@ -404,6 +411,8 @@ const ScrollToBottom = ({
 			{
 				type: "button",
 				className: clsx(style.scrollToBottom, className),
+				children:
+					render === undefined ? undefined : children,
 			},
 			props,
 		),
@@ -427,55 +436,172 @@ const EmptyState = ({
 		),
 	});
 
-type ConversationNamespace = Readonly<{
-	Root: typeof Root;
-	EmptyState: typeof EmptyState;
-	Group: typeof Group;
-	GroupSeparator: typeof GroupSeparator;
-	DateSeparator: typeof DateSeparator;
-	Message: typeof Message;
-	MessageBubble: typeof MessageBubble;
-	MessageAuthor: typeof MessageAuthor;
-	MessageAvatar: typeof MessageAvatar;
-	MessageTimestamp: typeof MessageTimestamp;
-	MessageReadIndicator: typeof MessageReadIndicator;
-	MessageContent: typeof MessageContent;
-	MessageFiles: typeof MessageFiles;
-	MessageFilesDownloadAll: typeof MessageFilesDownloadAll;
-	ScrollToBottom: typeof ScrollToBottom;
+/** One message, as the `Conversation` prefab takes it. */
+export type ConversationMessage = Readonly<{
+	id: string;
+	/** Who sent it. Consecutive messages with the same author form one burst. */
+	authorId: string;
+	/** The author's display name, shown above the burst and drawn as initials. */
+	authorName: string;
+	side: ConversationMessageSide;
+	sentAt: ConversationMoment;
+	/** The message's text. */
+	body: ReactNode;
+	/** Whether the other party has read it. A burst shows its last message's status. */
+	status?: ConversationMessageStatus;
+	/** The files sent with it, such as `SentAttachmentTile`s, laid out as a row. */
+	files?: ReactNode;
 }>;
+
+export type ConversationProps = Omit<
+	ConversationRootProps,
+	"children"
+> &
+	Readonly<{
+		/** The messages, oldest first. */
+		messages: ReadonlyArray<ConversationMessage>;
+		/** What the separator says for today's messages, such as "Today". */
+		todayLabel: string;
+		/** What the separator says for yesterday's messages, such as "Yesterday". */
+		yesterdayLabel: string;
+		/** What a read message's status is announced as, such as "Read". */
+		readLabel: string;
+		/** What an unread message's status is announced as, such as "Unread". */
+		unreadLabel: string;
+		/** Cuts each message's text off after this many lines. */
+		lineClamp?: number;
+		/** What the log shows while there are no messages. */
+		empty?: ReactNode;
+		/** Anything after the messages, such as a `ScrollToBottom`. */
+		children?: ReactNode;
+	}>;
+
+const Prefab = ({
+	messages,
+	todayLabel,
+	yesterdayLabel,
+	readLabel,
+	unreadLabel,
+	lineClamp,
+	empty,
+	children,
+	...props
+}: ConversationProps): ReactElement => {
+	const days = groupByDay(
+		messages,
+		message => message.sentAt,
+		useTimeZone(),
+	);
+	const statusLabel: Readonly<
+		Record<ConversationMessageStatus, string>
+	> = { read: readLabel, unread: unreadLabel };
+
+	return (
+		<Root {...props}>
+			{days.length === 0 && empty !== undefined ? (
+				<EmptyState>{empty}</EmptyState>
+			) : null}
+			{days.map(day => (
+				<Group key={day.key}>
+					<DateSeparator
+						date={day.date}
+						todayLabel={todayLabel}
+						yesterdayLabel={yesterdayLabel}
+					/>
+					{groupByBurst(
+						day.items,
+						message => message.authorId,
+					).map(burst => {
+						const [first] = burst.items;
+						const { status } = burst.items.at(-1) ?? first;
+
+						return (
+							<Message key={burst.key} side={first.side}>
+								<MessageAuthor>
+									<MessageAvatar name={first.authorName} />
+									{first.authorName}
+									<MessageTimestamp date={first.sentAt} />
+									{status === undefined ? null : (
+										<MessageReadIndicator
+											status={status}
+											label={statusLabel[status]}
+										/>
+									)}
+								</MessageAuthor>
+								{burst.items.map(message => (
+									<Fragment key={message.id}>
+										<MessageBubble>
+											<MessageContent lineClamp={lineClamp}>
+												{message.body}
+											</MessageContent>
+										</MessageBubble>
+										{message.files === undefined ? null : (
+											<MessageFiles>
+												{message.files}
+											</MessageFiles>
+										)}
+									</Fragment>
+								))}
+							</Message>
+						);
+					})}
+				</Group>
+			))}
+			{children}
+		</Root>
+	);
+};
+
+/** The parts of a conversation, hanging off its prefab. */
+export type ConversationParts = typeof Prefab &
+	Readonly<{
+		Root: typeof Root;
+		EmptyState: typeof EmptyState;
+		Group: typeof Group;
+		GroupSeparator: typeof GroupSeparator;
+		DateSeparator: typeof DateSeparator;
+		Message: typeof Message;
+		MessageBubble: typeof MessageBubble;
+		MessageAuthor: typeof MessageAuthor;
+		MessageAvatar: typeof MessageAvatar;
+		MessageTimestamp: typeof MessageTimestamp;
+		MessageReadIndicator: typeof MessageReadIndicator;
+		MessageContent: typeof MessageContent;
+		MessageFiles: typeof MessageFiles;
+		MessageFilesDownloadAll: typeof MessageFilesDownloadAll;
+		ScrollToBottom: typeof ScrollToBottom;
+	}>;
 
 /**
  * A message thread: a log of day groups, each a run of author bursts with their
- * bubbles, timestamps, read status and files. Group the messages with
- * `groupByDay` and `groupByBurst`.
+ * bubbles, timestamps, read status and files. The prefab groups `messages` by
+ * day and by author in the provider's time zone; the parts hanging off it build
+ * a log by hand, grouped with `groupByDay` and `groupByBurst`.
  *
  * @example
- * <Conversation.Root>
- * 	<Conversation.Group>
- * 		<Conversation.DateSeparator date={day.date} todayLabel="Today" yesterdayLabel="Yesterday" />
- * 		<Conversation.Message side="own">
- * 			<Conversation.MessageBubble>
- * 				<Conversation.MessageContent>{body}</Conversation.MessageContent>
- * 			</Conversation.MessageBubble>
- * 		</Conversation.Message>
- * 	</Conversation.Group>
- * </Conversation.Root>
+ * <Conversation
+ * 	messages={messages}
+ * 	todayLabel="Today"
+ * 	yesterdayLabel="Yesterday"
+ * 	readLabel="Read"
+ * 	unreadLabel="Unread"
+ * />
  */
-export const Conversation: ConversationNamespace = {
-	Root,
-	EmptyState,
-	Group,
-	GroupSeparator,
-	DateSeparator,
-	Message,
-	MessageBubble,
-	MessageAuthor,
-	MessageAvatar,
-	MessageTimestamp,
-	MessageReadIndicator,
-	MessageContent,
-	MessageFiles,
-	MessageFilesDownloadAll,
-	ScrollToBottom,
-};
+export const Conversation: ConversationParts =
+	Object.assign(Prefab, {
+		Root,
+		EmptyState,
+		Group,
+		GroupSeparator,
+		DateSeparator,
+		Message,
+		MessageBubble,
+		MessageAuthor,
+		MessageAvatar,
+		MessageTimestamp,
+		MessageReadIndicator,
+		MessageContent,
+		MessageFiles,
+		MessageFilesDownloadAll,
+		ScrollToBottom,
+	});

@@ -19,12 +19,12 @@ import {
 	type ConfirmDialogProps,
 } from "./confirm-dialog.tsx";
 
-const OPEN_LABEL = "Delete declaration";
-const TITLE = "Delete this declaration?";
+const OPEN_LABEL = "Delete invoice";
+const TITLE = "Delete this invoice?";
 const DESCRIPTION = "This cannot be undone.";
 const CONFIRM_LABEL = "Delete";
 const CANCEL_LABEL = "Cancel";
-const SEND_TITLE = "Send this declaration?";
+const SEND_TITLE = "Send this invoice?";
 const SEND_CONFIRM_LABEL = "Send";
 
 const confirmLater =
@@ -354,7 +354,7 @@ export const PendingRejects: Story = {
 			expect(confirm).toHaveAttribute("aria-busy", "true"),
 		);
 
-		reject(new Error("The insurer refused the request."));
+		reject(new Error("The client refused the request."));
 		await waitFor(() =>
 			expect(confirm).not.toHaveAttribute("aria-busy"),
 		);

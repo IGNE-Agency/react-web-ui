@@ -1,8 +1,61 @@
 @use "../../style/layers.scss";
+@use "../../style/loading-motion.scss" as loading;
 
 @layer kit.components {
+	@include loading.pulse-keyframes;
+
+	@keyframes spinner-turn {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes spinner-sweep {
+		0% {
+			stroke-dasharray: 0 150;
+			stroke-dashoffset: 0;
+		}
+
+		47.5% {
+			stroke-dasharray: 42 150;
+			stroke-dashoffset: -16;
+		}
+
+		95%,
+		100% {
+			stroke-dasharray: 42 150;
+			stroke-dashoffset: -59;
+		}
+	}
+
 	.spinner {
 		display: inline-block;
 		color: var(--spinner-color, currentcolor);
+	}
+
+	.ring {
+		transform-origin: center;
+	}
+
+	.arc {
+		stroke-dasharray: 42 150;
+		stroke-dashoffset: -16;
+		stroke-linecap: round;
+	}
+
+	@media (prefers-reduced-motion) {
+		.ring {
+			@include loading.pulse;
+		}
+	}
+
+	@media not (prefers-reduced-motion) {
+		.ring {
+			animation: spinner-turn 2s linear infinite;
+		}
+
+		.arc {
+			animation: spinner-sweep 1.5s ease-in-out infinite;
+		}
 	}
 }

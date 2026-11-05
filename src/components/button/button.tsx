@@ -4,7 +4,6 @@ import type {
 	ReactElement,
 	ReactNode,
 } from "react";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import { buttonAttributes } from "./button-attributes.ts";
 
@@ -48,7 +47,7 @@ type TextButtonProps = BaseProps &
 	Readonly<{
 		iconOnly?: false;
 		/** Optional leading icon rendered before the label. */
-		icon?: SvgComponent;
+		icon?: ReactNode;
 		children: ReactNode;
 	}>;
 
@@ -56,7 +55,7 @@ type IconOnlyButtonProps = BaseProps &
 	Readonly<{
 		iconOnly: true;
 		/** Icon to render; required in icon-only mode. */
-		icon: SvgComponent;
+		icon: ReactNode;
 		/** Accessible name, surfaced as the tooltip hint and set as `aria-label`, since the icon alone conveys no text. */
 		label: string;
 		children?: never;
@@ -102,7 +101,7 @@ export const Button = (props: ButtonProps): ReactNode => {
 					})}
 					data-icon-only={iconOnly}
 					{...nativeProps}>
-					<Icon svg={icon} label="" />
+					{icon}
 				</ButtonElement>
 			</Tooltip>
 		);
@@ -130,7 +129,7 @@ export const Button = (props: ButtonProps): ReactNode => {
 				className,
 			})}
 			{...nativeProps}>
-			{icon ? <Icon svg={icon} label="" /> : null}
+			{icon}
 			{children}
 		</ButtonElement>
 	);

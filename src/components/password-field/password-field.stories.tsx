@@ -1,4 +1,7 @@
+import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
+import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { type ReactElement, useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -117,6 +120,12 @@ const meta = {
 		optionalLabel: OPTIONAL_LABEL,
 		showPasswordLabel: SHOW_LABEL,
 		hidePasswordLabel: HIDE_LABEL,
+		showPasswordIcon: (
+			<Icon svg={VisibilityIcon} label="" />
+		),
+		hidePasswordIcon: (
+			<Icon svg={VisibilityOffIcon} label="" />
+		),
 		value: "",
 		autoComplete: "new-password",
 		onValueChange: fn(),

@@ -1,4 +1,21 @@
+import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
+import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
+import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
+import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
+import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { revalidateLogic } from "@tanstack/react-form";
 import {
 	expect,
@@ -27,7 +44,7 @@ const PASSWORD_LABEL = "Password";
 const SHOW_PASSWORD_LABEL = "Show password";
 const HIDE_PASSWORD_LABEL = "Hide password";
 const PHONE_LABEL = "Phone number";
-const REFERRER_LABEL = "Referred by";
+const CONTACT_LABEL = "Client contact";
 const CLEAR_LABEL = "Clear";
 const HOURS_LABEL = "Hours";
 const DECREMENT_LABEL = "Decrease";
@@ -37,7 +54,7 @@ const CODE_LABEL = "Invitation code";
 const OPTIONAL_LABEL = "optional";
 const SUBMIT_LABEL = "Submit";
 const BUSY_LABEL = "Submitting";
-const REFUSED = "The declaration period has closed.";
+const REFUSED = "The invoice period has closed.";
 const REFUSED_NAME = "Closed";
 
 const CODE_LENGTH = 6;
@@ -51,7 +68,7 @@ const SCHEMA = z.object({
 	notes: z.string(),
 	password: z.string(),
 	phone: z.string(),
-	referrer: z.string(),
+	contact: z.string(),
 	hours: z.number().nullable(),
 	code: z.string(),
 });
@@ -64,7 +81,7 @@ const EMPTY: ExampleValues = {
 	notes: "",
 	password: "",
 	phone: "",
-	referrer: "",
+	contact: "",
 	hours: null,
 	code: "",
 };
@@ -118,6 +135,7 @@ const ExampleForm = (props: ExampleFormProps) => {
 						label={EMAIL_LABEL}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
+						icon={<Icon svg={MailIcon} label="" />}
 					/>
 				)}
 			</form.AppField>
@@ -139,6 +157,12 @@ const ExampleForm = (props: ExampleFormProps) => {
 						optionalLabel={OPTIONAL_LABEL}
 						showPasswordLabel={SHOW_PASSWORD_LABEL}
 						hidePasswordLabel={HIDE_PASSWORD_LABEL}
+						showPasswordIcon={
+							<Icon svg={VisibilityIcon} label="" />
+						}
+						hidePasswordIcon={
+							<Icon svg={VisibilityOffIcon} label="" />
+						}
 						autoComplete="new-password"
 					/>
 				)}
@@ -152,13 +176,15 @@ const ExampleForm = (props: ExampleFormProps) => {
 					/>
 				)}
 			</form.AppField>
-			<form.AppField name="referrer">
+			<form.AppField name="contact">
 				{field => (
 					<field.SearchField
-						label={REFERRER_LABEL}
+						label={CONTACT_LABEL}
 						requiredness="optional"
 						optionalLabel={OPTIONAL_LABEL}
 						clearLabel={CLEAR_LABEL}
+						clearIcon={<Icon svg={CloseIcon} label="" />}
+						icon={<Icon svg={SearchIcon} label="" />}
 					/>
 				)}
 			</form.AppField>
@@ -170,6 +196,10 @@ const ExampleForm = (props: ExampleFormProps) => {
 						optionalLabel={OPTIONAL_LABEL}
 						decrementLabel={DECREMENT_LABEL}
 						incrementLabel={INCREMENT_LABEL}
+						decrementIcon={
+							<Icon svg={RemoveIcon} label="" />
+						}
+						incrementIcon={<Icon svg={AddIcon} label="" />}
 						roleDescription={NUMBER_ROLE}
 						min={0}
 					/>
@@ -210,12 +240,17 @@ const OWNER_LABEL = "Owner";
 const OWNER_ERROR = "Choose an owner.";
 const OWNERS = ["Ada", "Grace", "Linus"];
 
+const CHECK_ICON = <Icon svg={CheckIcon} label="" />;
+const EXPAND_ICON = <Icon svg={ExpandMoreIcon} label="" />;
+
 const COMBOBOX_LABELS = {
 	...OPTIONS_LOAD_LABELS,
 	noResultsLabel: "No results.",
 	searchLabel: "Search",
 	loadingMoreLabel: "Loading more options…",
 	resultsLabel: (count: number) => `${count} results`,
+	icon: EXPAND_ICON,
+	checkIcon: CHECK_ICON,
 };
 
 const STATUS_OPTIONS = [
@@ -297,6 +332,7 @@ const ChoiceForm = (props: ExampleFormProps) => {
 				{field => (
 					<field.CheckboxField
 						label={TERMS_LABEL}
+						checkIcon={CHECK_ICON}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 					/>
@@ -307,6 +343,7 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.CheckboxGroupField
 						label={STATUSES_LABEL}
 						items={STATUS_ITEMS}
+						checkIcon={CHECK_ICON}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 					/>
@@ -336,6 +373,8 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.SelectField
 						label={STATUS_LABEL}
 						options={STATUS_OPTIONS}
+						icon={EXPAND_ICON}
+						checkIcon={CHECK_ICON}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 						{...OPTIONS_LOAD_LABELS}
@@ -445,7 +484,7 @@ const fieldsLoaded = async (canvas: Canvas) => {
 			}),
 		),
 		canvas.findByRole("searchbox", {
-			name: startsWith(REFERRER_LABEL),
+			name: startsWith(CONTACT_LABEL),
 		}),
 	]);
 };
@@ -801,10 +840,10 @@ export const ChoicesSubmitted: Story = {
 	},
 };
 
-const TREATED_ON_LABEL = "Treatment date";
-const TREATED_ON_ERROR = "Enter the treatment date.";
-const PERIOD_LABEL = "Declaration period";
-const PERIOD_ERROR = "Enter the declaration period.";
+const WORKED_ON_LABEL = "Service date";
+const WORKED_ON_ERROR = "Enter the service date.";
+const PERIOD_LABEL = "Invoice period";
+const PERIOD_ERROR = "Enter the invoice period.";
 const START_TIME_LABEL = "Start time";
 const START_TIME_ERROR = "Enter the start time.";
 const ATTACHMENTS_LABEL = "Attachments";
@@ -820,12 +859,22 @@ const CALENDAR_COPY = {
 	noMatchingYearLabel: "No matching year.",
 };
 
+const CALENDAR_ICONS = {
+	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
+};
+
 const FILE_COPY = {
 	dropTargetLabel: "Drop zone for attachments",
 	dropHint: "Drag files here",
+	dropIcon: <Icon svg={UploadFileIcon} label="" />,
 	chooseLabel: "Choose files",
+	chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 	filesLabel: "Files for attachments",
 	removeLabel: "Remove",
+	removeIcon: <Icon svg={CloseIcon} label="" />,
 	fileHint: (name: string, size: string) =>
 		`${name} (${size})`,
 	tooLargeError: (name: string, maxSize: string) =>
@@ -839,15 +888,17 @@ const PHOTO_COPY = {
 	photoSetLabel: "Photo set",
 	noPhotoLabel: "No photo",
 	removeLabel: "Remove photo",
+	removeIcon: <Icon svg={CloseIcon} label="" />,
+	icon: <Icon svg={PhotoCameraIcon} label="" />,
 };
 
 const INVOICE = pdfFile("invoice-july.pdf");
 
 const FILES_AND_DATES_SCHEMA = z.object({
-	treatedOn: z
+	workedOn: z
 		.string()
 		.nullable()
-		.refine(value => value !== null, TREATED_ON_ERROR),
+		.refine(value => value !== null, WORKED_ON_ERROR),
 	period: z
 		.object({ start: z.string(), end: z.string() })
 		.nullable()
@@ -867,7 +918,7 @@ type FilesAndDatesValues = z.input<
 >;
 
 const NO_FILES_AND_DATES: FilesAndDatesValues = {
-	treatedOn: null,
+	workedOn: null,
 	period: null,
 	startTime: null,
 	attachments: [],
@@ -891,13 +942,17 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 			form={form}
 			className={style.form}
 			{...props}>
-			<form.AppField name="treatedOn">
+			<form.AppField name="workedOn">
 				{field => (
 					<field.DateField
-						label={TREATED_ON_LABEL}
+						label={WORKED_ON_LABEL}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
+						openCalendarIcon={
+							<Icon svg={CalendarTodayIcon} label="" />
+						}
 						{...CALENDAR_COPY}
+						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>
@@ -908,7 +963,11 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 						visibleMonths={2}
+						openCalendarIcon={
+							<Icon svg={DateRangeIcon} label="" />
+						}
 						{...CALENDAR_COPY}
+						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>
@@ -987,7 +1046,7 @@ export const FilesAndDates: Story = {
 	render: FilesAndDatesForm,
 	play: async ({ canvas }) => {
 		await expect(
-			await firstSegmentOf(canvas, TREATED_ON_LABEL),
+			await firstSegmentOf(canvas, WORKED_ON_LABEL),
 		).toBeVisible();
 		await expect(
 			await canvas.findByRole("button", {
@@ -1036,7 +1095,7 @@ export const FilesAndDatesSubmitWithErrors: Story = {
 		await userEvent.click(submitButton(canvas));
 
 		await expect(
-			await canvas.findByText(TREATED_ON_ERROR),
+			await canvas.findByText(WORKED_ON_ERROR),
 		).toBeInTheDocument();
 		await expect(
 			canvas.getByText(PERIOD_ERROR),
@@ -1052,7 +1111,7 @@ export const FilesAndDatesSubmitWithErrors: Story = {
 		);
 		await waitFor(async () =>
 			expect(
-				await firstSegmentOf(canvas, TREATED_ON_LABEL),
+				await firstSegmentOf(canvas, WORKED_ON_LABEL),
 			).toHaveFocus(),
 		);
 		await expect(
@@ -1066,7 +1125,7 @@ export const FilesAndDatesSubmitted: Story = {
 	render: FilesAndDatesForm,
 	play: async ({ canvas }) => {
 		await userEvent.click(
-			await firstSegmentOf(canvas, TREATED_ON_LABEL),
+			await firstSegmentOf(canvas, WORKED_ON_LABEL),
 		);
 		await userEvent.keyboard("07242026");
 		await userEvent.click(
@@ -1086,7 +1145,7 @@ export const FilesAndDatesSubmitted: Story = {
 
 		await waitFor(() =>
 			expect(submittedFilesAndDates).toHaveBeenCalledWith({
-				treatedOn: "2026-07-24",
+				workedOn: "2026-07-24",
 				period: { start: "2026-07-01", end: "2026-07-31" },
 				startTime: "09:30",
 				attachments: [INVOICE],

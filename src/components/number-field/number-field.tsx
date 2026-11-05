@@ -31,6 +31,10 @@ export type NumberFieldProps = FieldProps &
 		decrementLabel: string;
 		/** The increment button's accessible name and tooltip, such as "Increase". */
 		incrementLabel: string;
+		/** The decrement button's icon. */
+		decrementIcon: ReactNode;
+		/** The increment button's icon. */
+		incrementIcon: ReactNode;
 		/** What the control announces itself as, such as "Number field". */
 		roleDescription: string;
 	}>;
@@ -46,6 +50,8 @@ export type NumberFieldProps = FieldProps &
  * 	optionalLabel="optional"
  * 	decrementLabel="Decrease"
  * 	incrementLabel="Increase"
+ * 	decrementIcon={<RemoveIcon />}
+ * 	incrementIcon={<AddIcon />}
  * 	roleDescription="Number field"
  * 	format={percentFormat()}
  * 	value={rate}
@@ -59,6 +65,8 @@ export const NumberField = ({
 	suffix,
 	decrementLabel,
 	incrementLabel,
+	decrementIcon,
+	incrementIcon,
 	roleDescription,
 	placeholder,
 	autoComplete,
@@ -70,7 +78,9 @@ export const NumberField = ({
 	<NumberInput.Root {...rootProps}>
 		<NumberInput.Label>{label}</NumberInput.Label>
 		<NumberInput.Group>
-			<NumberInput.Decrement label={decrementLabel} />
+			<NumberInput.Decrement label={decrementLabel}>
+				{decrementIcon}
+			</NumberInput.Decrement>
 			{prefix !== undefined && (
 				<NumberInput.Affix>{prefix}</NumberInput.Affix>
 			)}
@@ -86,7 +96,9 @@ export const NumberField = ({
 				<NumberInput.Affix>{suffix}</NumberInput.Affix>
 			)}
 			<NumberInput.Pending />
-			<NumberInput.Increment label={incrementLabel} />
+			<NumberInput.Increment label={incrementLabel}>
+				{incrementIcon}
+			</NumberInput.Increment>
 		</NumberInput.Group>
 		<NumberInput.Description>
 			{description}

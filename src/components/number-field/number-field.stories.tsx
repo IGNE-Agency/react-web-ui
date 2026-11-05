@@ -1,4 +1,7 @@
+import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import { expect, fn, userEvent } from "storybook/test";
@@ -67,6 +70,8 @@ const meta = {
 		optionalLabel: OPTIONAL_LABEL,
 		decrementLabel: DECREMENT_LABEL,
 		incrementLabel: INCREMENT_LABEL,
+		decrementIcon: <Icon svg={RemoveIcon} label="" />,
+		incrementIcon: <Icon svg={AddIcon} label="" />,
 		roleDescription: ROLE_DESCRIPTION,
 		value: null,
 		min: 0,

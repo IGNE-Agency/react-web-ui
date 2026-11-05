@@ -12,7 +12,7 @@ const COLOUR = "sys.color.focus-ring";
 
 const SHAPES = [
 	{ name: "pill", label: "Save" },
-	{ name: "card", label: "Dental" },
+	{ name: "card", label: "Workshop" },
 	{ name: "circle", label: "AV" },
 ] as const;
 

@@ -1,4 +1,6 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
 import LogoutIcon from "@material-design-icons/svg/outlined/logout.svg?react";
 import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
@@ -24,15 +26,15 @@ import {
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
 import { Button } from "../button/button.tsx";
 import { Drawer } from "../drawer/drawer.tsx";
-import type { SvgComponent } from "../icon/icon.tsx";
+import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Nav, type NavRootProps } from "./nav.tsx";
 import { NavItemView } from "./nav-item-view.tsx";
 import styles from "./nav.stories.module.scss";
 
 const NAV_LABEL = "Main";
-const TABS_LABEL = "Declarations";
+const TABS_LABEL = "Invoices";
 const HOME = "Home";
-const DECLARATIONS = "Declarations";
+const INVOICES = "Invoices";
 const INCOMPLETE = "Incomplete";
 const OUTSTANDING = "Outstanding";
 const SENT = "Sent";
@@ -45,10 +47,10 @@ const MORE = "More";
 const CLOSE_MORE = "Close more";
 const TOGGLE_RAIL = "Collapse or expand the navigation";
 
-const START = "/declarations/incomplete";
+const START = "/invoices/incomplete";
 const SETTINGS_PATH = "/settings";
-const OUTSTANDING_PATH = "/declarations/outstanding";
-const SENT_PATH = "/declarations/sent";
+const OUTSTANDING_PATH = "/invoices/outstanding";
+const SENT_PATH = "/invoices/sent";
 
 const { history, decorator, reset } =
 	createStoryRouter(START);
@@ -67,8 +69,8 @@ type Destination = Readonly<{
 const DESTINATIONS: readonly Destination[] = [
 	{ to: "/", label: HOME, icon: HomeIcon },
 	{
-		to: "/declarations",
-		label: DECLARATIONS,
+		to: "/invoices",
+		label: INVOICES,
 		icon: DescriptionIcon,
 	},
 	{ to: "/clients", label: CLIENTS, icon: PeopleIcon },
@@ -103,7 +105,9 @@ const DestinationLink = ({
 		label={label}
 		labelled={labelled}
 		activeOptions={{ exact: to === "/" }}>
-		<NavItemView.Icon svg={icon} />
+		<NavItemView.Icon>
+			<Icon svg={icon} label="" />
+		</NavItemView.Icon>
 		<NavItemView.Label>{label}</NavItemView.Label>
 	</NavLink>
 );
@@ -111,7 +115,7 @@ const DestinationLink = ({
 const RailEntries = ({
 	labelled,
 }: Readonly<{ labelled: boolean }>): ReactElement => {
-	const [home, declarations, ...rest] = DESTINATIONS;
+	const [home, invoices, ...rest] = DESTINATIONS;
 
 	return (
 		<>
@@ -120,26 +124,32 @@ const RailEntries = ({
 					<DestinationLink {...home} labelled={labelled} />
 				</Nav.Item>
 			) : null}
-			{declarations ? (
+			{invoices ? (
 				<Nav.Item>
 					<Nav.Group defaultOpen={labelled}>
 						<Nav.GroupHeader>
 							<DestinationLink
-								{...declarations}
+								{...invoices}
 								labelled={labelled}
 							/>
 							{labelled ? (
-								<Nav.GroupToggle label={SUBPAGES} />
+								<Nav.GroupToggle label={SUBPAGES}>
+									<Icon svg={ExpandMoreIcon} label="" />
+								</Nav.GroupToggle>
 							) : null}
 						</Nav.GroupHeader>
 						<Nav.GroupPanel>
-							{SUBPAGE_LINKS.map(link => (
-								<Nav.Item key={link.to}>
-									<NavLink to={link.to} label={link.label}>
-										{link.label}
-									</NavLink>
-								</Nav.Item>
-							))}
+							<Nav.GroupList>
+								{SUBPAGE_LINKS.map(link => (
+									<Nav.Item key={link.to}>
+										<NavLink
+											to={link.to}
+											label={link.label}>
+											{link.label}
+										</NavLink>
+									</Nav.Item>
+								))}
+							</Nav.GroupList>
 						</Nav.GroupPanel>
 					</Nav.Group>
 				</Nav.Item>
@@ -164,7 +174,9 @@ const Rail = (args: NavRootProps): ReactElement => (
 				<NavItemView.Root
 					label={SIGN_OUT}
 					onClick={signOut}>
-					<NavItemView.Icon svg={LogoutIcon} />
+					<NavItemView.Icon>
+						<Icon svg={LogoutIcon} label="" />
+					</NavItemView.Icon>
 					<NavItemView.Label>{SIGN_OUT}</NavItemView.Label>
 				</NavItemView.Root>
 			</Nav.Item>
@@ -222,7 +234,13 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			<Button
 				variant="tertiary"
 				iconOnly
-				icon={collapsed ? MenuIcon : MenuOpenIcon}
+				icon={
+					collapsed ? (
+						<Icon svg={MenuIcon} label="" />
+					) : (
+						<Icon svg={MenuOpenIcon} label="" />
+					)
+				}
 				label={TOGGLE_RAIL}
 				onClick={() => setCollapsed(current => !current)}
 			/>
@@ -234,7 +252,9 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 						label={SIGN_OUT}
 						labelled={!collapsed}
 						onClick={signOut}>
-						<NavItemView.Icon svg={LogoutIcon} />
+						<NavItemView.Icon>
+							<Icon svg={LogoutIcon} label="" />
+						</NavItemView.Icon>
 						<NavItemView.Label>
 							{SIGN_OUT}
 						</NavItemView.Label>
@@ -272,7 +292,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 							activeOptions={{
 								exact: destination.to === "/",
 							}}>
-							<NavItemView.Icon svg={destination.icon} />
+							<NavItemView.Icon>
+								<Icon svg={destination.icon} label="" />
+							</NavItemView.Icon>
 							<NavItemView.Label>
 								{destination.label}
 							</NavItemView.Label>
@@ -288,7 +310,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 							data-active={
 								overflowIsCurrent ? "true" : undefined
 							}>
-							<NavItemView.Icon svg={MoreIcon} />
+							<NavItemView.Icon>
+								<Icon svg={MoreIcon} label="" />
+							</NavItemView.Icon>
 							<NavItemView.Label>{MORE}</NavItemView.Label>
 						</NavItemView.Root>
 						<Drawer.Portal>
@@ -300,6 +324,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 											<Drawer.Title>{MORE}</Drawer.Title>
 											<Drawer.CloseButton
 												closeLabel={CLOSE_MORE}
+												icon={
+													<Icon svg={CloseIcon} label="" />
+												}
 											/>
 										</Drawer.Header>
 										<Nav.Root aria-label={MORE}>
@@ -310,9 +337,12 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 															to={destination.to}
 															label={destination.label}
 															onClick={() => more.close()}>
-															<NavItemView.Icon
-																svg={destination.icon}
-															/>
+															<NavItemView.Icon>
+																<Icon
+																	svg={destination.icon}
+																	label=""
+																/>
+															</NavItemView.Icon>
 															<NavItemView.Label>
 																{destination.label}
 															</NavItemView.Label>
@@ -395,7 +425,7 @@ const meta = {
 			},
 			{
 				page: "Foundation/Iconography",
-				section: "Icons are the outlined set",
+				section: "An app's icons come from one set",
 			},
 			{ component: "components/tabs" },
 		],
@@ -421,7 +451,7 @@ export const Vertical: Story = {
 			canvas.getByRole("navigation", { name: NAV_LABEL }),
 		).toBeInTheDocument();
 		await current(link(canvas, INCOMPLETE));
-		await current(link(canvas, DECLARATIONS));
+		await current(link(canvas, INVOICES));
 		await expect(
 			link(canvas, SETTINGS),
 		).not.toHaveAttribute("aria-current");

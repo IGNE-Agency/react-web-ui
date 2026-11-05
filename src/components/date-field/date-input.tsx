@@ -1,4 +1,3 @@
-import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
 import type { CalendarDate } from "@internationalized/date";
 import { type ReactNode, type Ref, useId } from "react";
 import {
@@ -24,6 +23,13 @@ import { useTimeZone } from "../time-zone-provider/index.ts";
 export type DateInputRootProps =
 	AriaDatePickerProps<CalendarDate> & TemporalStateProps;
 
+/**
+ * A react-aria `DatePicker` holding the value, with today as the placeholder
+ * in the `TimeZoneProvider`'s zone.
+ *
+ * @example
+ * <DateInput.Root aria-labelledby={labelId}>…</DateInput.Root>
+ */
 const DateInputRoot = ({
 	state,
 	...props
@@ -44,17 +50,24 @@ export type DateInputTriggerProps = Readonly<{
 	/** Accessible name, such as "Open calendar". */
 	label: string;
 	ref?: Ref<HTMLButtonElement>;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
+/**
+ * The icon-only button that opens the calendar.
+ *
+ * @example
+ * <DateInput.Trigger label="Open calendar"><CalendarTodayIcon /></DateInput.Trigger>
+ */
 const DateInputTrigger = ({
 	label,
 	ref,
+	children,
 }: DateInputTriggerProps): ReactNode => (
-	<TemporalTrigger
-		icon={CalendarTodayIcon}
-		label={label}
-		ref={ref}
-	/>
+	<TemporalTrigger label={label} ref={ref}>
+		{children}
+	</TemporalTrigger>
 );
 
 /** The parts of a date input. */
@@ -80,10 +93,12 @@ export type DateInputParts = Readonly<{
  * 		<>
  * 			<DateInput.Group state={{ focused: isFocusWithin }}>
  * 				<DateInput.Input />
- * 				<DateInput.Trigger label="Open calendar" />
+ * 				<DateInput.Trigger label="Open calendar">
+ * 					<CalendarTodayIcon />
+ * 				</DateInput.Trigger>
  * 			</DateInput.Group>
  * 			<DateInput.Popup>
- * 				<DateInput.Calendar {...calendarLabels} />
+ * 				<DateInput.Calendar {...calendarLabels} {...calendarIcons} />
  * 			</DateInput.Popup>
  * 		</>
  * 	)}

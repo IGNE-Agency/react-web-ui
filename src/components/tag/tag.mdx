@@ -7,6 +7,7 @@ import { DocsPage } from "../../../.storybook/docs-page";
 import styles from "../../../docs/design-system/components.module.scss";
 import { DoDont } from "../../../docs/design-system/do-dont";
 import { Example } from "../../../docs/design-system/example";
+import { Icon } from "../icon/icon.tsx";
 import { Tag } from "./tag.tsx";
 import * as TagStories from "./tag.stories.tsx";
 
@@ -27,7 +28,7 @@ A tag leads with at most one indicator. A dot is enough where the tone is a dist
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <Tag.Root tone="error">
-        <Tag.Icon svg={ErrorIcon} />
+        <Tag.Icon><Icon svg={ErrorIcon} label="" /></Tag.Icon>
         Rejected
       </Tag.Root>
     </div>
@@ -35,7 +36,9 @@ A tag leads with at most one indicator. A dot is enough where the tone is a dist
 
 ```tsx
 <Tag.Root tone="error">
-	<Tag.Icon svg={ErrorIcon} />
+	<Tag.Icon>
+		<Icon svg={ErrorIcon} label="" />
+	</Tag.Icon>
 	{label}
 </Tag.Root>
 ```
@@ -81,9 +84,9 @@ A tag leads with at most one indicator. A dot is enough where the tone is a dist
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.stack}>
-        <Tag.Root tone="info"><Tag.Dot /><Tag.Icon svg={InfoIcon} />Submitted</Tag.Root>
-        <Tag.Root tone="success"><Tag.Dot /><Tag.Icon svg={CheckCircleIcon} />Paid</Tag.Root>
-        <Tag.Root tone="warning"><Tag.Dot /><Tag.Icon svg={WarningIcon} />Incomplete</Tag.Root>
+        <Tag.Root tone="info"><Tag.Dot /><Tag.Icon><Icon svg={InfoIcon} label="" /></Tag.Icon>Submitted</Tag.Root>
+        <Tag.Root tone="success"><Tag.Dot /><Tag.Icon><Icon svg={CheckCircleIcon} label="" /></Tag.Icon>Paid</Tag.Root>
+        <Tag.Root tone="warning"><Tag.Dot /><Tag.Icon><Icon svg={WarningIcon} label="" /></Tag.Icon>Incomplete</Tag.Root>
       </div>
     </div>
   }>
@@ -91,7 +94,7 @@ A tag leads with at most one indicator. A dot is enough where the tone is a dist
 ```tsx
 <Tag.Root tone={toneOf[status]}>
 	<Tag.Dot />
-	<Tag.Icon svg={statusIcon[status]} />
+	<Tag.Icon>{statusIcon[status]}</Tag.Icon>
 	{label}
 </Tag.Root>
 ```

@@ -5,17 +5,24 @@ import { expect, fn } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "../button/button.tsx";
 import { EmptyMessage } from "./empty-message.tsx";
+import { Icon } from "../icon/index.ts";
 
-const TITLE = "No declarations yet";
-const DESCRIPTION = "Declarations you send show up here.";
-const ADD = "New declaration";
+const TITLE = "No invoices yet";
+const DESCRIPTION = "Invoices you send show up here.";
+const ADD = "New invoice";
 
-const ICONS = { none: undefined, inbox: InboxIcon };
+const ICONS = {
+	none: undefined,
+	inbox: <Icon svg={InboxIcon} label="" />,
+};
 
 const ACTIONS = {
 	none: undefined,
 	add: (
-		<Button variant="primary" icon={AddIcon} onClick={fn()}>
+		<Button
+			variant="primary"
+			icon={<Icon svg={AddIcon} label="" />}
+			onClick={fn()}>
 			{ADD}
 		</Button>
 	),

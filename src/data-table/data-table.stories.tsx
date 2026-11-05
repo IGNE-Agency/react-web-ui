@@ -1,3 +1,18 @@
+import ArrowDownwardIcon from "@material-design-icons/svg/outlined/arrow_downward.svg?react";
+import ArrowUpwardIcon from "@material-design-icons/svg/outlined/arrow_upward.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import FilterIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
+import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.svg?react";
+import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
+import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
+import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+import UnfoldMoreIcon from "@material-design-icons/svg/outlined/unfold_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	QueryClient,
@@ -21,10 +36,13 @@ import { z } from "zod";
 import { describeValue } from "../components/active-filters/active-filter-describers.ts";
 import { ActiveFilters } from "../components/active-filters/active-filters.tsx";
 import { Button } from "../components/button/button.tsx";
+import { Drawer } from "../components/drawer/drawer.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
+import { Icon } from "../components/icon/icon.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
 import type { PaginationPage } from "../components/pagination/pagination.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
+import { Stale } from "../components/stale/stale.tsx";
 import {
 	type DataViewQueryParams,
 	useDataView,
@@ -41,6 +59,8 @@ import {
 	DataTable,
 	type DataTableRootProps,
 } from "./data-table.tsx";
+import { useDataTable } from "./data-table-context.tsx";
+import { useDataTableView } from "./data-table-parts.tsx";
 import { selectionColumn } from "./data-table-selection.tsx";
 import {
 	dataTableFeatures,
@@ -49,7 +69,7 @@ import {
 	PAGE_SIZE_OPTIONS,
 } from "./table-features.ts";
 
-type Declaration = Readonly<{
+type Invoice = Readonly<{
 	id: string;
 	client: string;
 	code: string;
@@ -57,14 +77,14 @@ type Declaration = Readonly<{
 }>;
 
 const CLIENT_HEADER = "Client";
-const CODE_HEADER = "Performance code";
+const CODE_HEADER = "Project code";
 const AMOUNT_HEADER = "Amount (€)";
 const CLIENT_FILTER_LABEL = "Client";
 const REOPEN_LABEL = "Reopen the table";
 
-const EMPTY_STATE = "No declarations yet.";
-const ERROR_LABEL = "The declarations could not be loaded.";
-const LOADING_LABEL = "Loading declarations";
+const EMPTY_STATE = "No invoices yet.";
+const ERROR_LABEL = "The invoices could not be loaded.";
+const LOADING_LABEL = "Loading invoices";
 const SLOW_LABEL = "This is taking longer than usual.";
 const RETRY_LABEL = "Try again";
 const PAGE_SIZE_LABEL = "Rows per page";
@@ -76,7 +96,7 @@ const SELECT_PAGE_LABEL = "Select page";
 const SELECT_ROW_LABEL = "Select row";
 const CLEAR_SELECTION_LABEL = "Clear selection";
 const FILTERS_LABEL = "Filters";
-const FILTERS_TITLE = "Filter declarations";
+const FILTERS_TITLE = "Filter invoices";
 const APPLY_LABEL = "Apply";
 const CLEAR_ALL_LABEL = "Clear filters";
 
@@ -94,8 +114,8 @@ const selectedLabel = (selected: number, total: number) =>
 const selectAllLabel = (total: number) =>
 	`Select all ${total}`;
 
-const declarationsTotal = (count: number) =>
-	`${count} declarations`;
+const invoicesTotal = (count: number) =>
+	`${count} invoices`;
 
 const CLIENTS = [
 	"Chris Bakker",
@@ -104,10 +124,10 @@ const CLIENTS = [
 	"Bram Jansen",
 ] as const;
 
-const DECLARATIONS: readonly Declaration[] = Array.from(
+const INVOICES: readonly Invoice[] = Array.from(
 	{ length: 30 },
 	(_, index) => ({
-		id: `declaration-${index + 1}`,
+		id: `invoice-${index + 1}`,
 		client: CLIENTS[index % CLIENTS.length] ?? CLIENTS[0],
 		code: String(1001 + index),
 		amount: 45 + index * 5,
@@ -117,9 +137,9 @@ const DECLARATIONS: readonly Declaration[] = Array.from(
 const PAGE_SIZE = 10;
 
 const sortedRows = (
-	rows: readonly Declaration[],
+	rows: readonly Invoice[],
 	sorting: SortingState,
-): readonly Declaration[] => {
+): readonly Invoice[] => {
 	const [sort] = sorting;
 	if (sort === undefined) {
 		return rows;
@@ -142,19 +162,14 @@ const AmountCell = ({
 		maximumFractionDigits: 2,
 	}).format(amount);
 
-const clientColumn: ColumnDef<
-	DataTableFeatures,
-	Declaration
-> = {
-	accessorKey: "client",
-	header: () => CLIENT_HEADER,
-	enableSorting: true,
-};
+const clientColumn: ColumnDef<DataTableFeatures, Invoice> =
+	{
+		accessorKey: "client",
+		header: () => CLIENT_HEADER,
+		enableSorting: true,
+	};
 
-const codeColumn: ColumnDef<
-	DataTableFeatures,
-	Declaration
-> = {
+const codeColumn: ColumnDef<DataTableFeatures, Invoice> = {
 	accessorKey: "code",
 	header: () => CODE_HEADER,
 	enableSorting: false,
@@ -162,7 +177,7 @@ const codeColumn: ColumnDef<
 
 const amountColumn = (
 	enableSorting: boolean,
-): ColumnDef<DataTableFeatures, Declaration> => ({
+): ColumnDef<DataTableFeatures, Invoice> => ({
 	accessorKey: "amount",
 	header: () => AMOUNT_HEADER,
 	enableSorting,
@@ -173,13 +188,15 @@ const amountColumn = (
 });
 
 const dataColumns: Array<
-	ColumnDef<DataTableFeatures, Declaration>
+	ColumnDef<DataTableFeatures, Invoice>
 > = [clientColumn, codeColumn, amountColumn(true)];
 
-const selectColumn = selectionColumn<Declaration>({
+const selectColumn = selectionColumn<Invoice>({
 	sticky: "start",
 	selectPageLabel: SELECT_PAGE_LABEL,
 	selectRowLabel: SELECT_ROW_LABEL,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
 });
 
 const selectableColumns = [selectColumn, ...dataColumns];
@@ -191,6 +208,14 @@ const dataViewColumns = [
 	amountColumn(false),
 ];
 
+const sortAscendingIcon = (
+	<Icon svg={ArrowUpwardIcon} label="" />
+);
+const sortDescendingIcon = (
+	<Icon svg={ArrowDownwardIcon} label="" />
+);
+const unsortedIcon = <Icon svg={UnfoldMoreIcon} label="" />;
+
 const TableContent = () => (
 	<DataTable.Content
 		emptyState={EMPTY_STATE}
@@ -198,8 +223,85 @@ const TableContent = () => (
 		loadingLabel={LOADING_LABEL}
 		slowLabel={SLOW_LABEL}
 		retryLabel={RETRY_LABEL}
+		sortAscendingIcon={sortAscendingIcon}
+		sortDescendingIcon={sortDescendingIcon}
+		unsortedIcon={unsortedIcon}
 	/>
 );
+
+const TableParts = () => {
+	const { table, onRetry } = useDataTable<Invoice>();
+	const { view } = useDataTableView();
+
+	return (
+		<DataTable.Frame>
+			<DataTable.Scroller>
+				<DataTable.Table>
+					<DataTable.LoadingCaption>
+						{LOADING_LABEL}
+					</DataTable.LoadingCaption>
+					<DataTable.Head>
+						{table.getHeaderGroups().map(headerGroup => (
+							<DataTable.HeaderRow key={headerGroup.id}>
+								{headerGroup.headers.map(header => (
+									<DataTable.HeaderCell
+										key={header.id}
+										header={header}>
+										{header.column.getCanSort() ? (
+											<DataTable.SortButton
+												header={header}
+												sortAscendingIcon={
+													sortAscendingIcon
+												}
+												sortDescendingIcon={
+													sortDescendingIcon
+												}
+											/>
+										) : undefined}
+									</DataTable.HeaderCell>
+								))}
+							</DataTable.HeaderRow>
+						))}
+					</DataTable.Head>
+					<DataTable.Body>
+						{view === "ready" ? (
+							table.getRowModel().rows.map(row => (
+								<DataTable.Row key={row.id} row={row}>
+									{row.getAllCells().map(cell => (
+										<DataTable.Cell
+											key={cell.id}
+											cell={cell}
+										/>
+									))}
+								</DataTable.Row>
+							))
+						) : view === "loading" ? (
+							<DataTable.PlaceholderRows />
+						) : (
+							<DataTable.StateRow>
+								{view === "error" ? (
+									<DataTable.ErrorMessage>
+										{ERROR_LABEL}
+									</DataTable.ErrorMessage>
+								) : (
+									EMPTY_STATE
+								)}
+							</DataTable.StateRow>
+						)}
+					</DataTable.Body>
+				</DataTable.Table>
+			</DataTable.Scroller>
+			<DataTable.StaleOverlay>
+				<Stale.Message>{SLOW_LABEL}</Stale.Message>
+				{onRetry ? (
+					<Stale.Retry onRetry={onRetry}>
+						{RETRY_LABEL}
+					</Stale.Retry>
+				) : null}
+			</DataTable.StaleOverlay>
+		</DataTable.Frame>
+	);
+};
 
 const TablePagination = () => (
 	<DataTable.Pagination
@@ -209,6 +311,12 @@ const TablePagination = () => (
 		previousLabel={PREVIOUS_LABEL}
 		nextLabel={NEXT_LABEL}
 		lastLabel={LAST_LABEL}
+		firstIcon={<Icon svg={FirstPageIcon} label="" />}
+		previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
+		nextIcon={<Icon svg={ChevronRightIcon} label="" />}
+		lastIcon={<Icon svg={LastPageIcon} label="" />}
+		checkIcon={<Icon svg={CheckIcon} label="" />}
+		expandIcon={<Icon svg={ExpandMoreIcon} label="" />}
 	/>
 );
 
@@ -217,7 +325,7 @@ type SelectionBarProps = Readonly<{ totalRows: number }>;
 const SelectionBar = ({ totalRows }: SelectionBarProps) => (
 	<DataTable.SelectionBar
 		totalRows={totalRows}
-		total={declarationsTotal(totalRows)}
+		total={invoicesTotal(totalRows)}
 		countLabel={selectedLabel}
 		clearLabel={CLEAR_SELECTION_LABEL}
 		selectAllLabel={selectAllLabel}
@@ -225,25 +333,27 @@ const SelectionBar = ({ totalRows }: SelectionBarProps) => (
 );
 
 type DataTableExampleProps = Pick<
-	DataTableRootProps<Declaration>,
+	DataTableRootProps<Invoice>,
 	"status" | "isFetching" | "onRetry"
 >;
 
-type DeclarationTableProps = DataTableExampleProps &
+type InvoiceTableProps = DataTableExampleProps &
 	Readonly<{
-		rows: readonly Declaration[];
+		rows: readonly Invoice[];
 		selectable: boolean;
+		composed?: boolean;
 	}>;
 
-const DeclarationTable = ({
+const InvoiceTable = ({
 	status,
 	isFetching,
 	onRetry,
 	rows,
 	selectable,
-}: DeclarationTableProps) => {
+	composed = false,
+}: InvoiceTableProps) => {
 	const selection = useRowSelection();
-	const table = useTable<DataTableFeatures, Declaration>({
+	const table = useTable<DataTableFeatures, Invoice>({
 		features: dataTableFeatures,
 		data: EMPTY_ROWS,
 		columns: selectable ? selectableColumns : dataColumns,
@@ -276,37 +386,42 @@ const DeclarationTable = ({
 			{selectable ? (
 				<SelectionBar totalRows={rows.length} />
 			) : null}
-			<TableContent />
+			{composed ? <TableParts /> : <TableContent />}
 			<TablePagination />
 		</DataTable.Root>
 	);
 };
 
 const DataTableExample = (props: DataTableExampleProps) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
-		rows={DECLARATIONS}
+		rows={INVOICES}
 		selectable={false}
 	/>
 );
 
 const EmptyDataTable = (props: DataTableExampleProps) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
 		rows={EMPTY_ROWS}
 		selectable={false}
 	/>
 );
 
-const SelectableDataTable = (
+const ComposedDataTable = (
 	props: DataTableExampleProps,
 ) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
-		rows={DECLARATIONS}
-		selectable
+		rows={INVOICES}
+		selectable={false}
+		composed
 	/>
 );
+
+const SelectableDataTable = (
+	props: DataTableExampleProps,
+) => <InvoiceTable {...props} rows={INVOICES} selectable />;
 
 const DATA_VIEW_TABLE_ID = "story-data-table";
 
@@ -339,20 +454,20 @@ const freshStorage = () => {
 };
 
 const rowsOf = (client: string) =>
-	DECLARATIONS.filter(row => row.client === client).length;
+	INVOICES.filter(row => row.client === client).length;
 
-type DeclarationPage = Readonly<{
-	items: Declaration[];
+type InvoicePage = Readonly<{
+	items: Invoice[];
 	totalCount: number;
 }>;
 
-const declarationPage = ({
+const invoicePage = ({
 	filters,
 	search,
 	pagination,
 	sorting,
-}: DataViewQueryParams<ClientFilters>): DeclarationPage => {
-	const matches = DECLARATIONS.filter(
+}: DataViewQueryParams<ClientFilters>): InvoicePage => {
+	const matches = INVOICES.filter(
 		row =>
 			(filters.client === undefined ||
 				row.client === filters.client) &&
@@ -400,7 +515,7 @@ const DataViewTable = ({
 				queryFn: () =>
 					params.pagination.pageIndex + 1 === failingPage
 						? Promise.reject(new Error(DATA_VIEW_TABLE_ID))
-						: Promise.resolve(declarationPage(params)),
+						: Promise.resolve(invoicePage(params)),
 			}),
 		getRows: data => data.items,
 		getRowCount: data => data.totalCount,
@@ -412,34 +527,59 @@ const DataViewTable = ({
 				<FilterBar.Search
 					label="Search by client"
 					clearLabel="Clear search"
+					clearIcon={<Icon svg={CloseIcon} label="" />}
+					icon={<Icon svg={SearchIcon} label="" />}
 					optionalLabel="optional"
 				/>
-				<FilterBar.Drawer
-					swipeDirection="right"
-					triggerLabel={FILTERS_LABEL}
-					title={FILTERS_TITLE}
-					closeLabel="Close"
-					resetLabel="Reset"
-					applyLabel={APPLY_LABEL}>
-					<SelectField
-						label={CLIENT_FILTER_LABEL}
-						optionalLabel="optional"
-						options={CLIENT_OPTIONS}
-						value={filters.draft.client ?? ""}
-						loadingLabel="Loading clients…"
-						loadFailedLabel="Clients could not be loaded."
-						loadBrokenLabel="Clients could not be loaded, and trying again won't help."
-						retryLabel={RETRY_LABEL}
-						noOptionsLabel="No clients."
-						onValueChange={next => {
-							filters.setDraft(
-								"client",
-								next === "" ? undefined : next,
-							);
-						}}
-					/>
+				<FilterBar.Drawer swipeDirection="right">
+					<FilterBar.Trigger
+						icon={<Icon svg={FilterIcon} label="" />}>
+						{FILTERS_LABEL}
+						<FilterBar.Badge />
+					</FilterBar.Trigger>
+					<FilterBar.Content>
+						<Drawer.Header>
+							<Drawer.Title>{FILTERS_TITLE}</Drawer.Title>
+							<Drawer.CloseButton
+								closeLabel="Close"
+								icon={<Icon svg={CloseIcon} label="" />}
+							/>
+						</Drawer.Header>
+						<FilterBar.Fields>
+							<SelectField
+								label={CLIENT_FILTER_LABEL}
+								optionalLabel="optional"
+								options={CLIENT_OPTIONS}
+								value={filters.draft.client ?? ""}
+								loadingLabel="Loading clients…"
+								loadFailedLabel="Clients could not be loaded."
+								loadBrokenLabel="Clients could not be loaded, and trying again won't help."
+								retryLabel={RETRY_LABEL}
+								noOptionsLabel="No clients."
+								checkIcon={
+									<Icon svg={CheckIcon} label="" />
+								}
+								onValueChange={next => {
+									filters.setDraft(
+										"client",
+										next === "" ? undefined : next,
+									);
+								}}
+							/>
+						</FilterBar.Fields>
+						<FilterBar.Footer>
+							<FilterBar.Reset
+								icon={<Icon svg={RestoreIcon} label="" />}>
+								Reset
+							</FilterBar.Reset>
+							<FilterBar.Apply
+								icon={<Icon svg={CheckIcon} label="" />}>
+								{APPLY_LABEL}
+							</FilterBar.Apply>
+						</FilterBar.Footer>
+					</FilterBar.Content>
 				</FilterBar.Drawer>
-				<FilterBar.Active clearAllLabel={CLEAR_ALL_LABEL}>
+				<FilterBar.Active>
 					<ActiveFilters
 						filters={filters}
 						describe={{
@@ -449,7 +589,12 @@ const DataViewTable = ({
 						}}
 						label="Active filters"
 						removeLabel="Remove"
+						removeIcon={<Icon svg={CloseIcon} label="" />}
 					/>
+					<FilterBar.ClearAll
+						icon={<Icon svg={FilterOffIcon} label="" />}>
+						{CLEAR_ALL_LABEL}
+					</FilterBar.ClearAll>
 				</FilterBar.Active>
 			</FilterBar.Root>
 			<DataTable.Root
@@ -525,7 +670,7 @@ const selectionStatus = (
 ) =>
 	waitFor(() =>
 		expect(selectionBarStatus(canvas)).toHaveTextContent(
-			selectedLabel(selected, DECLARATIONS.length),
+			selectedLabel(selected, INVOICES.length),
 		),
 	);
 
@@ -570,7 +715,7 @@ const everyRowIs = (canvas: Canvas, client: string) =>
 const totalIs = (canvas: Canvas, count: number) =>
 	waitFor(() =>
 		expect(selectionBarStatus(canvas)).toHaveTextContent(
-			declarationsTotal(count),
+			invoicesTotal(count),
 		),
 	);
 
@@ -748,14 +893,34 @@ export const RefreshFailed: Story = {
 	},
 };
 
+export const ComposedParts: Story = {
+	render: ComposedDataTable,
+	play: async ({ canvas }) => {
+		await expect(bodyRows(canvas)).toHaveLength(PAGE_SIZE);
+		await expect(firstRow(canvas)).toHaveTextContent(CHRIS);
+		await expect(sortButton(canvas)).toBeVisible();
+	},
+};
+
+export const ComposedSortMouse: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedDataTable,
+	play: async ({ canvas }) => {
+		await userEvent.click(sortButton(canvas));
+		await expect(clientHeader(canvas)).toHaveAttribute(
+			"aria-sort",
+			"ascending",
+		);
+		await expect(firstRow(canvas)).toHaveTextContent(ANNE);
+	},
+};
+
 export const Selectable: Story = {
 	render: SelectableDataTable,
 	play: async ({ canvas }) => {
 		await expect(
 			selectionBarStatus(canvas),
-		).toHaveTextContent(
-			declarationsTotal(DECLARATIONS.length),
-		);
+		).toHaveTextContent(invoicesTotal(INVOICES.length));
 		await expect(pageCheckbox(canvas)).not.toBeChecked();
 	},
 };
@@ -777,10 +942,10 @@ export const SelectMouse: Story = {
 
 		await userEvent.click(
 			await canvas.findByRole("button", {
-				name: selectAllLabel(DECLARATIONS.length),
+				name: selectAllLabel(INVOICES.length),
 			}),
 		);
-		await selectionStatus(canvas, DECLARATIONS.length);
+		await selectionStatus(canvas, INVOICES.length);
 
 		await userEvent.click(
 			canvas.getByRole("button", {
@@ -790,7 +955,7 @@ export const SelectMouse: Story = {
 		await expect(rowCheckbox(canvas, "1011")).toBeChecked();
 
 		await userEvent.click(rowCheckbox(canvas, "1011"));
-		await selectionStatus(canvas, DECLARATIONS.length - 1);
+		await selectionStatus(canvas, INVOICES.length - 1);
 
 		await userEvent.click(
 			canvas.getByRole("button", {
@@ -799,7 +964,7 @@ export const SelectMouse: Story = {
 		);
 		await waitFor(() =>
 			expect(selectionBarStatus(canvas)).toHaveTextContent(
-				declarationsTotal(DECLARATIONS.length),
+				invoicesTotal(INVOICES.length),
 			),
 		);
 		await expect(

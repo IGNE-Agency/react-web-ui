@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { Tone } from "../../lib/tone.ts";
-import type { SvgComponent } from "../icon/icon.tsx";
 import {
 	StatusMessage,
 	type StatusMessageLive,
@@ -8,12 +7,12 @@ import {
 
 /** What a status preset such as `EmptyMessage` or `ErrorMessage` shows. */
 export type StatusPresetProps = Readonly<{
-	/** What the region says, such as "No declarations yet". */
+	/** What the region says, such as "No invoices yet". */
 	title: string;
 	/** What would change it, or who can help. */
 	description?: string;
-	/** A glyph on a disc in the preset's tone. */
-	icon?: SvgComponent;
+	/** The app's icon, on a disc in the preset's tone. Left out, none shows. */
+	icon?: ReactNode;
 	/** A way on, such as a button to add one or a retry. */
 	action?: ReactNode;
 	className?: string;
@@ -23,7 +22,7 @@ export type StatusPresetProps = Readonly<{
  * A status message announced as `live`, with its icon on a `tone` disc.
  *
  * @example
- * <StatusPreset live="status" tone="neutral" title="No declarations yet" />
+ * <StatusPreset live="status" tone="neutral" title="No invoices yet" />
  */
 export const StatusPreset = ({
 	live,
@@ -40,7 +39,9 @@ export const StatusPreset = ({
 	}>): ReactNode => (
 	<StatusMessage.Root live={live} className={className}>
 		{icon === undefined ? null : (
-			<StatusMessage.Icon svg={icon} tone={tone} />
+			<StatusMessage.Icon tone={tone}>
+				{icon}
+			</StatusMessage.Icon>
 		)}
 		<StatusMessage.Title>{title}</StatusMessage.Title>
 		{description === undefined ? null : (

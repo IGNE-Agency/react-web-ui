@@ -17,6 +17,11 @@
 		min-inline-size: 0;
 	}
 
+	.icon {
+		display: inline-flex;
+		flex-shrink: 0;
+	}
+
 	.name {
 		@include a11y.visually-hidden;
 	}

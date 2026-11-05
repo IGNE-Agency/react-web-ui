@@ -10,34 +10,46 @@ import * as PaginationStories from "./pagination.stories.tsx";
 
 ### The pager knows where the list stands, not where it came from
 
-`Pagination.Root` takes four numbers, `pageIndex` (counted from 0), `pageCount`, `pageSize` and `pageSizes`, and reports a new page or page size through `onPageIndexChange` and `onPageSizeChange`. It reads no table and no API response. The list it pages, a table, a server query or an array in memory, maps its own state onto those props, and resets its page when the size changes if it wants to.
+`Pagination`, and the `Pagination.Root` its parts sit in, take four numbers, `pageIndex` (counted from 0), `pageCount`, `pageSize` and `pageSizes`, and reports a new page or page size through `onPageIndexChange` and `onPageSizeChange`. It reads no table and no API response. The list it pages, a table, a server query or an array in memory, maps its own state onto those props, and resets its page when the size changes if it wants to.
 
 ```tsx
-<Pagination.Root
+<Pagination
 	pageIndex={pageIndex}
 	pageCount={pageCount}
 	pageSize={pageSize}
 	pageSizes={[10, 20, 50]}
 	onPageIndexChange={setPageIndex}
-	onPageSizeChange={setPageSize}>
-	<Pagination.PageSize label="Rows per page" />
-	<Pagination.Index
-		label={({ pageIndex, pageCount }) =>
-			`Page ${pageIndex + 1} of ${pageCount}`
-		}
-	/>
-	<Pagination.Controls
-		firstLabel="First page"
-		previousLabel="Previous page"
-		nextLabel="Next page"
-		lastLabel="Last page"
-	/>
-</Pagination.Root>
+	onPageSizeChange={setPageSize}
+	pageSizeLabel="Rows per page"
+	indexLabel={({ pageIndex, pageCount }) =>
+		`Page ${pageIndex + 1} of ${pageCount}`
+	}
+	firstLabel="First page"
+	previousLabel="Previous page"
+	nextLabel="Next page"
+	lastLabel="Last page"
+	firstIcon={<FirstPageIcon />}
+	previousIcon={<ChevronLeftIcon />}
+	nextIcon={<ChevronRightIcon />}
+	lastIcon={<LastPageIcon />}
+	checkIcon={<CheckIcon />}
+	expandIcon={<ExpandMoreIcon />}
+/>
 ```
 
 ### Compose only the parts the list has room for
 
-`PageSize`, `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes.
+`Pagination` is the page size, the index and the controls in a row. Where a list needs less, compose the parts in a `Pagination.Root`: `PageSize` (which holds the `Select` parts), `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes. `Controls` is `First`, `Previous`, `Next` and `Last` in a row; compose those four directly where the list needs only some of them, or another order. Each takes its glyph as its children.
+
+```tsx
+<Pagination.Previous label="Previous page">
+	<ChevronLeftIcon />
+</Pagination.Previous>
+<Pagination.Index label={indexLabel} />
+<Pagination.Next label="Next page">
+	<ChevronRightIcon />
+</Pagination.Next>
+```
 
 ### The page size in effect is always on offer
 

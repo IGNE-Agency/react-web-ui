@@ -2,6 +2,7 @@ import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.
 import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
 import SaveIcon from "@material-design-icons/svg/outlined/save.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import {
 	expect,
 	fn,
@@ -13,7 +14,7 @@ import { textGone } from "../../lib/storybook/waits.ts";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "./button.tsx";
 
-const LABEL = "Save declaration";
+const LABEL = "Save invoice";
 const ICON_ONLY_LABEL = "Next page";
 
 const tooltipShown = () =>
@@ -22,9 +23,9 @@ const tooltipShown = () =>
 	);
 
 const ICONS = {
-	save: SaveIcon,
-	delete: DeleteIcon,
-	chevronRight: ChevronRightIcon,
+	save: <Icon svg={SaveIcon} label="" />,
+	delete: <Icon svg={DeleteIcon} label="" />,
+	chevronRight: <Icon svg={ChevronRightIcon} label="" />,
 };
 
 const meta = {
@@ -76,7 +77,7 @@ export const Danger: Story = {
 	args: {
 		variant: "primary",
 		tone: "danger",
-		children: "Delete declaration",
+		children: "Delete invoice",
 	},
 };
 

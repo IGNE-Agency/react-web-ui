@@ -20,6 +20,7 @@ import styles from "./interaction.module.scss";
 import { Illustration } from "./illustration";
 import { InteractionDrawing } from "./interaction-drawing";
 import { PromisesDrawing } from "./interaction-figures";
+import { Icon } from "../../src/components/icon/index.ts";
 
 <Meta title="Design system/Principles/Interaction" />
 
@@ -142,19 +143,19 @@ The same wash covers every variant, so a new variant brings no new hover colours
 		visual={
 			<div className={styles.rows}>
 				<span className={styles.dataRow}>
-					Physiotherapy
+					Design review
 					<span className={styles.amount}>€ 120.00</span>
 				</span>
 				<span
 					className={`${styles.dataRow} ${styles.dataRowTinted}`}>
-					Dental care
+					Workshop
 					<span className={styles.amount}>€ 85.50</span>
 					<span className={styles.rowCursor}>
 						<Cursor shape="arrow" />
 					</span>
 				</span>
 				<span className={styles.dataRow}>
-					Pharmacy
+					Copywriting
 					<span className={styles.amount}>€ 14.20</span>
 				</span>
 			</div>
@@ -166,19 +167,19 @@ The same wash covers every variant, so a new variant brings no new hover colours
 		visual={
 			<div className={styles.rows}>
 				<span className={styles.dataRow}>
-					Physiotherapy
+					Design review
 					<span className={styles.amount}>€ 120.00</span>
 				</span>
 				<span
 					className={`${styles.dataRow} ${styles.navLayer}`}>
-					Dental care
+					Workshop
 					<span className={styles.amount}>€ 85.50</span>
 					<span className={styles.rowCursor}>
 						<Cursor shape="arrow" />
 					</span>
 				</span>
 				<span className={styles.dataRow}>
-					Pharmacy
+					Copywriting
 					<span className={styles.amount}>€ 14.20</span>
 				</span>
 			</div>
@@ -398,7 +399,10 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={CheckIcon}>Save</Button>
+						<Button
+							icon={<Icon svg={CheckIcon} label="" />}>
+							Save
+						</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -406,7 +410,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 					<span className={styles.pointed}>
 						<Button
 							variant="primary"
-							icon={SendIcon}
+							icon={<Icon svg={SendIcon} label="" />}
 							disabled>
 							Submit
 						</Button>
@@ -446,7 +450,10 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={CheckIcon}>Save</Button>
+						<Button
+							icon={<Icon svg={CheckIcon} label="" />}>
+							Save
+						</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -454,7 +461,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 					<span className={styles.pointed}>
 						<Button
 							variant="primary"
-							icon={SendIcon}
+							icon={<Icon svg={SendIcon} label="" />}
 							disabled>
 							Submit
 						</Button>
@@ -479,7 +486,7 @@ A link in running text is the one place the brand colour is spent on words, and 
 				<div className={styles.chrome}>
 					<span
 						className={`${styles.navItem} ${styles.navSelected}`}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.navItem}>Settings</span>
 				</div>
@@ -566,7 +573,7 @@ Selecting is a state too, and the reader drives it. Drag across a paragraph and 
 		caption="The highlight and its ink, as one pair."
 		visual={
 			<span className={styles.prose}>
-				Your declaration was{" "}
+				Your invoice was{" "}
 				<span className={styles.selection}>
 					submitted on 2 October
 				</span>{" "}
@@ -580,14 +587,14 @@ Selecting is a state too, and the reader drives it. Drag across a paragraph and 
 		visual={
 			<div className={styles.stack}>
 				<span className={styles.prose}>
-					Your declaration was{" "}
+					Your invoice was{" "}
 					<span className={styles.selectionUnpaired}>
 						submitted on 2 October
 					</span>{" "}
 					and is awaiting review.
 				</span>
 				<span className={styles.prose}>
-					Your declaration was{" "}
+					Your invoice was{" "}
 					<span className={styles.selectionBrowser}>
 						submitted on 2 October
 					</span>{" "}
@@ -617,7 +624,7 @@ A selected item is marked as well, and a marker is drawn for a shape. A pill fit
 					<span className={styles.stackedIcon}>
 						<DescriptionIcon aria-hidden />
 					</span>
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.stackedItem}>
 					<span className={styles.stackedIcon}>
@@ -644,7 +651,7 @@ A selected item is marked as well, and a marker is drawn for a shape. A pill fit
 					<span className={styles.stackedIcon}>
 						<DescriptionIcon aria-hidden />
 					</span>
-					Declarations
+					Invoices
 				</span>
 				<span className={styles.stackedItem}>
 					<span className={styles.stackedIcon}>
@@ -747,7 +754,7 @@ A hint added to stop a cut-off label from being lost is a layout problem wearing
 			<div className={styles.headRow}>
 				<span>Date</span>
 				<span className={styles.headWraps}>
-					Outstanding declarations
+					Outstanding invoices
 				</span>
 				<span className={styles.amount}>Amount</span>
 			</div>
@@ -761,13 +768,13 @@ A hint added to stop a cut-off label from being lost is a layout problem wearing
 				<div className={styles.headRow}>
 					<span>Date</span>
 					<span className={styles.headTruncates}>
-						Outstanding declarations
+						Outstanding invoices
 					</span>
 					<span className={styles.amount}>Amount</span>
 				</div>
 				<span
 					className={`${styles.nativeTitle} ${styles.titleTip}`}>
-					Outstanding declarations
+					Outstanding invoices
 				</span>
 			</div>
 		}
@@ -1225,7 +1232,10 @@ An icon-only control is the button component's icon-only form, which requires a 
 <Example kind="do" caption="The menu trigger is the icon-only button.">
 
 ```tsx
-<Menu.Trigger icon={MoreVertIcon} label={m.row_actions()} />
+<Menu.Trigger
+	icon={<MoreVertIcon />}
+	label={m.row_actions()}
+/>
 ```
 
 </Example>

@@ -1,4 +1,10 @@
+import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -23,7 +29,7 @@ import {
 const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
 const MONTH_END = DAY.with({ day: DAY.daysInMonth });
-const LABEL = "Treatment date";
+const LABEL = "Service date";
 const OPEN_CALENDAR = "Open calendar";
 const PREVIOUS_MONTH = "Previous month";
 const NEXT_MONTH = "Next month";
@@ -74,6 +80,13 @@ const meta = {
 		label: LABEL,
 		optionalLabel: "optional",
 		openCalendarLabel: OPEN_CALENDAR,
+		openCalendarIcon: (
+			<Icon svg={CalendarTodayIcon} label="" />
+		),
+		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
+		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 		previousMonthLabel: PREVIOUS_MONTH,
 		nextMonthLabel: NEXT_MONTH,
 		monthLabel: "Month",
@@ -141,7 +154,7 @@ export const Optional: Story = {
 export const Invalid: Story = {
 	args: {
 		value: DAY.toString(),
-		errors: ["Enter a valid treatment date."],
+		errors: ["Enter a valid service date."],
 	},
 };
 
@@ -151,7 +164,7 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The day the treatment took place.",
+		description: "The day the work was done.",
 	},
 };
 

@@ -1,7 +1,3 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import CopyIcon from "@material-design-icons/svg/outlined/content_copy.svg?react";
-import ErrorIcon from "@material-design-icons/svg/outlined/error_outline.svg?react";
 import {
 	Input as BaseInput,
 	type InputProps as BaseInputProps,
@@ -34,7 +30,6 @@ import {
 } from "../field/input-parts.tsx";
 import { focusControlOnRim } from "../field/rim-focus.ts";
 import { withFieldFocus } from "../field/use-field-focus.ts";
-import type { SvgComponent } from "../icon/index.ts";
 import {
 	TextInputContext,
 	type TextInputControl,
@@ -61,6 +56,13 @@ export type TextInputRootProps = Omit<
 		children?: ReactNode;
 	}>;
 
+/**
+ * The field frame around a text input, holding its value and projecting its
+ * state onto every part.
+ *
+ * @example
+ * <TextInput.Root value={value} onValueChange={setValue} optionalLabel="optional">…</TextInput.Root>
+ */
 const TextInputRoot = ({
 	value,
 	onValueChange,
@@ -129,6 +131,12 @@ const TextInputRoot = ({
 
 export type TextInputLabelProps = InputLabelProps;
 
+/**
+ * The bordered box holding the control and its inlays.
+ *
+ * @example
+ * <TextInput.Group><TextInput.Input /></TextInput.Group>
+ */
 const TextInputGroup = ({
 	className,
 	children,
@@ -150,6 +158,12 @@ const TextInputGroup = ({
 	);
 };
 
+/**
+ * A strip of inlays along the bottom edge of the group.
+ *
+ * @example
+ * <TextInput.Bar><TextInput.Counter /></TextInput.Bar>
+ */
 const TextInputBar = ({
 	className,
 	...props
@@ -157,6 +171,12 @@ const TextInputBar = ({
 	<div className={clsx(style.bar, className)} {...props} />
 );
 
+/**
+ * A slot beside the control inside the group, such as an icon.
+ *
+ * @example
+ * <TextInput.Inlay aria-hidden="true"><SearchIcon /></TextInput.Inlay>
+ */
 const TextInputInlay = ({
 	className,
 	...props
@@ -167,6 +187,12 @@ const TextInputInlay = ({
 	/>
 );
 
+/**
+ * Static text beside the control, such as a unit. Decoration only.
+ *
+ * @example
+ * <TextInput.Affix>kg</TextInput.Affix>
+ */
 const TextInputAffix = ({
 	className,
 	...props
@@ -183,6 +209,12 @@ export type TextInputInputProps = Omit<
 	"value" | "defaultValue" | "onValueChange"
 >;
 
+/**
+ * The bare control, bound to `Root`'s value.
+ *
+ * @example
+ * <TextInput.Input type="email" />
+ */
 const TextInputInput = ({
 	type = "text",
 	className,
@@ -213,11 +245,20 @@ export type TextInputClearProps = Readonly<{
 	/** Accessible name and tooltip hint, such as "Clear". */
 	label: string;
 	className?: string;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
+/**
+ * The icon-only button that empties the control, shown once it holds a value.
+ *
+ * @example
+ * <TextInput.Clear label="Clear"><CloseIcon /></TextInput.Clear>
+ */
 const TextInputClear = ({
 	label,
 	className,
+	children,
 }: TextInputClearProps): ReactNode => {
 	const { value, setValue, state, focusControl } =
 		useTextInputContext();
@@ -231,7 +272,7 @@ const TextInputClear = ({
 	return (
 		<Button
 			iconOnly
-			icon={CloseIcon}
+			icon={children}
 			label={label}
 			variant="tertiary"
 			size="sm"
@@ -251,18 +292,16 @@ export type TextInputCopyProps = Readonly<{
 	copiedLabel: string;
 	/** Accessible name and announcement once copying failed and the text is selected instead. */
 	failedLabel: string;
+	/** The icon while the confirmation shows. Left out, the button keeps its own. */
+	copiedIcon?: ReactNode;
+	/** The icon once copying failed. Left out, the button keeps its own. */
+	failedIcon?: ReactNode;
 	className?: string;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
 type CopyOutcome = "idle" | "copied" | "failed";
-
-const COPY_ICON: Readonly<
-	Record<CopyOutcome, SvgComponent>
-> = {
-	idle: CopyIcon,
-	copied: CheckIcon,
-	failed: ErrorIcon,
-};
 
 /**
  * Writes text to the clipboard, rejecting where there is no clipboard as well
@@ -274,11 +313,21 @@ const COPY_ICON: Readonly<
 const writeClipboard = async (text: string) =>
 	navigator.clipboard.writeText(text);
 
+/**
+ * The icon-only button that copies the value to the clipboard, shown once it
+ * holds one, and announces whether the copy landed.
+ *
+ * @example
+ * <TextInput.Copy label="Copy" copiedLabel="Copied" failedLabel="Copy failed, text selected"><CopyIcon /></TextInput.Copy>
+ */
 const TextInputCopy = ({
 	label,
 	copiedLabel,
 	failedLabel,
+	copiedIcon,
+	failedIcon,
 	className,
+	children,
 }: TextInputCopyProps): ReactNode => {
 	const { value, state, selectControl } =
 		useTextInputContext();
@@ -299,11 +348,16 @@ const TextInputCopy = ({
 		copied: copiedLabel,
 		failed: failedLabel,
 	};
+	const icons: Readonly<Record<CopyOutcome, ReactNode>> = {
+		idle: children,
+		copied: copiedIcon ?? children,
+		failed: failedIcon ?? children,
+	};
 	return (
 		<>
 			<Button
 				iconOnly
-				icon={COPY_ICON[outcome]}
+				icon={icons[outcome]}
 				label={labels[outcome]}
 				tone={outcome === "failed" ? "danger" : "brand"}
 				variant="tertiary"
@@ -326,6 +380,54 @@ const TextInputCopy = ({
 	);
 };
 
+export type TextInputRevealProps = Readonly<{
+	/** Whether the concealed value shows as text. */
+	revealed: boolean;
+	onRevealedChange: (revealed: boolean) => void;
+	/** Accessible name and tooltip hint, such as "Show password". */
+	label: string;
+	className?: string;
+	/** The icon the button shows. */
+	children: ReactNode;
+}>;
+
+/**
+ * The icon-only toggle that shows a concealed value, such as a password, as
+ * text. The caller switches the `Input`'s `type` with `revealed`.
+ *
+ * @example
+ * <TextInput.Reveal revealed={revealed} onRevealedChange={setRevealed} label="Show password"><VisibilityIcon /></TextInput.Reveal>
+ */
+const TextInputReveal = ({
+	revealed,
+	onRevealedChange,
+	label,
+	className,
+	children,
+}: TextInputRevealProps): ReactNode => {
+	const { state } = useTextInputContext();
+	return (
+		<Button
+			iconOnly
+			icon={children}
+			label={label}
+			variant="tertiary"
+			size="sm"
+			aria-pressed={revealed}
+			disabled={state.disabled}
+			className={clsx(style.action, className)}
+			onClick={() => onRevealedChange(!revealed)}
+		/>
+	);
+};
+
+/**
+ * The value's length against `Root`'s `maxLength`, toned as it nears the limit.
+ * Renders nothing without a `maxLength`.
+ *
+ * @example
+ * <TextInput.Counter />
+ */
 const TextInputCounter = ({
 	className,
 	...props
@@ -360,6 +462,7 @@ export type TextInputParts = Readonly<{
 	Input: typeof TextInputInput;
 	Clear: typeof TextInputClear;
 	Copy: typeof TextInputCopy;
+	Reveal: typeof TextInputReveal;
 	Counter: typeof TextInputCounter;
 	Pending: typeof InputPending;
 	Description: typeof Field.Description;
@@ -379,7 +482,9 @@ export type TextInputParts = Readonly<{
  * 	<TextInput.Label>Email</TextInput.Label>
  * 	<TextInput.Group>
  * 		<TextInput.Input type="email" />
- * 		<TextInput.Clear label="Clear" />
+ * 		<TextInput.Clear label="Clear">
+ * 			<CloseIcon />
+ * 		</TextInput.Clear>
  * 	</TextInput.Group>
  * 	<TextInput.Error />
  * </TextInput.Root>
@@ -394,6 +499,7 @@ export const TextInput: TextInputParts = {
 	Input: TextInputInput,
 	Clear: TextInputClear,
 	Copy: TextInputCopy,
+	Reveal: TextInputReveal,
 	Counter: TextInputCounter,
 	Pending: InputPending,
 	Description: Field.Description,

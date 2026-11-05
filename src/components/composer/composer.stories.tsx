@@ -1,5 +1,9 @@
+import SendIcon from "@material-design-icons/svg/outlined/arrow_forward.svg?react";
+import AttachIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ComponentProps, useState } from "react";
+import { useState } from "react";
 import {
 	expect,
 	fn,
@@ -14,17 +18,18 @@ import {
 } from "../../lib/storybook/files.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { Button } from "../button/index.ts";
-import { Composer } from "./composer.tsx";
+import {
+	Composer,
+	type ComposerAttachmentOptions,
+	type ComposerProps,
+} from "./composer.tsx";
 import type { ComposerSendPayload } from "./composer.context.ts";
 import type {
 	MentionCandidate,
 	MentionSource,
 } from "./mention-sources.ts";
 import { serializeMention } from "./mention-text.tsx";
-
-type ComposerExampleProps = ComponentProps<
-	typeof Composer.Root
->;
+import { Icon } from "../icon/index.ts";
 
 type Person = Readonly<{
 	id: string;
@@ -79,21 +84,48 @@ const MAX_FILE_SIZE = 1024;
 const imageFile = () => pngFile(IMAGE_NAME);
 
 const documentFile = (size = 128) =>
-	new File(["x".repeat(size)], "referral.pdf", {
+	new File(["x".repeat(size)], "timesheet.pdf", {
 		type: "application/pdf",
 	});
 
-const ComposerParts = () => (
-	<>
+const fileHint = (name: string, size: string) =>
+	`${name} (${size})`;
+
+const tooLargeError = (maxSize: string) =>
+	`Some files exceed the maximum size of ${maxSize} and must be removed before sending.`;
+
+const ATTACHMENT_OPTIONS: ComposerAttachmentOptions = {
+	label: ATTACHMENTS,
+	removeLabel: REMOVE,
+	removeIcon: <Icon svg={CloseIcon} label="" />,
+	fileIcon: <Icon svg={DescriptionIcon} label="" />,
+	fileHint,
+	tooLargeError,
+	attachLabel: ADD_ATTACHMENT,
+	attachIcon: <Icon svg={AttachIcon} label="" />,
+};
+
+const ComposerParts = ({
+	defaultValue,
+	disabled,
+	maxLength,
+	maxFileSize,
+	onSend,
+}: ComposerProps) => (
+	<Composer.Root
+		defaultValue={defaultValue}
+		disabled={disabled}
+		maxLength={maxLength}
+		maxFileSize={maxFileSize}
+		onSend={onSend}>
 		<Composer.Attachments
 			label={ATTACHMENTS}
 			removeLabel={REMOVE}
-			fileHint={(name, size) => `${name} (${size})`}
+			removeIcon={<Icon svg={CloseIcon} label="" />}
+			fileHint={fileHint}
 		/>
 		<Composer.AttachmentsError
-			tooLargeError={maxSize =>
-				`Some files exceed the maximum size of ${maxSize} and must be removed before sending.`
-			}
+			tooLargeError={tooLargeError}
 		/>
 		<Composer.Editor
 			label={EDITOR_LABEL}
@@ -105,28 +137,24 @@ const ComposerParts = () => (
 		</Composer.Editor>
 		<Composer.Toolbar>
 			<Composer.MaxLength />
-			<Composer.AttachButton label={ADD_ATTACHMENT} />
-			<Composer.SendButton label={SEND} />
+			<Composer.AttachButton label={ADD_ATTACHMENT}>
+				<Icon svg={AttachIcon} label="" />
+			</Composer.AttachButton>
+			<Composer.SendButton label={SEND}>
+				<Icon svg={SendIcon} label="" />
+			</Composer.SendButton>
 		</Composer.Toolbar>
-	</>
-);
-
-const ComposerExample = (args: ComposerExampleProps) => (
-	<Composer.Root {...args}>
-		<ComposerParts />
 	</Composer.Root>
 );
 
-const ComposerWithHandle = (args: ComposerExampleProps) => {
+const ComposerWithHandle = (args: ComposerProps) => {
 	const [composer] = useState(() =>
 		Composer.createHandle(),
 	);
 
 	return (
 		<>
-			<Composer.Root {...args} handle={composer}>
-				<ComposerParts />
-			</Composer.Root>
+			<Composer {...args} handle={composer} />
 			<Button
 				variant="secondary"
 				onClick={() => composer.clear()}>
@@ -157,7 +185,7 @@ const attachments = () =>
 	});
 
 const sentOnce = async (
-	onSend: ComposerExampleProps["onSend"],
+	onSend: ComposerProps["onSend"],
 	payload: ComposerSendPayload,
 ) => {
 	await expect(onSend).toHaveBeenCalledOnce();
@@ -189,14 +217,23 @@ const meta = {
 			},
 		],
 	},
-	component: Composer.Root,
-	render: ComposerExample,
+	component: Composer,
 	args: {
-		children: null,
+		label: EDITOR_LABEL,
+		placeholder: PLACEHOLDER,
+		mentions: { label: MENTIONS, sources: [PEOPLE_SOURCE] },
+		attachments: ATTACHMENT_OPTIONS,
+		sendLabel: SEND,
+		sendIcon: <Icon svg={SendIcon} label="" />,
 		maxLength: 2000,
 		onSend: fn(),
 	},
-} satisfies Meta<typeof ComposerExample>;
+	argTypes: {
+		mentions: { control: false },
+		attachments: { control: false },
+		sendIcon: { control: false },
+	},
+} satisfies Meta<typeof Composer>;
 
 export default meta;
 
@@ -251,6 +288,16 @@ export const Disabled: Story = {
 				name: ADD_ATTACHMENT,
 			}),
 		).toBeDisabled();
+	},
+};
+
+export const Parts: Story = {
+	render: ComposerParts,
+	play: async ({ canvas }) => {
+		await expect(
+			editor(canvas),
+		).toHaveAccessibleDescription(PLACEHOLDER);
+		await expect(sendButton(canvas)).toBeDisabled();
 	},
 };
 

@@ -1,4 +1,6 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
+import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -92,6 +94,8 @@ const meta = {
 		photoSetLabel: PHOTO_SET,
 		noPhotoLabel: NO_PHOTO,
 		removeLabel: REMOVE,
+		removeIcon: <Icon svg={CloseIcon} label="" />,
+		icon: <Icon svg={PhotoCameraIcon} label="" />,
 		accept: ["image/png", "image/jpeg"],
 		value: undefined,
 		onValueChange: fn(),

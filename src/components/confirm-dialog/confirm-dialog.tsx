@@ -84,6 +84,7 @@ export type ConfirmDialogRootProps = Readonly<{
 	children: ReactNode;
 }>;
 
+/** The controlled alert dialog: its portal, backdrop and surface. */
 const ConfirmDialogRoot = ({
 	open,
 	onOpenChange,
@@ -120,6 +121,7 @@ const ConfirmDialogRoot = ({
 	);
 };
 
+/** The question the dialog asks. */
 const ConfirmDialogTitle = ({
 	className,
 	...props
@@ -130,6 +132,7 @@ const ConfirmDialogTitle = ({
 	/>
 );
 
+/** What confirming does; renders nothing without children. */
 const ConfirmDialogDescription = ({
 	className,
 	children,
@@ -265,21 +268,19 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
 	}>;
 
 /**
- * Confirmation over base-ui's AlertDialog, fully controlled via `open` /
- * `onOpenChange`. `onConfirm` may return a promise: the dialog stays busy and
- * undismissable while it is pending, closes when it resolves and stays open when
- * it rejects. `tone="danger"` repoints the confirm action to the error role. The
- * parts hanging off it compose a confirmation with a body of its own.
+ * A controlled confirmation over base-ui's `AlertDialog`. A promise from
+ * `onConfirm` keeps it busy until it settles, closing on resolve and staying open
+ * on reject; the parts hanging off it build one by hand.
  *
  * @example
  * <ConfirmDialog
  * 	open={open}
  * 	onOpenChange={setOpen}
- * 	title="Delete this declaration?"
+ * 	title="Delete this invoice?"
  * 	description="This cannot be undone."
  * 	confirmLabel="Delete"
  * 	cancelLabel="Cancel"
- * 	onConfirm={() => deleteDeclaration(id)}
+ * 	onConfirm={() => deleteInvoice(id)}
  * 	tone="danger"
  * />
  */

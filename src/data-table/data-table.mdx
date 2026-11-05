@@ -1,8 +1,10 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import FilterListIcon from "@material-design-icons/svg/outlined/filter_list.svg?react";
 import MouseIcon from "@material-design-icons/svg/outlined/mouse.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { DocsPage } from "../../.storybook/docs-page";
 import styles from "../../docs/design-system/components.module.scss";
@@ -17,6 +19,19 @@ import { Icon } from "../components/icon/icon.tsx";
 import { Spinner } from "../components/spinner/spinner.tsx";
 import { Skeleton } from "../components/skeleton/skeleton.tsx";
 import * as DataTableStories from "./data-table.stories.tsx";
+
+export const Box = ({ indeterminate, ...props }) => (
+	<Checkbox.Control
+		indeterminate={indeterminate}
+		{...props}>
+		<Checkbox.Indicator>
+			<Icon
+				svg={indeterminate ? RemoveIcon : CheckIcon}
+				label=""
+			/>
+		</Checkbox.Indicator>
+	</Checkbox.Control>
+);
 
 export const Live = ({ children }) => (
 	<StoryProviders>{children}</StoryProviders>
@@ -49,8 +64,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
             </tbody>
           </table>
         </div>
@@ -78,8 +93,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
             </tbody>
           </table>
         </div>
@@ -112,8 +127,8 @@ A cell is not folded. This is not an exception to [text that does not fit](?path
             <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+            <tr><td>02-10</td><td>Kick-off and discovery, with a report to the client contact</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Strategy session</td><td className={styles.end}>45,00</td></tr>
           </tbody>
         </table>
       </div>
@@ -143,8 +158,8 @@ A cell is not folded. This is not an exception to [text that does not fit](?path
             <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+            <tr><td>02-10</td><td>Kick-off and discovery, with a report to the client contact</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Strategy session</td><td className={styles.end}>45,00</td></tr>
           </tbody>
         </table>
       </div>
@@ -227,8 +242,8 @@ A table-level action menu is a labelled button beside the filters button, not an
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.tableWithToolbar}>
         <div className={styles.toolbar}>
-          <Button size="sm" icon={FilterListIcon}>Filters</Button>
-          <Button size="sm" icon={MoreVertIcon}>Table actions</Button>
+          <Button size="sm" icon={<Icon svg={FilterListIcon} label="" />}>Filters</Button>
+          <Button size="sm" icon={<Icon svg={MoreVertIcon} label="" />}>Table actions</Button>
         </div>
         <div className={styles.tableCard}>
           <table className={`${styles.table} ${styles.tableContent}`}>
@@ -246,7 +261,7 @@ A table-level action menu is a labelled button beside the filters button, not an
   }>
 
 ```tsx
-<Button icon={MoreVertIcon} render={<Menu.Trigger />}>
+<Button icon={<MoreVertIcon />} render={<Menu.Trigger />}>
 	Table actions
 </Button>
 ```
@@ -259,7 +274,7 @@ A table-level action menu is a labelled button beside the filters button, not an
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.tableWithToolbar}>
         <div className={styles.toolbar}>
-          <Button size="sm" icon={FilterListIcon}>Filters</Button>
+          <Button size="sm" icon={<Icon svg={FilterListIcon} label="" />}>Filters</Button>
         </div>
         <div className={styles.tableCard}>
           <table className={`${styles.table} ${styles.tableContent}`}>
@@ -311,11 +326,11 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
       <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
         <table className={`${styles.table} ${styles.tableContent}`}>
           <thead>
-            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Kick-off and discovery</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Strategy session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -336,11 +351,11 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
       <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
         <table className={`${styles.table} ${styles.tableContent}`}>
           <thead>
-            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Kick-off and discovery</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Strategy session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -620,7 +635,7 @@ cell: ({ row }) => currency.format(row.original.amountCents)
 
 ### Digits that name something stay start-aligned
 
-Digits that name something are not [quantities](#quantities-are-end-aligned-in-tabular-figures): a product code, a reference id, a BSN, a postcode. Neither is a date. None of them are compared by magnitude, so they stay start-aligned with the rest of the text. They keep the tabular figures, which is what makes a column of them scan.
+Digits that name something are not [quantities](#quantities-are-end-aligned-in-tabular-figures): a product code, a reference id, a VAT number, a postcode. Neither is a date. None of them are compared by magnitude, so they stay start-aligned with the rest of the text. They keep the tabular figures, which is what makes a column of them scan.
 
 <DoDont>
 <Example
@@ -693,7 +708,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     					<thead>
     						<tr>
     							<th className={styles.fit}>
-    								<Checkbox
+    								<Box
     									indeterminate
     									aria-label="Select page"
     								/>
@@ -704,7 +719,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     					<tbody>
     						<tr>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -713,7 +728,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     						</tr>
     						<tr className={styles.stripe}>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -722,7 +737,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     						</tr>
     						<tr>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -928,7 +943,7 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
     									<tbody>
     										<tr>
     											<td>03-10</td>
-    											<td>Treatment session</td>
+    											<td>Strategy session</td>
     										</tr>
     									</tbody>
     								</table>
@@ -961,7 +976,7 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ### The pager is the kit's pagination
 
-`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
+`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. With labels and icons it is the ready-made `Pagination`; with children it holds the `Pagination` parts it is given instead. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
 
 ```tsx
 <DataTable.Pagination
@@ -973,7 +988,69 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 	previousLabel="Previous page"
 	nextLabel="Next page"
 	lastLabel="Last page"
+	firstIcon={<FirstPageIcon />}
+	previousIcon={<ChevronLeftIcon />}
+	nextIcon={<ChevronRightIcon />}
+	lastIcon={<LastPageIcon />}
+	checkIcon={<CheckIcon />}
+	expandIcon={<ExpandMoreIcon />}
 />
+```
+
+### Content is the whole table; its parts are the same table in your markup
+
+`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, through `sortAscendingIcon`, `sortDescendingIcon` and `unsortedIcon`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`:
+
+```tsx
+const { view } = useDataTableView();
+
+<DataTable.Frame>
+	<DataTable.Scroller>
+		<DataTable.Table>
+			<DataTable.LoadingCaption>
+				Loading invoices
+			</DataTable.LoadingCaption>
+			<DataTable.Head>
+				{table.getHeaderGroups().map(group => (
+					<DataTable.HeaderRow key={group.id}>
+						{group.headers.map(header => (
+							<DataTable.HeaderCell
+								key={header.id}
+								header={header}>
+								{header.column.getCanSort() ? (
+									<DataTable.SortButton header={header} />
+								) : undefined}
+							</DataTable.HeaderCell>
+						))}
+					</DataTable.HeaderRow>
+				))}
+			</DataTable.Head>
+			<DataTable.Body>
+				{view === "ready" ? (
+					table.getRowModel().rows.map(row => (
+						<DataTable.Row key={row.id} row={row}>
+							{row.getAllCells().map(cell => (
+								<DataTable.Cell key={cell.id} cell={cell} />
+							))}
+						</DataTable.Row>
+					))
+				) : view === "loading" ? (
+					<DataTable.PlaceholderRows />
+				) : (
+					<DataTable.StateRow>
+						{emptyOrError}
+					</DataTable.StateRow>
+				)}
+			</DataTable.Body>
+		</DataTable.Table>
+	</DataTable.Scroller>
+	<DataTable.StaleOverlay>
+		<Stale.Message>
+			This is taking longer than usual.
+		</Stale.Message>
+		<Stale.Retry onRetry={retry}>Try again</Stale.Retry>
+	</DataTable.StaleOverlay>
+</DataTable.Frame>;
 ```
 
 ### Rows that are on screen never unmount
@@ -1003,7 +1080,7 @@ Rows that are on screen never unmount. Paging, sorting and filtering are all new
 
 ```tsx
 useQuery({
-	...declarationsQuery(page),
+	...invoicesQuery(page),
 	placeholderData: keepPreviousData,
 });
 ```
@@ -1051,12 +1128,12 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
       <div className={styles.tableCard}>
         <table className={`${styles.table} ${styles.tableFull}`}>
           <thead>
-            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+            <tr><th className={styles.fit}><Box aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
-            <tr className={styles.stripe}><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
-            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr className={styles.stripe}><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
           </tbody>
         </table>
       </div>
@@ -1068,7 +1145,11 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
 	id: "select",
 	meta: {
 		fit: true,
-		placeholderCell: () => <Checkbox aria-label={selectRowLabel} />,
+		placeholderCell: () => (
+			<Checkbox.Control aria-label={selectRowLabel}>
+				<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
+			</Checkbox.Control>
+		),
 	},
 	header: () => <PageCheckbox />,
 	cell: ({ row }) => <RowCheckbox rowId={row.id} />,
@@ -1084,7 +1165,7 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
       <div className={styles.tableCard}>
         <table className={`${styles.table} ${styles.tableFull}`}>
           <thead>
-            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+            <tr><th className={styles.fit}><Box aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
             <tr><td className={styles.fit}><Skeleton /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>

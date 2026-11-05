@@ -1,27 +1,71 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { expect, fn, userEvent } from "storybook/test";
+import { Icon } from "../icon/index.ts";
 import {
 	Checkbox,
-	type CheckboxProps,
+	type CheckboxControlProps,
 } from "./checkbox.tsx";
 
 const LABEL = "I agree to the terms";
 
 const checkedChange =
-	fn<NonNullable<CheckboxProps["onCheckedChange"]>>();
+	fn<
+		NonNullable<CheckboxControlProps["onCheckedChange"]>
+	>();
 
-const ControlledCheckbox = (args: CheckboxProps) => {
-	const [, updateArgs] = useArgs<CheckboxProps>();
+const Mark = ({
+	indeterminate,
+}: Readonly<{ indeterminate?: boolean }>) => (
+	<Checkbox.Indicator>
+		<Icon
+			svg={indeterminate === true ? RemoveIcon : CheckIcon}
+			label=""
+		/>
+	</Checkbox.Indicator>
+);
+
+const PlainCheckbox = (args: CheckboxControlProps) => (
+	<Checkbox.Control {...args}>
+		<Mark indeterminate={args.indeterminate} />
+	</Checkbox.Control>
+);
+
+const ControlledCheckbox = (args: CheckboxControlProps) => {
+	const [, updateArgs] = useArgs<CheckboxControlProps>();
 
 	return (
-		<Checkbox
+		<Checkbox.Control
 			{...args}
 			onCheckedChange={(checked, details) => {
 				args.onCheckedChange?.(checked, details);
 				updateArgs({ checked, indeterminate: false });
-			}}
-		/>
+			}}>
+			<Mark indeterminate={args.indeterminate} />
+		</Checkbox.Control>
+	);
+};
+
+const LabelledCheckbox = (args: CheckboxControlProps) => {
+	const [, updateArgs] = useArgs<CheckboxControlProps>();
+
+	return (
+		<Checkbox.Root filled={args.checked === true}>
+			<Checkbox.Label>
+				<Checkbox.Control
+					{...args}
+					aria-label={undefined}
+					onCheckedChange={(checked, details) => {
+						args.onCheckedChange?.(checked, details);
+						updateArgs({ checked, indeterminate: false });
+					}}>
+					<Mark indeterminate={args.indeterminate} />
+				</Checkbox.Control>
+				{LABEL}
+			</Checkbox.Label>
+		</Checkbox.Root>
 	);
 };
 
@@ -36,14 +80,14 @@ const meta = {
 			},
 		],
 	},
-	component: Checkbox,
+	component: Checkbox.Control,
 	render: ControlledCheckbox,
 	args: {
 		"aria-label": LABEL,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},
-} satisfies Meta<typeof Checkbox>;
+} satisfies Meta<typeof Checkbox.Control>;
 
 export default meta;
 
@@ -78,10 +122,14 @@ export const Invalid: Story = {
 	args: { "aria-invalid": true },
 };
 
+export const Labelled: Story = {
+	render: LabelledCheckbox,
+};
+
 export const Keyboard: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: { checked: undefined },
-	render: args => <Checkbox {...args} />,
+	render: PlainCheckbox,
 	play: async ({ canvas }) => {
 		const box = canvas.getByRole("checkbox", {
 			name: LABEL,
@@ -102,7 +150,7 @@ export const Keyboard: Story = {
 export const Mouse: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: { checked: undefined },
-	render: args => <Checkbox {...args} />,
+	render: PlainCheckbox,
 	play: async ({ canvas }) => {
 		const box = canvas.getByRole("checkbox", {
 			name: LABEL,
@@ -121,7 +169,7 @@ export const Mouse: Story = {
 export const Touch: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: { checked: undefined },
-	render: args => <Checkbox {...args} />,
+	render: PlainCheckbox,
 	play: async ({ canvas }) => {
 		const box = canvas.getByRole("checkbox", {
 			name: LABEL,

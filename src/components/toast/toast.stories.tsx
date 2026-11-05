@@ -1,4 +1,10 @@
+import CheckCircleIcon from "@material-design-icons/svg/outlined/check_circle.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ErrorIcon from "@material-design-icons/svg/outlined/error.svg?react";
+import InfoIcon from "@material-design-icons/svg/outlined/info.svg?react";
+import WarningIcon from "@material-design-icons/svg/outlined/warning_amber.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactNode } from "react";
 import {
 	expect,
 	fn,
@@ -21,13 +27,14 @@ import {
 	toastManager,
 } from "./toast.ts";
 import { ToastProvider } from "./toast-provider.tsx";
+import { Icon } from "../icon/index.ts";
 
-const SENT = "Declaration sent.";
-const SEND_FAILED = "Declaration failed to send.";
+const SENT = "Invoice sent.";
+const SEND_FAILED = "Invoice failed to send.";
 const DRAFT_SAVED = "Draft saved.";
-const OFFLINE = "You are offline. Declarations are queued.";
+const OFFLINE = "You are offline. Invoices are queued.";
 const SENT_DETAIL =
-	"All twelve declarations reached the insurer. Nothing is left in the outbox.";
+	"All twelve invoices reached their clients. Nothing is left in the outbox.";
 const RETRY_LABEL = "Retry";
 const DELETE_LABEL = "Delete";
 
@@ -35,6 +42,7 @@ type ToastTriggerProps = Readonly<{
 	tone: ToastTone;
 	body: string;
 	title?: string;
+	icon?: ReactNode;
 	actions?: ReadonlyArray<ToastAction>;
 	timeout?: number;
 	dedupeKey?: string;
@@ -44,6 +52,7 @@ const ToastTrigger = ({
 	tone,
 	body,
 	title,
+	icon,
 	actions,
 	timeout,
 	dedupeKey,
@@ -53,6 +62,7 @@ const ToastTrigger = ({
 		onClick={() =>
 			toast.notify(tone, body, {
 				title,
+				icon,
 				actions,
 				timeout,
 				key: dedupeKey,
@@ -75,13 +85,19 @@ const ACTIONS: ReadonlyArray<ToastAction> = [
 ];
 
 const SuccessToast = () => (
-	<ToastTrigger tone="success" body={SENT} timeout={0} />
+	<ToastTrigger
+		tone="success"
+		body={SENT}
+		icon={<Icon svg={CheckCircleIcon} label="" />}
+		timeout={0}
+	/>
 );
 
 const ErrorToast = () => (
 	<ToastTrigger
 		tone="error"
 		body={SEND_FAILED}
+		icon={<Icon svg={ErrorIcon} label="" />}
 		timeout={0}
 	/>
 );
@@ -90,12 +106,26 @@ const InfoToast = () => (
 	<ToastTrigger
 		tone="info"
 		body={DRAFT_SAVED}
+		icon={<Icon svg={InfoIcon} label="" />}
 		timeout={0}
 	/>
 );
 
 const WarningToast = () => (
-	<ToastTrigger tone="warning" body={OFFLINE} timeout={0} />
+	<ToastTrigger
+		tone="warning"
+		body={OFFLINE}
+		icon={<Icon svg={WarningIcon} label="" />}
+		timeout={0}
+	/>
+);
+
+const PlainToast = () => (
+	<ToastTrigger
+		tone="info"
+		body={DRAFT_SAVED}
+		timeout={0}
+	/>
 );
 
 const HeadingToast = () => (
@@ -111,7 +141,7 @@ const ActionsToast = () => (
 	<ToastTrigger
 		tone="error"
 		title={SEND_FAILED}
-		body="The insurer refused the batch. Check the client's policy number and send it again."
+		body="The client's mail server refused the invoice. Check their address and send it again."
 		actions={ACTIONS}
 	/>
 );
@@ -141,11 +171,14 @@ const meta = {
 	decorators: [withOverlayFrame("medium")],
 	args: {
 		closeLabel: STORY_TOAST_CLOSE_LABEL,
+		closeIcon: <Icon svg={CloseIcon} label="" />,
 		viewportLabel: STORY_TOAST_VIEWPORT_LABEL,
 		children: undefined,
 	},
 	argTypes: {
 		children: { control: false },
+		closeIcon: { control: false },
+		renderToast: { control: false },
 	},
 	parameters: {
 		test: { clearMocks: true },
@@ -214,6 +247,20 @@ export const Warning: Story = {
 			"data-tone",
 			"warning",
 		);
+	},
+};
+
+export const WithoutIcon: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: PlainToast,
+	play: async ({ canvas }) => {
+		await userEvent.click(canvas.getByRole("button"));
+
+		await expect(
+			(await findToast(DRAFT_SAVED)).querySelectorAll(
+				"svg",
+			),
+		).toHaveLength(1);
 	},
 };
 

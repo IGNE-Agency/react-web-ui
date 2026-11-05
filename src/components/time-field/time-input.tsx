@@ -19,6 +19,12 @@ import {
 export type TimeInputRootProps = AriaTimeFieldProps<Time> &
 	TemporalStateProps;
 
+/**
+ * A react-aria `TimeField` holding the value.
+ *
+ * @example
+ * <TimeInput.Root aria-labelledby={labelId}>…</TimeInput.Root>
+ */
 const TimeInputRoot = ({
 	state,
 	...props

@@ -1,10 +1,12 @@
 import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Icon } from "../../src/components/icon/index.ts";
 import { Tag } from "../../src/components/tag/index.ts";
 import { TagGroup } from "../../src/components/tag-group/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
@@ -43,12 +45,12 @@ A narrow column also asks the useful questions early: what comes first, what bel
 <DoDont>
 	<Example
 		kind="do"
-		caption="Built narrow first, each declaration stacks and every value is whole."
+		caption="Built narrow first, each invoice stacks and every value is whole."
 		visual={
 			<div className={styles.narrow}>
 				<div className={styles.card}>
 					<span className={styles.cardHead}>
-						Physiotherapy
+						Design review
 						<span className={styles.amount}>€ 120.00</span>
 					</span>
 					<span className={styles.cardMeta}>
@@ -58,7 +60,7 @@ A narrow column also asks the useful questions early: what comes first, what bel
 				</div>
 				<div className={styles.card}>
 					<span className={styles.cardHead}>
-						Dental care
+						Workshop
 						<span className={styles.amount}>€ 85.50</span>
 					</span>
 					<span className={styles.cardMeta}>
@@ -82,13 +84,13 @@ A narrow column also asks the useful questions early: what comes first, what bel
 					<span>Status</span>
 				</div>
 				<div className={styles.squeezed}>
-					<span>Physiotherapy</span>
+					<span>Design review</span>
 					<span>12 March</span>
 					<span>€ 120.00</span>
 					<span>Outstanding</span>
 				</div>
 				<div className={styles.squeezed}>
-					<span>Dental care</span>
+					<span>Workshop</span>
 					<span>3 March</span>
 					<span>€ 85.50</span>
 					<span>Processed</span>
@@ -168,11 +170,15 @@ The second is hover. A control that only shows up when the pointer passes over i
 						<TagGroup.List className={components.row}>
 							<TagGroup.Tag textValue="Submitted">
 								Submitted
-								<TagGroup.Remove label="Remove" />
+								<TagGroup.Remove label="Remove">
+									<Icon svg={CloseIcon} label="" />
+								</TagGroup.Remove>
 							</TagGroup.Tag>
 							<TagGroup.Tag textValue="October 2026">
 								October 2026
-								<TagGroup.Remove label="Remove" />
+								<TagGroup.Remove label="Remove">
+									<Icon svg={CloseIcon} label="" />
+								</TagGroup.Remove>
 							</TagGroup.Tag>
 						</TagGroup.List>
 					</TagGroup.Root>
@@ -215,7 +221,7 @@ So a bar pinned to an edge leaves room for whatever the device has there, which 
 						</span>
 						<span>
 							<DescriptionIcon aria-hidden />
-							Declarations
+							Invoices
 						</span>
 						<span>
 							<PersonIcon aria-hidden />
@@ -240,7 +246,7 @@ So a bar pinned to an edge leaves room for whatever the device has there, which 
 						</span>
 						<span>
 							<DescriptionIcon aria-hidden />
-							Declarations
+							Invoices
 						</span>
 						<span>
 							<PersonIcon aria-hidden />
@@ -297,7 +303,7 @@ At every width everything a screen offers is still there. It stacks, wraps or mo
 		render={
 			<Button
 				iconOnly
-				icon={MoreVertIcon}
+				icon={<MoreVertIcon />}
 				label={m.row_actions()}
 			/>
 		}
@@ -394,7 +400,9 @@ A remove on a staged file, a chip's dismiss, a row's own action: none is reveale
 		{filter => (
 			<TagGroup.Tag textValue={filter.label}>
 				{filter.label}
-				<TagGroup.Remove label={removeLabel} />
+				<TagGroup.Remove label={removeLabel}>
+					<CloseIcon />
+				</TagGroup.Remove>
 			</TagGroup.Tag>
 		)}
 	</TagGroup.List>

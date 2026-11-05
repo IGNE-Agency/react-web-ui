@@ -1,3 +1,4 @@
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	expect,
@@ -5,11 +6,12 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
+import { Icon } from "../icon/icon.tsx";
 import { Collapsible } from "./collapsible.tsx";
 
 const TRIGGER = "Advanced settings";
 const CONTENT =
-	"Choose how long a declaration stays editable after it is sent.";
+	"Choose how long an invoice stays editable after it is sent.";
 
 type Canvas = ReturnType<typeof within>;
 
@@ -57,7 +59,12 @@ const meta = {
 	args: {
 		children: (
 			<>
-				<Collapsible.Trigger>{TRIGGER}</Collapsible.Trigger>
+				<Collapsible.Trigger>
+					{TRIGGER}
+					<Collapsible.Indicator>
+						<Icon svg={ExpandMoreIcon} label="" />
+					</Collapsible.Indicator>
+				</Collapsible.Trigger>
 				<Collapsible.Panel>{CONTENT}</Collapsible.Panel>
 			</>
 		),

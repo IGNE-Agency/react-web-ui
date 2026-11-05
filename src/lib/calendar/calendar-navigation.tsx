@@ -1,11 +1,8 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { Field as BaseField } from "@base-ui/react/field";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { startOfYear } from "@internationalized/date";
 import { type ReactNode, useRef } from "react";
 import { Intl as TemporalIntl } from "temporal-polyfill";
-import { Icon } from "../../components/icon/index.ts";
 import { useLocale } from "../../components/locale-provider/index.ts";
 import { useTimeZone } from "../../components/time-zone-provider/index.ts";
 import { usePopupEdgePadding } from "../popup-edge-padding.ts";
@@ -27,6 +24,14 @@ export type CalendarNavigationLabels = Readonly<{
 	noMatchingYearLabel: string;
 }>;
 
+/** The icons the month and year lists in a calendar header show. */
+export type CalendarNavigationIcons = Readonly<{
+	/** The mark beside the selected month and year in their lists, their only sign of selection. */
+	checkIcon: ReactNode;
+	/** The chevron on the month and year controls. Left out, none shows. */
+	expandIcon?: ReactNode;
+}>;
+
 const OwnField = ({
 	children,
 }: Readonly<{ children: ReactNode }>): ReactNode => (
@@ -38,10 +43,13 @@ const OwnField = ({
 const CalendarMonthSelect = ({
 	state,
 	label,
-}: Readonly<{
-	state: CalendarNavigationState;
-	label: string;
-}>): ReactNode => {
+	checkIcon,
+	expandIcon,
+}: CalendarNavigationIcons &
+	Readonly<{
+		state: CalendarNavigationState;
+		label: string;
+	}>): ReactNode => {
 	const locale = useLocale();
 	const timeZone = useTimeZone();
 	const { ref, collisionPadding } = usePopupEdgePadding();
@@ -88,9 +96,11 @@ const CalendarMonthSelect = ({
 						))}
 					</span>
 				</span>
-				<BaseSelect.Icon className={style.navIcon}>
-					<Icon svg={ExpandMoreIcon} label="" />
-				</BaseSelect.Icon>
+				{expandIcon !== undefined && (
+					<BaseSelect.Icon className={style.navIcon}>
+						{expandIcon}
+					</BaseSelect.Icon>
+				)}
 			</BaseSelect.Trigger>
 
 			<BaseSelect.Positioner
@@ -110,7 +120,7 @@ const CalendarMonthSelect = ({
 									className={style.navItemIndicator}
 									aria-hidden="true">
 									<BaseSelect.ItemIndicator>
-										<Icon svg={CheckIcon} label="" />
+										{checkIcon}
 									</BaseSelect.ItemIndicator>
 								</span>
 								<BaseSelect.ItemText>
@@ -131,13 +141,16 @@ const CalendarMonthSelect = ({
  * year actually has; the year list is every year in its era.
  *
  * @example
- * <CalendarNavigation monthLabel="Month" yearLabel="Year" noMatchingYearLabel="No matching year." />
+ * <CalendarNavigation monthLabel="Month" yearLabel="Year" noMatchingYearLabel="No matching year." checkIcon={<CheckIcon />} />
  */
 export const CalendarNavigation = ({
 	monthLabel,
 	yearLabel,
 	noMatchingYearLabel,
-}: CalendarNavigationLabels): ReactNode => {
+	checkIcon,
+	expandIcon,
+}: CalendarNavigationLabels &
+	CalendarNavigationIcons): ReactNode => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const state = useCalendarNavigationState();
 
@@ -151,6 +164,8 @@ export const CalendarNavigation = ({
 				<CalendarMonthSelect
 					state={state}
 					label={monthLabel}
+					checkIcon={checkIcon}
+					expandIcon={expandIcon}
 				/>
 			</OwnField>
 			<OwnField>
@@ -159,6 +174,8 @@ export const CalendarNavigation = ({
 					container={containerRef}
 					label={yearLabel}
 					noMatchLabel={noMatchingYearLabel}
+					checkIcon={checkIcon}
+					expandIcon={expandIcon}
 				/>
 			</OwnField>
 		</div>

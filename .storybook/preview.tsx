@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import axe from "axe-core";
@@ -8,6 +9,7 @@ import {
 import { addons } from "storybook/preview-api";
 import { configure, spyOn } from "storybook/test";
 import { z } from "zod";
+import { Icon } from "../src/components/icon/index.ts";
 import {
 	STORY_LOCALE,
 	StoryProviders,
@@ -20,7 +22,6 @@ import { themeOf } from "./theme-global.ts";
 import { ThemedDocsContainer } from "./themed-docs-container.tsx";
 import "../src/style/tokens.gen.css";
 import "../src/style/base.scss";
-import "./fonts.scss";
 import "./docs.scss";
 
 configure({ asyncUtilTimeout: 30_000 });
@@ -31,7 +32,12 @@ axe.reset = () => {
 	registerContrastChecks();
 };
 
-const docgenInfo = z.object({ description: z.string() });
+const docgenInfo = z.object({
+	description: z.string(),
+	namespace: z
+		.object({ description: z.string() })
+		.optional(),
+});
 
 const applyTheme = (payload: unknown) => {
 	const theme = themeOf(payload);
@@ -60,9 +66,21 @@ const preview: Preview = {
 								component["__docgenInfo"],
 							)
 						: undefined;
-				return info?.success === true
-					? docCommentOf(info.data.description).markdown
-					: null;
+				if (info?.success !== true) {
+					return null;
+				}
+				const markdown = [
+					info.data.namespace?.description,
+					info.data.description,
+				]
+					.flatMap(text =>
+						text === undefined
+							? []
+							: [docCommentOf(text).markdown],
+					)
+					.filter(text => text !== "")
+					.join("\n\n");
+				return markdown === "" ? null : markdown;
 			},
 		},
 		options: {
@@ -72,7 +90,6 @@ const preview: Preview = {
 					[
 						"Introduction",
 						"Getting started",
-						"Brand",
 						"Foundation",
 						[
 							"Token architecture",
@@ -145,7 +162,8 @@ const preview: Preview = {
 			attributeName: "data-theme",
 		}),
 		Story => (
-			<StoryProviders>
+			<StoryProviders
+				toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
 				<Story />
 			</StoryProviders>
 		),

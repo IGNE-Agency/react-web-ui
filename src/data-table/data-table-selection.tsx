@@ -22,9 +22,16 @@ const useSelection = (): RowSelectionView => {
 	return selection;
 };
 
+type SelectionMarks = Readonly<{
+	checkIcon: ReactNode;
+	indeterminateIcon: ReactNode;
+}>;
+
 const PageCheckbox = ({
 	label,
-}: Readonly<{ label: string }>) => {
+	checkIcon,
+	indeterminateIcon,
+}: SelectionMarks & Readonly<{ label: string }>) => {
 	const { table } = useDataTable();
 	const selection = useSelection();
 	const pageIds = table
@@ -37,13 +44,14 @@ const PageCheckbox = ({
 		pageIds.length > 0 &&
 		selectedOnPage.length === pageIds.length;
 
+	const indeterminate =
+		selectedOnPage.length > 0 && !allOnPage;
+
 	return (
-		<Checkbox
+		<Checkbox.Control
 			aria-label={label}
 			checked={allOnPage}
-			indeterminate={
-				selectedOnPage.length > 0 && !allOnPage
-			}
+			indeterminate={indeterminate}
 			onCheckedChange={checked => {
 				for (const id of pageIds) {
 					selection.toggleRow(
@@ -52,19 +60,27 @@ const PageCheckbox = ({
 						table.getRowCount(),
 					);
 				}
-			}}
-		/>
+			}}>
+			<Checkbox.Indicator>
+				{indeterminate ? indeterminateIcon : checkIcon}
+			</Checkbox.Indicator>
+		</Checkbox.Control>
 	);
 };
 
 const RowCheckbox = ({
 	rowId,
 	label,
-}: Readonly<{ rowId: string; label: string }>) => {
+	checkIcon,
+}: Readonly<{
+	rowId: string;
+	label: string;
+	checkIcon: ReactNode;
+}>) => {
 	const { table } = useDataTable();
 	const selection = useSelection();
 	return (
-		<Checkbox
+		<Checkbox.Control
 			aria-label={label}
 			checked={selection.isRowSelected(rowId)}
 			onCheckedChange={checked => {
@@ -73,8 +89,9 @@ const RowCheckbox = ({
 					checked,
 					table.getRowCount(),
 				);
-			}}
-		/>
+			}}>
+			<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
+		</Checkbox.Control>
 	);
 };
 
@@ -84,6 +101,10 @@ export type SelectionColumnOptions = Readonly<{
 	selectPageLabel: string;
 	/** Each row checkbox's name, such as "Select row". */
 	selectRowLabel: string;
+	/** The mark a checked box shows, such as a tick. */
+	checkIcon: ReactNode;
+	/** The mark the page checkbox shows while only some rows on the page are selected, such as a dash. */
+	indeterminateIcon: ReactNode;
 }>;
 
 /**
@@ -93,7 +114,7 @@ export type SelectionColumnOptions = Readonly<{
  *
  * @example
  * const columns = [
- * 	selectionColumn<Declaration>({ sticky: "start", selectPageLabel: "Select page", selectRowLabel: "Select row" }),
+ * 	selectionColumn<Invoice>({ sticky: "start", selectPageLabel: "Select page", selectRowLabel: "Select row", checkIcon: <CheckIcon />, indeterminateIcon: <RemoveIcon /> }),
  * 	...dataColumns,
  * ];
  */
@@ -103,6 +124,8 @@ export const selectionColumn = <
 	sticky,
 	selectPageLabel,
 	selectRowLabel,
+	checkIcon,
+	indeterminateIcon,
 }: SelectionColumnOptions): ColumnDef<
 	DataTableFeatures,
 	TRow
@@ -112,17 +135,29 @@ export const selectionColumn = <
 		fit: true,
 		sticky,
 		placeholderCell: () => (
-			<Checkbox aria-label={selectRowLabel} />
+			<Checkbox.Control aria-label={selectRowLabel}>
+				<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
+			</Checkbox.Control>
 		),
 	},
-	header: () => <PageCheckbox label={selectPageLabel} />,
+	header: () => (
+		<PageCheckbox
+			label={selectPageLabel}
+			checkIcon={checkIcon}
+			indeterminateIcon={indeterminateIcon}
+		/>
+	),
 	cell: ({ row }) => (
-		<RowCheckbox rowId={row.id} label={selectRowLabel} />
+		<RowCheckbox
+			rowId={row.id}
+			label={selectRowLabel}
+			checkIcon={checkIcon}
+		/>
 	),
 });
 
 export type DataTableSelectionBarProps = Readonly<{
-	/** What the bar says while nothing is selected, such as "30 declarations". */
+	/** What the bar says while nothing is selected, such as "30 invoices". */
 	total?: ReactNode;
 	totalRows: number;
 	/** How many of the matching rows are selected, such as "3 of 30 selected". */

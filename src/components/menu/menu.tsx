@@ -3,8 +3,33 @@ import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { Button } from "../button/button.tsx";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import styles from "./menu.module.scss";
+
+export type MenuRootProps<Payload = unknown> = Omit<
+	BaseMenu.Root.Props<Payload>,
+	| "open"
+	| "defaultOpen"
+	| "onOpenChange"
+	| "modal"
+	| "children"
+> &
+	Readonly<{
+		/** Whether the menu is open. Leave it out for a menu that keeps its own state. */
+		open?: boolean;
+		/** Whether the menu starts open, when it keeps its own state. @default false */
+		defaultOpen?: boolean;
+		/** Called with the new open state when the menu opens or closes. */
+		onOpenChange?: BaseMenu.Root.Props<Payload>["onOpenChange"];
+		/** Whether the page behind the menu is inert while it is open. @default true */
+		modal?: BaseMenu.Root.Props<Payload>["modal"];
+		/** The trigger and the menu's content. */
+		children?: BaseMenu.Root.Props<Payload>["children"];
+	}>;
+
+/** Holds the menu's open state for its parts. It renders no element of its own. */
+const Root = <Payload,>(
+	props: MenuRootProps<Payload>,
+): ReactNode => <BaseMenu.Root {...props} />;
 
 type TriggerBaseProps = Omit<
 	ComponentProps<typeof BaseMenu.Trigger>,
@@ -13,7 +38,7 @@ type TriggerBaseProps = Omit<
 
 type IconTriggerProps = TriggerBaseProps &
 	Readonly<{
-		icon: SvgComponent;
+		icon: ReactNode;
 		/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
 		label: string;
 		children?: never;
@@ -22,7 +47,7 @@ type IconTriggerProps = TriggerBaseProps &
 type TextTriggerProps = TriggerBaseProps &
 	Readonly<{
 		/** Optional leading icon rendered before the label. */
-		icon?: SvgComponent;
+		icon?: ReactNode;
 		children: ReactNode;
 		label?: never;
 	}>;
@@ -65,6 +90,7 @@ export type MenuPositionerProps = Omit<
 	"ref"
 >;
 
+/** Places the popup against its trigger, clear of the viewport's edges. */
 const Positioner = ({
 	className,
 	...props
@@ -76,6 +102,7 @@ const Positioner = ({
 	/>
 );
 
+/** The menu's surface, holding its items. */
 const Popup = ({
 	className,
 	...props
@@ -86,6 +113,40 @@ const Popup = ({
 	/>
 );
 
+export type MenuContentProps = ComponentProps<
+	typeof BaseMenu.Popup
+> &
+	Readonly<
+		Pick<
+			MenuPositionerProps,
+			"side" | "sideOffset" | "align" | "alignOffset"
+		> & {
+			/** The element the menu is portalled into. @default document.body */
+			container?: BaseMenu.Portal.Props["container"];
+		}
+	>;
+
+/** `Portal`, `Positioner` and `Popup` in one: the menu's surface, placed against its trigger. */
+const Content = ({
+	container,
+	side,
+	sideOffset,
+	align,
+	alignOffset,
+	...props
+}: MenuContentProps): ReactNode => (
+	<BaseMenu.Portal container={container}>
+		<Positioner
+			side={side}
+			sideOffset={sideOffset}
+			align={align}
+			alignOffset={alignOffset}>
+			<Popup {...props} />
+		</Positioner>
+	</BaseMenu.Portal>
+);
+
+/** The arrow pointing from the popup at its trigger. */
 const Arrow = ({
 	className,
 	...props
@@ -111,9 +172,10 @@ export type MenuItemProps = ComponentProps<
 > &
 	Readonly<{
 		/** Optional leading icon, rendered decoratively before the label. */
-		icon?: SvgComponent;
+		icon?: ReactNode;
 	}>;
 
+/** An action, with an optional leading icon. */
 const Item = ({
 	icon,
 	className,
@@ -123,7 +185,7 @@ const Item = ({
 	<BaseMenu.Item
 		className={clsx(styles.item, className)}
 		{...props}>
-		{icon && <Icon svg={icon} label="" />}
+		{icon}
 		{children}
 	</BaseMenu.Item>
 );
@@ -150,6 +212,7 @@ const LinkItem = ({
 	/>
 );
 
+/** A line between groups of items. */
 const Separator = ({
 	className,
 	...props
@@ -162,6 +225,7 @@ const Separator = ({
 	/>
 );
 
+/** The heading that names a `Group`. */
 const GroupLabel = ({
 	className,
 	...props
@@ -175,11 +239,12 @@ const GroupLabel = ({
 );
 
 type MenuParts = Readonly<{
-	Root: typeof BaseMenu.Root;
+	Root: typeof Root;
 	Trigger: typeof Trigger;
 	Portal: typeof BaseMenu.Portal;
 	Positioner: typeof Positioner;
 	Popup: typeof Popup;
+	Content: typeof Content;
 	Arrow: typeof Arrow;
 	Item: typeof Item;
 	LinkItem: typeof LinkItem;
@@ -190,34 +255,27 @@ type MenuParts = Readonly<{
 }>;
 
 /**
- * Dropdown menu over base-ui's Menu, with an arrow pointing at the trigger.
- * `Menu.Item` accepts an optional leading `icon`. The positioner keeps
- * `--popup-edge-padding` from the viewport's edges.
+ * A dropdown menu over base-ui's `Menu`. `Content` bundles the portal,
+ * positioner and popup; the unbundled parts stay. Icons are the app's own.
  *
  * @example
- * import RowActionsIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
- * import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
- *
  * <Menu.Root>
- *   <Menu.Trigger icon={RowActionsIcon} label="Row actions" />
- *   <Menu.Portal>
- *     <Menu.Positioner sideOffset={8}>
- *       <Menu.Popup>
- *         <Menu.Arrow />
- *         <Menu.Item icon={DownloadIcon} onClick={download}>
- *           Download
- *         </Menu.Item>
- *       </Menu.Popup>
- *     </Menu.Positioner>
- *   </Menu.Portal>
+ *   <Menu.Trigger icon={<MoreIcon />} label="Row actions" />
+ *   <Menu.Content sideOffset={8}>
+ *     <Menu.Arrow />
+ *     <Menu.Item icon={<DownloadIcon />} onClick={download}>
+ *       Download
+ *     </Menu.Item>
+ *   </Menu.Content>
  * </Menu.Root>
  */
 export const Menu: MenuParts = {
-	Root: BaseMenu.Root,
+	Root,
 	Trigger,
 	Portal: BaseMenu.Portal,
 	Positioner,
 	Popup,
+	Content,
 	Arrow,
 	Item,
 	LinkItem,

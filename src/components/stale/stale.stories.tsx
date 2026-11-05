@@ -10,7 +10,7 @@ import {
 import { Button } from "../button/button.tsx";
 import { Stale, type StaleRootProps } from "./stale.tsx";
 
-const CONTENT = "This week's declarations";
+const CONTENT = "This week's invoices";
 const SLOW_MESSAGE = "This is taking longer than usual.";
 const TRY_AGAIN = "Try again";
 const FINISH_REFRESH = "Finish refresh";

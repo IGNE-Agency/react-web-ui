@@ -1,4 +1,6 @@
-/** The copy a combobox shows only when it holds several values. */
+import type { ReactNode } from "react";
+
+/** The copy and the remove icon a combobox shows only when it holds several values. */
 export type ComboboxMultipleLabels = Readonly<{
 	/** Names the group of tags, such as "Selected statuses". */
 	selectedLabel: string;
@@ -6,6 +8,8 @@ export type ComboboxMultipleLabels = Readonly<{
 	removeLabel: string;
 	/** The remove control's tooltip for a value, such as "Remove Jan Jansen". */
 	removeHint: (itemLabel: string) => string;
+	/** The remove control's icon, such as a cross. */
+	removeIcon: ReactNode;
 }>;
 
 /**

@@ -1,4 +1,7 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -60,6 +63,8 @@ const meta = {
 		label: LABEL,
 		optionalLabel: OPTIONAL_LABEL,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
+		icon: <Icon svg={SearchIcon} label="" />,
 		value: "",
 		onValueChange: fn(),
 	},

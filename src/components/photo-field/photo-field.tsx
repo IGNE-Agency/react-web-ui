@@ -2,26 +2,44 @@ import type { ReactNode } from "react";
 import {
 	Field,
 	type FieldProps,
-	useFieldIds,
 	useFieldState,
 } from "../field/index.ts";
 import {
 	PhotoInput,
 	type PhotoInputPreviewProps,
-	type PhotoInputProps,
+	type PhotoInputRootProps,
 } from "./photo-input.tsx";
 
-export type PhotoFieldProps = Omit<
-	PhotoInputProps,
-	| keyof PhotoInputPreviewProps
-	| "labelledBy"
-	| "describedBy"
-	| "invalid"
-	| "pending"
+export type PhotoFieldProps = Pick<
+	PhotoInputRootProps,
+	| "value"
+	| "onValueChange"
+	| "accept"
+	| "name"
+	| "readOnly"
+	| "onBlur"
 > &
 	PhotoInputPreviewProps &
 	FieldProps &
 	Readonly<{
+		/** The picked photo's alternative text, such as "Preview". */
+		previewLabel: string;
+
+		/** What the control announces while a photo is set, such as "Photo set". */
+		photoSetLabel: string;
+
+		/** What the control announces while no photo is set, such as "No photo". */
+		noPhotoLabel: string;
+
+		/** Accessible name of the button that removes a picked photo, such as "Remove photo". */
+		removeLabel: string;
+
+		/** The remove button's icon, such as a cross. */
+		removeIcon: ReactNode;
+
+		/** The badge on the circle's rim, such as a camera icon. */
+		icon?: ReactNode;
+
 		/** Applied to the field, where a caller lays it out itself. */
 		className?: string;
 	}>;
@@ -41,10 +59,12 @@ export type PhotoFieldProps = Omit<
  * 	hasStoredImage={user.photo !== null}
  * 	defaultPreview={<Avatar name={user.name} />}
  * 	accept={["image/png", "image/jpeg"]}
+ * 	icon={<PhotoCameraIcon />}
  * 	previewLabel="Preview"
  * 	photoSetLabel="Photo set"
  * 	noPhotoLabel="No photo"
  * 	removeLabel="Remove photo"
+ * 	removeIcon={<CloseIcon />}
  * />
  */
 export const PhotoField = ({
@@ -58,9 +78,17 @@ export const PhotoField = ({
 	pending,
 	readOnly,
 	className,
+	defaultPreview,
+	hasStoredImage,
+	previewLabel,
+	photoSetLabel,
+	noPhotoLabel,
+	removeLabel,
+	removeIcon,
+	icon,
 	...controlProps
 }: PhotoFieldProps): ReactNode => {
-	const ids = useFieldIds();
+	const ids = Field.useIds();
 	const { labelId, descriptionId, errorId } = ids;
 	const field = useFieldState({
 		errors,
@@ -86,8 +114,9 @@ export const PhotoField = ({
 				render={<span />}>
 				{label}
 			</Field.Label>
-			<PhotoInput
+			<PhotoInput.Root
 				{...controlProps}
+				hasStoredImage={hasStoredImage}
 				labelledBy={labelId}
 				describedBy={ids.describedBy(
 					description !== undefined,
@@ -95,8 +124,22 @@ export const PhotoField = ({
 				)}
 				readOnly={readOnly}
 				invalid={invalid}
-				pending={field.state.pending}
-			/>
+				pending={field.state.pending}>
+				<PhotoInput.Well>
+					<PhotoInput.Face previewLabel={previewLabel}>
+						{defaultPreview}
+					</PhotoInput.Face>
+					<PhotoInput.Badge>{icon}</PhotoInput.Badge>
+				</PhotoInput.Well>
+				<PhotoInput.Remove
+					label={removeLabel}
+					icon={removeIcon}
+				/>
+				<PhotoInput.ValueText
+					photoSetLabel={photoSetLabel}
+					noPhotoLabel={noPhotoLabel}
+				/>
+			</PhotoInput.Root>
 			<Field.Description id={descriptionId}>
 				{description}
 			</Field.Description>

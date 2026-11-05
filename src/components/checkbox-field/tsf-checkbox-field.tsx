@@ -5,16 +5,18 @@ import {
 } from "../../lib/forms/use-connected-field.ts";
 import {
 	CheckboxField,
-	type CheckboxFieldProps,
+	type CheckboxFieldBaseProps,
+	type CheckboxFieldIndeterminateProps,
 } from "./checkbox-field.tsx";
 
 export type TSFCheckboxFieldProps = Omit<
-	CheckboxFieldProps,
+	CheckboxFieldBaseProps,
 	| keyof ConnectedFieldProps
 	| "checked"
 	| "defaultChecked"
 	| "onCheckedChange"
->;
+> &
+	CheckboxFieldIndeterminateProps;
 
 /**
  * `CheckboxField` bound to the TanStack Form field it renders in, whose value

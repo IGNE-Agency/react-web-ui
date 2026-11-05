@@ -48,24 +48,13 @@
 		@include checkbox.indicator;
 		@include checkbox.indicator-hidden;
 
+		font-size: calc(
+			var(--checkbox-size, #{checkbox.$size}) * 0.7
+		);
+
 		&[data-checked],
 		&[data-indeterminate] {
 			@include checkbox.indicator-shown;
-		}
-	}
-
-	.glyph path {
-		d: path(
-			"M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z"
-		);
-
-		@media not (prefers-reduced-motion) {
-			transition: d var(--sys-motion-short)
-				var(--sys-motion-emphasized);
-		}
-
-		.indicator[data-indeterminate] & {
-			d: path("M12 11L20 11L20 13L12 13L4 13L4 11L12 11Z");
 		}
 	}
 }

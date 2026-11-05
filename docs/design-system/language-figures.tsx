@@ -2,26 +2,32 @@ import styles from "./language-figures.module.scss";
 
 const NAMES = [
 	[
-		"zorgvrager",
-		"patiënt",
-		"klant",
-		"verzekerde",
-		"deelnemer",
+		"opdrachtgever",
+		"afnemer",
+		"betaler",
+		"relatie",
+		"koper",
 	],
-	["aanvrager", "patiënt", "klant", "cliënt", "zorgvrager"],
 	[
-		"deelnemer",
-		"verzekerde",
-		"zorgvrager",
-		"patiënt",
+		"afnemer",
+		"betaler",
+		"relatie",
 		"klant",
+		"opdrachtgever",
+	],
+	[
+		"koper",
+		"relatie",
+		"opdrachtgever",
+		"betaler",
+		"afnemer",
 	],
 ] as const;
 
-const CHOSEN = "cliënt";
+const CHOSEN = "klant";
 
 /**
- * Rows of the words that could name the person in care, and among them the
+ * Rows of the words that could name the party that pays, and among them the
  * one the product uses.
  *
  * @example

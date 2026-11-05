@@ -130,11 +130,11 @@ export type DataView<
  *
  * @example
  * const { filters, table, query, selection } = useDataView({
- * 	tableId: "declarations",
+ * 	tableId: "invoices",
  * 	initialFilters: {},
  * 	columns,
  * 	queryOptions: ({ filters, search, pagination, sorting }) =>
- * 		declarationsQuery({ filters, search, pagination, sorting }),
+ * 		invoicesQuery({ filters, search, pagination, sorting }),
  * 	getRowId: row => row.id,
  * 	getRows: data => data.rows,
  * 	getRowCount: data => data.totalCount,

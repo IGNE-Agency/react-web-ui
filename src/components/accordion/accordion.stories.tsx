@@ -1,3 +1,4 @@
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	expect,
@@ -5,19 +6,20 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
+import { Icon } from "../icon/icon.tsx";
 import { Accordion } from "./accordion.tsx";
 
 const SECTIONS = [
 	{
 		value: "fees",
 		title: "Fees",
-		content: "A declaration costs nothing to send.",
+		content: "An invoice costs nothing to send.",
 	},
 	{
 		value: "deadlines",
 		title: "Deadlines",
 		content:
-			"Send a declaration within 30 days of the visit.",
+			"Send an invoice within 30 days of finishing the work.",
 	},
 	{
 		value: "payment",
@@ -85,6 +87,9 @@ const meta = {
 				<Accordion.Header>
 					<Accordion.Trigger>
 						{section.title}
+						<Accordion.Indicator>
+							<Icon svg={ExpandMoreIcon} label="" />
+						</Accordion.Indicator>
 					</Accordion.Trigger>
 				</Accordion.Header>
 				<Accordion.Panel>{section.content}</Accordion.Panel>

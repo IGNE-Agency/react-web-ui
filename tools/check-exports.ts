@@ -9,7 +9,7 @@
  * - the root barrel imports an optional peer, directly or through its modules,
  *   or re-exports a module that has no subpath of its own
  * - the package would ship anything under `docs/` or `.storybook/`, a story,
- *   or an MDX page
+ *   an MDX page, an SVG or a `vendor/` folder
  * - an emitted stylesheet does not open with the cascade layer order, or has
  *   a rule outside the kit's layers
  * - a packed file or source map points at a file the package leaves out
@@ -244,7 +244,9 @@ const packedFiles = packed.flatMap(({ files }) =>
 const unshippable = [
 	...(dryRun.ok ? [] : [`npm pack: ${dryRun.output}`]),
 	...packedFiles.flatMap(path =>
-		/^(docs|\.storybook)\/|\.stories\.|\.mdx$/.test(path)
+		/^(docs|\.storybook)\/|\.stories\.|\.mdx$|\.svg(\.|$)|(^|\/)vendor\//.test(
+			path,
+		)
 			? [`the package would ship ${path}`]
 			: [],
 	),
@@ -402,11 +404,7 @@ const fixtureEntries: readonly Readonly<{
 }>[] = [
 	{
 		entry: "button",
-		sheets: [
-			"button/button",
-			"icon/icon",
-			"tooltip/tooltip",
-		],
+		sheets: ["button/button", "tooltip/tooltip"],
 	},
 	{
 		entry: "spinner",
@@ -414,11 +412,7 @@ const fixtureEntries: readonly Readonly<{
 	},
 	{
 		entry: "root",
-		sheets: [
-			"button/button",
-			"icon/icon",
-			"tooltip/tooltip",
-		],
+		sheets: ["button/button", "tooltip/tooltip"],
 	},
 	{
 		entry: "forms",
@@ -426,7 +420,6 @@ const fixtureEntries: readonly Readonly<{
 			"button/button",
 			"error-text/error-text",
 			"field/field",
-			"icon/icon",
 			"spinner/spinner",
 			"text-field/text-field",
 			"tooltip/tooltip",
@@ -863,7 +856,7 @@ const sections: readonly Readonly<{
 			...danglingMaps,
 		],
 		passed:
-			"no docs, Storybook, stories or MDX, every stylesheet opens with the layer order and keeps its rules in the kit's layers, and no source map points at a file the package leaves out.",
+			"no docs, Storybook, stories, MDX, SVGs or vendor folder, every stylesheet opens with the layer order and keeps its rules in the kit's layers, and no source map points at a file the package leaves out.",
 	},
 	{
 		title: "consumer fixture",

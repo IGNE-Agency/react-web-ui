@@ -1,4 +1,10 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -28,7 +34,7 @@ const RANGE = {
 	start: MONTH_START.toString(),
 	end: MONTH_END.toString(),
 };
-const LABEL = "Declaration period";
+const LABEL = "Invoice period";
 const OPEN_CALENDAR = "Open calendar";
 const PREVIOUS_MONTH = "Previous month";
 const NEXT_MONTH = "Next month";
@@ -75,6 +81,11 @@ const meta = {
 		label: LABEL,
 		optionalLabel: "optional",
 		openCalendarLabel: OPEN_CALENDAR,
+		openCalendarIcon: <Icon svg={DateRangeIcon} label="" />,
+		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
+		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 		previousMonthLabel: PREVIOUS_MONTH,
 		nextMonthLabel: NEXT_MONTH,
 		monthLabel: "Month",
@@ -144,7 +155,7 @@ export const Optional: Story = {
 export const Invalid: Story = {
 	args: {
 		value: RANGE,
-		errors: ["Enter a valid declaration period."],
+		errors: ["Enter a valid invoice period."],
 	},
 };
 
@@ -155,7 +166,7 @@ export const Pending: Story = {
 export const WithDescription: Story = {
 	args: {
 		description:
-			"From the first through the last treatment day.",
+			"From the first through the last day of work.",
 	},
 };
 

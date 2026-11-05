@@ -21,7 +21,7 @@ const meta = {
 		designSystem: [
 			{
 				page: "Foundation/Iconography",
-				section: "Icons are the outlined set",
+				section: "An app's icons come from one set",
 			},
 			{
 				page: "Principles/Accessibility",

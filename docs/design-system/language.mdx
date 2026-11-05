@@ -12,6 +12,7 @@ import {
 	WrapDrawing,
 } from "./language-figures";
 import styles from "./language.module.scss";
+import { Icon } from "../../src/components/icon/index.ts";
 
 <Meta title="Design system/Principles/Language" />
 
@@ -27,7 +28,7 @@ Words are the one part of an interface that everybody reads. A colour or a corne
 
 Nobody reads an interface the way they read a letter. They glance at a button, skim a heading, catch the first words of a message and move on. Text written for that kind of reading keeps its voice down: no capitals for emphasis, no exclamation marks, nothing clever. It sounds like a colleague who knows the work, not like an advertisement.
 
-Capitals are the first thing to go. In sentence case only the first word and names take a capital, so a heading reads as calmly as a sentence and the eye goes straight to the words that matter. Title case gives every word a capital and makes them all compete, and Dutch doesn't use it at all. Acronyms keep their capitals: AGB, BSN, NZA.
+Capitals are the first thing to go. In sentence case only the first word and names take a capital, so a heading reads as calmly as a sentence and the eye goes straight to the words that matter. Title case gives every word a capital and makes them all compete, and Dutch doesn't use it at all. Acronyms keep their capitals: BTW, IBAN, PDF.
 
 <DoDont>
 	<Example
@@ -88,7 +89,9 @@ A button is a promise. Its label tells the reader what will happen when they pre
 		kind="do"
 		caption="The label is the action."
 		visual={
-			<Button variant="primary" icon={DownloadIcon}>
+			<Button
+				variant="primary"
+				icon={<Icon svg={DownloadIcon} label="" />}>
 				Download selection
 			</Button>
 		}
@@ -159,7 +162,7 @@ So a screen is designed for its longest language, with room for words to wrap on
 	<WrapDrawing />
 </Illustration>
 
-Word order moves too. English puts the verb at the start of a label and Dutch at the end; other languages put the name, the number or the date somewhere else again. A sentence built by gluing pieces together, "You have" plus a number plus "declarations", only works in the language it was glued in. A translator needs the whole sentence, with a slot for the value, to put that value where their own language wants it. Plurals are the same: English has two forms, some languages have one, and others have four or more, so the choice between them belongs to the translation, not to the code.
+Word order moves too. English puts the verb at the start of a label and Dutch at the end; other languages put the name, the number or the date somewhere else again. A sentence built by gluing pieces together, "You have" plus a number plus "invoices", only works in the language it was glued in. A translator needs the whole sentence, with a slot for the value, to put that value where their own language wants it. Plurals are the same: English has two forms, some languages have one, and others have four or more, so the choice between them belongs to the translation, not to the code.
 
 ## Other places, other habits
 
@@ -173,28 +176,28 @@ Some languages are written in another direction altogether. Arabic and Hebrew ru
 
 ## Dutch first
 
-This product is written in Dutch and speaks American English beside it, and every word it shows exists in both. Dutch is the source and the longer of the two: "Declaratieoverzicht" stands where English says "Declarations", so a screen is drawn to hold the Dutch. Both are written from left to right in Latin letters, so nothing here is mirrored, but the type still leaves room for the accents in a word like "cliënt".
+This product is written in Dutch and speaks American English beside it, and every word it shows exists in both. Dutch is the source and the longer of the two: "Factuuroverzicht" stands where English says "Invoices", so a screen is drawn to hold the Dutch. Both are written from left to right in Latin letters, so nothing here is mirrored, but the type still leaves room for the accents in a word like "financiën".
 
-Within each language, one thing has one name. Readers learn the product's words the way they learn its screens, and a second name for the same thing makes them wonder whether it is a second thing. A client is never also a patient, and a declaration is never also a claim. The words are the ones practitioners use in their own work.
+Within each language, one thing has one name. Readers learn the product's words the way they learn its screens, and a second name for the same thing makes them wonder whether it is a second thing. A client is never also a customer, and an invoice is never also a bill. The words are the ones consultants use in their own work.
 
-<Illustration caption="Of all the words that could name the person in care, the product uses one, and uses it everywhere.">
+<Illustration caption="Of all the words that could name the party that pays, the product uses one, and uses it everywhere.">
 	<NameDrawing />
 </Illustration>
 
-| English      | Dutch       |
-| ------------ | ----------- |
-| declaration  | declaratie  |
-| client       | cliënt      |
-| practitioner | behandelaar |
-| debtor       | debiteur    |
-| comment      | opmerking   |
-| NZA rate     | NZA-tarief  |
+| English        | Dutch       |
+| -------------- | ----------- |
+| invoice        | factuur     |
+| client         | klant       |
+| consultant     | adviseur    |
+| purchase order | inkooporder |
+| comment        | opmerking   |
+| VAT number     | BTW-nummer  |
 
-Dutch joins words into compounds, and after an acronym it joins them with a hyphen: AGB-code, BIG-nummer, NZA-tarief. English keeps them apart: AGB code, NZA rate.
+Dutch joins words into compounds, and after an acronym it joins them with a hyphen: BTW-nummer, KvK-nummer, PDF-factuur. English keeps them apart: VAT number, PDF invoice.
 
 ## Counting, dating and money
 
-Numbers are read more carefully than anything else on a screen, because they are what people act on. A count is written in digits, "8 digits", "2 weeks", so it can be taken in at a glance. Dates, times and amounts are written the way each language writes them, but always in Dutch time: a declaration made late in the evening in Amsterdam is dated that day, wherever in the world it is read. In a table [the euro sign moves into the column header](?path=/docs/components-data-table--docs#the-unit-is-named-once-in-the-header), "Amount (€)", and the cells hold the bare amount.
+Numbers are read more carefully than anything else on a screen, because they are what people act on. A count is written in digits, "8 digits", "2 weeks", so it can be taken in at a glance. Dates, times and amounts are written the way each language writes them, but always in Dutch time: an invoice made late in the evening in Amsterdam is dated that day, wherever in the world it is read. In a table [the euro sign moves into the column header](?path=/docs/components-data-table--docs#the-unit-is-named-once-in-the-header), "Amount (€)", and the cells hold the bare amount.
 
 | What | Dutch | English |
 | --- | --- | --- |
@@ -213,8 +216,8 @@ A format hint, such as "8 digits", belongs in a field's description: [a placehol
 ## Known issues
 
 - Dutch copy addresses the user as "u" on pages and errors, and as "je" in the session and outbox messages. Which one the product uses is undecided.
-- English uses both "Try again" and "Retry", "Login" and "Log in", and "rate" and "tariff".
-- The declarations page is "Declarations" in English and "Declaratieoverzicht" in Dutch.
+- English uses both "Try again" and "Retry", "Login" and "Log in", and "rate" and "fee".
+- The invoices page is "Invoices" in English and "Factuuroverzicht" in Dutch.
 - Two places still show text that doesn't come from the translation files: the server's messages on the sign-in forms, and a Dutch fallback for an unknown error.
 
 ## Technical rules
@@ -280,18 +283,18 @@ The label is a verb, and the thing it acts on where that helps. In Dutch the ver
 <Example kind="do" caption="The label is the action, in each language's own word order.">
 
 ```json
-"declarations_export_selected": "Download selection"
+"invoices_export_selected": "Download selection"
 ```
 
 ```json
-"declarations_export_selected": "Selectie downloaden"
+"invoices_export_selected": "Selectie downloaden"
 ```
 
 </Example>
 <Example kind="dont" caption="OK confirms something, but not what.">
 
 ```json
-"declarations_export_selected": "OK"
+"invoices_export_selected": "OK"
 ```
 
 </Example>
@@ -422,12 +425,12 @@ Each language lists its own plural forms, and the message picks one by the count
 <Example kind="do" caption="The forms live in the translation.">
 
 ```json
-"declarations_count": [{
+"invoices_count": [{
 	"declarations": ["input count", "local countPlural = count: plural"],
 	"selectors": ["countPlural"],
 	"match": {
-		"countPlural=one": "{count} declaration",
-		"countPlural=other": "{count} declarations"
+		"countPlural=one": "{count} invoice",
+		"countPlural=other": "{count} invoices"
 	}
 }]
 ```
@@ -436,7 +439,7 @@ Each language lists its own plural forms, and the message picks one by the count
 <Example kind="dont" caption="English's two forms, written into the code.">
 
 ```tsx
-count === 1 ? m.declaration_one() : m.declaration_many();
+count === 1 ? m.invoice_one() : m.invoice_many();
 ```
 
 </Example>
@@ -475,14 +478,14 @@ Use the words in the glossary, and add to it before naming something new. Explai
 <Example kind="do" caption="The glossary's word.">
 
 ```json
-"declarations_client_loading": "Loading client details"
+"invoices_client_loading": "Loading client details"
 ```
 
 </Example>
 <Example kind="dont" caption="A second name for the same person.">
 
 ```json
-"declarations_client_loading": "Loading patient details"
+"invoices_client_loading": "Loading customer details"
 ```
 
 </Example>
@@ -498,14 +501,14 @@ English keeps the two words apart. Explained in [Dutch first](#dutch-first).
 <Example kind="do" caption="A hyphen after the acronym.">
 
 ```json
-"agb_field_label": "AGB-code"
+"kvk_field_label": "KvK-nummer"
 ```
 
 </Example>
 <Example kind="dont" caption="The compound written apart, the English way.">
 
 ```json
-"agb_field_label": "AGB code"
+"kvk_field_label": "KvK nummer"
 ```
 
 </Example>
@@ -521,14 +524,14 @@ Including the small ones. Explained in [Counting, dating and money](#counting-da
 <Example kind="do" caption="Digits, taken in at a glance.">
 
 ```json
-"agb_field_invalid": "An AGB code has 8 digits."
+"kvk_field_invalid": "A KvK number has 8 digits."
 ```
 
 </Example>
 <Example kind="dont" caption="The number spelled out.">
 
 ```json
-"agb_field_invalid": "An AGB code has eight digits."
+"kvk_field_invalid": "A KvK number has eight digits."
 ```
 
 </Example>
@@ -545,14 +548,14 @@ The formatters write each language's own format, always in the Dutch time zone, 
 
 ```tsx
 const { format } = useDateFormatter();
-format(declaration.date);
+format(invoice.date);
 ```
 
 </Example>
 <Example kind="dont" caption="The device's own zone and format.">
 
 ```tsx
-new Date(declaration.date).toLocaleDateString();
+new Date(invoice.date).toLocaleDateString();
 ```
 
 </Example>

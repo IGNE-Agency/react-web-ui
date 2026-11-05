@@ -10,7 +10,7 @@ import * as CollapsibleStories from "./collapsible.stories.tsx";
 
 ### The trigger names what folds away, and the chevron says which way
 
-The trigger's label is what the panel holds, such as "Advanced settings", never "Show more", so it still makes sense read out on its own. Its chevron points down while the panel is shut and turns over while it is open; the state reaches a screen reader as the trigger's expanded state.
+The trigger's label is what the panel holds, such as "Advanced settings", never "Show more", so it still makes sense read out on its own. Its chevron, the app's own glyph in `Collapsible.Indicator`, points down while the panel is shut, and the indicator turns it over while it is open; the state reaches a screen reader as the trigger's expanded state.
 
 ### A panel folds along its height, and only for those who want motion
 

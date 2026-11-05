@@ -3,9 +3,16 @@ import {
 	SET_GLOBALS,
 } from "storybook/internal/core-events";
 import { addons } from "storybook/manager-api";
-import { themes } from "storybook/theming";
+import { create } from "storybook/theming";
 import { labelOf } from "./label.ts";
 import { themeFromQuery, themeOf } from "./theme-global.ts";
+
+const brandTitle = "@igne-agency/react-web-ui";
+
+const themes = {
+	light: create({ base: "light", brandTitle }),
+	dark: create({ base: "dark", brandTitle }),
+};
 
 addons.setConfig({
 	theme: themes[themeFromQuery(location.search)],

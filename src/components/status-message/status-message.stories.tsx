@@ -14,14 +14,15 @@ import {
 	StatusMessage,
 	type StatusMessageRootProps,
 } from "./status-message.tsx";
+import { Icon } from "../icon/index.ts";
 
-const EMPTY_TITLE = "No declarations yet";
-const EMPTY_BODY = "Declarations you send show up here.";
-const ERROR_TITLE = "The declarations could not be loaded";
+const EMPTY_TITLE = "No invoices yet";
+const EMPTY_BODY = "Invoices you send show up here.";
+const ERROR_TITLE = "The invoices could not be loaded";
 const ERROR_BODY =
 	"Check your connection, then try again in a moment.";
 const RETRY = "Try again";
-const WELCOME_TITLE = "Welcome to your declarations";
+const WELCOME_TITLE = "Welcome to your invoices";
 const SHOW = "Show the message";
 
 const retried = fn();
@@ -48,7 +49,9 @@ const Mark = (): ReactNode => (
 const CONTENT = {
 	empty: (
 		<>
-			<StatusMessage.Icon svg={InboxIcon} />
+			<StatusMessage.Icon>
+				<Icon svg={InboxIcon} label="" />
+			</StatusMessage.Icon>
 			<StatusMessage.Title>
 				{EMPTY_TITLE}
 			</StatusMessage.Title>
@@ -59,7 +62,9 @@ const CONTENT = {
 	),
 	error: (
 		<>
-			<StatusMessage.Icon svg={ErrorIcon} tone="error" />
+			<StatusMessage.Icon tone="error">
+				<Icon svg={ErrorIcon} label="" />
+			</StatusMessage.Icon>
 			<StatusMessage.Title>
 				{ERROR_TITLE}
 			</StatusMessage.Title>
@@ -69,7 +74,7 @@ const CONTENT = {
 			<StatusMessage.Action>
 				<Button
 					variant="primary"
-					icon={RestartIcon}
+					icon={<Icon svg={RestartIcon} label="" />}
 					onClick={retried}>
 					{RETRY}
 				</Button>

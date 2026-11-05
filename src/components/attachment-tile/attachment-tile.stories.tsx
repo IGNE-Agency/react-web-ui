@@ -1,3 +1,5 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	TagGroup as AriaTagGroup,
@@ -13,11 +15,13 @@ import {
 	pdfFile,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import {
 	AttachmentTile,
 	type AttachmentTileProps,
 	SentAttachmentTile,
 } from "./attachment-tile.tsx";
+import { Icon } from "../icon/index.ts";
 
 const TILE_ID = "invoice";
 const REMOVE = "Remove";
@@ -25,7 +29,12 @@ const FILES = "Attachments";
 
 const INVOICE = pdfFile("invoice-july.pdf");
 
-const SCAN = pngFile("referral-letter.png");
+const SCAN = pngFile("receipt.png");
+
+const ICONS = {
+	none: undefined,
+	document: <Icon svg={DescriptionIcon} label="" />,
+};
 
 const removed =
 	fn<(keys: Set<unknown>) => void>().mockName("removed");
@@ -62,8 +71,18 @@ const meta = {
 		file: INVOICE,
 		hint: "invoice-july.pdf (8 B)",
 		removeLabel: REMOVE,
+		removeIcon: <Icon svg={CloseIcon} label="" />,
+		icon: mappedArg(ICONS, "document"),
 		invalid: false,
 		disabled: false,
+	},
+	argTypes: {
+		icon: {
+			options: Object.keys(ICONS),
+			mapping: ICONS,
+			control: "radio",
+		},
+		removeIcon: { control: false },
 	},
 } satisfies Meta<typeof AttachmentTile>;
 
@@ -74,7 +93,21 @@ type Story = StoryObj<typeof meta>;
 export const Document: Story = {};
 
 export const Image: Story = {
-	args: { file: SCAN, hint: "referral-letter.png (70 B)" },
+	args: { file: SCAN, hint: "receipt.png (70 B)" },
+};
+
+export const ExtensionOnly: Story = {
+	args: { icon: mappedArg(ICONS, "none") },
+	play: async ({ canvas }) => {
+		const tile = canvas.getByRole("row", {
+			name: INVOICE.name,
+		});
+
+		await expect(tile).toHaveTextContent("pdf");
+		await expect(tile.querySelectorAll("svg")).toHaveLength(
+			1,
+		);
+	},
 };
 
 export const Invalid: Story = {
@@ -86,7 +119,7 @@ export const Disabled: Story = {
 };
 
 export const Fixed: Story = {
-	args: { removeLabel: undefined },
+	args: { removeLabel: undefined, removeIcon: undefined },
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.queryByRole("button", { name: REMOVE }),
@@ -99,6 +132,7 @@ const SentDownload = () => (
 		name={INVOICE.name}
 		hint="invoice-july.pdf (8 B)"
 		src={undefined}
+		icon={<Icon svg={DescriptionIcon} label="" />}
 		href="#invoice-july.pdf"
 		label="Download invoice-july.pdf"
 	/>
@@ -118,7 +152,7 @@ export const Sent: Story = {
 const SentWaiting = () => (
 	<SentAttachmentTile
 		name={SCAN.name}
-		hint="referral-letter.png (70 B)"
+		hint="receipt.png (70 B)"
 		src={undefined}
 		pending
 	/>

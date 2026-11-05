@@ -20,11 +20,31 @@ import styles from "./popover.stories.module.scss";
 const SHOW_DETAILS = "Show client details";
 const LOADING = "Loading client details";
 const CLIENT_NAME = "Jan de Vries";
-const DIAGNOSIS = "Alcohol use disorder";
+const INDUSTRY = "Hospitality and leisure";
 
 type PopoverExampleProps = ComponentProps<
 	typeof Popover.Root
 >;
+
+const ROWS = [
+	{
+		label: "KvK number:",
+		value: "12345678",
+		numeric: true,
+	},
+	{
+		label: "Debtor number:",
+		value: "123456789",
+		numeric: true,
+	},
+	{ label: "Purchase order required:", value: "Yes" },
+	{ label: "Rate card:", value: "RC05" },
+	{ label: "Industry:", value: INDUSTRY },
+	{
+		label: "Engagement:",
+		value: "Retainer for design and strategy work",
+	},
+];
 
 const intent = fn().mockName("intent");
 
@@ -43,36 +63,25 @@ const PopoverParts = ({
 				render={<Popover.Trigger onIntent={onIntent} />}>
 				{SHOW_DETAILS}
 			</Button>
-			<Popover.Portal container={container}>
-				<Popover.Positioner>
-					<Popover.Popup
-						loading={loading}
-						loadingLabel={LOADING}>
-						<Popover.Arrow />
-						<Popover.Title>{CLIENT_NAME}</Popover.Title>
-						<Popover.Rows>
-							<Popover.Row numeric label="Policy:">
-								12345678
-							</Popover.Row>
-							<Popover.Row numeric label="BSN:">
-								123456789
-							</Popover.Row>
-							<Popover.Row label="Referral letter:">
-								Yes
-							</Popover.Row>
-							<Popover.Row label="Care request type:">
-								ZT05
-							</Popover.Row>
-							<Popover.Row label="DSM diagnosis:">
-								{DIAGNOSIS}
-							</Popover.Row>
-							<Popover.Row label="Mental healthcare profile:">
-								Basic short-term mental healthcare
-							</Popover.Row>
-						</Popover.Rows>
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
+			<Popover.Content
+				container={container}
+				loading={loading}
+				loadingLabel={LOADING}>
+				<Popover.Arrow />
+				<Popover.Title>{CLIENT_NAME}</Popover.Title>
+				<Popover.Rows>
+					{ROWS.map(row => (
+						<Popover.Row key={row.label}>
+							<Popover.RowLabel>
+								{row.label}
+							</Popover.RowLabel>
+							<Popover.RowValue numeric={row.numeric}>
+								{row.value}
+							</Popover.RowValue>
+						</Popover.Row>
+					))}
+				</Popover.Rows>
+			</Popover.Content>
 		</>
 	);
 };
@@ -158,7 +167,7 @@ type Story = StoryObj<typeof meta>;
 export const Open: Story = {
 	play: async () => {
 		await expect(await popover()).toHaveTextContent(
-			DIAGNOSIS,
+			INDUSTRY,
 		);
 	},
 };

@@ -54,7 +54,7 @@ const check = <T>(
  *
  * @example
  * const filters = tableStoredValue(
- * 	"declarations",
+ * 	"invoices",
  * 	"filters",
  * 	{ schema: z.object({ status: z.array(z.string()) }), fallback: { status: [] } },
  * 	localStorageAdapter,
@@ -112,7 +112,7 @@ const pageSizeSchema = (
  * none is stored.
  *
  * @example
- * storedPageSize("nza-rates", [10, 25, 50, 100], 10, localStorageAdapter).read(); // 50, or 10
+ * storedPageSize("hourly-rates", [10, 25, 50, 100], 10, localStorageAdapter).read(); // 50, or 10
  */
 export const storedPageSize = (
 	tableId: string,

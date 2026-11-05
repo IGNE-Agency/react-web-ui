@@ -1,6 +1,9 @@
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
+	type ComponentProps,
 	createContext,
+	type ReactElement,
 	type ReactNode,
 	useRef,
 } from "react";
@@ -25,57 +28,60 @@ const usePhase = (): BusyPhase =>
 const isOverlaid = (phase: BusyPhase): boolean =>
 	phase === "slow" || phase === "stuck";
 
-export type StaleRootProps = Readonly<{
-	/** Whether a background refresh is in flight. */
-	busy: boolean;
-	/** Ms of `busy` before anything is shown at all. @default 150 */
-	busyAfter?: number;
-	/**
-	 * Ms the busy treatment stays up once shown, even if the refresh finishes
-	 * sooner. @default 200
-	 */
-	busyMinDuration?: number;
-	/** Ms of `busy` before the overlay surfaces. @default 4000 */
-	slowAfter?: number;
-	/** Ms of `busy` before the retry appears. @default 8000 */
-	stuckAfter?: number;
-	children?: ReactNode;
-	className?: string;
-}>;
+export type StaleRootProps =
+	useRender.ComponentProps<"div"> &
+		Readonly<{
+			/** Whether a background refresh is in flight. */
+			busy: boolean;
+			/** Ms of `busy` before anything is shown at all. @default 150 */
+			busyAfter?: number;
+			/**
+			 * Ms the busy treatment stays up once shown, even if the refresh finishes
+			 * sooner. @default 200
+			 */
+			busyMinDuration?: number;
+			/** Ms of `busy` before the overlay surfaces. @default 4000 */
+			slowAfter?: number;
+			/** Ms of `busy` before the retry appears. @default 8000 */
+			stuckAfter?: number;
+		}>;
 
-export type StaleContentProps = Readonly<{
-	children?: ReactNode;
-	className?: string;
-}>;
+export type StaleContentProps =
+	useRender.ComponentProps<"div">;
 
-export type StaleOverlayProps = Readonly<{
-	children?: ReactNode;
-	className?: string;
-}>;
+export type StaleOverlayProps =
+	useRender.ComponentProps<"div">;
 
-export type StaleMessageProps = Readonly<{
-	/** The moving indicator above the copy, such as the app's animated logo. @default <Spinner size={2} /> */
-	illustration?: ReactNode;
-	/** What the overlay says, such as "This is taking longer than usual." */
-	children: ReactNode;
-	className?: string;
-}>;
+export type StaleMessageProps =
+	useRender.ComponentProps<"p"> &
+		Readonly<{
+			/** The moving indicator above the copy, such as the app's animated logo. @default <Spinner size={2} /> */
+			illustration?: ReactNode;
+			/** What the overlay says, such as "This is taking longer than usual." */
+			children: ReactNode;
+		}>;
 
-export type StaleRetryProps = Readonly<{
-	onRetry: () => void;
-	/** The retry's label, such as "Try again". */
-	children: ReactNode;
-	className?: string;
-}>;
+export type StaleRetryProps = Omit<
+	ComponentProps<"button">,
+	"ref" | "children" | "onClick"
+> &
+	Readonly<{
+		onRetry: () => void;
+		/** The retry's label, such as "Try again". */
+		children: ReactNode;
+	}>;
 
+/** The region that refreshes, holding how long the refresh has run in its `data-phase`. */
 const Root = ({
 	busy,
 	busyAfter,
 	busyMinDuration,
 	slowAfter,
 	stuckAfter,
-	children,
+	render,
 	className,
+	ref,
+	...props
 }: StaleRootProps): ReactNode => {
 	const phase = useBusyPhase({
 		busy,
@@ -84,77 +90,107 @@ const Root = ({
 		slowAfter,
 		stuckAfter,
 	});
+	const element = useRender({
+		defaultTagName: "div",
+		render,
+		ref,
+		props: {
+			...props,
+			"data-phase": phase,
+			className: clsx(style.root, className),
+		},
+	});
 
 	return (
-		<StaleContext value={phase}>
-			<div
-				className={clsx(style.root, className)}
-				data-phase={phase}>
-				{children}
-			</div>
-		</StaleContext>
+		<StaleContext value={phase}>{element}</StaleContext>
 	);
 };
 
+/** The content that stays on screen: dimmed and busy once the refresh is seen, inert once overlaid. */
 const Content = ({
-	children,
+	render,
 	className,
-}: StaleContentProps): ReactNode => {
+	ref,
+	...props
+}: StaleContentProps): ReactElement => {
 	const phase = usePhase();
 	const busy = phase !== "fresh";
-	return (
-		<div
-			className={clsx(style.content, className)}
-			data-busy={busy || undefined}
-			aria-busy={busy || undefined}
-			inert={isOverlaid(phase)}>
-			{children}
-		</div>
-	);
+	return useRender({
+		defaultTagName: "div",
+		render,
+		ref,
+		props: {
+			...props,
+			"data-busy": busy || undefined,
+			"aria-busy": busy || undefined,
+			inert: isOverlaid(phase),
+			className: clsx(style.content, className),
+		},
+	});
 };
 
+/** What covers the content once the refresh is slow, fading in and out. */
 const Overlay = ({
-	children,
+	render,
 	className,
-}: StaleOverlayProps): ReactNode => {
+	ref,
+	...props
+}: StaleOverlayProps): ReactElement | null => {
 	const phase = usePhase();
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const presence = usePresence(
 		isOverlaid(phase),
 		overlayRef,
 	);
-	if (!presence.mounted) {
-		return null;
-	}
-	return (
-		<div
-			ref={overlayRef}
-			className={clsx(style.overlay, className)}
-			{...presence.props}>
-			{children}
-		</div>
-	);
+	return useRender({
+		defaultTagName: "div",
+		render,
+		ref: ref === undefined ? overlayRef : [overlayRef, ref],
+		enabled: presence.mounted,
+		props: {
+			...props,
+			...presence.props,
+			className: clsx(style.overlay, className),
+		},
+	});
 };
 
+/** The overlay's status: a moving indicator over its copy. */
 const Message = ({
 	illustration,
-	children,
+	render,
 	className,
-}: StaleMessageProps): ReactNode => (
-	<p
-		className={clsx(style.message, className)}
-		role="status">
-		<span className={style.illustration} aria-hidden="true">
-			{illustration ?? <Spinner size={2} />}
-		</span>
-		{children}
-	</p>
-);
+	ref,
+	children,
+	...props
+}: StaleMessageProps): ReactElement =>
+	useRender({
+		defaultTagName: "p",
+		render,
+		ref,
+		props: {
+			role: "status",
+			...props,
+			className: clsx(style.message, className),
+			children: (
+				<>
+					<span
+						className={style.illustration}
+						aria-hidden="true">
+						{illustration ?? <Spinner size={2} />}
+					</span>
+					{children}
+				</>
+			),
+		},
+	});
 
+/** The way out once the refresh looks stuck: a button that appears only then. */
 const Retry = ({
 	onRetry,
 	children,
 	className,
+	...props
 }: StaleRetryProps): ReactNode => {
 	const phase = usePhase();
 	const retryRef = useRef<HTMLButtonElement>(null);
@@ -164,9 +200,10 @@ const Retry = ({
 	}
 	return (
 		<Button
-			ref={retryRef}
 			variant="tertiary"
 			size="sm"
+			{...props}
+			ref={retryRef}
 			onClick={onRetry}
 			className={clsx(style.retry, className)}
 			{...presence.props}>

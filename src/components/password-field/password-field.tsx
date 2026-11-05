@@ -1,13 +1,9 @@
-import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
-import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import { type ReactNode, useState } from "react";
 import type { ZxcvbnLanguages } from "../../lib/password-strength/password-strength.ts";
-import { Button } from "../button/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
 } from "../text-field/index.ts";
-import textInputStyle from "../text-field/text-field.module.scss";
 import {
 	PasswordStrength,
 	type PasswordScoreLabels,
@@ -48,6 +44,10 @@ export type PasswordFieldBaseProps = Omit<
 		showPasswordLabel: string;
 		/** The reveal button's accessible name while the password shows, such as "Hide password". */
 		hidePasswordLabel: string;
+		/** The reveal button's icon while the password is hidden. */
+		showPasswordIcon: ReactNode;
+		/** The reveal button's icon while the password shows. */
+		hidePasswordIcon: ReactNode;
 	}>;
 
 export type PasswordFieldProps = PasswordFieldBaseProps &
@@ -63,6 +63,8 @@ export type PasswordFieldProps = PasswordFieldBaseProps &
  * 	optionalLabel="optional"
  * 	showPasswordLabel="Show password"
  * 	hidePasswordLabel="Hide password"
+ * 	showPasswordIcon={<VisibilityIcon />}
+ * 	hidePasswordIcon={<VisibilityOffIcon />}
  * 	value={password}
  * 	onValueChange={setPassword}
  * 	autoComplete="current-password"
@@ -76,6 +78,8 @@ export const PasswordField = ({
 	optionalLabel,
 	showPasswordLabel,
 	hidePasswordLabel,
+	showPasswordIcon,
+	hidePasswordIcon,
 	strength,
 	strengthLabel,
 	scoreLabels,
@@ -114,21 +118,14 @@ export const PasswordField = ({
 					type={revealed ? "text" : "password"}
 				/>
 				<TextInput.Pending />
-				<Button
-					iconOnly
-					icon={
-						revealed ? VisibilityOffIcon : VisibilityIcon
-					}
+				<TextInput.Reveal
+					revealed={revealed}
+					onRevealedChange={setRevealed}
 					label={
 						revealed ? hidePasswordLabel : showPasswordLabel
-					}
-					variant="tertiary"
-					size="sm"
-					aria-pressed={revealed}
-					disabled={disabled}
-					className={textInputStyle.action}
-					onClick={() => setRevealed(!revealed)}
-				/>
+					}>
+					{revealed ? hidePasswordIcon : showPasswordIcon}
+				</TextInput.Reveal>
 			</TextInput.Group>
 			{strength === true && (
 				<PasswordStrength
