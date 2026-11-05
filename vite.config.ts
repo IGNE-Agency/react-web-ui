@@ -33,6 +33,15 @@ const componentEntries = readdirSync(
 		join(src, "components", entry.name, "index.ts"),
 	);
 
+const libEntries = [
+	"lib/forms/index.ts",
+	"lib/hooks/index.ts",
+	"lib/storage.ts",
+	"lib/table-storage.ts",
+	"lib/tone.ts",
+	"lib/unsaved-changes/index.ts",
+].map(path => join(src, path));
+
 const optionalPeerEntries = [
 	"components/combobox-field/react-query.tsx",
 	"data-table/index.ts",
@@ -114,6 +123,7 @@ const config: UserConfig = defineConfig({
 			entry: [
 				join(src, "index.ts"),
 				...componentEntries,
+				...libEntries,
 				...optionalPeerEntries,
 			],
 			formats: ["es"],

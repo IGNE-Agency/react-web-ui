@@ -10,7 +10,7 @@ import {
 } from "storybook/test";
 import { pdfFile } from "../../lib/storybook/files.ts";
 import { z } from "zod";
-import { useAppForm } from "../../lib/forms/index.ts";
+import { useAppForm } from "../../lib/storybook/app-form.tsx";
 import { OPTIONS_LOAD_LABELS } from "../../lib/storybook/options-load.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { Form, type FormRootProps } from "./index.ts";

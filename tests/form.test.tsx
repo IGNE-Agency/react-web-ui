@@ -9,7 +9,7 @@ import {
 } from "vitest";
 import { render } from "vitest-browser-react";
 import { Form } from "../src/components/form/index.ts";
-import { useAppForm } from "../src/lib/forms/index.ts";
+import { useAppForm } from "../src/lib/storybook/app-form.tsx";
 
 const NAME_LABEL = "Name";
 const SUBMIT_LABEL = "Save";

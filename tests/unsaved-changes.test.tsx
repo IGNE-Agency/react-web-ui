@@ -12,7 +12,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { Form } from "../src/components/form/index.ts";
-import { useAppForm } from "../src/lib/forms/index.ts";
+import { useAppForm } from "../src/lib/storybook/app-form.tsx";
 import {
 	type LeaveGuardPolicy,
 	LeaveGuardDialog,

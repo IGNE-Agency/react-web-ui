@@ -157,6 +157,14 @@
 			"types": "./dist/components/form/index.d.ts",
 			"default": "./dist/components/form/index.js"
 		},
+		"./forms": {
+			"types": "./dist/lib/forms/index.d.ts",
+			"default": "./dist/lib/forms/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/lib/hooks/index.d.ts",
+			"default": "./dist/lib/hooks/index.js"
+		},
 		"./icon": {
 			"types": "./dist/components/icon/index.d.ts",
 			"default": "./dist/components/icon/index.js"
@@ -245,9 +253,17 @@
 			"types": "./dist/components/status-message/index.d.ts",
 			"default": "./dist/components/status-message/index.js"
 		},
+		"./storage": {
+			"types": "./dist/lib/storage.d.ts",
+			"default": "./dist/lib/storage.js"
+		},
 		"./switch-field": {
 			"types": "./dist/components/switch-field/index.d.ts",
 			"default": "./dist/components/switch-field/index.js"
+		},
+		"./table-storage": {
+			"types": "./dist/lib/table-storage.d.ts",
+			"default": "./dist/lib/table-storage.js"
 		},
 		"./tabs": {
 			"types": "./dist/components/tabs/index.d.ts",
@@ -291,9 +307,17 @@
 		},
 		"./tokens.css": "./dist/tokens.css",
 		"./tokens/*": "./tokens/*",
+		"./tone": {
+			"types": "./dist/lib/tone.d.ts",
+			"default": "./dist/lib/tone.js"
+		},
 		"./tooltip": {
 			"types": "./dist/components/tooltip/index.d.ts",
 			"default": "./dist/components/tooltip/index.js"
+		},
+		"./unsaved-changes": {
+			"types": "./dist/lib/unsaved-changes/index.d.ts",
+			"default": "./dist/lib/unsaved-changes/index.js"
 		},
 		"./unsaved-changes/tanstack-router": {
 			"types": "./dist/lib/unsaved-changes/tanstack-router.d.ts",
