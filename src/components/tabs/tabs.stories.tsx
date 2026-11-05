@@ -7,39 +7,72 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
-import {
-	type Tab,
-	Tabs,
-	type TabsRootProps,
-} from "./tabs.tsx";
+import { Tabs, type TabsRootProps } from "./tabs.tsx";
 
 const BAR_LABEL = "Declaration";
 const DETAILS = "Details";
 const HISTORY = "History";
 const NOTES = "Notes";
 
-const TABS: readonly Tab[] = [
+const PANELS = [
 	{ value: "details", label: DETAILS },
 	{ value: "history", label: HISTORY },
 	{ value: "notes", label: NOTES },
-];
-
-const COUNTED_TABS: readonly Tab[] = [
-	{ value: "details", label: DETAILS },
-	{ value: "history", label: HISTORY, count: 12 },
-	{ value: "notes", label: NOTES, count: 3 },
-];
+] as const;
 
 const changed = fn().mockName("onValueChange");
 
-const TabsExample = (args: TabsRootProps): ReactElement => (
-	<Tabs.Root {...args}>
-		<Tabs.Bar label={BAR_LABEL} />
-		{args.tabs.map(tab => (
-			<Tabs.Panel key={tab.value} value={tab.value}>
-				<p>{`${tab.label} of declaration 2041.`}</p>
+const TabsPanels = (): ReactElement => (
+	<>
+		{PANELS.map(panel => (
+			<Tabs.Panel key={panel.value} value={panel.value}>
+				<p>{`${panel.label} of declaration 2041.`}</p>
 			</Tabs.Panel>
 		))}
+	</>
+);
+
+const TabsExample = (args: TabsRootProps): ReactElement => (
+	<Tabs.Root {...args}>
+		<Tabs.List label={BAR_LABEL}>
+			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+			<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
+			<Tabs.Tab value="notes">{NOTES}</Tabs.Tab>
+			<Tabs.Indicator />
+		</Tabs.List>
+		<TabsPanels />
+	</Tabs.Root>
+);
+
+const CountedTabs = (args: TabsRootProps): ReactElement => (
+	<Tabs.Root {...args}>
+		<Tabs.List label={BAR_LABEL}>
+			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+			<Tabs.Tab value="history">
+				{HISTORY}
+				<Tabs.Count>12</Tabs.Count>
+			</Tabs.Tab>
+			<Tabs.Tab value="notes">
+				{NOTES}
+				<Tabs.Count>3</Tabs.Count>
+			</Tabs.Tab>
+			<Tabs.Indicator />
+		</Tabs.List>
+		<TabsPanels />
+	</Tabs.Root>
+);
+
+const DisabledTab = (args: TabsRootProps): ReactElement => (
+	<Tabs.Root {...args}>
+		<Tabs.List label={BAR_LABEL}>
+			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+			<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
+			<Tabs.Tab value="notes" disabled>
+				{NOTES}
+			</Tabs.Tab>
+			<Tabs.Indicator />
+		</Tabs.List>
+		<TabsPanels />
 	</Tabs.Root>
 );
 
@@ -80,7 +113,6 @@ const meta = {
 	component: Tabs.Root,
 	render: TabsExample,
 	args: {
-		tabs: TABS,
 		defaultValue: "details",
 		onValueChange: changed,
 		children: null,
@@ -106,16 +138,11 @@ export const SecondOpen: Story = {
 };
 
 export const WithCounts: Story = {
-	args: { tabs: COUNTED_TABS },
+	render: CountedTabs,
 };
 
 export const WithDisabledTab: Story = {
-	args: {
-		tabs: [
-			...TABS.slice(0, 2),
-			{ value: "notes", label: NOTES, disabled: true },
-		],
-	},
+	render: DisabledTab,
 };
 
 export const Keyboard: Story = {

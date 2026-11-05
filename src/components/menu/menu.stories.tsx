@@ -39,32 +39,28 @@ const MenuItems = () => {
 	const { container } = useOverlayFrame();
 
 	return (
-		<Menu.Portal container={container}>
-			<Menu.Positioner sideOffset={8}>
-				<Menu.Popup>
-					<Menu.Arrow />
-					<Menu.Item icon={DownloadIcon} onClick={download}>
-						{DOWNLOAD}
-					</Menu.Item>
-					<Menu.Item icon={CommentIcon} onClick={comment}>
-						{ADD_COMMENT}
-					</Menu.Item>
-					<Menu.Item icon={ArchiveIcon} disabled>
-						{ARCHIVE}
-					</Menu.Item>
-					<Menu.Separator />
-					<Menu.Group>
-						<Menu.GroupLabel>{EXPORT}</Menu.GroupLabel>
-						<Menu.Item onClick={exportCsv}>
-							{DOWNLOAD_CSV}
-						</Menu.Item>
-						<Menu.Item onClick={exportPdf}>
-							{DOWNLOAD_PDF}
-						</Menu.Item>
-					</Menu.Group>
-				</Menu.Popup>
-			</Menu.Positioner>
-		</Menu.Portal>
+		<Menu.Content container={container} sideOffset={8}>
+			<Menu.Arrow />
+			<Menu.Item icon={DownloadIcon} onClick={download}>
+				{DOWNLOAD}
+			</Menu.Item>
+			<Menu.Item icon={CommentIcon} onClick={comment}>
+				{ADD_COMMENT}
+			</Menu.Item>
+			<Menu.Item icon={ArchiveIcon} disabled>
+				{ARCHIVE}
+			</Menu.Item>
+			<Menu.Separator />
+			<Menu.Group>
+				<Menu.GroupLabel>{EXPORT}</Menu.GroupLabel>
+				<Menu.Item onClick={exportCsv}>
+					{DOWNLOAD_CSV}
+				</Menu.Item>
+				<Menu.Item onClick={exportPdf}>
+					{DOWNLOAD_PDF}
+				</Menu.Item>
+			</Menu.Group>
+		</Menu.Content>
 	);
 };
 

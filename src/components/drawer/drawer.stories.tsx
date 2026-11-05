@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentProps } from "react";
 import {
@@ -10,6 +11,7 @@ import {
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { Button } from "../button/button.tsx";
+import { Icon } from "../icon/icon.tsx";
 import {
 	useOpenArg,
 	useOverlayFrame,
@@ -36,28 +38,20 @@ const DrawerExample = (props: DrawerExampleProps) => {
 					<Button variant="secondary">{OPEN_LABEL}</Button>
 				}
 			/>
-			<Drawer.Portal container={container}>
-				<Drawer.Backdrop />
-				<Drawer.Viewport>
-					<Drawer.Popup>
-						<Drawer.Content>
-							<Drawer.Header>
-								<Drawer.Title>{TITLE}</Drawer.Title>
-								<Drawer.CloseButton
-									closeLabel={CLOSE_LABEL}
-								/>
-							</Drawer.Header>
-							<Drawer.Close
-								render={
-									<Button variant="primary">
-										{DONE_LABEL}
-									</Button>
-								}
-							/>
-						</Drawer.Content>
-					</Drawer.Popup>
-				</Drawer.Viewport>
-			</Drawer.Portal>
+			<Drawer.Sheet container={container}>
+				<Drawer.Header>
+					<Drawer.Title>{TITLE}</Drawer.Title>
+					<Drawer.CloseButton
+						closeLabel={CLOSE_LABEL}
+						icon={<Icon svg={CloseIcon} label="" />}
+					/>
+				</Drawer.Header>
+				<Drawer.Close
+					render={
+						<Button variant="primary">{DONE_LABEL}</Button>
+					}
+				/>
+			</Drawer.Sheet>
 		</Drawer.Root>
 	);
 };

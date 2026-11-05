@@ -7,6 +7,7 @@ import {
 } from "../button/close-button.tsx";
 import styles from "./drawer.module.scss";
 
+/** The dimmed layer behind a modal drawer. */
 const Backdrop = ({
 	className,
 	...props
@@ -19,6 +20,7 @@ const Backdrop = ({
 	/>
 );
 
+/** The fixed frame the popup slides within. */
 const Viewport = ({
 	className,
 	...props
@@ -42,6 +44,7 @@ export type DrawerPopupProps = ComponentProps<
 		filled?: boolean;
 	}>;
 
+/** The drawer's surface: a side panel, or a bottom sheet when swiped down. */
 const Popup = ({
 	className,
 	filled,
@@ -57,6 +60,7 @@ const Popup = ({
 	/>
 );
 
+/** The drawer's heading, which names it. */
 const Title = ({
 	className,
 	...props
@@ -67,34 +71,59 @@ const Title = ({
 	/>
 );
 
-export type DrawerHeaderProps = Readonly<{
-	children?: ReactNode;
-	className?: string;
-}>;
+export type DrawerHeaderProps = ComponentProps<"div">;
 
 /** The title's line. Put a `Drawer.CloseButton` in it to trail a way out. */
 const Header = ({
-	children,
 	className,
+	...props
 }: DrawerHeaderProps): ReactNode => (
-	<div className={clsx(styles.header, className)}>
-		{children}
-	</div>
+	<div
+		className={clsx(styles.header, className)}
+		{...props}
+	/>
 );
 
 export type DrawerCloseButtonProps = Pick<
 	CloseButtonProps,
-	"closeLabel"
+	"closeLabel" | "icon"
 >;
 
-/** The icon-only way out, for a header or a footer. */
+/** The icon-only way out, for a header or a footer, drawn with the app's `icon`. */
 const CloseButton = ({
 	closeLabel,
+	icon,
 }: DrawerCloseButtonProps): ReactNode => (
 	<KitCloseButton
 		closeLabel={closeLabel}
+		icon={icon}
 		render={<BaseDrawer.Close />}
 	/>
+);
+
+export type DrawerSheetProps = DrawerPopupProps &
+	Readonly<{
+		/** The element the drawer is portalled into. @default document.body */
+		container?: BaseDrawer.Portal.Props["container"];
+	}>;
+
+/**
+ * `Portal`, `Backdrop`, `Viewport`, `Popup` and `Content` in one: the drawer's
+ * surface, above the page, holding its children.
+ */
+const Sheet = ({
+	container,
+	children,
+	...props
+}: DrawerSheetProps): ReactNode => (
+	<BaseDrawer.Portal container={container}>
+		<Backdrop />
+		<Viewport>
+			<Popup {...props}>
+				<BaseDrawer.Content>{children}</BaseDrawer.Content>
+			</Popup>
+		</Viewport>
+	</BaseDrawer.Portal>
 );
 
 type DrawerParts = Readonly<{
@@ -105,6 +134,7 @@ type DrawerParts = Readonly<{
 	Viewport: typeof Viewport;
 	Popup: typeof Popup;
 	Content: typeof BaseDrawer.Content;
+	Sheet: typeof Sheet;
 	Header: typeof Header;
 	Title: typeof Title;
 	Close: typeof BaseDrawer.Close;
@@ -113,29 +143,20 @@ type DrawerParts = Readonly<{
 }>;
 
 /**
- * Shared wrapper over base-ui's Drawer, mirroring its parts. Its look follows
- * `swipeDirection` on `Drawer.Root`: `"right"` slides a side panel in from the
- * right, `"down"` raises a bottom sheet up to 85dvh tall. The caller picks the
- * direction, for example from its own viewport query.
+ * A drawer over base-ui's `Drawer`: `swipeDirection="right"` slides in a side
+ * panel, `"down"` raises a bottom sheet. `Sheet` bundles the portal, backdrop,
+ * viewport, popup and content; the unbundled parts stay.
  *
  * @example
- * const handle = Drawer.createHandle();
- * const narrow = useMediaQuery("(width < 40rem)");
- *
- * <Drawer.Root handle={handle} swipeDirection={narrow ? "down" : "right"}>
- *   <Drawer.Trigger handle={handle}>Open</Drawer.Trigger>
- *   <Drawer.Portal>
- *     <Drawer.Backdrop />
- *     <Drawer.Viewport>
- *       <Drawer.Popup>
- *         <Drawer.Content>
- *           <Drawer.Title>Filters</Drawer.Title>
- *           ...
- *           <Drawer.Close>Done</Drawer.Close>
- *         </Drawer.Content>
- *       </Drawer.Popup>
- *     </Drawer.Viewport>
- *   </Drawer.Portal>
+ * <Drawer.Root swipeDirection={narrow ? "down" : "right"}>
+ *   <Drawer.Trigger>Open</Drawer.Trigger>
+ *   <Drawer.Sheet>
+ *     <Drawer.Header>
+ *       <Drawer.Title>Filters</Drawer.Title>
+ *       <Drawer.CloseButton closeLabel="Close" icon={<CloseIcon />} />
+ *     </Drawer.Header>
+ *     <Drawer.Close>Done</Drawer.Close>
+ *   </Drawer.Sheet>
  * </Drawer.Root>
  */
 export const Drawer: DrawerParts = {
@@ -146,6 +167,7 @@ export const Drawer: DrawerParts = {
 	Viewport,
 	Popup,
 	Content: BaseDrawer.Content,
+	Sheet,
 	Header,
 	Title,
 	Close: BaseDrawer.Close,

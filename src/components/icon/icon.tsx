@@ -6,16 +6,13 @@ import type {
 } from "react";
 import style from "./icon.module.scss";
 
-/**
- * The component type produced by SVGR's `?react` imports
- * (e.g. `import Close from "@material-design-icons/svg/outlined/close.svg?react"`).
- */
+/** An SVG as a React component, such as an SVGR `?react` import from the app's icon set. */
 export type SvgComponent = FunctionComponent<
 	SVGProps<SVGSVGElement>
 >;
 
 export type IconProps = Readonly<{
-	/** The SVG component to render, from a SVGR `?react` import. */
+	/** The app's SVG component to render. */
 	svg: SvgComponent;
 
 	/**
@@ -34,13 +31,11 @@ export type IconProps = Readonly<{
 }>;
 
 /**
- * Renders an SVG icon with a consistent size and accessibility treatment.
- * Decorative icons (`label=""`) are hidden from assistive tech; labelled icons
- * expose `role="img"` with an accessible name.
+ * Sizes, colours and labels the app's SVG, from any icon set. `label=""` hides
+ * it from assistive tech; a label names it as an image.
  *
  * @example
- * import Close from "@material-design-icons/svg/outlined/close.svg?react";
- * <Icon svg={Close} label="Close" />
+ * <Icon svg={CloseIcon} label="Close" />
  */
 export const Icon = ({
 	svg: Svg,

@@ -1,8 +1,7 @@
 import { Accordion as BaseAccordion } from "@base-ui/react/accordion";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import { Icon } from "../icon/icon.tsx";
 import style from "./accordion.module.scss";
 
 export type AccordionRootProps = Omit<
@@ -27,9 +26,12 @@ export type AccordionTriggerProps = Omit<
 > &
 	Readonly<{
 		className?: string;
-		/** What the item's panel holds, as the trigger's label. */
+		/** The label naming what the item's panel holds, then an `Accordion.Indicator`. */
 		children: ReactNode;
 	}>;
+
+export type AccordionIndicatorProps =
+	useRender.ComponentProps<"span">;
 
 export type AccordionPanelProps = Omit<
 	BaseAccordion.Panel.Props,
@@ -37,6 +39,7 @@ export type AccordionPanelProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/** The stack of items. */
 const Root = ({
 	className,
 	...props
@@ -47,6 +50,7 @@ const Root = ({
 	/>
 );
 
+/** One item: its header and its panel. */
 const Item = ({
 	className,
 	...props
@@ -57,24 +61,47 @@ const Item = ({
 	/>
 );
 
+/** The button that folds the item's panel open and shut, inside its `Header`. */
 const Trigger = ({
 	className,
-	children,
 	...props
 }: AccordionTriggerProps): ReactNode => (
 	<BaseAccordion.Trigger
 		className={clsx(style.trigger, className)}
-		{...props}>
-		{children}
-		<Icon
-			svg={ExpandMoreIcon}
-			label=""
-			size={1.5}
-			className={style.chevron}
-		/>
-	</BaseAccordion.Trigger>
+		{...props}
+	/>
 );
 
+/**
+ * The trigger's open-state glyph, such as the app's chevron, turned over while
+ * the panel is open. Put it last in the `Trigger`; without children it renders
+ * nothing.
+ */
+const Indicator = ({
+	render,
+	className,
+	children,
+	ref,
+	...props
+}: AccordionIndicatorProps): ReactNode => {
+	const element = useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.indicator, className),
+			children,
+		},
+	});
+
+	return children === undefined || children === null
+		? null
+		: element;
+};
+
+/** What the item holds, folding along its height. */
 const Panel = ({
 	className,
 	children,
@@ -92,6 +119,7 @@ type AccordionNamespace = Readonly<{
 	Item: typeof Item;
 	Header: typeof BaseAccordion.Header;
 	Trigger: typeof Trigger;
+	Indicator: typeof Indicator;
 	Panel: typeof Panel;
 }>;
 
@@ -104,7 +132,10 @@ type AccordionNamespace = Readonly<{
  * <Accordion.Root>
  * 	<Accordion.Item value="fees">
  * 		<Accordion.Header>
- * 			<Accordion.Trigger>Fees</Accordion.Trigger>
+ * 			<Accordion.Trigger>
+ * 				Fees
+ * 				<Accordion.Indicator><ChevronIcon /></Accordion.Indicator>
+ * 			</Accordion.Trigger>
  * 		</Accordion.Header>
  * 		<Accordion.Panel>{fees}</Accordion.Panel>
  * 	</Accordion.Item>
@@ -115,5 +146,6 @@ export const Accordion: AccordionNamespace = {
 	Item,
 	Header: BaseAccordion.Header,
 	Trigger,
+	Indicator,
 	Panel,
 };

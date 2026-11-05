@@ -1,3 +1,5 @@
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import MoreHorizIcon from "@material-design-icons/svg/outlined/more_horiz.svg?react";
 import type {
 	Decorator,
 	Meta,
@@ -14,6 +16,7 @@ import {
 } from "storybook/test";
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { Icon } from "../icon/icon.tsx";
 import { Menu } from "../menu/menu.tsx";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs.tsx";
 
@@ -31,6 +34,9 @@ const START = "/declarations/2041";
 const OUTSTANDING_PATH = "/region/declarations/outstanding";
 
 const CURRENT = { selector: '[aria-current="page"]' };
+
+const SEPARATOR = <Icon svg={ChevronRightIcon} label="" />;
+const MORE_ICON = <Icon svg={MoreHorizIcon} label="" />;
 
 const { history, decorator, reset } =
 	createStoryRouter(START);
@@ -83,7 +89,7 @@ const ByHand = (): ReactElement => (
 			</Breadcrumbs.Item>
 			<Breadcrumbs.Separator>/</Breadcrumbs.Separator>
 			<Breadcrumbs.Item>
-				<Breadcrumbs.Overflow label={MORE}>
+				<Breadcrumbs.Overflow label={MORE} icon={MORE_ICON}>
 					<Menu.LinkItem render={<Link to="/region" />}>
 						{REGION}
 					</Menu.LinkItem>
@@ -127,10 +133,14 @@ const meta = {
 	args: {
 		label: TRAIL_LABEL,
 		overflowLabel: MORE,
+		overflowIcon: MORE_ICON,
+		separator: SEPARATOR,
 		crumbs: CRUMBS,
 	},
 	argTypes: {
 		crumbs: { control: false },
+		overflowIcon: { control: false },
+		separator: { control: false },
 	},
 } satisfies Meta<typeof Breadcrumbs>;
 

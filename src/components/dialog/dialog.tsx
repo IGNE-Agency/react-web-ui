@@ -7,6 +7,7 @@ import {
 } from "../button/close-button.tsx";
 import styles from "./dialog.module.scss";
 
+/** The dimmed layer behind a modal dialog. */
 const Backdrop = ({
 	className,
 	...props
@@ -19,6 +20,7 @@ const Backdrop = ({
 	/>
 );
 
+/** The dialog's surface. */
 const Popup = ({
 	className,
 	...props
@@ -29,6 +31,7 @@ const Popup = ({
 	/>
 );
 
+/** The dialog's heading, which names it. */
 const Title = ({
 	className,
 	...props
@@ -39,36 +42,56 @@ const Title = ({
 	/>
 );
 
-export type DialogHeaderProps = Readonly<{
-	children?: ReactNode;
-	className?: string;
-}>;
+export type DialogHeaderProps = ComponentProps<"div">;
 
 /** The title's line. Put a `Dialog.CloseButton` in it to trail a way out. */
 const Header = ({
-	children,
 	className,
+	...props
 }: DialogHeaderProps): ReactNode => (
-	<div className={clsx(styles.header, className)}>
-		{children}
-	</div>
+	<div
+		className={clsx(styles.header, className)}
+		{...props}
+	/>
 );
 
 export type DialogCloseButtonProps = Pick<
 	CloseButtonProps,
-	"closeLabel"
+	"closeLabel" | "icon"
 >;
 
-/** The icon-only way out, for a header or a footer. */
+/** The icon-only way out, for a header or a footer, drawn with the app's `icon`. */
 const CloseButton = ({
 	closeLabel,
+	icon,
 }: DialogCloseButtonProps): ReactNode => (
 	<KitCloseButton
 		closeLabel={closeLabel}
+		icon={icon}
 		render={<BaseDialog.Close />}
 	/>
 );
 
+export type DialogContentProps = ComponentProps<
+	typeof BaseDialog.Popup
+> &
+	Readonly<{
+		/** The element the dialog is portalled into. @default document.body */
+		container?: BaseDialog.Portal.Props["container"];
+	}>;
+
+/** `Portal`, `Backdrop` and `Popup` in one: the dialog's surface, above the page. */
+const Content = ({
+	container,
+	...props
+}: DialogContentProps): ReactNode => (
+	<BaseDialog.Portal container={container}>
+		<Backdrop />
+		<Popup {...props} />
+	</BaseDialog.Portal>
+);
+
+/** The dialog's content, scrolling when it outgrows the surface. */
 const Body = ({
 	className,
 	...props
@@ -79,6 +102,7 @@ const Body = ({
 	/>
 );
 
+/** The row the dialog's actions sit on. */
 const Footer = ({
 	className,
 	...props
@@ -95,6 +119,7 @@ type DialogParts = Readonly<{
 	Portal: typeof BaseDialog.Portal;
 	Backdrop: typeof Backdrop;
 	Popup: typeof Popup;
+	Content: typeof Content;
 	Title: typeof Title;
 	Description: typeof BaseDialog.Description;
 	Close: typeof BaseDialog.Close;
@@ -106,28 +131,25 @@ type DialogParts = Readonly<{
 }>;
 
 /**
- * Dialog chrome over base-ui's Dialog. Provides `Header` / `Body` / `Footer`
- * regions plus a styled `Backdrop` and `Popup`. Footer actions are a slot.
+ * A dialog over base-ui's `Dialog`, in `Header`, `Body` and `Footer` regions.
+ * `Content` bundles the portal, backdrop and popup; the unbundled parts stay.
  *
  * @example
  * <Dialog.Root>
  *   <Dialog.Trigger>Edit</Dialog.Trigger>
- *   <Dialog.Portal>
- *     <Dialog.Backdrop />
- *     <Dialog.Popup>
- *       <Dialog.Header>
- *         <Dialog.Title>Discard changes?</Dialog.Title>
- *         <Dialog.CloseButton closeLabel="Close" />
- *       </Dialog.Header>
- *       <Dialog.Body>
- *         <Dialog.Description>Your edits will be lost.</Dialog.Description>
- *       </Dialog.Body>
- *       <Dialog.Footer>
- *         <Dialog.Close>Keep editing</Dialog.Close>
- *         <button onClick={discard}>Discard</button>
- *       </Dialog.Footer>
- *     </Dialog.Popup>
- *   </Dialog.Portal>
+ *   <Dialog.Content>
+ *     <Dialog.Header>
+ *       <Dialog.Title>Discard changes?</Dialog.Title>
+ *       <Dialog.CloseButton closeLabel="Close" icon={<CloseIcon />} />
+ *     </Dialog.Header>
+ *     <Dialog.Body>
+ *       <Dialog.Description>Your edits will be lost.</Dialog.Description>
+ *     </Dialog.Body>
+ *     <Dialog.Footer>
+ *       <Dialog.Close>Keep editing</Dialog.Close>
+ *       <button onClick={discard}>Discard</button>
+ *     </Dialog.Footer>
+ *   </Dialog.Content>
  * </Dialog.Root>
  */
 export const Dialog: DialogParts = {
@@ -136,6 +158,7 @@ export const Dialog: DialogParts = {
 	Portal: BaseDialog.Portal,
 	Backdrop,
 	Popup,
+	Content,
 	Title,
 	Description: BaseDialog.Description,
 	Close: BaseDialog.Close,

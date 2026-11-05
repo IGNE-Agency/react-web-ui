@@ -1,3 +1,4 @@
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	expect,
@@ -5,6 +6,7 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
+import { Icon } from "../icon/icon.tsx";
 import { Accordion } from "./accordion.tsx";
 
 const SECTIONS = [
@@ -85,6 +87,9 @@ const meta = {
 				<Accordion.Header>
 					<Accordion.Trigger>
 						{section.title}
+						<Accordion.Indicator>
+							<Icon svg={ExpandMoreIcon} label="" />
+						</Accordion.Indicator>
 					</Accordion.Trigger>
 				</Accordion.Header>
 				<Accordion.Panel>{section.content}</Accordion.Panel>

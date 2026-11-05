@@ -2,7 +2,10 @@ import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
-import { Button } from "../button/button.tsx";
+import {
+	Button,
+	type ButtonIcon,
+} from "../button/button.tsx";
 import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import styles from "./menu.module.scss";
 
@@ -13,7 +16,7 @@ type TriggerBaseProps = Omit<
 
 type IconTriggerProps = TriggerBaseProps &
 	Readonly<{
-		icon: SvgComponent;
+		icon: ButtonIcon;
 		/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
 		label: string;
 		children?: never;
@@ -22,7 +25,7 @@ type IconTriggerProps = TriggerBaseProps &
 type TextTriggerProps = TriggerBaseProps &
 	Readonly<{
 		/** Optional leading icon rendered before the label. */
-		icon?: SvgComponent;
+		icon?: ButtonIcon;
 		children: ReactNode;
 		label?: never;
 	}>;
@@ -65,6 +68,7 @@ export type MenuPositionerProps = Omit<
 	"ref"
 >;
 
+/** Places the popup against its trigger, clear of the viewport's edges. */
 const Positioner = ({
 	className,
 	...props
@@ -76,6 +80,7 @@ const Positioner = ({
 	/>
 );
 
+/** The menu's surface, holding its items. */
 const Popup = ({
 	className,
 	...props
@@ -86,6 +91,40 @@ const Popup = ({
 	/>
 );
 
+export type MenuContentProps = ComponentProps<
+	typeof BaseMenu.Popup
+> &
+	Readonly<
+		Pick<
+			MenuPositionerProps,
+			"side" | "sideOffset" | "align" | "alignOffset"
+		> & {
+			/** The element the menu is portalled into. @default document.body */
+			container?: BaseMenu.Portal.Props["container"];
+		}
+	>;
+
+/** `Portal`, `Positioner` and `Popup` in one: the menu's surface, placed against its trigger. */
+const Content = ({
+	container,
+	side,
+	sideOffset,
+	align,
+	alignOffset,
+	...props
+}: MenuContentProps): ReactNode => (
+	<BaseMenu.Portal container={container}>
+		<Positioner
+			side={side}
+			sideOffset={sideOffset}
+			align={align}
+			alignOffset={alignOffset}>
+			<Popup {...props} />
+		</Positioner>
+	</BaseMenu.Portal>
+);
+
+/** The arrow pointing from the popup at its trigger. */
 const Arrow = ({
 	className,
 	...props
@@ -114,6 +153,7 @@ export type MenuItemProps = ComponentProps<
 		icon?: SvgComponent;
 	}>;
 
+/** An action, with an optional leading icon. */
 const Item = ({
 	icon,
 	className,
@@ -150,6 +190,7 @@ const LinkItem = ({
 	/>
 );
 
+/** A line between groups of items. */
 const Separator = ({
 	className,
 	...props
@@ -162,6 +203,7 @@ const Separator = ({
 	/>
 );
 
+/** The heading that names a `Group`. */
 const GroupLabel = ({
 	className,
 	...props
@@ -180,6 +222,7 @@ type MenuParts = Readonly<{
 	Portal: typeof BaseMenu.Portal;
 	Positioner: typeof Positioner;
 	Popup: typeof Popup;
+	Content: typeof Content;
 	Arrow: typeof Arrow;
 	Item: typeof Item;
 	LinkItem: typeof LinkItem;
@@ -190,26 +233,18 @@ type MenuParts = Readonly<{
 }>;
 
 /**
- * Dropdown menu over base-ui's Menu, with an arrow pointing at the trigger.
- * `Menu.Item` accepts an optional leading `icon`. The positioner keeps
- * `--popup-edge-padding` from the viewport's edges.
+ * A dropdown menu over base-ui's `Menu`. `Content` bundles the portal,
+ * positioner and popup; the unbundled parts stay. Icons are the app's own.
  *
  * @example
- * import RowActionsIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
- * import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
- *
  * <Menu.Root>
- *   <Menu.Trigger icon={RowActionsIcon} label="Row actions" />
- *   <Menu.Portal>
- *     <Menu.Positioner sideOffset={8}>
- *       <Menu.Popup>
- *         <Menu.Arrow />
- *         <Menu.Item icon={DownloadIcon} onClick={download}>
- *           Download
- *         </Menu.Item>
- *       </Menu.Popup>
- *     </Menu.Positioner>
- *   </Menu.Portal>
+ *   <Menu.Trigger icon={MoreIcon} label="Row actions" />
+ *   <Menu.Content sideOffset={8}>
+ *     <Menu.Arrow />
+ *     <Menu.Item icon={DownloadIcon} onClick={download}>
+ *       Download
+ *     </Menu.Item>
+ *   </Menu.Content>
  * </Menu.Root>
  */
 export const Menu: MenuParts = {
@@ -218,6 +253,7 @@ export const Menu: MenuParts = {
 	Portal: BaseMenu.Portal,
 	Positioner,
 	Popup,
+	Content,
 	Arrow,
 	Item,
 	LinkItem,

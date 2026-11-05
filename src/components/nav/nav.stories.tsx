@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
 import LogoutIcon from "@material-design-icons/svg/outlined/logout.svg?react";
@@ -24,7 +25,7 @@ import {
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
 import { Button } from "../button/button.tsx";
 import { Drawer } from "../drawer/drawer.tsx";
-import type { SvgComponent } from "../icon/icon.tsx";
+import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Nav, type NavRootProps } from "./nav.tsx";
 import { NavItemView } from "./nav-item-view.tsx";
 import styles from "./nav.stories.module.scss";
@@ -300,6 +301,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 											<Drawer.Title>{MORE}</Drawer.Title>
 											<Drawer.CloseButton
 												closeLabel={CLOSE_MORE}
+												icon={
+													<Icon svg={CloseIcon} label="" />
+												}
 											/>
 										</Drawer.Header>
 										<Nav.Root aria-label={MORE}>

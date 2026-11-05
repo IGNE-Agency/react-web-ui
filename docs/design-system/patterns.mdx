@@ -2075,14 +2075,18 @@ An overlay includes `overlay.backdrop` and re-points the tier rather than restat
 
 <Details title="A dismissable surface says so on its title's line">
 
-Dialogs and drawers put an icon-only close button on the heading's line, at the surface's own inset, even when they can also be swiped or backdrop-clicked away. The header part draws it from its `closeLabel`. Shown in [Above the page](#above-the-page).
+Dialogs and drawers put an icon-only close button on the heading's line, at the surface's own inset, even when they can also be swiped or backdrop-clicked away. The header holds the title and a `CloseButton`, which takes its `closeLabel` and the app's close `icon`. Shown in [Above the page](#above-the-page).
 
 <DoDont>
 <Example kind="do" caption="The close button sits on the title's line, and the title stands alone.">
 
 ```tsx
-<Drawer.Header closeLabel={m.filter_close()}>
+<Drawer.Header>
 	<Drawer.Title>{m.filter_title()}</Drawer.Title>
+	<Drawer.CloseButton
+		closeLabel={m.filter_close()}
+		icon={<CloseIcon />}
+	/>
 </Drawer.Header>
 ```
 

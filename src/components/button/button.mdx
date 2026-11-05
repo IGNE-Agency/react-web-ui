@@ -277,14 +277,14 @@ Leave the icon off where it costs more than it gives: when no glyph means the ac
 
 Density argues for adding the icon. It never argues for dropping the label: that is [the icon-only form, which comes with its own tooltip and accessible name](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name).
 
-### A disabled button is a neutral fill with muted ink
+### A disabled button takes the disabled fill and ink
 
-Disabled is a neutral fill with muted ink and [a not-allowed cursor](?path=/docs/design-system-principles-interaction--docs#the-cursor-says-what-happens-on-click).
+Disabled is the disabled role's pale fill with its faint ink, and [a not-allowed cursor](?path=/docs/design-system-principles-interaction--docs#the-cursor-says-what-happens-on-click). A tertiary button has no fill to lose, so only its ink fades.
 
 <DoDont>
 <Example
   kind="do"
-  caption="Every tier goes to the same neutral, so nothing disabled still reads as the main action."
+  caption="Every filled tier goes to the same disabled fill, so nothing disabled still reads as the main action."
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
@@ -296,9 +296,8 @@ Disabled is a neutral fill with muted ink and [a not-allowed cursor](?path=/docs
 
 ```scss
 .button:disabled {
-	--btn-bg: var(--sys-color-neutral-bg);
-	--btn-fg: var(--sys-color-text-muted);
-
+	background: var(--sys-color-disabled-bg);
+	color: var(--sys-color-disabled-fg);
 	cursor: not-allowed;
 }
 ```
@@ -306,7 +305,7 @@ Disabled is a neutral fill with muted ink and [a not-allowed cursor](?path=/docs
 </Example>
 <Example
   kind="dont"
-  caption="A faded brand fill still reads as the primary action, only a weak one."
+  caption="A faded primary fill still reads as the primary action, only a weak one."
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>

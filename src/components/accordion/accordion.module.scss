@@ -17,8 +17,12 @@
 		@include disclosure.trigger("accordion");
 	}
 
-	.chevron {
+	.indicator {
 		@include disclosure.chevron;
+
+		display: inline-flex;
+		color: var(--accordion-indicator-fg, currentcolor);
+		font-size: var(--accordion-indicator-size, 1.5em);
 	}
 
 	.panel {

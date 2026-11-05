@@ -26,6 +26,18 @@ type PopoverExampleProps = ComponentProps<
 	typeof Popover.Root
 >;
 
+const ROWS = [
+	{ label: "Policy:", value: "12345678", numeric: true },
+	{ label: "BSN:", value: "123456789", numeric: true },
+	{ label: "Referral letter:", value: "Yes" },
+	{ label: "Care request type:", value: "ZT05" },
+	{ label: "DSM diagnosis:", value: DIAGNOSIS },
+	{
+		label: "Mental healthcare profile:",
+		value: "Basic short-term mental healthcare",
+	},
+];
+
 const intent = fn().mockName("intent");
 
 const PopoverParts = ({
@@ -43,36 +55,25 @@ const PopoverParts = ({
 				render={<Popover.Trigger onIntent={onIntent} />}>
 				{SHOW_DETAILS}
 			</Button>
-			<Popover.Portal container={container}>
-				<Popover.Positioner>
-					<Popover.Popup
-						loading={loading}
-						loadingLabel={LOADING}>
-						<Popover.Arrow />
-						<Popover.Title>{CLIENT_NAME}</Popover.Title>
-						<Popover.Rows>
-							<Popover.Row numeric label="Policy:">
-								12345678
-							</Popover.Row>
-							<Popover.Row numeric label="BSN:">
-								123456789
-							</Popover.Row>
-							<Popover.Row label="Referral letter:">
-								Yes
-							</Popover.Row>
-							<Popover.Row label="Care request type:">
-								ZT05
-							</Popover.Row>
-							<Popover.Row label="DSM diagnosis:">
-								{DIAGNOSIS}
-							</Popover.Row>
-							<Popover.Row label="Mental healthcare profile:">
-								Basic short-term mental healthcare
-							</Popover.Row>
-						</Popover.Rows>
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
+			<Popover.Content
+				container={container}
+				loading={loading}
+				loadingLabel={LOADING}>
+				<Popover.Arrow />
+				<Popover.Title>{CLIENT_NAME}</Popover.Title>
+				<Popover.Rows>
+					{ROWS.map(row => (
+						<Popover.Row key={row.label}>
+							<Popover.RowLabel>
+								{row.label}
+							</Popover.RowLabel>
+							<Popover.RowValue numeric={row.numeric}>
+								{row.value}
+							</Popover.RowValue>
+						</Popover.Row>
+					))}
+				</Popover.Rows>
+			</Popover.Content>
 		</>
 	);
 };
