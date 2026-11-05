@@ -9,7 +9,9 @@
  * - the root barrel imports an optional peer, directly or through its modules
  * - the package would ship anything under `docs/` or `.storybook/`, a story,
  *   or an MDX page
- * - an emitted stylesheet does not open with the cascade layer order
+ * - an emitted stylesheet does not open with the cascade layer order, or has
+ *   a rule outside the kit's layers
+ * - a packed file or source map points at a file the package leaves out
  * - the consumer fixture (`tools/fixtures/consumer/`) fails to typecheck or
  *   build against the packed kit, its CSS for one component carries
  *   another's, or a package it should load lazily, such as a zxcvbn language,
@@ -26,7 +28,7 @@ import {
 	readFileSync,
 	rmSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, posix } from "node:path";
 
 type Exports = Readonly<Record<string, unknown>>;
 
@@ -226,14 +228,86 @@ const unshippable = [
 	),
 ];
 
+/**
+ * The preludes of a stylesheet's top-level statements and blocks, comments
+ * left out.
+ *
+ * @example
+ *   topLevelPreludes("@layer a, b; @layer a { p { color: red } } p {}");
+ *   // ["@layer a, b", "@layer a", "p"]
+ */
+const topLevelPreludes = (
+	css: string,
+): readonly string[] => {
+	const collapse = (text: string): string => {
+		const next = text.replace(/\{[^{}]*\}/g, "\0");
+		return next === text ? text : collapse(next);
+	};
+	return collapse(
+		css
+			.replace(/\/\*[\s\S]*?\*\//g, "")
+			.replace(
+				/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g,
+				'""',
+			),
+	)
+		.split(/[\0;]/)
+		.map(prelude => prelude.trim())
+		.filter(prelude => prelude !== "");
+};
+
 const unlayered = packedFiles
 	.filter(path => path.endsWith(".css"))
-	.flatMap(path =>
-		readFileSync(join(root, path), "utf8").startsWith(
-			LAYER_ORDER,
-		)
+	.flatMap(path => {
+		const css = readFileSync(join(root, path), "utf8");
+		const outside = topLevelPreludes(css).filter(
+			prelude => !/^@layer\s+kit\./.test(prelude),
+		);
+		const opening = css.startsWith(LAYER_ORDER)
 			? []
-			: [`${path} does not open with "${LAYER_ORDER}"`],
+			: [`${path} does not open with "${LAYER_ORDER}"`];
+		return opening.concat(
+			outside.map(
+				prelude =>
+					`${path} has a rule outside the kit's layers: ${prelude}`,
+			),
+		);
+	});
+
+/** Where a packed file's source map or a source map's source points, resolved from the packed file. */
+const mapTargets = (path: string): readonly string[] => {
+	const contents = readFileSync(join(root, path), "utf8");
+	const base = posix.dirname(path);
+	if (path.endsWith(".map")) {
+		const map: Readonly<{
+			sourceRoot?: string;
+			sources?: readonly string[];
+		}> = JSON.parse(contents);
+		return (map.sources ?? []).map(source =>
+			posix.join(base, map.sourceRoot ?? "", source),
+		);
+	}
+	return [
+		...contents.matchAll(/[#@] sourceMappingURL=(\S+)/g),
+	].flatMap(([, url]) =>
+		url === undefined || url.startsWith("data:")
+			? []
+			: [posix.join(base, url)],
+	);
+};
+
+const packedSet = new Set(packedFiles);
+
+const danglingMaps = packedFiles
+	.filter(path => /\.(map|js|css|d\.ts)$/.test(path))
+	.flatMap(path =>
+		mapTargets(path).flatMap(target =>
+			packedSet.has(target)
+				? []
+				: [
+						`${path} points at ${target}, which is not packed`,
+					],
+		),
 	);
 
 /** The class names a component's own emitted stylesheet defines. */
@@ -512,9 +586,13 @@ const sections: readonly Readonly<{
 	},
 	{
 		title: "packed files",
-		problems: [...unshippable, ...unlayered],
+		problems: [
+			...unshippable,
+			...unlayered,
+			...danglingMaps,
+		],
 		passed:
-			"no docs, Storybook, stories or MDX, and every stylesheet opens with the layer order.",
+			"no docs, Storybook, stories or MDX, every stylesheet opens with the layer order and keeps its rules in the kit's layers, and no source map points at a file the package leaves out.",
 	},
 	{
 		title: "consumer fixture",
