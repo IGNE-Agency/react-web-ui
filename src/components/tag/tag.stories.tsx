@@ -2,6 +2,7 @@ import ErrorIcon from "@material-design-icons/svg/outlined/error.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentProps, ReactElement } from "react";
 import { expect } from "storybook/test";
+import { Icon } from "../icon/icon.tsx";
 import { Tag } from "./tag.tsx";
 
 type TagStoryProps = ComponentProps<typeof Tag.Root>;
@@ -24,7 +25,9 @@ const IconTag = ({
 	...args
 }: TagStoryProps): ReactElement => (
 	<Tag.Root {...args}>
-		<Tag.Icon svg={ErrorIcon} />
+		<Tag.Icon>
+			<Icon svg={ErrorIcon} label="" />
+		</Tag.Icon>
 		{children}
 	</Tag.Root>
 );

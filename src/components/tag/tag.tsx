@@ -1,66 +1,85 @@
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import type {
-	ComponentPropsWithRef,
-	ReactNode,
-} from "react";
+import type { ReactElement, ReactNode } from "react";
 import type { Tone, ToneVariant } from "../../lib/tone.ts";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import style from "./tag.module.scss";
 
-export type TagRootProps = ComponentPropsWithRef<"span"> &
-	Readonly<{
-		/** Status colour. @default "neutral" */
-		tone?: Tone;
-		/** @default "subtle" */
-		variant?: ToneVariant;
-		children: ReactNode;
-	}>;
+export type TagRootProps =
+	useRender.ComponentProps<"span"> &
+		Readonly<{
+			/** Status colour. @default "neutral" */
+			tone?: Tone;
+			/** @default "subtle" */
+			variant?: ToneVariant;
+			children: ReactNode;
+		}>;
 
+/** The pill: a `<span>` in a status `tone` and `variant`. */
 const Root = ({
 	tone = "neutral",
 	variant = "subtle",
+	render,
 	className,
+	ref,
+	...props
+}: TagRootProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"data-tone": tone,
+			"data-variant": variant,
+			...props,
+			className: clsx(style.root, className),
+		},
+	});
+
+export type TagDotProps = useRender.ComponentProps<"span">;
+
+/** A dot in the tag's tone, leading its label. */
+const Dot = ({
+	render,
+	className,
+	ref,
+	...props
+}: TagDotProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.dot, className),
+		},
+	});
+
+export type TagIconProps = useRender.ComponentProps<"span">;
+
+/**
+ * The glyph leading the label: its children, sized to the tag's text and drawn
+ * in its ink. Renders nothing without children.
+ */
+const TagIcon = ({
+	render,
+	className,
+	ref,
 	children,
 	...props
-}: TagRootProps): ReactNode => (
-	<span
-		data-tone={tone}
-		data-variant={variant}
-		className={clsx(style.root, className)}
-		{...props}>
-		{children}
-	</span>
-);
-
-export type TagDotProps = ComponentPropsWithRef<"span">;
-
-const Dot = ({
-	className,
-	...props
-}: TagDotProps): ReactNode => (
-	<span
-		aria-hidden="true"
-		className={clsx(style.dot, className)}
-		{...props}
-	/>
-);
-
-export type TagIconProps = Readonly<{
-	/** The glyph, from a SVGR `?react` import. */
-	svg: SvgComponent;
-	className?: string;
-}>;
-
-const TagIcon = ({
-	svg,
-	className,
-}: TagIconProps): ReactNode => (
-	<Icon
-		svg={svg}
-		label=""
-		className={clsx(style.icon, className)}
-	/>
-);
+}: TagIconProps): ReactElement | null =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		enabled: children !== undefined && children !== null,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.icon, className),
+			children,
+		},
+	});
 
 type TagParts = Readonly<{
 	Root: typeof Root;
@@ -73,9 +92,9 @@ type TagParts = Readonly<{
  * most one indicator: `Dot` or `Icon`. A removable tag is a `TagGroup.Tag`.
  *
  * @example
- * <Tag.Root tone="info">
- * 	<Tag.Dot />
- * 	Outstanding
+ * <Tag.Root tone="error">
+ * 	<Tag.Icon><ErrorIcon /></Tag.Icon>
+ * 	Returned
  * </Tag.Root>
  */
 export const Tag: TagParts = {

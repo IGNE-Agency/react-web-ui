@@ -22,5 +22,7 @@
 
 	.remove {
 		@include tag.remove;
+
+		font-size: var(--tag-group-remove-icon-size, 0.875em);
 	}
 }

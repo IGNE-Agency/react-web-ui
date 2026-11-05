@@ -8,24 +8,45 @@ import {
 import { TagGroup } from "../tag-group/tag-group.tsx";
 import type { ActiveFilterDescribers } from "./active-filter-describers.ts";
 
-type Chip = Readonly<{
+/** One chip for a committed filter, ready for a `TagGroup.Tag`. */
+export type ActiveFilterChip = Readonly<{
+	/** The chip's key in the `TagGroup`. */
 	id: string;
 	content: ReactNode;
 	textValue?: string;
 	tone?: Tone;
 	variant: ToneVariant;
+	/** Clears what the chip stands for. */
 	onRemove: () => void;
 }>;
 
-const buildChips = <TFilters extends object>(
+/** The chips for the committed filters, and the `TagGroup.Root` `onRemove` that clears them. */
+export type ActiveFilterChips = Readonly<{
+	chips: readonly ActiveFilterChip[];
+	/** Clears the filters behind the removed keys; pass it to `TagGroup.Root`. */
+	onRemove: (keys: Set<Key>) => void;
+}>;
+
+/**
+ * Builds one or more chips per described, non-empty committed filter, for a
+ * caller that renders its own `TagGroup`.
+ *
+ * @example
+ * const { chips, onRemove } = useActiveFilterChips(filters, {
+ * 	status: describeValue({ label: "Status" }),
+ * });
+ */
+export const useActiveFilterChips = <
+	TFilters extends object,
+>(
 	filters: FilterView<TFilters>,
 	describe: ActiveFilterDescribers<TFilters>,
-): readonly Chip[] => {
+): ActiveFilterChips => {
 	const keys = Object.keys(describe).filter(
 		(key): key is Extract<keyof TFilters, string> =>
 			key in describe,
 	);
-	return keys.flatMap(key => {
+	const chips = keys.flatMap(key => {
 		const value = filters.committed[key];
 		if (!isActiveFilterValue(value)) {
 			return [];
@@ -37,23 +58,36 @@ const buildChips = <TFilters extends object>(
 		const descriptors = Array.isArray(described)
 			? described
 			: [described];
-		return descriptors.map((descriptor, index): Chip => ({
-			id: `${key}#${index}`,
-			content: descriptor.content,
-			textValue:
-				descriptor.textValue ??
-				(typeof descriptor.content === "string"
-					? descriptor.content
-					: undefined),
-			tone: descriptor.tone,
-			variant: descriptor.variant ?? "subtle",
-			onRemove:
-				descriptor.onRemove ??
-				(() => {
-					filters.removeFilter(key);
-				}),
-		}));
+		return descriptors.map(
+			(descriptor, index): ActiveFilterChip => ({
+				id: `${key}#${index}`,
+				content: descriptor.content,
+				textValue:
+					descriptor.textValue ??
+					(typeof descriptor.content === "string"
+						? descriptor.content
+						: undefined),
+				tone: descriptor.tone,
+				variant: descriptor.variant ?? "subtle",
+				onRemove:
+					descriptor.onRemove ??
+					(() => {
+						filters.removeFilter(key);
+					}),
+			}),
+		);
 	});
+
+	return {
+		chips,
+		onRemove: removed => {
+			for (const chip of chips) {
+				if (removed.has(chip.id)) {
+					chip.onRemove();
+				}
+			}
+		},
+	};
 };
 
 export type ActiveFiltersProps<TFilters extends object> =
@@ -65,13 +99,16 @@ export type ActiveFiltersProps<TFilters extends object> =
 		label: string;
 		/** Each chip's remove button's name and tooltip, such as "Remove". */
 		removeLabel: string;
+		/** The glyph on each chip's remove button, such as a cross. */
+		removeIcon: ReactNode;
 		className?: string;
 	}>;
 
 /**
  * A roving-focus row of removable chips for the committed filters, on the
  * kit's `TagGroup`. Renders one or more chips per described, non-empty
- * committed field, and nothing when none are active.
+ * committed field, and nothing when none are active. Compose `TagGroup` over
+ * `useActiveFilterChips` where a chip needs more than this.
  *
  * @example
  * <ActiveFilters
@@ -79,6 +116,7 @@ export type ActiveFiltersProps<TFilters extends object> =
  * 	describe={{ status: describeValue({ label: "Status" }) }}
  * 	label="Active filters"
  * 	removeLabel="Remove"
+ * 	removeIcon={<CloseIcon />}
  * />
  */
 export const ActiveFilters = <TFilters extends object>({
@@ -86,26 +124,22 @@ export const ActiveFilters = <TFilters extends object>({
 	describe,
 	label,
 	removeLabel,
+	removeIcon,
 	className,
 }: ActiveFiltersProps<TFilters>): ReactNode => {
-	const chips = buildChips(filters, describe);
+	const { chips, onRemove } = useActiveFilterChips(
+		filters,
+		describe,
+	);
 
 	if (chips.length === 0) {
 		return null;
 	}
 
-	const handleRemove = (keys: Set<Key>) => {
-		for (const chip of chips) {
-			if (keys.has(chip.id)) {
-				chip.onRemove();
-			}
-		}
-	};
-
 	return (
 		<TagGroup.Root
 			aria-label={label}
-			onRemove={handleRemove}
+			onRemove={onRemove}
 			className={className}>
 			<TagGroup.List items={chips}>
 				{chip => (
@@ -115,7 +149,9 @@ export const ActiveFilters = <TFilters extends object>({
 						tone={chip.tone}
 						variant={chip.variant}>
 						{chip.content}
-						<TagGroup.Remove label={removeLabel} />
+						<TagGroup.Remove label={removeLabel}>
+							{removeIcon}
+						</TagGroup.Remove>
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>

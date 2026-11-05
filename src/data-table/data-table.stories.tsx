@@ -1,5 +1,16 @@
+import ArrowDownwardIcon from "@material-design-icons/svg/outlined/arrow_downward.svg?react";
+import ArrowUpwardIcon from "@material-design-icons/svg/outlined/arrow_upward.svg?react";
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import FilterIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
+import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.svg?react";
+import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
+import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
+import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
+import UnfoldMoreIcon from "@material-design-icons/svg/outlined/unfold_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../components/icon/index.ts";
 import {
@@ -24,10 +35,17 @@ import { z } from "zod";
 import { describeValue } from "../components/active-filters/active-filter-describers.ts";
 import { ActiveFilters } from "../components/active-filters/active-filters.tsx";
 import { Button } from "../components/button/button.tsx";
+import { Drawer } from "../components/drawer/drawer.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
+import { Icon } from "../components/icon/icon.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
-import type { PaginationPage } from "../components/pagination/pagination.tsx";
+import {
+	Pagination,
+	type PaginationPage,
+} from "../components/pagination/pagination.tsx";
+import { Select } from "../components/select-field/select.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
+import { Stale } from "../components/stale/stale.tsx";
 import {
 	type DataViewQueryParams,
 	useDataView,
@@ -44,6 +62,8 @@ import {
 	DataTable,
 	type DataTableRootProps,
 } from "./data-table.tsx";
+import { useDataTable } from "./data-table-context.tsx";
+import { useDataTableView } from "./data-table-parts.tsx";
 import { selectionColumn } from "./data-table-selection.tsx";
 import {
 	dataTableFeatures,
@@ -194,6 +214,14 @@ const dataViewColumns = [
 	amountColumn(false),
 ];
 
+const sortAscendingIcon = (
+	<Icon svg={ArrowUpwardIcon} label="" />
+);
+const sortDescendingIcon = (
+	<Icon svg={ArrowDownwardIcon} label="" />
+);
+const unsortedIcon = <Icon svg={UnfoldMoreIcon} label="" />;
+
 const TableContent = () => (
 	<DataTable.Content
 		emptyState={EMPTY_STATE}
@@ -201,18 +229,113 @@ const TableContent = () => (
 		loadingLabel={LOADING_LABEL}
 		slowLabel={SLOW_LABEL}
 		retryLabel={RETRY_LABEL}
+		sortAscendingIcon={sortAscendingIcon}
+		sortDescendingIcon={sortDescendingIcon}
+		unsortedIcon={unsortedIcon}
 	/>
 );
 
+const TableParts = () => {
+	const { table, onRetry } = useDataTable<Declaration>();
+	const { view } = useDataTableView();
+
+	return (
+		<DataTable.Frame>
+			<DataTable.Scroller>
+				<DataTable.Table>
+					<DataTable.LoadingCaption>
+						{LOADING_LABEL}
+					</DataTable.LoadingCaption>
+					<DataTable.Head>
+						{table.getHeaderGroups().map(headerGroup => (
+							<DataTable.HeaderRow key={headerGroup.id}>
+								{headerGroup.headers.map(header => (
+									<DataTable.HeaderCell
+										key={header.id}
+										header={header}>
+										{header.column.getCanSort() ? (
+											<DataTable.SortButton
+												header={header}
+												sortAscendingIcon={
+													sortAscendingIcon
+												}
+												sortDescendingIcon={
+													sortDescendingIcon
+												}
+											/>
+										) : undefined}
+									</DataTable.HeaderCell>
+								))}
+							</DataTable.HeaderRow>
+						))}
+					</DataTable.Head>
+					<DataTable.Body>
+						{view === "ready" ? (
+							table.getRowModel().rows.map(row => (
+								<DataTable.Row key={row.id} row={row}>
+									{row.getAllCells().map(cell => (
+										<DataTable.Cell
+											key={cell.id}
+											cell={cell}
+										/>
+									))}
+								</DataTable.Row>
+							))
+						) : view === "loading" ? (
+							<DataTable.PlaceholderRows />
+						) : (
+							<DataTable.StateRow>
+								{view === "error" ? (
+									<DataTable.ErrorMessage>
+										{ERROR_LABEL}
+									</DataTable.ErrorMessage>
+								) : (
+									EMPTY_STATE
+								)}
+							</DataTable.StateRow>
+						)}
+					</DataTable.Body>
+				</DataTable.Table>
+			</DataTable.Scroller>
+			<DataTable.StaleOverlay>
+				<Stale.Message>{SLOW_LABEL}</Stale.Message>
+				{onRetry ? (
+					<Stale.Retry onRetry={onRetry}>
+						{RETRY_LABEL}
+					</Stale.Retry>
+				) : null}
+			</DataTable.StaleOverlay>
+		</DataTable.Frame>
+	);
+};
+
 const TablePagination = () => (
-	<DataTable.Pagination
-		pageSizeLabel={PAGE_SIZE_LABEL}
-		indexLabel={indexLabel}
-		firstLabel={FIRST_LABEL}
-		previousLabel={PREVIOUS_LABEL}
-		nextLabel={NEXT_LABEL}
-		lastLabel={LAST_LABEL}
-	/>
+	<DataTable.Pagination>
+		<Pagination.PageSize>
+			<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
+			<Select.Trigger />
+			<Select.Portal>
+				<Select.Positioner>
+					<Select.Popup>
+						<Select.List>
+							<Select.Items />
+						</Select.List>
+					</Select.Popup>
+				</Select.Positioner>
+			</Select.Portal>
+		</Pagination.PageSize>
+		<Pagination.Index label={indexLabel} />
+		<Pagination.Controls
+			firstLabel={FIRST_LABEL}
+			previousLabel={PREVIOUS_LABEL}
+			nextLabel={NEXT_LABEL}
+			lastLabel={LAST_LABEL}
+			firstIcon={<Icon svg={FirstPageIcon} label="" />}
+			previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
+			nextIcon={<Icon svg={ChevronRightIcon} label="" />}
+			lastIcon={<Icon svg={LastPageIcon} label="" />}
+		/>
+	</DataTable.Pagination>
 );
 
 type SelectionBarProps = Readonly<{ totalRows: number }>;
@@ -236,6 +359,7 @@ type DeclarationTableProps = DataTableExampleProps &
 	Readonly<{
 		rows: readonly Declaration[];
 		selectable: boolean;
+		composed?: boolean;
 	}>;
 
 const DeclarationTable = ({
@@ -244,6 +368,7 @@ const DeclarationTable = ({
 	onRetry,
 	rows,
 	selectable,
+	composed = false,
 }: DeclarationTableProps) => {
 	const selection = useRowSelection();
 	const table = useTable<DataTableFeatures, Declaration>({
@@ -279,7 +404,7 @@ const DeclarationTable = ({
 			{selectable ? (
 				<SelectionBar totalRows={rows.length} />
 			) : null}
-			<TableContent />
+			{composed ? <TableParts /> : <TableContent />}
 			<TablePagination />
 		</DataTable.Root>
 	);
@@ -298,6 +423,17 @@ const EmptyDataTable = (props: DataTableExampleProps) => (
 		{...props}
 		rows={EMPTY_ROWS}
 		selectable={false}
+	/>
+);
+
+const ComposedDataTable = (
+	props: DataTableExampleProps,
+) => (
+	<DeclarationTable
+		{...props}
+		rows={DECLARATIONS}
+		selectable={false}
+		composed
 	/>
 );
 
@@ -419,32 +555,52 @@ const DataViewTable = ({
 					icon={<Icon svg={SearchIcon} label="" />}
 					optionalLabel="optional"
 				/>
-				<FilterBar.Drawer
-					swipeDirection="right"
-					triggerLabel={FILTERS_LABEL}
-					title={FILTERS_TITLE}
-					closeLabel="Close"
-					resetLabel="Reset"
-					applyLabel={APPLY_LABEL}>
-					<SelectField
-						label={CLIENT_FILTER_LABEL}
-						optionalLabel="optional"
-						options={CLIENT_OPTIONS}
-						value={filters.draft.client ?? ""}
-						loadingLabel="Loading clients…"
-						loadFailedLabel="Clients could not be loaded."
-						loadBrokenLabel="Clients could not be loaded, and trying again won't help."
-						retryLabel={RETRY_LABEL}
-						noOptionsLabel="No clients."
-						onValueChange={next => {
-							filters.setDraft(
-								"client",
-								next === "" ? undefined : next,
-							);
-						}}
-					/>
+				<FilterBar.Drawer swipeDirection="right">
+					<FilterBar.Trigger
+						icon={<Icon svg={FilterIcon} label="" />}>
+						{FILTERS_LABEL}
+						<FilterBar.Badge />
+					</FilterBar.Trigger>
+					<FilterBar.Content>
+						<Drawer.Header>
+							<Drawer.Title>{FILTERS_TITLE}</Drawer.Title>
+							<Drawer.CloseButton
+								closeLabel="Close"
+								icon={<Icon svg={CloseIcon} label="" />}
+							/>
+						</Drawer.Header>
+						<FilterBar.Fields>
+							<SelectField
+								label={CLIENT_FILTER_LABEL}
+								optionalLabel="optional"
+								options={CLIENT_OPTIONS}
+								value={filters.draft.client ?? ""}
+								loadingLabel="Loading clients…"
+								loadFailedLabel="Clients could not be loaded."
+								loadBrokenLabel="Clients could not be loaded, and trying again won't help."
+								retryLabel={RETRY_LABEL}
+								noOptionsLabel="No clients."
+								onValueChange={next => {
+									filters.setDraft(
+										"client",
+										next === "" ? undefined : next,
+									);
+								}}
+							/>
+						</FilterBar.Fields>
+						<FilterBar.Footer>
+							<FilterBar.Reset
+								icon={<Icon svg={RestoreIcon} label="" />}>
+								Reset
+							</FilterBar.Reset>
+							<FilterBar.Apply
+								icon={<Icon svg={CheckIcon} label="" />}>
+								{APPLY_LABEL}
+							</FilterBar.Apply>
+						</FilterBar.Footer>
+					</FilterBar.Content>
 				</FilterBar.Drawer>
-				<FilterBar.Active clearAllLabel={CLEAR_ALL_LABEL}>
+				<FilterBar.Active>
 					<ActiveFilters
 						filters={filters}
 						describe={{
@@ -454,7 +610,12 @@ const DataViewTable = ({
 						}}
 						label="Active filters"
 						removeLabel="Remove"
+						removeIcon={<Icon svg={CloseIcon} label="" />}
 					/>
+					<FilterBar.ClearAll
+						icon={<Icon svg={FilterOffIcon} label="" />}>
+						{CLEAR_ALL_LABEL}
+					</FilterBar.ClearAll>
 				</FilterBar.Active>
 			</FilterBar.Root>
 			<DataTable.Root
@@ -750,6 +911,28 @@ export const RefreshFailed: Story = {
 		);
 
 		await expect(retry).toHaveBeenCalledOnce();
+	},
+};
+
+export const ComposedParts: Story = {
+	render: ComposedDataTable,
+	play: async ({ canvas }) => {
+		await expect(bodyRows(canvas)).toHaveLength(PAGE_SIZE);
+		await expect(firstRow(canvas)).toHaveTextContent(CHRIS);
+		await expect(sortButton(canvas)).toBeVisible();
+	},
+};
+
+export const ComposedSortMouse: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedDataTable,
+	play: async ({ canvas }) => {
+		await userEvent.click(sortButton(canvas));
+		await expect(clientHeader(canvas)).toHaveAttribute(
+			"aria-sort",
+			"ascending",
+		);
+		await expect(firstRow(canvas)).toHaveTextContent(ANNE);
 	},
 };
 

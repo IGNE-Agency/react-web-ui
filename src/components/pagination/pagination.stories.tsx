@@ -1,3 +1,7 @@
+import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
+import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
+import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
+import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -10,6 +14,8 @@ import {
 	type within,
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { Icon } from "../icon/icon.tsx";
+import { Select } from "../select-field/select.tsx";
 import {
 	Pagination,
 	type PaginationPage,
@@ -35,16 +41,40 @@ const pageSizeChange = fn<
 	(pageSize: number) => void
 >().mockName("onPageSizeChange");
 
+const PageSize = (): ReactElement => (
+	<Pagination.PageSize>
+		<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
+		<Select.Trigger />
+		<Select.Portal>
+			<Select.Positioner>
+				<Select.Popup>
+					<Select.List>
+						<Select.Items />
+					</Select.List>
+				</Select.Popup>
+			</Select.Positioner>
+		</Select.Portal>
+	</Pagination.PageSize>
+);
+
+const Controls = (): ReactElement => (
+	<Pagination.Controls
+		firstLabel={FIRST_LABEL}
+		previousLabel={PREVIOUS_LABEL}
+		nextLabel={NEXT_LABEL}
+		lastLabel={LAST_LABEL}
+		firstIcon={<Icon svg={FirstPageIcon} label="" />}
+		previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
+		nextIcon={<Icon svg={ChevronRightIcon} label="" />}
+		lastIcon={<Icon svg={LastPageIcon} label="" />}
+	/>
+);
+
 const Parts = (): ReactElement => (
 	<>
-		<Pagination.PageSize label={PAGE_SIZE_LABEL} />
+		<PageSize />
 		<Pagination.Index label={pageLabel} />
-		<Pagination.Controls
-			firstLabel={FIRST_LABEL}
-			previousLabel={PREVIOUS_LABEL}
-			nextLabel={NEXT_LABEL}
-			lastLabel={LAST_LABEL}
-		/>
+		<Controls />
 	</>
 );
 
@@ -82,12 +112,21 @@ const ControlsOnly = (
 ): ReactElement => (
 	<Pagination.Root {...args}>
 		<Pagination.Index label={pageLabel} />
-		<Pagination.Controls
-			firstLabel={FIRST_LABEL}
-			previousLabel={PREVIOUS_LABEL}
-			nextLabel={NEXT_LABEL}
-			lastLabel={LAST_LABEL}
-		/>
+		<Controls />
+	</Pagination.Root>
+);
+
+const PreviousAndNext = (
+	args: PaginationRootProps,
+): ReactElement => (
+	<Pagination.Root {...args}>
+		<Pagination.Previous label={PREVIOUS_LABEL}>
+			<Icon svg={ChevronLeftIcon} label="" />
+		</Pagination.Previous>
+		<Pagination.Index label={pageLabel} />
+		<Pagination.Next label={NEXT_LABEL}>
+			<Icon svg={ChevronRightIcon} label="" />
+		</Pagination.Next>
 	</Pagination.Root>
 );
 
@@ -202,6 +241,20 @@ export const PageSizeNotOnOffer: Story = {
 
 export const WithoutPageSize: Story = {
 	render: ControlsOnly,
+};
+
+export const StepButtons: Story = {
+	render: PreviousAndNext,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("status"),
+		).toHaveTextContent("Page 3 of 12");
+		await available(button(canvas, PREVIOUS_LABEL));
+		await available(button(canvas, NEXT_LABEL));
+		await expect(
+			canvas.queryByRole("button", { name: FIRST_LABEL }),
+		).not.toBeInTheDocument();
+	},
 };
 
 export const Keyboard: Story = {

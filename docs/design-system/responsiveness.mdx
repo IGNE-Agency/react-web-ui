@@ -1,10 +1,12 @@
 import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Icon } from "../../src/components/icon/index.ts";
 import { Tag } from "../../src/components/tag/index.ts";
 import { TagGroup } from "../../src/components/tag-group/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
@@ -168,11 +170,15 @@ The second is hover. A control that only shows up when the pointer passes over i
 						<TagGroup.List className={components.row}>
 							<TagGroup.Tag textValue="Submitted">
 								Submitted
-								<TagGroup.Remove label="Remove" />
+								<TagGroup.Remove label="Remove">
+									<Icon svg={CloseIcon} label="" />
+								</TagGroup.Remove>
 							</TagGroup.Tag>
 							<TagGroup.Tag textValue="October 2026">
 								October 2026
-								<TagGroup.Remove label="Remove" />
+								<TagGroup.Remove label="Remove">
+									<Icon svg={CloseIcon} label="" />
+								</TagGroup.Remove>
 							</TagGroup.Tag>
 						</TagGroup.List>
 					</TagGroup.Root>
@@ -394,7 +400,9 @@ A remove on a staged file, a chip's dismiss, a row's own action: none is reveale
 		{filter => (
 			<TagGroup.Tag textValue={filter.label}>
 				{filter.label}
-				<TagGroup.Remove label={removeLabel} />
+				<TagGroup.Remove label={removeLabel}>
+					<CloseIcon />
+				</TagGroup.Remove>
 			</TagGroup.Tag>
 		)}
 	</TagGroup.List>

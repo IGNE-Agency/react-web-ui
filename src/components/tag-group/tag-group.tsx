@@ -1,8 +1,8 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import {
 	Button as AriaButton,
+	type ButtonProps as AriaButtonProps,
 	Tag as AriaTag,
 	TagGroup as AriaTagGroup,
 	type TagGroupProps as AriaTagGroupProps,
@@ -11,7 +11,6 @@ import {
 	type TagProps as AriaTagProps,
 } from "react-aria-components";
 import type { Tone, ToneVariant } from "../../lib/tone.ts";
-import { Icon } from "../icon/icon.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import style from "./tag-group.module.scss";
 
@@ -25,6 +24,7 @@ export type TagGroupRootProps = Omit<
 		className?: string;
 	}>;
 
+/** The group: named by `aria-label`, and calling `onRemove` with the keys removed. */
 const Root = ({
 	className,
 	...props
@@ -41,6 +41,7 @@ export type TagGroupListProps<T extends object> = Omit<
 > &
 	Readonly<{ className?: string }>;
 
+/** The row of tags, from `items` or from its children. */
 const List = <T extends object>({
 	className,
 	...props
@@ -63,6 +64,7 @@ export type TagGroupTagProps = Omit<
 		className?: string;
 	}>;
 
+/** One tag, in a status `tone` and `variant`. */
 const GroupTag = ({
 	tone = "neutral",
 	variant = "subtle",
@@ -77,23 +79,33 @@ const GroupTag = ({
 	/>
 );
 
-export type TagGroupRemoveProps = Readonly<{
-	/** The action's name, such as "Remove", surfaced as the tooltip hint; the button is named by it followed by its tag. */
-	label: string;
-	className?: string;
-}>;
+export type TagGroupRemoveProps = Omit<
+	AriaButtonProps,
+	"slot" | "children" | "className"
+> &
+	Readonly<{
+		/** The action's name, such as "Remove", surfaced as the tooltip hint; the button is named by it followed by its tag. */
+		label: string;
+		/** The glyph, such as a cross. */
+		children: ReactNode;
+		className?: string;
+	}>;
 
+/** The tag's icon-only remove button, named by `label` and its tag, and left out of the tab order. */
 const Remove = ({
 	label,
 	className,
+	children,
+	...props
 }: TagGroupRemoveProps): ReactNode => (
 	<Tooltip content={label}>
 		<AriaButton
 			slot="remove"
 			excludeFromTabOrder
 			aria-label={label}
-			className={clsx(style.remove, className)}>
-			<Icon svg={CloseIcon} label="" size={0.875} />
+			className={clsx(style.remove, className)}
+			{...props}>
+			{children}
 		</AriaButton>
 	</Tooltip>
 );
@@ -117,7 +129,7 @@ type TagGroupParts = Readonly<{
  * 		{filter => (
  * 			<TagGroup.Tag id={filter.id} textValue={filter.label}>
  * 				{filter.label}
- * 				<TagGroup.Remove label="Remove" />
+ * 				<TagGroup.Remove label="Remove"><CloseIcon /></TagGroup.Remove>
  * 			</TagGroup.Tag>
  * 		)}
  * 	</TagGroup.List>

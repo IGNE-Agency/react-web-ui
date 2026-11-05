@@ -1,18 +1,27 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { useFilterView } from "../filter-bar/use-filter-view.ts";
+import { Icon } from "../icon/icon.tsx";
+import { Tag } from "../tag/tag.tsx";
+import { TagGroup } from "../tag-group/tag-group.tsx";
 import {
 	describeFlag,
 	describeList,
 	describeValue,
 } from "./active-filter-describers.ts";
-import { ActiveFilters } from "./active-filters.tsx";
+import {
+	ActiveFilters,
+	useActiveFilterChips,
+} from "./active-filters.tsx";
 
 const ACTIVE_LABEL = "Active filters";
 const REMOVE_LABEL = "Remove";
 const STATUS_CHIP = "Status: Submitted, Paid";
 const YEAR_CHIP = "Year: 2026";
 const ARCHIVED_CHIP = "Archived";
+
+const removeIcon = <Icon svg={CloseIcon} label="" />;
 
 type DeclarationFilters = Readonly<{
 	statuses?: readonly string[];
@@ -42,7 +51,49 @@ const ActiveFiltersExample = () => {
 			}}
 			label={ACTIVE_LABEL}
 			removeLabel={REMOVE_LABEL}
+			removeIcon={removeIcon}
 		/>
+	);
+};
+
+const ComposedExample = () => {
+	const filters = useFilterView<DeclarationFilters>({
+		initial: {
+			statuses: ["Submitted", "Paid"],
+			year: "2026",
+		},
+	});
+	const { chips, onRemove } = useActiveFilterChips(
+		filters,
+		{
+			statuses: describeList({
+				label: "Status",
+				tone: "info",
+			}),
+			year: describeValue({ label: "Year" }),
+		},
+	);
+
+	return (
+		<TagGroup.Root
+			aria-label={ACTIVE_LABEL}
+			onRemove={onRemove}>
+			<TagGroup.List items={chips}>
+				{chip => (
+					<TagGroup.Tag
+						id={chip.id}
+						textValue={chip.textValue}
+						tone={chip.tone}
+						variant={chip.variant}>
+						<Tag.Dot />
+						{chip.content}
+						<TagGroup.Remove label={REMOVE_LABEL}>
+							{removeIcon}
+						</TagGroup.Remove>
+					</TagGroup.Tag>
+				)}
+			</TagGroup.List>
+		</TagGroup.Root>
 	);
 };
 
@@ -57,6 +108,7 @@ const UnfilteredExample = () => {
 			describe={{ year: describeValue({ label: "Year" }) }}
 			label={ACTIVE_LABEL}
 			removeLabel={REMOVE_LABEL}
+			removeIcon={removeIcon}
 		/>
 	);
 };
@@ -79,10 +131,12 @@ const meta = {
 		describe: {},
 		label: ACTIVE_LABEL,
 		removeLabel: REMOVE_LABEL,
+		removeIcon,
 	},
 	argTypes: {
 		filters: { control: false },
 		describe: { control: false },
+		removeIcon: { control: false },
 	},
 } satisfies Meta<typeof ActiveFilters>;
 
@@ -163,6 +217,39 @@ export const RemoveTouch: Story = {
 				canvas.queryByRole("row", { name: STATUS_CHIP }),
 			).not.toBeInTheDocument(),
 		);
+	},
+};
+
+export const Composed: Story = {
+	render: ComposedExample,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("row", { name: STATUS_CHIP }),
+		).toBeVisible();
+		await expect(
+			canvas.getByRole("row", { name: YEAR_CHIP }),
+		).toBeVisible();
+	},
+};
+
+export const ComposedRemoveMouse: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedExample,
+	play: async ({ canvas }) => {
+		await userEvent.click(
+			canvas.getByRole("button", {
+				name: `${REMOVE_LABEL} ${YEAR_CHIP}`,
+			}),
+		);
+
+		await waitFor(() =>
+			expect(
+				canvas.queryByRole("row", { name: YEAR_CHIP }),
+			).not.toBeInTheDocument(),
+		);
+		await expect(
+			canvas.getByRole("row", { name: STATUS_CHIP }),
+		).toBeVisible();
 	},
 };
 

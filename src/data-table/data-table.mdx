@@ -961,19 +961,95 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ### The pager is the kit's pagination
 
-`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
+`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. It holds the `Pagination` parts it is given, and everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
 
 ```tsx
-<DataTable.Pagination
-	pageSizeLabel="Rows per page"
-	indexLabel={({ pageIndex, pageCount }) =>
-		`Page ${pageIndex + 1} of ${pageCount}`
-	}
-	firstLabel="First page"
-	previousLabel="Previous page"
-	nextLabel="Next page"
-	lastLabel="Last page"
-/>
+<DataTable.Pagination>
+	<Pagination.PageSize>
+		<Select.Label>Rows per page</Select.Label>
+		<Select.Trigger />
+		<Select.Portal>
+			<Select.Positioner>
+				<Select.Popup>
+					<Select.List>
+						<Select.Items />
+					</Select.List>
+				</Select.Popup>
+			</Select.Positioner>
+		</Select.Portal>
+	</Pagination.PageSize>
+	<Pagination.Index
+		label={({ pageIndex, pageCount }) =>
+			`Page ${pageIndex + 1} of ${pageCount}`
+		}
+	/>
+	<Pagination.Controls
+		firstLabel="First page"
+		previousLabel="Previous page"
+		nextLabel="Next page"
+		lastLabel="Last page"
+		firstIcon={<FirstPageIcon />}
+		previousIcon={<ChevronLeftIcon />}
+		nextIcon={<ChevronRightIcon />}
+		lastIcon={<LastPageIcon />}
+	/>
+</DataTable.Pagination>
+```
+
+### Content is the whole table; its parts are the same table in your markup
+
+`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, through `sortAscendingIcon`, `sortDescendingIcon` and `unsortedIcon`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`:
+
+```tsx
+const { view } = useDataTableView();
+
+<DataTable.Frame>
+	<DataTable.Scroller>
+		<DataTable.Table>
+			<DataTable.LoadingCaption>
+				Loading declarations
+			</DataTable.LoadingCaption>
+			<DataTable.Head>
+				{table.getHeaderGroups().map(group => (
+					<DataTable.HeaderRow key={group.id}>
+						{group.headers.map(header => (
+							<DataTable.HeaderCell
+								key={header.id}
+								header={header}>
+								{header.column.getCanSort() ? (
+									<DataTable.SortButton header={header} />
+								) : undefined}
+							</DataTable.HeaderCell>
+						))}
+					</DataTable.HeaderRow>
+				))}
+			</DataTable.Head>
+			<DataTable.Body>
+				{view === "ready" ? (
+					table.getRowModel().rows.map(row => (
+						<DataTable.Row key={row.id} row={row}>
+							{row.getAllCells().map(cell => (
+								<DataTable.Cell key={cell.id} cell={cell} />
+							))}
+						</DataTable.Row>
+					))
+				) : view === "loading" ? (
+					<DataTable.PlaceholderRows />
+				) : (
+					<DataTable.StateRow>
+						{emptyOrError}
+					</DataTable.StateRow>
+				)}
+			</DataTable.Body>
+		</DataTable.Table>
+	</DataTable.Scroller>
+	<DataTable.StaleOverlay>
+		<Stale.Message>
+			This is taking longer than usual.
+		</Stale.Message>
+		<Stale.Retry onRetry={retry}>Try again</Stale.Retry>
+	</DataTable.StaleOverlay>
+</DataTable.Frame>;
 ```
 
 ### Rows that are on screen never unmount
