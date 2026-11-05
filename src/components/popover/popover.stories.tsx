@@ -20,21 +20,21 @@ import styles from "./popover.stories.module.scss";
 const SHOW_DETAILS = "Show client details";
 const LOADING = "Loading client details";
 const CLIENT_NAME = "Jan de Vries";
-const DIAGNOSIS = "Alcohol use disorder";
+const INDUSTRY = "Hospitality and leisure";
 
 type PopoverExampleProps = ComponentProps<
 	typeof Popover.Root
 >;
 
 const ROWS = [
-	{ label: "Policy:", value: "12345678", numeric: true },
-	{ label: "BSN:", value: "123456789", numeric: true },
-	{ label: "Referral letter:", value: "Yes" },
-	{ label: "Care request type:", value: "ZT05" },
-	{ label: "DSM diagnosis:", value: DIAGNOSIS },
+	{ label: "KvK number:", value: "12345678", numeric: true },
+	{ label: "Debtor number:", value: "123456789", numeric: true },
+	{ label: "Purchase order required:", value: "Yes" },
+	{ label: "Rate card:", value: "RC05" },
+	{ label: "Industry:", value: INDUSTRY },
 	{
-		label: "Mental healthcare profile:",
-		value: "Basic short-term mental healthcare",
+		label: "Engagement:",
+		value: "Retainer for design and strategy work",
 	},
 ];
 
@@ -159,7 +159,7 @@ type Story = StoryObj<typeof meta>;
 export const Open: Story = {
 	play: async () => {
 		await expect(await popover()).toHaveTextContent(
-			DIAGNOSIS,
+			INDUSTRY,
 		);
 	},
 };

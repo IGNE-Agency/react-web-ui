@@ -23,7 +23,7 @@ import {
 const LABEL = "I agree to the terms";
 const OPTIONAL_LABEL = "optional";
 const DESCRIPTION =
-	"The terms apply to every declaration you submit.";
+	"The terms apply to every invoice you submit.";
 const ERROR = "Agree to the terms to continue.";
 
 const checkedChange =

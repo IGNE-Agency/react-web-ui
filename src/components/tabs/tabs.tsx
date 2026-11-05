@@ -58,7 +58,7 @@ export type TabsListProps = Omit<
 	"className" | "aria-label"
 > &
 	Readonly<{
-		/** What the tabs switch between, such as "Declaration". */
+		/** What the tabs switch between, such as "Invoice". */
 		label: string;
 		className?: string;
 	}>;
@@ -188,7 +188,7 @@ type TabsParts = Readonly<{
  *
  * @example
  * <Tabs.Root defaultValue="details">
- * 	<Tabs.List label="Declaration">
+ * 	<Tabs.List label="Invoice">
  * 		<Tabs.Tab value="details">Details</Tabs.Tab>
  * 		<Tabs.Tab value="history">History<Tabs.Count>3</Tabs.Count></Tabs.Tab>
  * 		<Tabs.Indicator />

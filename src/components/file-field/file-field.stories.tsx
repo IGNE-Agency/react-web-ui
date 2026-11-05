@@ -29,7 +29,7 @@ const tooLarge = (name: string, maxSize: string) =>
 	`${name} is larger than the maximum size of ${maxSize} and must be removed.`;
 const wrongType = (name: string) =>
 	`${name} is not an accepted file type and must be removed.`;
-const SCAN_NAME = "referral-letter.png";
+const SCAN_NAME = "signed-timesheet.png";
 
 const KILOBYTE = 1024;
 
@@ -179,7 +179,7 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "Add the invoice and any referral letter.",
+		description: "Add the invoice and any signed timesheet.",
 	},
 };
 

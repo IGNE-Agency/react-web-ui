@@ -22,7 +22,7 @@ export type TSFDateFieldProps = Omit<
  *
  * @example
  * <form.AppField name="treatedOn">
- * 	{field => <field.DateField label="Treatment date" optionalLabel="optional" openCalendarIcon={<CalendarTodayIcon />} {...calendarLabels} {...calendarIcons} />}
+ * 	{field => <field.DateField label="Service date" optionalLabel="optional" openCalendarIcon={<CalendarTodayIcon />} {...calendarLabels} {...calendarIcons} />}
  * </form.AppField>
  */
 export const TSFDateField = (

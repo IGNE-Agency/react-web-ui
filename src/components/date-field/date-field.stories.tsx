@@ -29,7 +29,7 @@ import {
 const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
 const MONTH_END = DAY.with({ day: DAY.daysInMonth });
-const LABEL = "Treatment date";
+const LABEL = "Service date";
 const OPEN_CALENDAR = "Open calendar";
 const PREVIOUS_MONTH = "Previous month";
 const NEXT_MONTH = "Next month";
@@ -154,7 +154,7 @@ export const Optional: Story = {
 export const Invalid: Story = {
 	args: {
 		value: DAY.toString(),
-		errors: ["Enter a valid treatment date."],
+		errors: ["Enter a valid service date."],
 	},
 };
 
@@ -164,7 +164,7 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The day the treatment took place.",
+		description: "The day the work was done.",
 	},
 };
 

@@ -13,13 +13,13 @@ const SECTIONS = [
 	{
 		value: "fees",
 		title: "Fees",
-		content: "A declaration costs nothing to send.",
+		content: "An invoice costs nothing to send.",
 	},
 	{
 		value: "deadlines",
 		title: "Deadlines",
 		content:
-			"Send a declaration within 30 days of the visit.",
+			"Send an invoice within 30 days of finishing the work.",
 	},
 	{
 		value: "payment",

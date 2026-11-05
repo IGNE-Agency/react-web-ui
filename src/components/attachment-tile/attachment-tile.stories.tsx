@@ -71,7 +71,7 @@ const meta = {
 		file: INVOICE,
 		hint: "invoice-july.pdf (8 B)",
 		removeLabel: REMOVE,
-		removeIcon: <CloseIcon />,
+		removeIcon: <Icon svg={CloseIcon} label="" />,
 		icon: mappedArg(ICONS, "document"),
 		invalid: false,
 		disabled: false,

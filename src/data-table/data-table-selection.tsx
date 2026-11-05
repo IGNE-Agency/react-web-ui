@@ -114,7 +114,7 @@ export type SelectionColumnOptions = Readonly<{
  *
  * @example
  * const columns = [
- * 	selectionColumn<Declaration>({ sticky: "start", selectPageLabel: "Select page", selectRowLabel: "Select row", checkIcon: <CheckIcon />, indeterminateIcon: <RemoveIcon /> }),
+ * 	selectionColumn<Invoice>({ sticky: "start", selectPageLabel: "Select page", selectRowLabel: "Select row", checkIcon: <CheckIcon />, indeterminateIcon: <RemoveIcon /> }),
  * 	...dataColumns,
  * ];
  */
@@ -157,7 +157,7 @@ export const selectionColumn = <
 });
 
 export type DataTableSelectionBarProps = Readonly<{
-	/** What the bar says while nothing is selected, such as "30 declarations". */
+	/** What the bar says while nothing is selected, such as "30 invoices". */
 	total?: ReactNode;
 	totalRows: number;
 	/** How many of the matching rows are selected, such as "3 of 30 selected". */

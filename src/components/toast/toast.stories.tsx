@@ -171,7 +171,7 @@ const meta = {
 	decorators: [withOverlayFrame("medium")],
 	args: {
 		closeLabel: STORY_TOAST_CLOSE_LABEL,
-		closeIcon: <CloseIcon />,
+		closeIcon: <Icon svg={CloseIcon} label="" />,
 		viewportLabel: STORY_TOAST_VIEWPORT_LABEL,
 		children: undefined,
 	},

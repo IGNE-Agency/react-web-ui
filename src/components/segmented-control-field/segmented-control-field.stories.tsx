@@ -194,7 +194,7 @@ export const Invalid: Story = {
 export const WithDescription: Story = {
 	args: {
 		description:
-			"Shows only declarations with this status.",
+			"Shows only invoices with this status.",
 	},
 };
 

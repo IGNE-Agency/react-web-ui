@@ -9,7 +9,7 @@ import {
 } from "storybook/test";
 import { Tabs, type TabsRootProps } from "./tabs.tsx";
 
-const BAR_LABEL = "Declaration";
+const BAR_LABEL = "Invoice";
 const DETAILS = "Details";
 const HISTORY = "History";
 const NOTES = "Notes";
@@ -26,7 +26,7 @@ const TabsPanels = (): ReactElement => (
 	<>
 		{PANELS.map(panel => (
 			<Tabs.Panel key={panel.value} value={panel.value}>
-				<p>{`${panel.label} of declaration 2041.`}</p>
+				<p>{`${panel.label} of invoice 2041.`}</p>
 			</Tabs.Panel>
 		))}
 	</>
@@ -92,7 +92,7 @@ const selected = (element: HTMLElement) =>
 const panelShows = (canvas: Canvas, label: string) =>
 	waitFor(() =>
 		expect(canvas.getByRole("tabpanel")).toHaveTextContent(
-			`${label} of declaration 2041.`,
+			`${label} of invoice 2041.`,
 		),
 	);
 

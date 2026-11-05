@@ -34,7 +34,7 @@ export type DataTableState<
  * caller's row type. Pass the same `TData` the table was built with.
  *
  * @example
- * const { table } = useDataTable<Appointment>();
+ * const { table } = useDataTable<Invoice>();
  * const rows = table.getRowModel().rows;
  */
 export const useDataTable = <

@@ -276,11 +276,11 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
  * <ConfirmDialog
  * 	open={open}
  * 	onOpenChange={setOpen}
- * 	title="Delete this declaration?"
+ * 	title="Delete this invoice?"
  * 	description="This cannot be undone."
  * 	confirmLabel="Delete"
  * 	cancelLabel="Cancel"
- * 	onConfirm={() => deleteDeclaration(id)}
+ * 	onConfirm={() => deleteInvoice(id)}
  * 	tone="danger"
  * />
  */

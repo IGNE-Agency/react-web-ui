@@ -177,7 +177,7 @@ export const Invalid: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "Shows declarations with any of these.",
+		description: "Shows invoices with any of these.",
 	},
 };
 

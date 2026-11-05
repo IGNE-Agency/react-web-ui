@@ -60,7 +60,7 @@ const meta = {
 	},
 	component: DateField,
 	args: {
-		label: "Appointment date",
+		label: "Due date",
 		optionalLabel: "optional",
 		openCalendarLabel: OPEN_CALENDAR,
 		openCalendarIcon: (

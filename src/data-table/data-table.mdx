@@ -125,8 +125,8 @@ A cell is not folded. This is not an exception to [text that does not fit](?path
             <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+            <tr><td>02-10</td><td>Kick-off and discovery, with a report to the client contact</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Strategy session</td><td className={styles.end}>45,00</td></tr>
           </tbody>
         </table>
       </div>
@@ -156,8 +156,8 @@ A cell is not folded. This is not an exception to [text that does not fit](?path
             <tr><th>Date</th><th>Description</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td>02-10</td><td>Intake and assessment, with a report to the referring GP</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td>03-10</td><td>Treatment session</td><td className={styles.end}>45,00</td></tr>
+            <tr><td>02-10</td><td>Kick-off and discovery, with a report to the client contact</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>03-10</td><td>Strategy session</td><td className={styles.end}>45,00</td></tr>
           </tbody>
         </table>
       </div>
@@ -327,8 +327,8 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
             <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Kick-off and discovery</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Strategy session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -352,8 +352,8 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
             <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Kick-off and discovery</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Strategy session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -633,7 +633,7 @@ cell: ({ row }) => currency.format(row.original.amountCents)
 
 ### Digits that name something stay start-aligned
 
-Digits that name something are not [quantities](#quantities-are-end-aligned-in-tabular-figures): a product code, a reference id, a BSN, a postcode. Neither is a date. None of them are compared by magnitude, so they stay start-aligned with the rest of the text. They keep the tabular figures, which is what makes a column of them scan.
+Digits that name something are not [quantities](#quantities-are-end-aligned-in-tabular-figures): a product code, a reference id, a VAT number, a postcode. Neither is a date. None of them are compared by magnitude, so they stay start-aligned with the rest of the text. They keep the tabular figures, which is what makes a column of them scan.
 
 <DoDont>
 <Example
@@ -941,7 +941,7 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
     									<tbody>
     										<tr>
     											<td>03-10</td>
-    											<td>Treatment session</td>
+    											<td>Strategy session</td>
     										</tr>
     									</tbody>
     								</table>
@@ -1006,7 +1006,7 @@ const { view } = useDataTableView();
 	<DataTable.Scroller>
 		<DataTable.Table>
 			<DataTable.LoadingCaption>
-				Loading declarations
+				Loading invoices
 			</DataTable.LoadingCaption>
 			<DataTable.Head>
 				{table.getHeaderGroups().map(group => (
@@ -1078,7 +1078,7 @@ Rows that are on screen never unmount. Paging, sorting and filtering are all new
 
 ```tsx
 useQuery({
-	...declarationsQuery(page),
+	...invoicesQuery(page),
 	placeholderData: keepPreviousData,
 });
 ```

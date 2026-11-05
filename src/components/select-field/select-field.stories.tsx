@@ -159,7 +159,7 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The status the declaration is in now.",
+		description: "The status the invoice is in now.",
 	},
 };
 

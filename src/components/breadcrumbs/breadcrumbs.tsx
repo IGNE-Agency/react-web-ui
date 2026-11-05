@@ -433,8 +433,8 @@ type BreadcrumbsParts = typeof Trail &
  * 	separator={<ChevronIcon />}
  * 	crumbs={[
  * 		{ id: "home", label: "Home", render: <Link to="/" /> },
- * 		{ id: "declarations", label: "Declarations", render: <Link to="/declarations" /> },
- * 		{ id: "declaration", label: "Declaration 2041" },
+ * 		{ id: "invoices", label: "Invoices", render: <Link to="/invoices" /> },
+ * 		{ id: "invoice", label: "Invoice 2041" },
  * 	]}
  * />
  */

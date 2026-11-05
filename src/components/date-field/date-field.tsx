@@ -59,7 +59,7 @@ export type DateFieldProps = FieldProps &
  *
  * @example
  * <DateField
- * 	label="Treatment date"
+ * 	label="Service date"
  * 	optionalLabel="optional"
  * 	openCalendarLabel="Open calendar"
  * 	previousMonthLabel="Previous month"

@@ -44,7 +44,7 @@ const PASSWORD_LABEL = "Password";
 const SHOW_PASSWORD_LABEL = "Show password";
 const HIDE_PASSWORD_LABEL = "Hide password";
 const PHONE_LABEL = "Phone number";
-const REFERRER_LABEL = "Referred by";
+const CONTACT_LABEL = "Client contact";
 const CLEAR_LABEL = "Clear";
 const HOURS_LABEL = "Hours";
 const DECREMENT_LABEL = "Decrease";
@@ -54,7 +54,7 @@ const CODE_LABEL = "Invitation code";
 const OPTIONAL_LABEL = "optional";
 const SUBMIT_LABEL = "Submit";
 const BUSY_LABEL = "Submitting";
-const REFUSED = "The declaration period has closed.";
+const REFUSED = "The invoice period has closed.";
 const REFUSED_NAME = "Closed";
 
 const CODE_LENGTH = 6;
@@ -68,7 +68,7 @@ const SCHEMA = z.object({
 	notes: z.string(),
 	password: z.string(),
 	phone: z.string(),
-	referrer: z.string(),
+	contact: z.string(),
 	hours: z.number().nullable(),
 	code: z.string(),
 });
@@ -81,7 +81,7 @@ const EMPTY: ExampleValues = {
 	notes: "",
 	password: "",
 	phone: "",
-	referrer: "",
+	contact: "",
 	hours: null,
 	code: "",
 };
@@ -176,10 +176,10 @@ const ExampleForm = (props: ExampleFormProps) => {
 					/>
 				)}
 			</form.AppField>
-			<form.AppField name="referrer">
+			<form.AppField name="contact">
 				{field => (
 					<field.SearchField
-						label={REFERRER_LABEL}
+						label={CONTACT_LABEL}
 						requiredness="optional"
 						optionalLabel={OPTIONAL_LABEL}
 						clearLabel={CLEAR_LABEL}
@@ -484,7 +484,7 @@ const fieldsLoaded = async (canvas: Canvas) => {
 			}),
 		),
 		canvas.findByRole("searchbox", {
-			name: startsWith(REFERRER_LABEL),
+			name: startsWith(CONTACT_LABEL),
 		}),
 	]);
 };
@@ -840,10 +840,10 @@ export const ChoicesSubmitted: Story = {
 	},
 };
 
-const TREATED_ON_LABEL = "Treatment date";
-const TREATED_ON_ERROR = "Enter the treatment date.";
-const PERIOD_LABEL = "Declaration period";
-const PERIOD_ERROR = "Enter the declaration period.";
+const WORKED_ON_LABEL = "Service date";
+const WORKED_ON_ERROR = "Enter the service date.";
+const PERIOD_LABEL = "Invoice period";
+const PERIOD_ERROR = "Enter the invoice period.";
 const START_TIME_LABEL = "Start time";
 const START_TIME_ERROR = "Enter the start time.";
 const ATTACHMENTS_LABEL = "Attachments";
@@ -895,10 +895,10 @@ const PHOTO_COPY = {
 const INVOICE = pdfFile("invoice-july.pdf");
 
 const FILES_AND_DATES_SCHEMA = z.object({
-	treatedOn: z
+	workedOn: z
 		.string()
 		.nullable()
-		.refine(value => value !== null, TREATED_ON_ERROR),
+		.refine(value => value !== null, WORKED_ON_ERROR),
 	period: z
 		.object({ start: z.string(), end: z.string() })
 		.nullable()
@@ -918,7 +918,7 @@ type FilesAndDatesValues = z.input<
 >;
 
 const NO_FILES_AND_DATES: FilesAndDatesValues = {
-	treatedOn: null,
+	workedOn: null,
 	period: null,
 	startTime: null,
 	attachments: [],
@@ -942,10 +942,10 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 			form={form}
 			className={style.form}
 			{...props}>
-			<form.AppField name="treatedOn">
+			<form.AppField name="workedOn">
 				{field => (
 					<field.DateField
-						label={TREATED_ON_LABEL}
+						label={WORKED_ON_LABEL}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 						openCalendarIcon={
@@ -1046,7 +1046,7 @@ export const FilesAndDates: Story = {
 	render: FilesAndDatesForm,
 	play: async ({ canvas }) => {
 		await expect(
-			await firstSegmentOf(canvas, TREATED_ON_LABEL),
+			await firstSegmentOf(canvas, WORKED_ON_LABEL),
 		).toBeVisible();
 		await expect(
 			await canvas.findByRole("button", {
@@ -1095,7 +1095,7 @@ export const FilesAndDatesSubmitWithErrors: Story = {
 		await userEvent.click(submitButton(canvas));
 
 		await expect(
-			await canvas.findByText(TREATED_ON_ERROR),
+			await canvas.findByText(WORKED_ON_ERROR),
 		).toBeInTheDocument();
 		await expect(
 			canvas.getByText(PERIOD_ERROR),
@@ -1111,7 +1111,7 @@ export const FilesAndDatesSubmitWithErrors: Story = {
 		);
 		await waitFor(async () =>
 			expect(
-				await firstSegmentOf(canvas, TREATED_ON_LABEL),
+				await firstSegmentOf(canvas, WORKED_ON_LABEL),
 			).toHaveFocus(),
 		);
 		await expect(
@@ -1125,7 +1125,7 @@ export const FilesAndDatesSubmitted: Story = {
 	render: FilesAndDatesForm,
 	play: async ({ canvas }) => {
 		await userEvent.click(
-			await firstSegmentOf(canvas, TREATED_ON_LABEL),
+			await firstSegmentOf(canvas, WORKED_ON_LABEL),
 		);
 		await userEvent.keyboard("07242026");
 		await userEvent.click(
@@ -1145,7 +1145,7 @@ export const FilesAndDatesSubmitted: Story = {
 
 		await waitFor(() =>
 			expect(submittedFilesAndDates).toHaveBeenCalledWith({
-				treatedOn: "2026-07-24",
+				workedOn: "2026-07-24",
 				period: { start: "2026-07-01", end: "2026-07-31" },
 				startTime: "09:30",
 				attachments: [INVOICE],

@@ -34,7 +34,7 @@ const RANGE = {
 	start: MONTH_START.toString(),
 	end: MONTH_END.toString(),
 };
-const LABEL = "Declaration period";
+const LABEL = "Invoice period";
 const OPEN_CALENDAR = "Open calendar";
 const PREVIOUS_MONTH = "Previous month";
 const NEXT_MONTH = "Next month";
@@ -155,7 +155,7 @@ export const Optional: Story = {
 export const Invalid: Story = {
 	args: {
 		value: RANGE,
-		errors: ["Enter a valid declaration period."],
+		errors: ["Enter a valid invoice period."],
 	},
 };
 
@@ -166,7 +166,7 @@ export const Pending: Story = {
 export const WithDescription: Story = {
 	args: {
 		description:
-			"From the first through the last treatment day.",
+			"From the first through the last day of work.",
 	},
 };
 

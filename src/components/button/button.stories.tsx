@@ -14,7 +14,7 @@ import { textGone } from "../../lib/storybook/waits.ts";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "./button.tsx";
 
-const LABEL = "Save declaration";
+const LABEL = "Save invoice";
 const ICON_ONLY_LABEL = "Next page";
 
 const tooltipShown = () =>
@@ -77,7 +77,7 @@ export const Danger: Story = {
 	args: {
 		variant: "primary",
 		tone: "danger",
-		children: "Delete declaration",
+		children: "Delete invoice",
 	},
 };
 

@@ -25,7 +25,7 @@ const OPEN_LABEL = "Open";
 const SENT_LABEL = "Sent";
 const PAID_LABEL = "Paid";
 const DESCRIPTION =
-	"Shows only declarations with these statuses.";
+	"Shows only invoices with these statuses.";
 const ERROR = "Choose at least one status.";
 
 const STATUS_ITEMS = [

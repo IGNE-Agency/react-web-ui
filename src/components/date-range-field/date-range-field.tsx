@@ -74,7 +74,7 @@ export type DateRangeFieldProps = FieldProps &
  *
  * @example
  * <DateRangeField
- * 	label="Declaration period"
+ * 	label="Invoice period"
  * 	optionalLabel="optional"
  * 	openCalendarLabel="Open calendar"
  * 	openCalendarIcon={<DateRangeIcon />}

@@ -27,7 +27,7 @@ type DialogExampleProps = ComponentProps<
 >;
 
 const OPEN_LABEL = "Open";
-const TITLE = "Edit declaration";
+const TITLE = "Edit invoice";
 const CLOSE_LABEL = "Close";
 const BODY =
 	"A body long enough to sit under the title and show the room around it.";

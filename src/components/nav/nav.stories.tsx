@@ -230,7 +230,7 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			<Button
 				variant="tertiary"
 				iconOnly
-				icon={collapsed ? <MenuIcon /> : <MenuOpenIcon />}
+				icon={collapsed ? <Icon svg={MenuIcon} label="" /> : <Icon svg={MenuOpenIcon} label="" />}
 				label={TOGGLE_RAIL}
 				onClick={() => setCollapsed(current => !current)}
 			/>

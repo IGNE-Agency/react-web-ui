@@ -69,7 +69,7 @@ import {
 	PAGE_SIZE_OPTIONS,
 } from "./table-features.ts";
 
-type Declaration = Readonly<{
+type Invoice = Readonly<{
 	id: string;
 	client: string;
 	code: string;
@@ -77,14 +77,14 @@ type Declaration = Readonly<{
 }>;
 
 const CLIENT_HEADER = "Client";
-const CODE_HEADER = "Performance code";
+const CODE_HEADER = "Project code";
 const AMOUNT_HEADER = "Amount (€)";
 const CLIENT_FILTER_LABEL = "Client";
 const REOPEN_LABEL = "Reopen the table";
 
-const EMPTY_STATE = "No declarations yet.";
-const ERROR_LABEL = "The declarations could not be loaded.";
-const LOADING_LABEL = "Loading declarations";
+const EMPTY_STATE = "No invoices yet.";
+const ERROR_LABEL = "The invoices could not be loaded.";
+const LOADING_LABEL = "Loading invoices";
 const SLOW_LABEL = "This is taking longer than usual.";
 const RETRY_LABEL = "Try again";
 const PAGE_SIZE_LABEL = "Rows per page";
@@ -96,7 +96,7 @@ const SELECT_PAGE_LABEL = "Select page";
 const SELECT_ROW_LABEL = "Select row";
 const CLEAR_SELECTION_LABEL = "Clear selection";
 const FILTERS_LABEL = "Filters";
-const FILTERS_TITLE = "Filter declarations";
+const FILTERS_TITLE = "Filter invoices";
 const APPLY_LABEL = "Apply";
 const CLEAR_ALL_LABEL = "Clear filters";
 
@@ -114,8 +114,8 @@ const selectedLabel = (selected: number, total: number) =>
 const selectAllLabel = (total: number) =>
 	`Select all ${total}`;
 
-const declarationsTotal = (count: number) =>
-	`${count} declarations`;
+const invoicesTotal = (count: number) =>
+	`${count} invoices`;
 
 const CLIENTS = [
 	"Chris Bakker",
@@ -124,10 +124,10 @@ const CLIENTS = [
 	"Bram Jansen",
 ] as const;
 
-const DECLARATIONS: readonly Declaration[] = Array.from(
+const INVOICES: readonly Invoice[] = Array.from(
 	{ length: 30 },
 	(_, index) => ({
-		id: `declaration-${index + 1}`,
+		id: `invoice-${index + 1}`,
 		client: CLIENTS[index % CLIENTS.length] ?? CLIENTS[0],
 		code: String(1001 + index),
 		amount: 45 + index * 5,
@@ -137,9 +137,9 @@ const DECLARATIONS: readonly Declaration[] = Array.from(
 const PAGE_SIZE = 10;
 
 const sortedRows = (
-	rows: readonly Declaration[],
+	rows: readonly Invoice[],
 	sorting: SortingState,
-): readonly Declaration[] => {
+): readonly Invoice[] => {
 	const [sort] = sorting;
 	if (sort === undefined) {
 		return rows;
@@ -164,7 +164,7 @@ const AmountCell = ({
 
 const clientColumn: ColumnDef<
 	DataTableFeatures,
-	Declaration
+	Invoice
 > = {
 	accessorKey: "client",
 	header: () => CLIENT_HEADER,
@@ -173,7 +173,7 @@ const clientColumn: ColumnDef<
 
 const codeColumn: ColumnDef<
 	DataTableFeatures,
-	Declaration
+	Invoice
 > = {
 	accessorKey: "code",
 	header: () => CODE_HEADER,
@@ -182,7 +182,7 @@ const codeColumn: ColumnDef<
 
 const amountColumn = (
 	enableSorting: boolean,
-): ColumnDef<DataTableFeatures, Declaration> => ({
+): ColumnDef<DataTableFeatures, Invoice> => ({
 	accessorKey: "amount",
 	header: () => AMOUNT_HEADER,
 	enableSorting,
@@ -193,10 +193,10 @@ const amountColumn = (
 });
 
 const dataColumns: Array<
-	ColumnDef<DataTableFeatures, Declaration>
+	ColumnDef<DataTableFeatures, Invoice>
 > = [clientColumn, codeColumn, amountColumn(true)];
 
-const selectColumn = selectionColumn<Declaration>({
+const selectColumn = selectionColumn<Invoice>({
 	sticky: "start",
 	selectPageLabel: SELECT_PAGE_LABEL,
 	selectRowLabel: SELECT_ROW_LABEL,
@@ -235,7 +235,7 @@ const TableContent = () => (
 );
 
 const TableParts = () => {
-	const { table, onRetry } = useDataTable<Declaration>();
+	const { table, onRetry } = useDataTable<Invoice>();
 	const { view } = useDataTableView();
 
 	return (
@@ -330,7 +330,7 @@ type SelectionBarProps = Readonly<{ totalRows: number }>;
 const SelectionBar = ({ totalRows }: SelectionBarProps) => (
 	<DataTable.SelectionBar
 		totalRows={totalRows}
-		total={declarationsTotal(totalRows)}
+		total={invoicesTotal(totalRows)}
 		countLabel={selectedLabel}
 		clearLabel={CLEAR_SELECTION_LABEL}
 		selectAllLabel={selectAllLabel}
@@ -338,27 +338,27 @@ const SelectionBar = ({ totalRows }: SelectionBarProps) => (
 );
 
 type DataTableExampleProps = Pick<
-	DataTableRootProps<Declaration>,
+	DataTableRootProps<Invoice>,
 	"status" | "isFetching" | "onRetry"
 >;
 
-type DeclarationTableProps = DataTableExampleProps &
+type InvoiceTableProps = DataTableExampleProps &
 	Readonly<{
-		rows: readonly Declaration[];
+		rows: readonly Invoice[];
 		selectable: boolean;
 		composed?: boolean;
 	}>;
 
-const DeclarationTable = ({
+const InvoiceTable = ({
 	status,
 	isFetching,
 	onRetry,
 	rows,
 	selectable,
 	composed = false,
-}: DeclarationTableProps) => {
+}: InvoiceTableProps) => {
 	const selection = useRowSelection();
-	const table = useTable<DataTableFeatures, Declaration>({
+	const table = useTable<DataTableFeatures, Invoice>({
 		features: dataTableFeatures,
 		data: EMPTY_ROWS,
 		columns: selectable ? selectableColumns : dataColumns,
@@ -398,15 +398,15 @@ const DeclarationTable = ({
 };
 
 const DataTableExample = (props: DataTableExampleProps) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
-		rows={DECLARATIONS}
+		rows={INVOICES}
 		selectable={false}
 	/>
 );
 
 const EmptyDataTable = (props: DataTableExampleProps) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
 		rows={EMPTY_ROWS}
 		selectable={false}
@@ -416,9 +416,9 @@ const EmptyDataTable = (props: DataTableExampleProps) => (
 const ComposedDataTable = (
 	props: DataTableExampleProps,
 ) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
-		rows={DECLARATIONS}
+		rows={INVOICES}
 		selectable={false}
 		composed
 	/>
@@ -427,9 +427,9 @@ const ComposedDataTable = (
 const SelectableDataTable = (
 	props: DataTableExampleProps,
 ) => (
-	<DeclarationTable
+	<InvoiceTable
 		{...props}
-		rows={DECLARATIONS}
+		rows={INVOICES}
 		selectable
 	/>
 );
@@ -465,20 +465,20 @@ const freshStorage = () => {
 };
 
 const rowsOf = (client: string) =>
-	DECLARATIONS.filter(row => row.client === client).length;
+	INVOICES.filter(row => row.client === client).length;
 
-type DeclarationPage = Readonly<{
-	items: Declaration[];
+type InvoicePage = Readonly<{
+	items: Invoice[];
 	totalCount: number;
 }>;
 
-const declarationPage = ({
+const invoicePage = ({
 	filters,
 	search,
 	pagination,
 	sorting,
-}: DataViewQueryParams<ClientFilters>): DeclarationPage => {
-	const matches = DECLARATIONS.filter(
+}: DataViewQueryParams<ClientFilters>): InvoicePage => {
+	const matches = INVOICES.filter(
 		row =>
 			(filters.client === undefined ||
 				row.client === filters.client) &&
@@ -526,7 +526,7 @@ const DataViewTable = ({
 				queryFn: () =>
 					params.pagination.pageIndex + 1 === failingPage
 						? Promise.reject(new Error(DATA_VIEW_TABLE_ID))
-						: Promise.resolve(declarationPage(params)),
+						: Promise.resolve(invoicePage(params)),
 			}),
 		getRows: data => data.items,
 		getRowCount: data => data.totalCount,
@@ -679,7 +679,7 @@ const selectionStatus = (
 ) =>
 	waitFor(() =>
 		expect(selectionBarStatus(canvas)).toHaveTextContent(
-			selectedLabel(selected, DECLARATIONS.length),
+			selectedLabel(selected, INVOICES.length),
 		),
 	);
 
@@ -724,7 +724,7 @@ const everyRowIs = (canvas: Canvas, client: string) =>
 const totalIs = (canvas: Canvas, count: number) =>
 	waitFor(() =>
 		expect(selectionBarStatus(canvas)).toHaveTextContent(
-			declarationsTotal(count),
+			invoicesTotal(count),
 		),
 	);
 
@@ -930,7 +930,7 @@ export const Selectable: Story = {
 		await expect(
 			selectionBarStatus(canvas),
 		).toHaveTextContent(
-			declarationsTotal(DECLARATIONS.length),
+			invoicesTotal(INVOICES.length),
 		);
 		await expect(pageCheckbox(canvas)).not.toBeChecked();
 	},
@@ -953,10 +953,10 @@ export const SelectMouse: Story = {
 
 		await userEvent.click(
 			await canvas.findByRole("button", {
-				name: selectAllLabel(DECLARATIONS.length),
+				name: selectAllLabel(INVOICES.length),
 			}),
 		);
-		await selectionStatus(canvas, DECLARATIONS.length);
+		await selectionStatus(canvas, INVOICES.length);
 
 		await userEvent.click(
 			canvas.getByRole("button", {
@@ -966,7 +966,7 @@ export const SelectMouse: Story = {
 		await expect(rowCheckbox(canvas, "1011")).toBeChecked();
 
 		await userEvent.click(rowCheckbox(canvas, "1011"));
-		await selectionStatus(canvas, DECLARATIONS.length - 1);
+		await selectionStatus(canvas, INVOICES.length - 1);
 
 		await userEvent.click(
 			canvas.getByRole("button", {
@@ -975,7 +975,7 @@ export const SelectMouse: Story = {
 		);
 		await waitFor(() =>
 			expect(selectionBarStatus(canvas)).toHaveTextContent(
-				declarationsTotal(DECLARATIONS.length),
+				invoicesTotal(INVOICES.length),
 			),
 		);
 		await expect(

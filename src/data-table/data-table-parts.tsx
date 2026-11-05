@@ -132,7 +132,7 @@ const cellProps = (
  *
  * @example
  * const { view } = useDataTableView();
- * if (view === "empty") return <DataTable.StateRow>No declarations yet.</DataTable.StateRow>;
+ * if (view === "empty") return <DataTable.StateRow>No invoices yet.</DataTable.StateRow>;
  */
 export const useDataTableView = (): ResolvedView => {
 	const { table, status, isFetching } = useDataTable();
@@ -276,7 +276,7 @@ export const Table = ({
 export type DataTableLoadingCaptionProps =
 	useRender.ComponentProps<"caption">;
 
-/** What is announced while the first page loads, such as "Loading declarations". Renders nothing otherwise. */
+/** What is announced while the first page loads, such as "Loading invoices". Renders nothing otherwise. */
 export const LoadingCaption = ({
 	render,
 	className,

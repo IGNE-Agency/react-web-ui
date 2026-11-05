@@ -11,7 +11,7 @@ import { Collapsible } from "./collapsible.tsx";
 
 const TRIGGER = "Advanced settings";
 const CONTENT =
-	"Choose how long a declaration stays editable after it is sent.";
+	"Choose how long an invoice stays editable after it is sent.";
 
 type Canvas = ReturnType<typeof within>;
 

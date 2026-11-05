@@ -339,11 +339,11 @@ A surface gets **more tinted as you nest** and **lighter as you rise**. In light
 			<div className={styles.stack}>
 				<div className={styles.stackCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<div className={styles.nested}>
-						<span>Physiotherapy</span>
-						<span>Dental care</span>
+						<span>Design review</span>
+						<span>Workshop</span>
 					</div>
 				</div>
 				<div
@@ -361,11 +361,11 @@ A surface gets **more tinted as you nest** and **lighter as you rise**. In light
 			<div className={styles.stack}>
 				<div className={styles.stackCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<div className={styles.nested}>
-						<span>Physiotherapy</span>
-						<span>Dental care</span>
+						<span>Design review</span>
+						<span>Workshop</span>
 					</div>
 				</div>
 				<div
@@ -454,14 +454,14 @@ Every surface sits visibly away from the canvas, so a card reads as something pl
 				className={`${styles.canvas} ${styles.canvasApart}`}>
 				<div className={styles.canvasCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span>€ 120</span>
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Dental care</span>
+						<span>Workshop</span>
 						<span>€ 85</span>
 					</span>
 				</div>
@@ -476,14 +476,14 @@ Every surface sits visibly away from the canvas, so a card reads as something pl
 				className={`${styles.canvas} ${styles.canvasClose}`}>
 				<div className={styles.canvasCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span>€ 120</span>
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Dental care</span>
+						<span>Workshop</span>
 						<span>€ 85</span>
 					</span>
 				</div>
@@ -502,12 +502,12 @@ Exactly one set of tiers is allowed to resolve to the same colour: the default c
 			<div className={styles.stack}>
 				<div className={styles.stackCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<div className={styles.nested}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span className={styles.recess}>
-							Referral.pdf
+							Timesheet.pdf
 						</span>
 					</div>
 				</div>
@@ -522,12 +522,12 @@ Exactly one set of tiers is allowed to resolve to the same colour: the default c
 				<div
 					className={`${styles.stackCard} ${styles.collapsed}`}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<div className={styles.nested}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span className={styles.recess}>
-							Referral.pdf
+							Timesheet.pdf
 						</span>
 					</div>
 				</div>
@@ -586,14 +586,14 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 				className={`${styles.page} ${styles.pageCanvas}`}>
 				<div className={styles.sheet}>
 					<span className={styles.sheetTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span>€ 120</span>
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Dental care</span>
+						<span>Workshop</span>
 						<span>€ 85</span>
 					</span>
 				</div>
@@ -608,14 +608,14 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 				className={`${styles.page} ${styles.pageFilled}`}>
 				<div className={styles.sheet}>
 					<span className={styles.sheetTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Physiotherapy</span>
+						<span>Design review</span>
 						<span>€ 120</span>
 					</span>
 					<span className={styles.sheetRow}>
-						<span>Dental care</span>
+						<span>Workshop</span>
 						<span>€ 85</span>
 					</span>
 				</div>
@@ -632,7 +632,7 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 			<div className={styles.stack}>
 				<div className={styles.stackCard}>
 					<span className={styles.cardTitle}>
-						Physiotherapy
+						Design review
 					</span>
 					<div
 						className={`${styles.nested} ${styles.groupsSpaced}`}>
@@ -640,7 +640,7 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 							<span className={styles.groupHeading}>
 								March
 							</span>
-							<span>Treatment</span>
+							<span>First round</span>
 						</div>
 						<div className={styles.group}>
 							<span className={styles.groupHeading}>
@@ -660,7 +660,7 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 			<div className={styles.stack}>
 				<div className={styles.stackCard}>
 					<span className={styles.cardTitle}>
-						Physiotherapy
+						Design review
 					</span>
 					<div
 						className={`${styles.nested} ${styles.groupsFilled}`}>
@@ -668,7 +668,7 @@ The ladder is shorter than the tree, so the rule is not one tier per level — i
 							<span className={styles.groupHeading}>
 								March
 							</span>
-							<span>Treatment</span>
+							<span>First round</span>
 						</div>
 						<div className={styles.group}>
 							<span className={styles.groupHeading}>
@@ -696,10 +696,10 @@ Past a certain darkness every step resolves to black or to something indistingui
 				className={`${styles.darkLadder} ${styles.ladderBand}`}>
 				<div className={styles.ladderCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.ladderNested}>
-						Physiotherapy
+						Design review
 					</span>
 					<span className={styles.ladderAccent}>
 						Submit
@@ -716,10 +716,10 @@ Past a certain darkness every step resolves to black or to something indistingui
 				className={`${styles.darkLadder} ${styles.ladderBottom}`}>
 				<div className={styles.ladderCard}>
 					<span className={styles.cardTitle}>
-						Declarations
+						Invoices
 					</span>
 					<span className={styles.ladderNested}>
-						Physiotherapy
+						Design review
 					</span>
 					<span className={styles.ladderAccent}>
 						Submit
@@ -787,7 +787,7 @@ Three things follow, and they are the difference between a dark theme that works
 			<div
 				className={`${styles.darkText} ${styles.inkGrey}`}>
 				<span className={styles.darkBody}>
-					Physiotherapy
+					Design review
 				</span>
 				<span className={styles.darkMuted}>
 					Submitted 12 March
@@ -802,7 +802,7 @@ Three things follow, and they are the difference between a dark theme that works
 			<div
 				className={`${styles.darkText} ${styles.inkWhite}`}>
 				<span className={styles.darkBody}>
-					Physiotherapy
+					Design review
 				</span>
 				<span className={styles.darkMuted}>
 					Submitted 12 March
@@ -1463,11 +1463,11 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
   caption="Each theme states its colour scheme outright, so the browser's own scrollbar goes dark too."
   visual={
     <div className={`${styles.scroller} ${styles.schemeDark}`}>
-      <p>Physiotherapy · € 120</p>
-      <p>Dental care · € 85</p>
-      <p>Pharmacy · € 32</p>
-      <p>Speech therapy · € 64</p>
-      <p>Dietitian · € 48</p>
+      <p>Design review · € 120</p>
+      <p>Workshop · € 85</p>
+      <p>Copywriting · € 32</p>
+      <p>Strategy session · € 64</p>
+      <p>Consultation · € 48</p>
     </div>
   }>
 
@@ -1487,11 +1487,11 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
   caption="The tokens went dark and the browser's own parts stayed light."
   visual={
     <div className={`${styles.scroller} ${styles.schemeLight}`}>
-      <p>Physiotherapy · € 120</p>
-      <p>Dental care · € 85</p>
-      <p>Pharmacy · € 32</p>
-      <p>Speech therapy · € 64</p>
-      <p>Dietitian · € 48</p>
+      <p>Design review · € 120</p>
+      <p>Workshop · € 85</p>
+      <p>Copywriting · € 32</p>
+      <p>Strategy session · € 64</p>
+      <p>Consultation · € 48</p>
     </div>
   }>
 

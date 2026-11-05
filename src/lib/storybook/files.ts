@@ -7,7 +7,7 @@ const PIXEL_PNG =
  * A one-pixel PNG named `name`, for a story that stages an image.
  *
  * @example
- * const SCAN = pngFile("referral-letter.png");
+ * const SCAN = pngFile("signed-timesheet.png");
  */
 export const pngFile = (name: string): File =>
 	new File(

@@ -69,7 +69,7 @@ type Story = StoryObj<typeof meta>;
 export const Empty: Story = {};
 
 export const Placeholder: Story = {
-	args: { placeholder: "Add a note for the practitioner" },
+	args: { placeholder: "Add a note for the consultant" },
 };
 
 export const Filled: Story = {

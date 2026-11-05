@@ -23,14 +23,14 @@ const ARCHIVED_CHIP = "Archived";
 
 const removeIcon = <Icon svg={CloseIcon} label="" />;
 
-type DeclarationFilters = Readonly<{
+type InvoiceFilters = Readonly<{
 	statuses?: readonly string[];
 	year?: string;
 	archived?: boolean;
 }>;
 
 const ActiveFiltersExample = () => {
-	const filters = useFilterView<DeclarationFilters>({
+	const filters = useFilterView<InvoiceFilters>({
 		initial: {
 			statuses: ["Submitted", "Paid"],
 			year: "2026",
@@ -57,7 +57,7 @@ const ActiveFiltersExample = () => {
 };
 
 const ComposedExample = () => {
-	const filters = useFilterView<DeclarationFilters>({
+	const filters = useFilterView<InvoiceFilters>({
 		initial: {
 			statuses: ["Submitted", "Paid"],
 			year: "2026",
@@ -98,7 +98,7 @@ const ComposedExample = () => {
 };
 
 const UnfilteredExample = () => {
-	const filters = useFilterView<DeclarationFilters>({
+	const filters = useFilterView<InvoiceFilters>({
 		initial: {},
 	});
 

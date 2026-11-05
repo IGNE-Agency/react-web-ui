@@ -97,12 +97,12 @@ const tooLargeError = (maxSize: string) =>
 const ATTACHMENT_OPTIONS: ComposerAttachmentOptions = {
 	label: ATTACHMENTS,
 	removeLabel: REMOVE,
-	removeIcon: <CloseIcon />,
-	fileIcon: <DescriptionIcon />,
+	removeIcon: <Icon svg={CloseIcon} label="" />,
+	fileIcon: <Icon svg={DescriptionIcon} label="" />,
 	fileHint,
 	tooLargeError,
 	attachLabel: ADD_ATTACHMENT,
-	attachIcon: <AttachIcon />,
+	attachIcon: <Icon svg={AttachIcon} label="" />,
 };
 
 const ComposerParts = ({
@@ -224,7 +224,7 @@ const meta = {
 		mentions: { label: MENTIONS, sources: [PEOPLE_SOURCE] },
 		attachments: ATTACHMENT_OPTIONS,
 		sendLabel: SEND,
-		sendIcon: <SendIcon />,
+		sendIcon: <Icon svg={SendIcon} label="" />,
 		maxLength: 2000,
 		onSend: fn(),
 	},

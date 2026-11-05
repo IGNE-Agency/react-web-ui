@@ -232,7 +232,7 @@ News is easiest to take in where the eye already is. Feedback about what is in f
 | What happened | Said where | For example |
 | --- | --- | --- |
 | Data in view didn't load | In the region | "Comments could not be loaded." |
-| A field is invalid | Under the field | "An AGB code has 8 digits." |
+| A field is invalid | Under the field | "A KvK number has 8 digits." |
 | A form did its job | In place of its introduction | "A recovery link is on its way." |
 | Background work failed | A toast, with the fix | A comment that didn't send |
 | A condition that lasts | A banner across the app | "Storage almost full" |
@@ -265,7 +265,7 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 						<DateField
 							{...dateLabels}
 							{...dateIcons}
-							label="Treatment date"
+							label="Service date"
 							defaultValue="2026-10-02"
 						/>
 					</div>
@@ -281,7 +281,7 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<label className={componentStyles.native}>
-						Treatment date
+						Service date
 						<input
 							className={componentStyles.nativeControl}
 							type="date"
@@ -294,7 +294,7 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 	/>
 </DoDont>
 
-Nothing is masked. A formatted identifier, like a BSN, an AGB code, a postcode, an IBAN or a phone number, is plain text entry with its format in the description, and the spaces, dashes and capitals are tidied on the way to the server.
+Nothing is masked. A formatted identifier, like a VAT number, a KvK number, a postcode, an IBAN or a phone number, is plain text entry with its format in the description, and the spaces, dashes and capitals are tidied on the way to the server.
 
 The reason is not taste. Every masking engine either rejects a character or cuts off what comes after its last slot. <Pull>Either way, the screen reader announces the character the user typed while the field keeps something else.</Pull> That comes from rejecting and cutting off, not from formatting, so no setting makes it go away: allowing more characters fixes the first half and leaves the second, and a fixed number of slots overflows by design.
 
@@ -465,7 +465,7 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 						/>
 						<SwitchField
 							optionalLabel="optional"
-							label="Notify the referrer"
+							label="Notify the client contact"
 							requiredness="optional"
 						/>
 					</div>
@@ -510,7 +510,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 					<div className={componentStyles.card}>
 						<TextField
 							optionalLabel="optional"
-							label="Practitioner"
+							label="Consultant"
 							value="Anna de Vries"
 							onValueChange={ignore}
 							readOnly
@@ -518,7 +518,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 						<DateField
 							{...dateLabels}
 							{...dateIcons}
-							label="Treatment date"
+							label="Service date"
 							defaultValue="2026-10-02"
 							readOnly
 						/>
@@ -536,7 +536,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<div className={componentStyles.card}>
 					<div className={componentStyles.field}>
 						<span className={componentStyles.label}>
-							Practitioner
+							Consultant
 						</span>
 						<span
 							className={`${componentStyles.box} ${componentStyles.boxGreyed}`}>
@@ -545,7 +545,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 					</div>
 					<div className={componentStyles.field}>
 						<span className={componentStyles.label}>
-							Treatment date
+							Service date
 						</span>
 						<span className={componentStyles.box}>
 							<span className={componentStyles.grow}>
@@ -574,13 +574,13 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 					<div className={componentStyles.card}>
 						<CheckboxField
 							optionalLabel="optional"
-							label="Treatment completed"
+							label="Work completed"
 							readOnly
 							{...checkMarks}
 						/>
 						<SwitchField
 							optionalLabel="optional"
-							label="Notify the referrer"
+							label="Notify the client contact"
 							readOnly
 						/>
 					</div>
@@ -599,7 +599,7 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 						<span className={componentStyles.secondEdge}>
 							<Box />
 						</span>
-						Treatment completed
+						Work completed
 					</label>
 				</div>
 			</div>
@@ -904,10 +904,10 @@ Nobody likes being corrected mid-sentence. A form says nothing about errors whil
     	visual={
     		<TextField optionalLabel="optional"
     			className={styles.field}
-    			label="AGB code"
+    			label="KvK number"
     			value="1234"
     			onValueChange={() => {}}
-    			errors={["An AGB code has 8 digits."]}
+    			errors={["A KvK number has 8 digits."]}
     		/>
     	}
     />
@@ -1037,7 +1037,7 @@ A dialog or a drawer [carries no shadow](?path=/docs/design-system-foundation-el
 				<div className={componentStyles.stage}>
 					<div className={componentStyles.stagePage}>
 						<span className={componentStyles.stageTitle}>
-							Declarations
+							Invoices
 						</span>
 						<span className={componentStyles.stageRow}>
 							<span>A. de Vries</span>
@@ -1075,7 +1075,7 @@ A dialog or a drawer [carries no shadow](?path=/docs/design-system-foundation-el
 				<div className={componentStyles.stage}>
 					<div className={componentStyles.stagePage}>
 						<span className={componentStyles.stageTitle}>
-							Declarations
+							Invoices
 						</span>
 						<span className={componentStyles.stageRow}>
 							<span>A. de Vries</span>
@@ -1158,7 +1158,7 @@ Neither carries a subtitle. A heading with a line of explanatory grey under it i
 							Filters
 						</span>
 						<div className={componentStyles.sheetSubtitle}>
-							Filter the declarations in this list
+							Filter the invoices in this list
 						</div>
 					</div>
 					<span className={componentStyles.line} />
@@ -1487,7 +1487,7 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 
 ```tsx
 <CheckboxGroupField
-	label={m.declarations_status_label()}
+	label={m.invoices_status_label()}
 	items={items}
 	checkIcon={<CheckIcon />}
 />
@@ -1525,7 +1525,7 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 
 ```tsx
 <CheckboxField
-	label={m.declaration_send_copy()}
+	label={m.invoice_send_copy()}
 	requiredness="optional"
 	checkIcon={<CheckIcon />}
 />
@@ -1536,7 +1536,7 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 
 ```tsx
 <CheckboxField
-	label={`${m.declaration_send_copy()} (${m.forms_optional()})`}
+	label={`${m.invoice_send_copy()} (${m.forms_optional()})`}
 	checkIcon={<CheckIcon />}
 />
 ```
@@ -1728,7 +1728,7 @@ An `Affix` is static text sharing the control's box, and a glyph in an `Inlay` i
 
 ```tsx
 <TextField
-	label={m.declaration_amount_euros()}
+	label={m.invoice_amount_euros()}
 	prefix="€"
 	value={amount}
 	onValueChange={setAmount}
@@ -1740,7 +1740,7 @@ An `Affix` is static text sharing the control's box, and a glyph in an `Inlay` i
 
 ```tsx
 <TextField
-	label={m.declaration_amount()}
+	label={m.invoice_amount()}
 	prefix="€"
 	value={amount}
 	onValueChange={setAmount}
@@ -1989,7 +1989,7 @@ Both are derived from the route tree: a route declares its tab in `staticData`, 
 
 ```tsx
 export const Route = createFileRoute(
-	"/_app/declarations/incomplete",
+	"/_app/invoices/incomplete",
 )({
 	staticData: {
 		tab: { label: m.tab_incomplete, order: 10 },
@@ -2004,9 +2004,9 @@ export const Route = createFileRoute(
 ```tsx
 const Page = () => (
 	<>
-		<h1>{m.declarations_title()}</h1>
-		<Tabs items={declarationTabs} />
-		<DeclarationsTable />
+		<h1>{m.invoices_title()}</h1>
+		<Tabs items={invoiceTabs} />
+		<InvoicesTable />
 	</>
 );
 ```

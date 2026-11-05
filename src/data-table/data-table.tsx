@@ -206,9 +206,9 @@ type DataTableParts = Readonly<{
  * 		<FilterBar.Root filters={filters}>…</FilterBar.Root>
  * 	</DataTable.Toolbar>
  * 	<DataTable.Content
- * 		emptyState="No declarations yet."
- * 		errorLabel="The declarations could not be loaded."
- * 		loadingLabel="Loading declarations"
+ * 		emptyState="No invoices yet."
+ * 		errorLabel="The invoices could not be loaded."
+ * 		loadingLabel="Loading invoices"
  * 		slowLabel="This is taking longer than usual."
  * 		retryLabel="Try again"
  * 		sortAscendingIcon={<ArrowUpwardIcon />}

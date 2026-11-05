@@ -35,11 +35,11 @@ export type DataTableContentProps<
 	renderSubRow?: (
 		row: TableRow<DataTableFeatures, TData>,
 	) => ReactNode;
-	/** The body when the query matched nothing, such as "No declarations yet." or an `EmptyMessage`. */
+	/** The body when the query matched nothing, such as "No invoices yet." or an `EmptyMessage`. */
 	emptyState: ReactNode;
-	/** What a failed fetch says, as the body or above rows still on screen, such as "The declarations could not be loaded." */
+	/** What a failed fetch says, as the body or above rows still on screen, such as "The invoices could not be loaded." */
 	errorLabel: string;
-	/** What is announced while the first page loads, as the table's caption, such as "Loading declarations". */
+	/** What is announced while the first page loads, as the table's caption, such as "Loading invoices". */
 	loadingLabel: string;
 	/** What the overlay says when a refresh runs long, such as "This is taking longer than usual." */
 	slowLabel: string;

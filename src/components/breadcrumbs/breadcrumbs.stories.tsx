@@ -24,14 +24,14 @@ const TRAIL_LABEL = "Breadcrumbs";
 const MORE = "Show more";
 const HOME = "Home";
 const REGION = "Region Heerenveen and surroundings";
-const DECLARATIONS = "Declarations";
+const INVOICES = "Invoices";
 const OUTSTANDING = "Outstanding";
-const PAGE = "Declaration 2041";
+const PAGE = "Invoice 2041";
 const LONG_PAGE =
-	"Declaration 2041 for the physiotherapy sessions of March and April";
+	"Invoice 2041 for the design reviews of March and April";
 
-const START = "/declarations/2041";
-const OUTSTANDING_PATH = "/region/declarations/outstanding";
+const START = "/invoices/2041";
+const OUTSTANDING_PATH = "/region/invoices/outstanding";
 
 const CURRENT = { selector: '[aria-current="page"]' };
 
@@ -52,21 +52,21 @@ const CRUMBS: readonly Crumb[] = [
 		render: <Link to="/region" />,
 	},
 	{
-		id: "declarations",
-		label: DECLARATIONS,
-		render: <Link to="/region/declarations" />,
+		id: "invoices",
+		label: INVOICES,
+		render: <Link to="/region/invoices" />,
 	},
 	{
 		id: "outstanding",
 		label: OUTSTANDING,
 		render: <Link to={OUTSTANDING_PATH} />,
 	},
-	{ id: "declaration", label: PAGE },
+	{ id: "invoice", label: PAGE },
 ];
 
 const LONG_CRUMBS: readonly Crumb[] = [
 	{ id: "home", label: HOME, render: <Link to="/" /> },
-	{ id: "declaration", label: LONG_PAGE },
+	{ id: "invoice", label: LONG_PAGE },
 ];
 
 const width =
@@ -154,8 +154,8 @@ export const Default: Story = {
 			canvas.getByRole("navigation", { name: TRAIL_LABEL }),
 		).toBeInTheDocument();
 		await expect(
-			canvas.getByRole("link", { name: DECLARATIONS }),
-		).toHaveAttribute("href", "/region/declarations");
+			canvas.getByRole("link", { name: INVOICES }),
+		).toHaveAttribute("href", "/region/invoices");
 		await expect(
 			canvas.getByText(PAGE, CURRENT),
 		).toHaveAttribute("aria-current", "page");

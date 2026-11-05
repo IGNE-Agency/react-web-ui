@@ -40,7 +40,7 @@ export type ActiveFilterDescribers<TFilters> = Readonly<{
  * multi-value filter. `render` maps one value to its display text.
  *
  * @example
- * // statuses?: DeclarationStatus[]
+ * // statuses?: InvoiceStatus[]
  * describeList({
  * 	label: "Status",
  * 	render: (status) => statusLabels[status](),
