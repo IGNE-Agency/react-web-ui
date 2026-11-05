@@ -15,7 +15,7 @@ You are working in a published TypeScript + React component kit for the web, `@m
 | Build | Vite library mode, declarations from `tsc` |
 | UI primitives | `@base-ui/react`, then `react-aria-components` |
 | Styling | CSS Modules + SCSS (`sass-embedded`), in cascade layers |
-| Forms | `@tanstack/react-form` via `src/lib/forms/app-form.tsx` |
+| Forms | `@tanstack/react-form`; apps register bridges through `createAppForm` from `./forms`, stories through `src/lib/storybook/app-form.tsx` |
 | Dates and times | `temporal-polyfill`; `@internationalized/date` inside the react-aria pickers only |
 | Icons | `@material-design-icons/svg` |
 | Tokens | DTCG 2025.10 in `tokens/`, built by Terrazzo 2 |
@@ -33,8 +33,9 @@ The kit ships built JavaScript, one module per source file, and one plain `.css`
 - SVG icons are imported as components (`…svg?react`) and compiled by SVGR at kit build time. A package's SVG, such as a Material icon, is emitted under `dist/vendor/`, because npm never packs a `node_modules` folder.
 - Every `dependencies` and `peerDependencies` package is external. `sideEffects` is `["**/*.css"]`.
 - Declarations come from `tsc -p tsconfig.build.json`. `isolatedDeclarations` is on: every exported value carries a type the declaration emitter can read without inference. Annotate component return types, and type namespace objects explicitly.
-- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/`, `.storybook/`, `*.stories.*` or `*.mdx` is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim.
-- The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`). Those have their own entry: `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`.
+- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/`, `.storybook/`, `*.stories.*` or `*.mdx` is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server.
+- The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`, `lexical`). Those have their own entry: `./composer`, `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`.
+- The public lib modules have subpaths of their own too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`.
 - `./terrazzo` is the token preset, built for Node with `tsconfig.terrazzo.json`. `./base.css` and `./tokens.css` are the reset and the default theme. `./tokens/*` are the DTCG files an app's resolver layers.
 - Relative imports only, with their `.ts` / `.tsx` extension. There is no `@/` alias.
 - A dependency an app also imports is a peer dependency. Only packages no app imports itself are `dependencies`. Stories, MDX, docs and Storybook never ship (`files: ["dist", "tokens"]`).
@@ -170,7 +171,7 @@ tools/            build- and lint-time scripts
 
 - A component folder is `src/components/<kebab-name>/` and becomes the `./<kebab-name>` export. When you add one, add its line to `src/index.ts` (`export * from "./components/<name>/index.ts"`, unless it needs an optional peer) and its entry to `package.json` `exports`, `types` first. Keep both lists sorted.
 - A compound component is one namespace object of parts. Parts that need no styling pass through untouched.
-- Hooks live in `src/lib/hooks/` and are re-exported from the root barrel.
+- Hooks live in `src/lib/hooks/` and are re-exported from the root barrel and from `./hooks`.
 
 ### Form controls: three tiers
 
@@ -178,7 +179,7 @@ A form control family is named after its Field tier and lives in `src/components
 
 1. **The raw compound**, exported as `<Raw>` (`TextInput`, `Select`, `Checkbox`). Raw text-like controls are named `*Input`.
 2. **The shorthand**, `<Control>Field` (`TextField`, `SelectField`), which composes the raw parts with `Field`.
-3. **The TanStack Form bridge**, `TSF<Control>Field`, registered in `src/lib/forms/app-form.tsx`. The registry exports `useAppForm`, `withForm`, `withFieldGroup`, `useFieldContext` and `useFormContext`.
+3. **The TanStack Form bridge**, `TSF<Control>Field`. An app registers the bridges it uses through `createAppForm(fields)` from `./forms`, which returns `useAppForm`, `withForm` and `withFieldGroup`; `./forms` also exports `useFieldContext` and `useFormContext`. Stories and tests use the full registry in `src/lib/storybook/app-form.tsx`.
 
 Presets (`EmailField`, `PhoneField`, `SearchField`, `PasswordField`) get tiers 2 and 3 only, and reuse another control's raw tier.
 
