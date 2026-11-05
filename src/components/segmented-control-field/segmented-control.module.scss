@@ -39,10 +39,6 @@
 			flex-direction: column;
 		}
 
-		&[data-disabled] {
-			@include form.disabled;
-		}
-
 		&[data-readonly] {
 			@include form.readonly;
 
@@ -63,6 +59,19 @@
 			--_segmented-control-on-fill: var(
 				--sys-color-error-bg
 			);
+		}
+
+		&[data-disabled] {
+			@include form.disabled;
+
+			--_segmented-control-fill: var(
+				--sys-color-disabled-fg
+			);
+			--_segmented-control-on-fill: var(
+				--sys-color-disabled-bg
+			);
+
+			background: var(--sys-color-disabled-bg);
 		}
 	}
 

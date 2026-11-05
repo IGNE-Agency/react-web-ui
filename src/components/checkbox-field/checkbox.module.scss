@@ -1,7 +1,6 @@
 @use "../../style/layers.scss";
 @use "../../style/checkbox.scss" as checkbox;
 @use "../../style/focus.scss" as focus;
-@use "../../style/form.scss" as form;
 
 @layer kit.components {
 	.root {
@@ -41,7 +40,7 @@
 
 		&[data-disabled],
 		&:has(~ :disabled) {
-			@include form.disabled;
+			@include checkbox.box-disabled;
 		}
 	}
 

@@ -48,7 +48,14 @@
 		}
 
 		&[data-disabled] {
-			opacity: 0.5;
+			background: var(
+				--composer-disabled-bg,
+				var(--sys-color-disabled-bg)
+			);
+			color: var(
+				--composer-disabled-fg,
+				var(--sys-color-disabled-fg)
+			);
 			cursor: not-allowed;
 		}
 	}

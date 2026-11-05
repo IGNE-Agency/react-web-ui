@@ -60,7 +60,7 @@
 		font-variant-numeric: tabular-nums;
 
 		&[data-placeholder] {
-			color: var(--field-muted-fg);
+			color: var(--field-placeholder-fg);
 		}
 
 		&[data-type="literal"] {
@@ -380,6 +380,11 @@
 
 		&[data-disabled] {
 			@include form.disabled;
+
+			&[data-selected] {
+				background: var(--sys-color-disabled-fg);
+				color: var(--sys-color-disabled-bg);
+			}
 		}
 
 		&[data-invalid] {
