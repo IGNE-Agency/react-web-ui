@@ -6,16 +6,20 @@
  * - an entry of `exports` does not list `types` first
  * - a component folder has no `./<name>` export, or an export points at a
  *   file the build did not emit
- * - the root barrel imports an optional peer, directly or through its modules
+ * - the root barrel imports an optional peer, directly or through its modules,
+ *   or re-exports a module that has no subpath of its own
  * - the package would ship anything under `docs/` or `.storybook/`, a story,
  *   or an MDX page
  * - an emitted stylesheet does not open with the cascade layer order, or has
  *   a rule outside the kit's layers
  * - a packed file or source map points at a file the package leaves out
  * - the consumer fixture (`tools/fixtures/consumer/`) fails to typecheck or
- *   build against the packed kit, its CSS for one component carries
- *   another's, or a package it should load lazily, such as a zxcvbn language,
- *   lacks a chunk of its own or loads up front
+ *   build against the packed kit, one of its entries brings other kit
+ *   stylesheets than the ones it lists, or a package it should load lazily,
+ *   such as a zxcvbn language, lacks a chunk of its own or loads up front
+ * - importing a subpath brings other kit stylesheets than the ones
+ *   `tools/fixtures/consumer/stylesheets.json` lists for it, in a build or in
+ *   the dev server's pre-bundle
  *
  * @example
  *   bun tools/check-exports.ts
@@ -62,6 +66,7 @@ const exportsMap = manifest.exports ?? {};
 /** Runs a command from the repository root and returns its output, or the failure as a problem. */
 const run = (
 	command: readonly string[],
+	env: Readonly<Record<string, string>> = {},
 ): Readonly<{
 	ok: boolean;
 	stdout: string;
@@ -71,6 +76,7 @@ const run = (
 		cwd: root,
 		stdout: "pipe",
 		stderr: "pipe",
+		env: { ...process.env, ...env },
 	});
 	return {
 		ok: result.exitCode === 0,
@@ -160,6 +166,22 @@ const missingTargets = Object.entries(exportsMap).flatMap(
 						`${subpath}: ${target} does not exist; run \`bun run build\` first`,
 					],
 		),
+);
+
+const allTargets =
+	Object.values(exportsMap).flatMap(targetsOf);
+
+const rootOnly = [
+	...readFileSync(
+		join(root, "src", "index.ts"),
+		"utf8",
+	).matchAll(/^export \* from "\.\/(.+)\.tsx?";$/gm),
+].flatMap(([, module]) =>
+	allTargets.includes(`./dist/${module}.js`)
+		? []
+		: [
+				`the root re-exports src/${module}, which has no subpath of its own`,
+			],
 );
 
 const optionalPeers = Object.entries(
@@ -310,48 +332,109 @@ const danglingMaps = packedFiles
 		),
 	);
 
-/** The class names a component's own emitted stylesheet defines. */
-const classesOf = (
-	component: string,
+/** A packed stylesheet's name: its path under `dist/` without the extension, components without their folder prefix (`button/button`, `lib/calendar/temporal`). */
+const sheetName = (path: string): string =>
+	path
+		.replace(/^(\.\/)?dist\//, "")
+		.replace(/^components\//, "")
+		.replace(/\.css$/, "");
+
+/** Every component stylesheet the package ships, with the class names it defines. */
+const sheetClasses: ReadonlyMap<string, readonly string[]> =
+	new Map(
+		packedFiles
+			.filter(
+				path =>
+					path.endsWith(".css") &&
+					!["dist/base.css", "dist/tokens.css"].includes(
+						path,
+					),
+			)
+			.map(path => [
+				sheetName(path),
+				[
+					...new Set(
+						readFileSync(join(root, path), "utf8").match(
+							/\._[\w-]+/g,
+						) ?? [],
+					),
+				],
+			]),
+	);
+
+/** The kit stylesheets whose classes a build's CSS contains, sorted. */
+const sheetsIn = (css: string): readonly string[] =>
+	[...sheetClasses]
+		.flatMap(([sheet, classes]) =>
+			classes.some(name => css.includes(name))
+				? [sheet]
+				: [],
+		)
+		.sort();
+
+/** What differs between the stylesheets an import should bring and the ones it brought. */
+const sheetProblems = (
+	what: string,
+	expected: readonly string[],
+	actual: readonly string[],
 ): readonly string[] => [
-	...new Set(
-		readFileSync(
-			join(
-				dist,
-				"components",
-				component,
-				`${component}.css`,
-			),
-			"utf8",
-		).match(/\._[\w-]+/g) ?? [],
+	...expected.flatMap(sheet =>
+		actual.includes(sheet)
+			? []
+			: [`${what} left out ${sheet}`],
+	),
+	...actual.flatMap(sheet =>
+		expected.includes(sheet)
+			? []
+			: [`${what} pulled in ${sheet}`],
 	),
 ];
 
 /**
- * Each fixture entry (`src/<entry>.tsx`), the component stylesheets its build
- * must and must not contain, and the packages that must each arrive in a chunk
- * of their own, loaded only through a dynamic import.
+ * Each fixture entry (`src/<entry>.tsx`), exactly the kit stylesheets its
+ * build contains, and the packages that must each arrive in a chunk of their
+ * own, loaded only through a dynamic import.
  */
 const fixtureEntries: readonly Readonly<{
 	entry: string;
-	includes: readonly string[];
-	excludes: readonly string[];
+	sheets: readonly string[];
 	lazy?: readonly string[];
 }>[] = [
 	{
 		entry: "button",
-		includes: ["button", "icon"],
-		excludes: ["spinner", "skeleton", "link"],
+		sheets: [
+			"button/button",
+			"icon/icon",
+			"tooltip/tooltip",
+		],
 	},
 	{
 		entry: "spinner",
-		includes: ["spinner"],
-		excludes: ["button", "icon", "skeleton", "link"],
+		sheets: ["spinner/spinner"],
+	},
+	{
+		entry: "root",
+		sheets: [
+			"button/button",
+			"icon/icon",
+			"tooltip/tooltip",
+		],
+	},
+	{
+		entry: "forms",
+		sheets: [
+			"button/button",
+			"error-text/error-text",
+			"field/field",
+			"icon/icon",
+			"spinner/spinner",
+			"text-field/text-field",
+			"tooltip/tooltip",
+		],
 	},
 	{
 		entry: "password-strength",
-		includes: ["password-field"],
-		excludes: ["button", "spinner", "text-field"],
+		sheets: ["password-field/password-field"],
 		lazy: [
 			"@zxcvbn-ts/core",
 			"@zxcvbn-ts/language-common",
@@ -363,10 +446,13 @@ const fixtureEntries: readonly Readonly<{
 
 type ManifestChunk = Readonly<{
 	file: string;
+	name?: string;
 	src?: string;
 	isEntry?: boolean;
 	isDynamicEntry?: boolean;
 	imports?: readonly string[];
+	dynamicImports?: readonly string[];
+	css?: readonly string[];
 }>;
 
 /** The chunks a fixture build emitted, by Vite's manifest key. */
@@ -465,6 +551,207 @@ const fixtureCss = (entry: string): string => {
 		: "";
 };
 
+/** Every subpath an app imports a module by, such as `button`, without the token preset, which runs in Node. */
+const moduleSubpaths: readonly string[] = Object.entries(
+	exportsMap,
+).flatMap(([subpath, entry]) =>
+	subpath !== "." &&
+	targetsOf(entry).some(
+		target =>
+			target.endsWith(".js") &&
+			!target.startsWith("./dist/terrazzo/"),
+	)
+		? [subpath.slice(2)]
+		: [],
+);
+
+/** Every file the keys reach through the edges `next` gives, the keys included. */
+const closure = (
+	keys: readonly string[],
+	next: (key: string) => readonly string[],
+	seen: ReadonlySet<string> = new Set(),
+): ReadonlySet<string> => {
+	const fresh = keys.filter(key => !seen.has(key));
+	return fresh.length === 0
+		? seen
+		: closure(
+				fresh.flatMap(next),
+				next,
+				new Set([...seen, ...fresh]),
+			);
+};
+
+/** The CSS a fixture build loads for one entry chunk, up front or on demand, all files together. */
+const entryCss = (
+	build: string,
+	chunks: Readonly<Record<string, ManifestChunk>>,
+	key: string,
+): string =>
+	[
+		...closure([key], chunk => [
+			...(chunks[chunk]?.imports ?? []),
+			...(chunks[chunk]?.dynamicImports ?? []),
+		]),
+	]
+		.flatMap(chunk => chunks[chunk]?.css ?? [])
+		.map(file =>
+			readFileSync(
+				join(fixture, "dist", build, file),
+				"utf8",
+			),
+		)
+		.join("\n");
+
+/** The kit stylesheets a dev server's pre-bundled module loads, up front or on demand. */
+const prebundledSheets = (
+	deps: string,
+	file: string,
+): readonly string[] => {
+	const imports = (name: string): readonly string[] =>
+		existsSync(join(deps, name))
+			? transpiler
+					.scanImports(
+						readFileSync(join(deps, name), "utf8"),
+					)
+					.map(({ path }) => path)
+			: [];
+	const files = closure([file], name =>
+		imports(name).flatMap(path =>
+			path.startsWith("./") && path.endsWith(".js")
+				? [path.slice(2)]
+				: [],
+		),
+	);
+	return [
+		...new Set(
+			[...files].flatMap(name =>
+				imports(name).flatMap(path => {
+					const sheet = path.split(`/${manifest.name}/`)[1];
+					return sheet?.endsWith(".css") === true &&
+						sheetClasses.has(sheetName(sheet))
+						? [sheetName(sheet)]
+						: [];
+				}),
+			),
+		),
+	].sort();
+};
+
+/**
+ * Builds an app entry per subpath that imports everything the subpath exports,
+ * and pre-bundles the same subpaths as Vite's dev server does. Each must bring
+ * exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for
+ * it, and the dev server the same ones as the build.
+ */
+const checkSubpaths = (): readonly string[] => {
+	const env = { KIT_SUBPATHS: moduleSubpaths.join(",") };
+	const config = join(fixture, "vite.config.ts");
+	const build = run(
+		[
+			"bun",
+			"x",
+			"vite",
+			"build",
+			"--config",
+			config,
+			"--mode",
+			"subpaths",
+		],
+		env,
+	);
+	if (!build.ok) {
+		return [
+			`fixture build of every subpath:\n${build.output}`,
+		];
+	}
+	const prebundle = run(
+		[
+			"bun",
+			"x",
+			"vite",
+			"optimize",
+			"--force",
+			"--config",
+			config,
+			"--mode",
+			"subpaths",
+		],
+		env,
+	);
+	if (!prebundle.ok) {
+		return [
+			`fixture pre-bundle of every subpath:\n${prebundle.output}`,
+		];
+	}
+	const stylesheets = join(fixture, "stylesheets.json");
+	const expected: Readonly<
+		Record<string, readonly string[]>
+	> = existsSync(stylesheets)
+		? JSON.parse(readFileSync(stylesheets, "utf8"))
+		: {};
+	const chunks = fixtureManifest("subpaths");
+	const deps = join(
+		fixture,
+		"node_modules",
+		".vite",
+		"deps",
+	);
+	const metadata: Readonly<{
+		optimized?: Readonly<
+			Record<string, Readonly<{ file: string }>>
+		>;
+	}> = JSON.parse(
+		readFileSync(join(deps, "_metadata.json"), "utf8"),
+	);
+
+	return [
+		...Object.keys(expected).flatMap(subpath =>
+			moduleSubpaths.includes(subpath)
+				? []
+				: [
+						`stylesheets.json lists ${subpath}, which the package does not export`,
+					],
+		),
+		...moduleSubpaths.flatMap(subpath => {
+			const key = Object.entries(chunks).find(
+				([, chunk]) =>
+					chunk.isEntry === true && chunk.name === subpath,
+			)?.[0];
+			if (key === undefined) {
+				return [
+					`the fixture built no entry for ./${subpath}`,
+				];
+			}
+			const built = sheetsIn(
+				entryCss("subpaths", chunks, key),
+			);
+			const file =
+				metadata.optimized?.[`${manifest.name}/${subpath}`]
+					?.file;
+			const sheets = expected[subpath];
+			const inBuild =
+				sheets === undefined
+					? [
+							`importing ./${subpath} brings ${built.length === 0 ? "no stylesheet" : built.join(", ")}; list exactly the ones it should under "${subpath}" in stylesheets.json`,
+						]
+					: sheetProblems(
+							`importing ./${subpath}`,
+							sheets,
+							built,
+						);
+			const inDev =
+				file === undefined
+					? [`the dev server pre-bundled no ./${subpath}`]
+					: sheetProblems(
+							`in the dev server, importing ./${subpath}`,
+							built,
+							prebundledSheets(deps, file),
+						);
+			return inBuild.concat(inDev);
+		}),
+	];
+};
+
 /** Packs the kit into the fixture's `node_modules`, then typechecks and builds every fixture entry. */
 const checkConsumer = (): readonly string[] => {
 	const installed = join(
@@ -520,7 +807,7 @@ const checkConsumer = (): readonly string[] => {
 			? []
 			: [`fixture typecheck:\n${typecheck.output}`]),
 		...fixtureEntries.flatMap(
-			({ entry, includes, excludes, lazy = [] }) => {
+			({ entry, sheets, lazy = [] }) => {
 				const build = run([
 					"bun",
 					"x",
@@ -536,31 +823,14 @@ const checkConsumer = (): readonly string[] => {
 						`fixture build of ${entry}:\n${build.output}`,
 					];
 				}
-				const css = fixtureCss(entry);
-				const missing = includes.flatMap(component =>
-					classesOf(component).every(name =>
-						css.includes(name),
-					)
-						? []
-						: [
-								`importing ${entry} left out ${component}'s CSS`,
-							],
-				);
-				const extra = excludes.flatMap(component =>
-					classesOf(component).some(name =>
-						css.includes(name),
-					)
-						? [
-								`importing ${entry} pulled in ${component}'s CSS`,
-							]
-						: [],
-				);
-				return missing.concat(
-					extra,
-					eagerPackages(entry, lazy),
-				);
+				return sheetProblems(
+					`importing ${entry}`,
+					sheets,
+					sheetsIn(fixtureCss(entry)),
+				).concat(eagerPackages(entry, lazy));
 			},
 		),
+		...checkSubpaths(),
 	];
 };
 
@@ -581,8 +851,9 @@ const sections: readonly Readonly<{
 	},
 	{
 		title: "root barrel",
-		problems: rootPeers,
-		passed: "imports no optional peer.",
+		problems: [...rootPeers, ...rootOnly],
+		passed:
+			"imports no optional peer, and everything it re-exports has a subpath of its own.",
 	},
 	{
 		title: "packed files",
@@ -598,7 +869,7 @@ const sections: readonly Readonly<{
 		title: "consumer fixture",
 		problems: checkConsumer(),
 		passed:
-			"typechecks and builds against the packed kit, each component brings only its own CSS, and each lazy package has a chunk of its own, loaded on demand.",
+			"typechecks and builds against the packed kit, every subpath brings only the stylesheets it lists, in a build and in the dev server, and each lazy package has a chunk of its own, loaded on demand.",
 	},
 ];
 
