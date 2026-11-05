@@ -5,7 +5,7 @@ import {
 import type { ReactNode } from "react";
 import type { Tone } from "../../lib/tone.ts";
 
-/** A toast's status role; drives its colour and icon. */
+/** A toast's status role; drives its colour. */
 export type ToastTone = Exclude<Tone, "neutral">;
 
 /** An action button rendered inside a toast, such as Retry on a failed send. */
@@ -21,6 +21,8 @@ export type ToastAction = Readonly<{
 /** The data every kit toast carries. */
 export type ToastData = Readonly<{
 	tone: ToastTone;
+	/** A glyph before the title, such as one for the tone. */
+	icon?: ReactNode;
 	/** Heading above the body, where one line will not carry the news. */
 	title?: ReactNode;
 	body: ReactNode;
@@ -39,6 +41,8 @@ export type ToastOptions = Readonly<{
 	 * copy short enough to read at a glance.
 	 */
 	title?: ReactNode;
+	/** A glyph before the title, such as one for the tone. Left out, none shows. */
+	icon?: ReactNode;
 	/** Action buttons rendered in the toast. */
 	actions?: ReadonlyArray<ToastAction>;
 	/**
@@ -79,7 +83,7 @@ const push = (
 	body: ReactNode,
 	options: ToastOptions = {},
 ): string => {
-	const { key, title, actions, timeout } = options;
+	const { key, title, icon, actions, timeout } = options;
 
 	if (key !== undefined) {
 		const existing = activeKeys.get(key);
@@ -100,7 +104,7 @@ const push = (
 			id,
 			type: tone,
 			timeout: resolvedTimeout,
-			data: { tone, title, body, actions },
+			data: { tone, icon, title, body, actions },
 			onClose:
 				key !== undefined
 					? () => {

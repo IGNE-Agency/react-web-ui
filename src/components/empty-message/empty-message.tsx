@@ -14,8 +14,8 @@ export type EmptyMessageProps = StatusPresetProps;
  * @example
  * <EmptyMessage
  * 	icon={InboxIcon}
- * 	title="No declarations yet"
- * 	description="Declarations you send show up here."
+ * 	title="No invoices yet"
+ * 	description="Invoices you send show up here."
  * />
  */
 export const EmptyMessage = (

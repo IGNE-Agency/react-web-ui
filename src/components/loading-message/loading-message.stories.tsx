@@ -4,7 +4,7 @@ import { expect, waitFor } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { LoadingMessage } from "./loading-message.tsx";
 
-const TITLE = "Loading your declarations";
+const TITLE = "Loading your invoices";
 const DESCRIPTION = "This can take a few seconds.";
 
 const Mark = (): ReactNode => (

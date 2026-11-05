@@ -1,7 +1,11 @@
-import FileIcon from "@material-design-icons/svg/outlined/description.svg?react";
-import { type ReactNode, useEffect, useState } from "react";
+import { clsx } from "clsx";
+import {
+	type ComponentPropsWithRef,
+	type ReactNode,
+	useEffect,
+	useState,
+} from "react";
 import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
-import { Icon } from "../icon/index.ts";
 import { Skeleton } from "../skeleton/index.ts";
 import { Tooltip } from "../tooltip/index.ts";
 import style from "./attachment-tile.module.scss";
@@ -61,30 +65,39 @@ export const useAttachmentPreview = (
 	};
 };
 
-export type AttachmentPreviewProps = Readonly<{
-	name: string;
-	/** Tooltip text for the preview. */
-	hint: string;
-	/** Image source; without one the tile shows a glyph and the extension. */
-	src: string | undefined;
-	/** Whether an image source is still being produced. */
-	pending?: boolean;
-}>;
+export type AttachmentPreviewProps = Omit<
+	ComponentPropsWithRef<"span">,
+	"children"
+> &
+	Readonly<{
+		name: string;
+		/** Tooltip text for the preview. */
+		hint: string;
+		/** Image source; without one the tile shows its `icon` and the file's extension. */
+		src: string | undefined;
+		/** Whether an image source is still being produced. */
+		pending?: boolean;
+		/** A file-type glyph above the extension, where there is no image. */
+		icon?: ReactNode;
+	}>;
 
 /**
- * The inside of an attachment tile: an image preview where there is one, a file
- * glyph and the extension otherwise, plus the file name for assistive tech. A
- * source that is still arriving shows a skeleton; one that fails to load falls
- * back to the glyph.
+ * The inside of an attachment tile: an image preview where there is one, the
+ * `icon` and the file's extension otherwise, plus the file name for assistive
+ * tech. A source that is still arriving shows a skeleton; one that fails to
+ * load falls back to the extension.
  *
  * @example
- * <AttachmentPreview name="nota.pdf" hint="nota.pdf (12 kB)" src={undefined} />
+ * <AttachmentTile.Preview name="nota.pdf" hint="nota.pdf (12 kB)" src={undefined} />
  */
 export const AttachmentPreview = ({
 	name,
 	hint,
 	src,
 	pending = false,
+	icon,
+	className,
+	...props
 }: AttachmentPreviewProps): ReactNode => {
 	const [loadedSrc, setLoadedSrc] = useState<string>();
 	const [brokenSrc, setBrokenSrc] = useState<string>();
@@ -113,12 +126,19 @@ export const AttachmentPreview = ({
 	return (
 		<Tooltip content={hint}>
 			<span
-				className={style.preview}
+				{...props}
+				className={clsx(style.preview, className)}
 				aria-busy={busy || undefined}>
 				{image === undefined ? (
 					pending ? null : (
 						<>
-							<Icon svg={FileIcon} size={1.5} label="" />
+							{icon === undefined ? null : (
+								<span
+									aria-hidden="true"
+									className={style.icon}>
+									{icon}
+								</span>
+							)}
 							{extension === "" ? null : (
 								<span className={style.extension}>
 									{extension}

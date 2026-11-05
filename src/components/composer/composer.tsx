@@ -1,7 +1,7 @@
-import SendIcon from "@material-design-icons/svg/outlined/arrow_forward.svg?react";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
+	type ComponentPropsWithRef,
 	type ReactNode,
 	useEffect,
 	useRef,
@@ -28,11 +28,20 @@ import {
 import style from "./composer.module.scss";
 import {
 	ComposerAttachButton,
+	type ComposerAttachButtonProps,
 	ComposerAttachments,
 	ComposerAttachmentsError,
+	type ComposerAttachmentsErrorProps,
+	type ComposerAttachmentsProps,
 } from "./composer-attachments.tsx";
-import { ComposerEditor } from "./composer-editor.tsx";
-import { ComposerMentions } from "./composer-mentions.tsx";
+import {
+	ComposerEditor,
+	type ComposerEditorProps,
+} from "./composer-editor.tsx";
+import {
+	ComposerMentions,
+	type ComposerMentionsProps,
+} from "./composer-mentions.tsx";
 import {
 	parseMentionString,
 	toPlainText,
@@ -246,15 +255,24 @@ const Toolbar = ({
 	</div>
 );
 
+export type ComposerMaxLengthProps = Omit<
+	ComponentPropsWithRef<"span">,
+	"children"
+>;
+
 /** The `length/maxLength` counter, warning near the limit. Renders nothing without a `maxLength`. */
-const MaxLength = (): ReactNode => {
+const MaxLength = ({
+	className,
+	...props
+}: ComposerMaxLengthProps): ReactNode => {
 	const { maxLength, textLength } = useComposerContext();
 	if (maxLength === undefined) {
 		return null;
 	}
 	return (
 		<span
-			className={style.counter}
+			{...props}
+			className={clsx(style.counter, className)}
 			data-tone={lengthTone(textLength, maxLength)}>
 			{textLength}/{maxLength}
 		</span>
@@ -266,13 +284,16 @@ export type ComposerSendButtonProps = Readonly<{
 	label: string;
 	/** @default "primary" */
 	variant?: "primary" | "secondary";
+	/** The send glyph. */
+	children: ReactNode;
 }> &
 	Omit<ComponentProps<"button">, "children">;
 
-/** The icon button that sends the message; disabled while it can't be sent. */
+/** The icon button that sends the message, its children the glyph; disabled while it can't be sent. */
 const SendButton = ({
 	label,
 	variant = "primary",
+	children,
 	...props
 }: ComposerSendButtonProps): ReactNode => {
 	const { submit, canSend } = useComposerContext();
@@ -282,7 +303,7 @@ const SendButton = ({
 			variant={variant}
 			size="md"
 			iconOnly
-			icon={SendIcon}
+			icon={children}
 			label={label}
 			disabled={!canSend}
 			onClick={() => {
@@ -293,46 +314,128 @@ const SendButton = ({
 	);
 };
 
-type ComposerNamespace = Readonly<{
-	Root: typeof Root;
-	Editor: typeof ComposerEditor;
-	Mentions: typeof ComposerMentions;
-	Toolbar: typeof Toolbar;
-	Attachments: typeof ComposerAttachments;
-	AttachmentsError: typeof ComposerAttachmentsError;
-	AttachButton: typeof ComposerAttachButton;
-	MaxLength: typeof MaxLength;
-	SendButton: typeof SendButton;
-	createHandle: typeof createComposerHandle;
-}>;
+/** The attachment controls the `Composer` prefab renders, and what they say. */
+export type ComposerAttachmentOptions = Omit<
+	ComposerAttachmentsProps,
+	"className"
+> &
+	ComposerAttachmentsErrorProps &
+	Readonly<{
+		/** The attach button's accessible name and tooltip, such as "Add attachment". */
+		attachLabel: string;
+		/** The attach button's glyph. */
+		attachIcon: ReactNode;
+		accept?: ComposerAttachButtonProps["accept"];
+	}>;
+
+export type ComposerProps = Omit<
+	ComposerRootProps,
+	"children"
+> &
+	Omit<ComposerEditorProps, "children" | "className"> &
+	Readonly<{
+		/** The `@` typeahead, where the composer takes mentions. */
+		mentions?: ComposerMentionsProps;
+		/** The staged files and the button that adds them, where the composer takes attachments. */
+		attachments?: ComposerAttachmentOptions;
+		/** The send button's accessible name and tooltip, such as "Send". */
+		sendLabel: string;
+		/** The send button's glyph. */
+		sendIcon: ReactNode;
+	}>;
+
+const Prefab = ({
+	label,
+	placeholder,
+	minLines,
+	maxLines,
+	mentions,
+	attachments,
+	sendLabel,
+	sendIcon,
+	...props
+}: ComposerProps): ReactNode => (
+	<Root {...props}>
+		{attachments === undefined ? null : (
+			<>
+				<ComposerAttachments
+					label={attachments.label}
+					removeLabel={attachments.removeLabel}
+					removeIcon={attachments.removeIcon}
+					fileIcon={attachments.fileIcon}
+					fileHint={attachments.fileHint}
+				/>
+				<ComposerAttachmentsError
+					tooLargeError={attachments.tooLargeError}
+				/>
+			</>
+		)}
+		<ComposerEditor
+			label={label}
+			placeholder={placeholder}
+			minLines={minLines}
+			maxLines={maxLines}>
+			{mentions === undefined ? null : (
+				<ComposerMentions {...mentions} />
+			)}
+		</ComposerEditor>
+		<Toolbar>
+			<MaxLength />
+			{attachments === undefined ? null : (
+				<ComposerAttachButton
+					label={attachments.attachLabel}
+					accept={attachments.accept}>
+					{attachments.attachIcon}
+				</ComposerAttachButton>
+			)}
+			<SendButton label={sendLabel}>{sendIcon}</SendButton>
+		</Toolbar>
+	</Root>
+);
+
+/** The parts of a composer, hanging off its prefab. */
+export type ComposerParts = typeof Prefab &
+	Readonly<{
+		Root: typeof Root;
+		Editor: typeof ComposerEditor;
+		Mentions: typeof ComposerMentions;
+		Toolbar: typeof Toolbar;
+		Attachments: typeof ComposerAttachments;
+		AttachmentsError: typeof ComposerAttachmentsError;
+		AttachButton: typeof ComposerAttachButton;
+		MaxLength: typeof MaxLength;
+		SendButton: typeof SendButton;
+		createHandle: typeof createComposerHandle;
+	}>;
 
 /**
  * A message composer: a plain-text editor with `@` mentions, staged
  * attachments, a length counter, and Enter to send (Shift+Enter for a new
- * line).
+ * line). The prefab wires the editor, the attachments and the send button
+ * into one; the parts hanging off it compose a composer by hand.
  *
  * @example
- * <Composer.Root onSend={send} maxLength={2000}>
- * 	<Composer.Attachments label="Attachments" removeLabel="Remove" fileHint={(name, size) => `${name} (${size})`} />
- * 	<Composer.Editor label="Comment">
- * 		<Composer.Mentions label="People to mention" sources={[people]} />
- * 	</Composer.Editor>
- * 	<Composer.Toolbar>
- * 		<Composer.MaxLength />
- * 		<Composer.AttachButton label="Add attachment" />
- * 		<Composer.SendButton label="Send" />
- * 	</Composer.Toolbar>
- * </Composer.Root>
+ * <Composer
+ * 	label="Comment"
+ * 	onSend={send}
+ * 	maxLength={2000}
+ * 	mentions={{ label: "People to mention", sources: [people] }}
+ * 	sendLabel="Send"
+ * 	sendIcon={<SendIcon />}
+ * />
  */
-export const Composer: ComposerNamespace = {
-	Root,
-	Editor: ComposerEditor,
-	Mentions: ComposerMentions,
-	Toolbar,
-	Attachments: ComposerAttachments,
-	AttachmentsError: ComposerAttachmentsError,
-	AttachButton: ComposerAttachButton,
-	MaxLength,
-	SendButton,
-	createHandle: createComposerHandle,
-};
+export const Composer: ComposerParts = Object.assign(
+	Prefab,
+	{
+		Root,
+		Editor: ComposerEditor,
+		Mentions: ComposerMentions,
+		Toolbar,
+		Attachments: ComposerAttachments,
+		AttachmentsError: ComposerAttachmentsError,
+		AttachButton: ComposerAttachButton,
+		MaxLength,
+		SendButton,
+		createHandle: createComposerHandle,
+	},
+);

@@ -1,12 +1,9 @@
 import { Collapsible as BaseCollapsible } from "@base-ui/react/collapsible";
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import { useRender } from "@base-ui/react/use-render";
-import ExpandLessIcon from "@material-design-icons/svg/outlined/expand_less.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { clsx } from "clsx";
 import {
 	type ComponentPropsWithRef,
-	createContext,
 	type ReactNode,
 	use,
 	useState,
@@ -176,8 +173,6 @@ const Link = ({
 	);
 };
 
-const GroupOpenContext = createContext(false);
-
 export type NavGroupProps = Omit<
 	ComponentPropsWithRef<"div">,
 	"onToggle"
@@ -199,7 +194,7 @@ export type NavGroupProps = Omit<
 
 /**
  * A destination with subpages: a `GroupHeader` holding its own `Link` and a
- * `GroupToggle`, over a `GroupPanel` that folds the subpages open.
+ * `GroupToggle`, over a `GroupPanel` that folds open a `GroupList` of subpages.
  */
 const Group = ({
 	open,
@@ -213,18 +208,16 @@ const Group = ({
 	const current = open ?? own;
 
 	return (
-		<GroupOpenContext value={current}>
-			<BaseCollapsible.Root
-				open={current}
-				onOpenChange={next => {
-					setOwn(next);
-					onOpenChange?.(next);
-				}}
-				className={clsx(style.group, className)}
-				{...props}>
-				{children}
-			</BaseCollapsible.Root>
-		</GroupOpenContext>
+		<BaseCollapsible.Root
+			open={current}
+			onOpenChange={next => {
+				setOwn(next);
+				onOpenChange?.(next);
+			}}
+			className={clsx(style.group, className)}
+			{...props}>
+			{children}
+		</BaseCollapsible.Root>
 	);
 };
 
@@ -242,43 +235,63 @@ const GroupHeader = ({
 	/>
 );
 
-export type NavGroupToggleProps = Readonly<{
-	/** Accessible name, such as "Show subpages", surfaced as the tooltip hint and the `aria-label`. */
-	label: string;
-}>;
+export type NavGroupToggleProps = Omit<
+	ComponentPropsWithRef<"button">,
+	"children" | "aria-label"
+> &
+	Readonly<{
+		/** Accessible name, such as "Show subpages", surfaced as the tooltip hint and the `aria-label`. */
+		label: string;
+		/** The expand chevron, pointing down while closed; it turns over while open. */
+		children: ReactNode;
+	}>;
 
+/** The icon-only button that folds the group's subpages open and shut; its children are the chevron. */
 const GroupToggle = ({
 	label,
-}: NavGroupToggleProps): ReactNode => {
-	const open = use(GroupOpenContext);
+	children,
+	className,
+	...props
+}: NavGroupToggleProps): ReactNode => (
+	<Button
+		{...props}
+		variant="tertiary"
+		iconOnly
+		className={clsx(style.groupToggle, className)}
+		icon={children}
+		label={label}
+		render={<BaseCollapsible.Trigger />}
+	/>
+);
 
-	return (
-		<Button
-			variant="tertiary"
-			iconOnly
-			className={style.groupToggle}
-			icon={open ? ExpandLessIcon : ExpandMoreIcon}
-			label={label}
-			render={<BaseCollapsible.Trigger />}
-		/>
-	);
-};
+export type NavGroupPanelProps = Omit<
+	BaseCollapsible.Panel.Props,
+	"className"
+> &
+	Readonly<{ className?: string }>;
 
-export type NavGroupPanelProps = Readonly<{
-	className?: string;
-	/** The subpages, each a `Nav.Item` holding a `Nav.Link`. */
-	children: ReactNode;
-}>;
-
+/** The fold that opens and shuts the group's `GroupList`. */
 const GroupPanel = ({
 	className,
-	children,
+	...props
 }: NavGroupPanelProps): ReactNode => (
-	<BaseCollapsible.Panel className={style.groupPanel}>
-		<ul className={clsx(style.groupList, className)}>
-			{children}
-		</ul>
-	</BaseCollapsible.Panel>
+	<BaseCollapsible.Panel
+		{...props}
+		className={clsx(style.groupPanel, className)}
+	/>
+);
+
+export type NavGroupListProps = ComponentPropsWithRef<"ul">;
+
+/** The subpages, each a `Nav.Item` holding a `Nav.Link`, joined to the group by branch lines. */
+const GroupList = ({
+	className,
+	...props
+}: NavGroupListProps): ReactNode => (
+	<ul
+		{...props}
+		className={clsx(style.groupList, className)}
+	/>
 );
 
 type NavParts = Readonly<{
@@ -290,6 +303,7 @@ type NavParts = Readonly<{
 	GroupHeader: typeof GroupHeader;
 	GroupToggle: typeof GroupToggle;
 	GroupPanel: typeof GroupPanel;
+	GroupList: typeof GroupList;
 }>;
 
 /**
@@ -321,4 +335,5 @@ export const Nav: NavParts = {
 	GroupHeader,
 	GroupToggle,
 	GroupPanel,
+	GroupList,
 };

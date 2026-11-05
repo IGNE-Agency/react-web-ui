@@ -53,6 +53,7 @@ export type StatusMessageActionProps = Readonly<{
 	children: ReactNode;
 }>;
 
+/** The message's frame, and its live region when `live` is set. */
 const Root = ({
 	live,
 	className,
@@ -63,6 +64,7 @@ const Root = ({
 	</div>
 );
 
+/** The caller's glyph, on a disc tinted in `tone`. */
 const StatusIcon = ({
 	svg,
 	tone = "neutral",
@@ -76,6 +78,7 @@ const StatusIcon = ({
 	</span>
 );
 
+/** The caller's picture in place of an icon, hidden from assistive technology. */
 const Illustration = ({
 	className,
 	children,
@@ -87,6 +90,7 @@ const Illustration = ({
 	</div>
 );
 
+/** What happened, in one sentence. A paragraph unless `render` names a heading. */
 const Title = ({
 	render,
 	className,
@@ -101,6 +105,7 @@ const Title = ({
 		},
 	});
 
+/** What to do next, or who can help. */
 const Description = ({
 	className,
 	children,
@@ -110,6 +115,7 @@ const Description = ({
 	</p>
 );
 
+/** The way on: the buttons or links under the message. */
 const Action = ({
 	className,
 	children,

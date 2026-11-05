@@ -10,6 +10,7 @@ import {
 	$getRoot,
 	defineExtension,
 } from "lexical";
+import { clsx } from "clsx";
 import { type ReactNode, useId, useState } from "react";
 import { useComposerContext } from "./composer.context.ts";
 import style from "./composer-editor.module.scss";
@@ -56,6 +57,7 @@ export type ComposerEditorProps = Readonly<{
 	maxLines?: number;
 	/** Editor plugins, such as `Composer.Mentions`. */
 	children?: ReactNode;
+	className?: string;
 }>;
 
 /** The composer's plain-text editor, with mentions and Enter to send. */
@@ -65,6 +67,7 @@ export const ComposerEditor = ({
 	minLines = 3,
 	maxLines,
 	children,
+	className,
 }: ComposerEditorProps): ReactNode => {
 	const {
 		value,
@@ -99,7 +102,7 @@ export const ComposerEditor = ({
 			extension={extension}
 			contentEditable={null}>
 			<div
-				className={style.editor}
+				className={clsx(style.editor, className)}
 				style={{
 					"--composer-min-lines": minLines,
 					"--composer-max-lines": maxLines,

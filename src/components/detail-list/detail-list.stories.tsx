@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "../button/button.tsx";
+import { Icon } from "../icon/icon.tsx";
 import { DetailList } from "./detail-list.tsx";
 
 const PHONE = "Phone number";
@@ -18,45 +19,65 @@ const changePhone = fn();
 const ROWS = {
 	terms: (
 		<>
-			<DetailList.Row term="Name">
-				Ada Lovelace
+			<DetailList.Row>
+				<DetailList.Term>Name</DetailList.Term>
+				<DetailList.Detail>Ada Lovelace</DetailList.Detail>
 			</DetailList.Row>
-			<DetailList.Row term={PHONE}>
-				{PHONE_NUMBER}
+			<DetailList.Row>
+				<DetailList.Term>{PHONE}</DetailList.Term>
+				<DetailList.Detail>
+					{PHONE_NUMBER}
+				</DetailList.Detail>
 			</DetailList.Row>
-			<DetailList.Row term={EMAIL}>
-				{EMAIL_ADDRESS}
+			<DetailList.Row>
+				<DetailList.Term>{EMAIL}</DetailList.Term>
+				<DetailList.Detail>
+					{EMAIL_ADDRESS}
+				</DetailList.Detail>
 			</DetailList.Row>
 		</>
 	),
 	icons: (
 		<>
-			<DetailList.IconRow svg={PhoneIcon} label={PHONE}>
-				{PHONE_NUMBER}
+			<DetailList.IconRow>
+				<DetailList.Term>
+					<Icon svg={PhoneIcon} label={PHONE} />
+				</DetailList.Term>
+				<DetailList.Detail>
+					{PHONE_NUMBER}
+				</DetailList.Detail>
 			</DetailList.IconRow>
-			<DetailList.IconRow svg={MailIcon} label={EMAIL}>
-				{EMAIL_ADDRESS}
+			<DetailList.IconRow>
+				<DetailList.Term>
+					<Icon svg={MailIcon} label={EMAIL} />
+				</DetailList.Term>
+				<DetailList.Detail>
+					{EMAIL_ADDRESS}
+				</DetailList.Detail>
 			</DetailList.IconRow>
 		</>
 	),
 	action: (
 		<>
-			<DetailList.Row term="Name">
-				Ada Lovelace
+			<DetailList.Row>
+				<DetailList.Term>Name</DetailList.Term>
+				<DetailList.Detail>Ada Lovelace</DetailList.Detail>
 			</DetailList.Row>
-			<DetailList.Row
-				term={PHONE}
-				action={
+			<DetailList.Row>
+				<DetailList.Term>{PHONE}</DetailList.Term>
+				<DetailList.Detail>
+					{PHONE_NUMBER}
+				</DetailList.Detail>
+				<DetailList.Action>
 					<Button
 						variant="tertiary"
 						size="sm"
 						iconOnly
-						icon={EditIcon}
+						icon={<EditIcon />}
 						label={CHANGE_PHONE}
 						onClick={changePhone}
 					/>
-				}>
-				{PHONE_NUMBER}
+				</DetailList.Action>
 			</DetailList.Row>
 		</>
 	),
