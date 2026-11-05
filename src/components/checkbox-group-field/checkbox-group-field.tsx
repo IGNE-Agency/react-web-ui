@@ -1,6 +1,9 @@
 import type { CheckboxGroup as BaseCheckboxGroup } from "@base-ui/react/checkbox-group";
 import type { ReactNode } from "react";
-import { type FieldBlurHandler, type FieldProps } from "../field/index.ts";
+import {
+	type FieldBlurHandler,
+	type FieldProps,
+} from "../field/index.ts";
 import { detachHiddenInput } from "../field/hidden-input.ts";
 import { CheckboxGroup } from "./checkbox-group.tsx";
 
