@@ -5,6 +5,28 @@ import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { Button } from "../button/button.tsx";
 import styles from "./menu.module.scss";
 
+export type MenuRootProps<Payload = unknown> = Omit<
+	BaseMenu.Root.Props<Payload>,
+	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+> &
+	Readonly<{
+		/** Whether the menu is open. Leave it out for a menu that keeps its own state. */
+		open?: boolean;
+		/** Whether the menu starts open, when it keeps its own state. @default false */
+		defaultOpen?: boolean;
+		/** Called with the new open state when the menu opens or closes. */
+		onOpenChange?: BaseMenu.Root.Props<Payload>["onOpenChange"];
+		/** Whether the page behind the menu is inert while it is open. @default true */
+		modal?: BaseMenu.Root.Props<Payload>["modal"];
+		/** The trigger and the menu's content. */
+		children?: BaseMenu.Root.Props<Payload>["children"];
+	}>;
+
+/** Holds the menu's open state for its parts. It renders no element of its own. */
+const Root = <Payload,>(
+	props: MenuRootProps<Payload>,
+): ReactNode => <BaseMenu.Root {...props} />;
+
 type TriggerBaseProps = Omit<
 	ComponentProps<typeof BaseMenu.Trigger>,
 	"children" | "render"
@@ -213,7 +235,7 @@ const GroupLabel = ({
 );
 
 type MenuParts = Readonly<{
-	Root: typeof BaseMenu.Root;
+	Root: typeof Root;
 	Trigger: typeof Trigger;
 	Portal: typeof BaseMenu.Portal;
 	Positioner: typeof Positioner;
@@ -244,7 +266,7 @@ type MenuParts = Readonly<{
  * </Menu.Root>
  */
 export const Menu: MenuParts = {
-	Root: BaseMenu.Root,
+	Root,
 	Trigger,
 	Portal: BaseMenu.Portal,
 	Positioner,

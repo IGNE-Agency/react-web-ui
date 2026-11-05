@@ -7,6 +7,30 @@ import {
 } from "../button/close-button.tsx";
 import styles from "./drawer.module.scss";
 
+export type DrawerRootProps<Payload = unknown> = Omit<
+	BaseDrawer.Root.Props<Payload>,
+	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children" | "swipeDirection"
+> &
+	Readonly<{
+		/** Whether the drawer is open. Leave it out for a drawer that keeps its own state. */
+		open?: boolean;
+		/** Whether the drawer starts open, when it keeps its own state. @default false */
+		defaultOpen?: boolean;
+		/** Called with the new open state when the drawer opens or closes. */
+		onOpenChange?: BaseDrawer.Root.Props<Payload>["onOpenChange"];
+		/** Whether focus stays inside the drawer and the page behind it is inert while it is open. @default true */
+		modal?: BaseDrawer.Root.Props<Payload>["modal"];
+		/** The edge the drawer slides in from, and the way a swipe dismisses it. @default "down" */
+		swipeDirection?: BaseDrawer.Root.Props<Payload>["swipeDirection"];
+		/** The trigger and the drawer's content. */
+		children?: BaseDrawer.Root.Props<Payload>["children"];
+	}>;
+
+/** Holds the drawer's open state for its parts. It renders no element of its own. */
+const Root = <Payload,>(
+	props: DrawerRootProps<Payload>,
+): ReactNode => <BaseDrawer.Root {...props} />;
+
 /** The dimmed layer behind a modal drawer. */
 const Backdrop = ({
 	className,
@@ -127,7 +151,7 @@ const Sheet = ({
 );
 
 type DrawerParts = Readonly<{
-	Root: typeof BaseDrawer.Root;
+	Root: typeof Root;
 	Trigger: typeof BaseDrawer.Trigger;
 	Portal: typeof BaseDrawer.Portal;
 	Backdrop: typeof Backdrop;
@@ -160,7 +184,7 @@ type DrawerParts = Readonly<{
  * </Drawer.Root>
  */
 export const Drawer: DrawerParts = {
-	Root: BaseDrawer.Root,
+	Root,
 	Trigger: BaseDrawer.Trigger,
 	Portal: BaseDrawer.Portal,
 	Backdrop,

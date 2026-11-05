@@ -7,6 +7,28 @@ import {
 } from "../button/close-button.tsx";
 import styles from "./dialog.module.scss";
 
+export type DialogRootProps<Payload = unknown> = Omit<
+	BaseDialog.Root.Props<Payload>,
+	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+> &
+	Readonly<{
+		/** Whether the dialog is open. Leave it out for a dialog that keeps its own state. */
+		open?: boolean;
+		/** Whether the dialog starts open, when it keeps its own state. @default false */
+		defaultOpen?: boolean;
+		/** Called with the new open state when the dialog opens or closes. */
+		onOpenChange?: BaseDialog.Root.Props<Payload>["onOpenChange"];
+		/** Whether focus stays inside the dialog and the page behind it is inert while it is open. @default true */
+		modal?: BaseDialog.Root.Props<Payload>["modal"];
+		/** The trigger and the dialog's content. */
+		children?: BaseDialog.Root.Props<Payload>["children"];
+	}>;
+
+/** Holds the dialog's open state for its parts. It renders no element of its own. */
+const Root = <Payload,>(
+	props: DialogRootProps<Payload>,
+): ReactNode => <BaseDialog.Root {...props} />;
+
 /** The dimmed layer behind a modal dialog. */
 const Backdrop = ({
 	className,
@@ -114,7 +136,7 @@ const Footer = ({
 );
 
 type DialogParts = Readonly<{
-	Root: typeof BaseDialog.Root;
+	Root: typeof Root;
 	Trigger: typeof BaseDialog.Trigger;
 	Portal: typeof BaseDialog.Portal;
 	Backdrop: typeof Backdrop;
@@ -153,7 +175,7 @@ type DialogParts = Readonly<{
  * </Dialog.Root>
  */
 export const Dialog: DialogParts = {
-	Root: BaseDialog.Root,
+	Root,
 	Trigger: BaseDialog.Trigger,
 	Portal: BaseDialog.Portal,
 	Backdrop,

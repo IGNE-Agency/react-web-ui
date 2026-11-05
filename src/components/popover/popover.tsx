@@ -13,6 +13,28 @@ import { useIntent } from "../../lib/use-intent.ts";
 import { Skeleton } from "../skeleton/skeleton.tsx";
 import styles from "./popover.module.scss";
 
+export type PopoverRootProps<Payload = unknown> = Omit<
+	BasePopover.Root.Props<Payload>,
+	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+> &
+	Readonly<{
+		/** Whether the popover is open. Leave it out for a popover that keeps its own state. */
+		open?: boolean;
+		/** Whether the popover starts open, when it keeps its own state. @default false */
+		defaultOpen?: boolean;
+		/** Called with the new open state when the popover opens or closes. */
+		onOpenChange?: BasePopover.Root.Props<Payload>["onOpenChange"];
+		/** Whether focus stays inside the popover and the page behind it is inert while it is open. @default false */
+		modal?: BasePopover.Root.Props<Payload>["modal"];
+		/** The trigger and the popover's content. */
+		children?: BasePopover.Root.Props<Payload>["children"];
+	}>;
+
+/** Holds the popover's open state for its parts. It renders no element of its own. */
+const Root = <Payload,>(
+	props: PopoverRootProps<Payload>,
+): ReactNode => <BasePopover.Root {...props} />;
+
 const LoadingContext = createContext(false);
 
 export type PopoverTriggerProps = ComponentProps<
@@ -276,7 +298,7 @@ const Content = ({
 );
 
 type PopoverParts = Readonly<{
-	Root: typeof BasePopover.Root;
+	Root: typeof Root;
 	Trigger: typeof Trigger;
 	Portal: typeof BasePopover.Portal;
 	Positioner: typeof Positioner;
@@ -316,7 +338,7 @@ type PopoverParts = Readonly<{
  * </Popover.Root>
  */
 export const Popover: PopoverParts = {
-	Root: BasePopover.Root,
+	Root,
 	Trigger,
 	Portal: BasePopover.Portal,
 	Positioner,
