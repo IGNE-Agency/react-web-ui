@@ -159,8 +159,7 @@
 	}
 
 	&[data-disabled] {
-		opacity: 0.38;
-		color: var(--sys-color-text-muted);
+		color: var(--sys-color-disabled-fg);
 	}
 }
 

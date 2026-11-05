@@ -4,19 +4,19 @@
 		"color": {
 			"primary": {
 				"$type": "color",
-				"$value": "{ref.green.200}"
+				"$value": "{ref.neutral.50}"
 			},
 			"on-primary": {
 				"$type": "color",
-				"$value": "{ref.green.900}"
+				"$value": "{ref.neutral.900}"
 			},
 			"primary-container": {
 				"$type": "color",
-				"$value": "{ref.green.700}"
+				"$value": "{ref.neutral.600}"
 			},
 			"on-primary-container": {
 				"$type": "color",
-				"$value": "{ref.green.100}"
+				"$value": "{ref.neutral.50}"
 			},
 			"success": {
 				"fg": {
@@ -100,6 +100,10 @@
 				"$type": "color",
 				"$value": "{ref.neutral.150}"
 			},
+			"text-placeholder": {
+				"$type": "color",
+				"$value": "{ref.neutral.150}"
+			},
 			"text-inverse": {
 				"$type": "color",
 				"$value": "{ref.neutral.900}"
@@ -107,11 +111,11 @@
 			"selection": {
 				"bg": {
 					"$type": "color",
-					"$value": "{ref.green.650}"
+					"$value": "{ref.neutral.550}"
 				},
 				"fg": {
 					"$type": "color",
-					"$value": "{ref.green.50}"
+					"$value": "{ref.neutral.0}"
 				}
 			},
 			"bg": {
@@ -149,6 +153,16 @@
 			"outline": {
 				"$type": "color",
 				"$value": "{ref.neutral.400}"
+			},
+			"disabled": {
+				"bg": {
+					"$type": "color",
+					"$value": "{ref.neutral.650}"
+				},
+				"fg": {
+					"$type": "color",
+					"$value": "{ref.neutral.450}"
+				}
 			},
 			"identity": {
 				"1": {

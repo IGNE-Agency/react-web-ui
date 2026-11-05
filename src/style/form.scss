@@ -23,14 +23,19 @@ $field-touch-target: var(--sys-unit-22);
 	cursor: default;
 }
 
-/// The disabled treatment for any form control.
+/// The disabled ink for any form control: its text, its placeholder and every
+/// part that reads the field's ink.
 ///
 /// @example
-///   .my-control:disabled {
+///   .my-control[data-disabled] {
 ///       @include form.disabled;
 ///   }
 @mixin disabled {
-	opacity: 0.5;
+	--field-fg: var(--sys-color-disabled-fg);
+	--field-muted-fg: var(--sys-color-disabled-fg);
+	--field-placeholder-fg: var(--sys-color-disabled-fg);
+
+	color: var(--sys-color-disabled-fg);
 	cursor: not-allowed;
 }
 
@@ -49,8 +54,8 @@ $field-touch-target: var(--sys-unit-22);
 	font-size: 0.75rem;
 }
 
-/// The ink a field's parts read: the control's own text, and the muted ink its
-/// placeholder, affixes, separators, chevrons and inlays take.
+/// The ink a field's parts read: the control's own text, the muted ink its
+/// affixes, separators, chevrons and inlays take, and its placeholder's.
 ///
 /// @example
 ///   .separator {
@@ -59,6 +64,7 @@ $field-touch-target: var(--sys-unit-22);
 @mixin ink {
 	--field-fg: var(--sys-color-text);
 	--field-muted-fg: var(--sys-color-text-muted);
+	--field-placeholder-fg: var(--sys-color-text-placeholder);
 }
 
 /// The invalid treatment for any form control.
@@ -70,6 +76,7 @@ $field-touch-target: var(--sys-unit-22);
 @mixin invalid {
 	--field-fg: var(--sys-color-error-fg);
 	--field-muted-fg: var(--sys-color-error-fg);
+	--field-placeholder-fg: var(--sys-color-error-fg);
 
 	border-color: var(--sys-color-error-fg);
 	background-color: var(--sys-color-error-bg);
@@ -143,6 +150,8 @@ $field-touch-target: var(--sys-unit-22);
 
 	&[data-disabled] {
 		@include disabled;
+
+		background: var(--sys-color-disabled-bg);
 	}
 }
 
@@ -163,7 +172,7 @@ $field-touch-target: var(--sys-unit-22);
 	}
 
 	&::placeholder {
-		color: var(--field-muted-fg);
+		color: var(--field-placeholder-fg);
 	}
 }
 

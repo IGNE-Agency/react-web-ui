@@ -31,7 +31,7 @@
 		@include form.field-text-metrics;
 
 		&::placeholder {
-			color: var(--field-muted-fg);
+			color: var(--field-placeholder-fg);
 		}
 	}
 

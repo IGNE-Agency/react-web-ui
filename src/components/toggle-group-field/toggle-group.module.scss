@@ -134,7 +134,8 @@
 			}
 		}
 
-		.group[data-invalid] &:not([data-pressed]) {
+		.group[data-invalid]
+			&:not([data-pressed], [data-disabled]) {
 			@include form.invalid;
 		}
 
@@ -162,6 +163,18 @@
 
 		&[data-disabled] {
 			@include form.disabled;
+
+			background-color: var(--sys-color-disabled-bg);
+
+			&[data-pressed] {
+				--_toggle-group-fill: var(--sys-color-disabled-fg);
+				--_toggle-group-on-fill: var(
+					--sys-color-disabled-bg
+				);
+
+				background-color: var(--_toggle-group-fill);
+				color: var(--_toggle-group-on-fill);
+			}
 		}
 	}
 }

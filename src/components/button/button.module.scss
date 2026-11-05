@@ -97,11 +97,11 @@
 	.button[aria-disabled="true"] {
 		background: var(
 			--btn-disabled-bg,
-			var(--sys-color-neutral-bg)
+			var(--sys-color-disabled-bg)
 		);
 		color: var(
 			--btn-disabled-fg,
-			var(--sys-color-text-muted)
+			var(--sys-color-disabled-fg)
 		);
 
 		&[data-variant="tertiary"] {

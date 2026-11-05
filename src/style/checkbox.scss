@@ -70,6 +70,15 @@ $size: var(--sys-unit-16);
 	border-style: dashed;
 }
 
+/// Re-points a `box`'s fill knobs to the disabled palette, checked or not.
+@mixin box-disabled {
+	--box-bg: var(--sys-color-disabled-bg);
+	--box-checked-bg: var(--sys-color-disabled-bg);
+	--box-fg: var(--sys-color-disabled-fg);
+
+	cursor: not-allowed;
+}
+
 /// The affordances a clickable wrapper gives the `$box` inside it, dropped once
 /// an enclosing state makes the field inert.
 ///

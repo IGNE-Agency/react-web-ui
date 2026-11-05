@@ -27,8 +27,11 @@
 		background: none;
 
 		&[data-disabled] {
+			color: var(
+				--tab-disabled-fg,
+				var(--sys-color-disabled-fg)
+			);
 			cursor: not-allowed;
-			opacity: 0.38;
 		}
 	}
 

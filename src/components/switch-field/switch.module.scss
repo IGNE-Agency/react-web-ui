@@ -106,8 +106,14 @@
 			}
 		}
 
-		&[data-disabled] {
+		&[data-disabled],
+		&[data-disabled][data-checked] {
 			@include form.disabled;
+
+			--_switch-on-bg: var(--sys-color-disabled-bg);
+			--_switch-thumb-bg: var(--sys-color-disabled-fg);
+
+			background: var(--sys-color-disabled-bg);
 		}
 	}
 
