@@ -44,6 +44,7 @@ const libEntries = [
 
 const optionalPeerEntries = [
 	"components/combobox-field/react-query.tsx",
+	"components/composer/index.ts",
 	"data-table/index.ts",
 	"data-view/index.ts",
 	"lib/unsaved-changes/tanstack-router.ts",
@@ -122,7 +123,9 @@ const config: UserConfig = defineConfig({
 		lib: {
 			entry: [
 				join(src, "index.ts"),
-				...componentEntries,
+				...componentEntries.filter(
+					entry => !optionalPeerEntries.includes(entry),
+				),
 				...libEntries,
 				...optionalPeerEntries,
 			],

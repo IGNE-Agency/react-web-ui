@@ -8,25 +8,26 @@ The package ships built ESM, one module per source file, each importing only its
 
 ```sh
 bun add @maanlamp/react-web-ui
-bun add react react-dom @base-ui/react react-aria-components @internationalized/date @tanstack/react-form temporal-polyfill lexical @lexical/react @lexical/history @lexical/plain-text
+bun add react react-dom @base-ui/react react-aria-components @internationalized/date @tanstack/react-form temporal-polyfill
 ```
-
-Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
 
 Some entry points need an optional peer as well:
 
 | Import | Needs |
 | --- | --- |
+| `@maanlamp/react-web-ui/composer` | `lexical`, `@lexical/react`, `@lexical/history`, `@lexical/plain-text` |
 | `@maanlamp/react-web-ui/data-table` | `@tanstack/react-table` |
 | `@maanlamp/react-web-ui/data-view` | `@tanstack/react-query` |
 | `@maanlamp/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
 | `@maanlamp/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/plugin-css` |
 
+Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
+
 ## Imports
 
 Import each component from its own subpath, such as `@maanlamp/react-web-ui/button`. Everything else has one too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`. The app then loads the CSS of what it imports and of the components those render, and no other.
 
-The root, `@maanlamp/react-web-ui`, re-exports all of it. A production build tree-shakes it, but Vite's dev server pre-bundles a package import with every export it has, so a single import from the root loads every component's stylesheet in development.
+The root, `@maanlamp/react-web-ui`, re-exports all of it but the entries that need an optional peer. A production build tree-shakes it, but Vite's dev server pre-bundles a package import with every export it has, so a single import from the root loads every component's stylesheet in development.
 
 ## Styles
 

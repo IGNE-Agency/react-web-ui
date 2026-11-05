@@ -10,7 +10,6 @@ export * from "./components/checkbox-field/index.ts";
 export * from "./components/checkbox-group-field/index.ts";
 export * from "./components/collapsible/index.ts";
 export * from "./components/combobox-field/index.ts";
-export * from "./components/composer/index.ts";
 export * from "./components/confirm-dialog/index.ts";
 export * from "./components/conversation/index.ts";
 export * from "./components/date-field/index.ts";

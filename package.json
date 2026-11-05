@@ -422,6 +422,15 @@
 		"temporal-polyfill": "^1.0.7"
 	},
 	"peerDependenciesMeta": {
+		"@lexical/history": {
+			"optional": true
+		},
+		"@lexical/plain-text": {
+			"optional": true
+		},
+		"@lexical/react": {
+			"optional": true
+		},
 		"@tanstack/react-query": {
 			"optional": true
 		},
@@ -432,6 +441,9 @@
 			"optional": true
 		},
 		"@terrazzo/plugin-css": {
+			"optional": true
+		},
+		"lexical": {
 			"optional": true
 		}
 	},
