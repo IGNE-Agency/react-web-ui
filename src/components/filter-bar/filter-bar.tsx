@@ -61,6 +61,10 @@ export type FilterBarSearchProps = Readonly<{
 	label: string;
 	/** The clear button's name and tooltip, such as "Clear search". */
 	clearLabel: string;
+	/** The clear button's icon. */
+	clearIcon: ReactNode;
+	/** The decorative leading icon. Left out, none shows. */
+	icon?: ReactNode;
 	/** The word an optional field's label trails, such as "optional", which every field takes. */
 	optionalLabel: string;
 	className?: string;
@@ -74,6 +78,8 @@ export type FilterBarSearchProps = Readonly<{
 const Search = ({
 	label,
 	clearLabel,
+	clearIcon,
+	icon,
 	optionalLabel,
 	className,
 }: FilterBarSearchProps): ReactNode => {
@@ -85,6 +91,8 @@ const Search = ({
 			labelHidden
 			optionalLabel={optionalLabel}
 			clearLabel={clearLabel}
+			clearIcon={clearIcon}
+			icon={icon}
 			placeholder={label}
 			value={search}
 			onValueChange={setSearch}
@@ -259,7 +267,7 @@ type FilterBarParts = Readonly<{
  *
  * @example
  * <FilterBar.Root filters={filters}>
- * 	<FilterBar.Search label="Search clients" clearLabel="Clear search" optionalLabel="optional" />
+ * 	<FilterBar.Search label="Search clients" clearLabel="Clear search" clearIcon={<CloseIcon />} icon={<SearchIcon />} optionalLabel="optional" />
  * 	<FilterBar.Drawer swipeDirection={narrow ? "down" : "right"} triggerLabel="Filters" title="Filter clients" closeLabel="Close" resetLabel="Reset" applyLabel="Apply">
  * 		<ClientFilterFields filters={filters} />
  * 	</FilterBar.Drawer>

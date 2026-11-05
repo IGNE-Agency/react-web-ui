@@ -8,7 +8,7 @@ import { formatBytes } from "../../lib/format-bytes.ts";
 import {
 	type FieldBlurHandler,
 	type FieldProps,
-	useFieldIds,
+	Field,
 	useFieldState,
 } from "../field/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
@@ -123,7 +123,7 @@ export const FileField = ({
 	className,
 }: FileFieldProps): ReactNode => {
 	const locale = useLocale();
-	const ids = useFieldIds();
+	const ids = Field.useIds();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	const maxSize = formatBytes(maxFileSize, locale);

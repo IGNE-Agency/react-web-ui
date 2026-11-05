@@ -1,6 +1,11 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import CopyIcon from "@material-design-icons/svg/outlined/content_copy.svg?react";
+import ErrorIcon from "@material-design-icons/svg/outlined/error_outline.svg?react";
 import LanguageIcon from "@material-design-icons/svg/outlined/language.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -36,6 +41,9 @@ const COPY_LABELS: TextFieldCopyProps = {
 	copyLabel: COPY_LABEL,
 	copiedLabel: COPIED_LABEL,
 	copyFailedLabel: COPY_FAILED_LABEL,
+	copyIcon: <Icon svg={CopyIcon} label="" />,
+	copiedIcon: <Icon svg={CheckIcon} label="" />,
+	copyFailedIcon: <Icon svg={ErrorIcon} label="" />,
 };
 
 const ControlledTextField = (
@@ -155,7 +163,7 @@ export const LabelHidden: Story = {
 };
 
 export const WithIcon: Story = {
-	args: { icon: PersonIcon },
+	args: { icon: <Icon svg={PersonIcon} label="" /> },
 };
 
 export const WithAffixes: Story = {
@@ -193,6 +201,7 @@ export const Clearable: Story = {
 		value: VALUE,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 
@@ -207,12 +216,13 @@ export const AllInlays: Story = {
 	args: {
 		label: WEBSITE_LABEL,
 		value: WEBSITE_VALUE,
-		icon: LanguageIcon,
+		icon: <Icon svg={LanguageIcon} label="" />,
 		prefix: PREFIX,
 		suffix: SUFFIX,
 		maxLength: COUNTER_MAX,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 		...COPY_LABELS,
 	},
 };
@@ -297,6 +307,7 @@ export const ClearKeyboard: Story = {
 		value: VALUE,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {
@@ -323,6 +334,7 @@ export const ClearMouse: Story = {
 		value: VALUE,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {
@@ -341,6 +353,7 @@ export const ClearTouch: Story = {
 		value: VALUE,
 		clearable: true,
 		clearLabel: CLEAR_LABEL,
+		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {

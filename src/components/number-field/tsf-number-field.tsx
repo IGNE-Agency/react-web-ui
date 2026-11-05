@@ -19,7 +19,7 @@ export type TSFNumberFieldProps = Omit<
  *
  * @example
  * <form.AppField name="hours">
- * 	{field => <field.NumberField label="Hours" optionalLabel="optional" decrementLabel="Decrease" incrementLabel="Increase" roleDescription="Number field" />}
+ * 	{field => <field.NumberField label="Hours" optionalLabel="optional" decrementLabel="Decrease" incrementLabel="Increase" decrementIcon={<RemoveIcon />} incrementIcon={<AddIcon />} roleDescription="Number field" />}
  * </form.AppField>
  */
 export const TSFNumberField = (

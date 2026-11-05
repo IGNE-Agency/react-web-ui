@@ -1,4 +1,3 @@
-import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
 import type { CalendarDate } from "@internationalized/date";
 import type { ReactNode, Ref } from "react";
 import {
@@ -27,6 +26,13 @@ export type DateRangeInputRootProps =
 	AriaDateRangePickerProps<CalendarDate> &
 		TemporalStateProps;
 
+/**
+ * A react-aria `DateRangePicker` holding the value, with today as the
+ * placeholder in the `TimeZoneProvider`'s zone.
+ *
+ * @example
+ * <DateRangeInput.Root aria-labelledby={labelId}>…</DateRangeInput.Root>
+ */
 const DateRangeInputRoot = ({
 	state,
 	...props
@@ -43,17 +49,24 @@ export type DateRangeInputTriggerProps = Readonly<{
 	/** Accessible name, such as "Open calendar". */
 	label: string;
 	ref?: Ref<HTMLButtonElement>;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
+/**
+ * The icon-only button that opens the range calendar.
+ *
+ * @example
+ * <DateRangeInput.Trigger label="Open calendar"><DateRangeIcon /></DateRangeInput.Trigger>
+ */
 const DateRangeInputTrigger = ({
 	label,
 	ref,
+	children,
 }: DateRangeInputTriggerProps): ReactNode => (
-	<TemporalTrigger
-		icon={DateRangeIcon}
-		label={label}
-		ref={ref}
-	/>
+	<TemporalTrigger label={label} ref={ref}>
+		{children}
+	</TemporalTrigger>
 );
 
 /** The parts of a date range input. */
@@ -84,10 +97,12 @@ export type DateRangeInputParts = Readonly<{
  * 				<DateRangeInput.Separator />
  * 				<DateRangeInput.Input slot="end" />
  * 				<DateRangeInput.Spacer />
- * 				<DateRangeInput.Trigger label="Open calendar" />
+ * 				<DateRangeInput.Trigger label="Open calendar">
+ * 					<DateRangeIcon />
+ * 				</DateRangeInput.Trigger>
  * 			</DateRangeInput.Group>
  * 			<DateRangeInput.Popup>
- * 				<DateRangeInput.Calendar {...calendarLabels} />
+ * 				<DateRangeInput.Calendar {...calendarLabels} {...calendarIcons} />
  * 			</DateRangeInput.Popup>
  * 		</>
  * 	)}

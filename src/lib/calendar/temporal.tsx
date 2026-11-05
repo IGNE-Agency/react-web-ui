@@ -1,5 +1,3 @@
-import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import type { CalendarDate } from "@internationalized/date";
 import { clsx } from "clsx";
 import {
@@ -38,15 +36,14 @@ import {
 	type FieldState,
 	fieldStateAttributes,
 	useFieldFocus,
-	useFieldIds,
 } from "../../components/field/index.ts";
 import { focusControlOnRim } from "../../components/field/rim-focus.ts";
 import { withFieldFocus } from "../../components/field/use-field-focus.ts";
-import type { SvgComponent } from "../../components/icon/index.ts";
 import { useTimeZone } from "../../components/time-zone-provider/index.ts";
 import { normalizeFieldErrors } from "../forms/errors.ts";
 import {
 	CalendarNavigation,
+	type CalendarNavigationIcons,
 	type CalendarNavigationLabels,
 } from "./calendar-navigation.tsx";
 import { todayIn } from "./temporal-value.ts";
@@ -59,6 +56,15 @@ export type CalendarLabels = CalendarNavigationLabels &
 		previousMonthLabel: string;
 		/** Accessible name of the button that shows the next month. */
 		nextMonthLabel: string;
+	}>;
+
+/** The icons a calendar popup shows: its month steppers and its month and year lists. */
+export type CalendarIcons = CalendarNavigationIcons &
+	Readonly<{
+		/** The icon of the button that shows the previous month. */
+		previousIcon: ReactNode;
+		/** The icon of the button that shows the next month. */
+		nextIcon: ReactNode;
 	}>;
 
 export type TemporalStateProps = Readonly<{
@@ -182,26 +188,26 @@ export const TemporalRangeSpacer = (): ReactNode => (
 export type TemporalTriggerProps = Readonly<{
 	/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
 	label: string;
-	/** Glyph for the trigger. */
-	icon: SvgComponent;
 	/** The button itself, for the popup to align to. */
 	ref?: Ref<HTMLButtonElement>;
+	/** The icon the button shows. */
+	children: ReactNode;
 }>;
 
 /**
  * The icon-only button that opens the calendar.
  *
  * @example
- * <TemporalTrigger label="Open calendar" icon={CalendarIcon} ref={triggerRef} />
+ * <TemporalTrigger label="Open calendar" ref={triggerRef}><CalendarIcon /></TemporalTrigger>
  */
 export const TemporalTrigger = ({
 	label,
-	icon,
 	ref,
+	children,
 }: TemporalTriggerProps): ReactNode => (
 	<Button
 		iconOnly
-		icon={icon}
+		icon={children}
 		label={label}
 		variant="tertiary"
 		size="sm"
@@ -244,14 +250,19 @@ const CalendarChrome = ({
 	monthLabel,
 	yearLabel,
 	noMatchingYearLabel,
+	previousIcon,
+	nextIcon,
+	checkIcon,
+	expandIcon,
 	children,
 }: CalendarLabels &
+	CalendarIcons &
 	Readonly<{ children: ReactNode }>): ReactNode => (
 	<>
 		<header className={style.header}>
 			<Button
 				iconOnly
-				icon={ChevronLeftIcon}
+				icon={previousIcon}
 				label={previousMonthLabel}
 				variant="tertiary"
 				size="md"
@@ -261,10 +272,12 @@ const CalendarChrome = ({
 				monthLabel={monthLabel}
 				yearLabel={yearLabel}
 				noMatchingYearLabel={noMatchingYearLabel}
+				checkIcon={checkIcon}
+				expandIcon={expandIcon}
 			/>
 			<Button
 				iconOnly
-				icon={ChevronRightIcon}
+				icon={nextIcon}
 				label={nextMonthLabel}
 				variant="tertiary"
 				size="md"
@@ -312,14 +325,15 @@ export type TemporalCalendarProps = Omit<
 	AriaCalendarProps<CalendarDate>,
 	"children"
 > &
-	CalendarLabels;
+	CalendarLabels &
+	CalendarIcons;
 
 /**
  * A month of days, selecting one. Today, and the month it opens on without a
  * value, are read in the `TimeZoneProvider`'s zone.
  *
  * @example
- * <TemporalCalendar {...calendarLabels} />
+ * <TemporalCalendar {...calendarLabels} {...calendarIcons} />
  */
 export const TemporalCalendar = ({
 	className,
@@ -328,6 +342,10 @@ export const TemporalCalendar = ({
 	monthLabel,
 	yearLabel,
 	noMatchingYearLabel,
+	previousIcon,
+	nextIcon,
+	checkIcon,
+	expandIcon,
 	...props
 }: TemporalCalendarProps): ReactNode => {
 	const today = todayIn(useTimeZone());
@@ -346,7 +364,11 @@ export const TemporalCalendar = ({
 				nextMonthLabel={nextMonthLabel}
 				monthLabel={monthLabel}
 				yearLabel={yearLabel}
-				noMatchingYearLabel={noMatchingYearLabel}>
+				noMatchingYearLabel={noMatchingYearLabel}
+				previousIcon={previousIcon}
+				nextIcon={nextIcon}
+				checkIcon={checkIcon}
+				expandIcon={expandIcon}>
 				<MonthGrid today={today} />
 			</CalendarChrome>
 		</AriaCalendar>
@@ -358,6 +380,7 @@ export type TemporalRangeCalendarProps = Omit<
 	"children" | "visibleDuration"
 > &
 	CalendarLabels &
+	CalendarIcons &
 	Readonly<{
 		/** Months shown side by side. @default 1 */
 		visibleMonths?: number;
@@ -369,7 +392,7 @@ export type TemporalRangeCalendarProps = Omit<
  * `TimeZoneProvider`'s zone.
  *
  * @example
- * <TemporalRangeCalendar visibleMonths={2} {...calendarLabels} />
+ * <TemporalRangeCalendar visibleMonths={2} {...calendarLabels} {...calendarIcons} />
  */
 export const TemporalRangeCalendar = ({
 	visibleMonths = 1,
@@ -379,6 +402,10 @@ export const TemporalRangeCalendar = ({
 	monthLabel,
 	yearLabel,
 	noMatchingYearLabel,
+	previousIcon,
+	nextIcon,
+	checkIcon,
+	expandIcon,
 	...props
 }: TemporalRangeCalendarProps): ReactNode => {
 	const today = todayIn(useTimeZone());
@@ -403,7 +430,11 @@ export const TemporalRangeCalendar = ({
 				nextMonthLabel={nextMonthLabel}
 				monthLabel={monthLabel}
 				yearLabel={yearLabel}
-				noMatchingYearLabel={noMatchingYearLabel}>
+				noMatchingYearLabel={noMatchingYearLabel}
+				previousIcon={previousIcon}
+				nextIcon={nextIcon}
+				checkIcon={checkIcon}
+				expandIcon={expandIcon}>
 				<div className={style.months}>
 					{Array.from({ length: months }, (_, month) => (
 						<MonthGrid
@@ -455,7 +486,7 @@ export const TemporalFrame = ({
 	className,
 	children,
 }: TemporalFrameProps): ReactNode => {
-	const ids = useFieldIds();
+	const ids = Field.useIds();
 	const { labelId, descriptionId, errorId, controlId } =
 		ids;
 	const messages = normalizeFieldErrors(errors);

@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import {
 	Field,
 	type FieldProps,
-	useFieldIds,
 	useFieldState,
 } from "../field/index.ts";
 import {
@@ -60,7 +59,7 @@ export const PhotoField = ({
 	className,
 	...controlProps
 }: PhotoFieldProps): ReactNode => {
-	const ids = useFieldIds();
+	const ids = Field.useIds();
 	const { labelId, descriptionId, errorId } = ids;
 	const field = useFieldState({
 		errors,

@@ -26,7 +26,7 @@ export type TSFDateRangeFieldProps = Omit<
  *
  * @example
  * <form.AppField name="period">
- * 	{field => <field.DateRangeField label="Period" optionalLabel="optional" openCalendarLabel="Open calendar" {...calendarLabels} />}
+ * 	{field => <field.DateRangeField label="Period" optionalLabel="optional" openCalendarLabel="Open calendar" openCalendarIcon={<DateRangeIcon />} {...calendarLabels} {...calendarIcons} />}
  * </form.AppField>
  */
 export const TSFDateRangeField = (

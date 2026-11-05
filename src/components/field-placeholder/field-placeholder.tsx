@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { type ReactNode, useId } from "react";
 import { Skeleton } from "../skeleton/index.ts";
 import style from "./field-placeholder.module.scss";
@@ -15,6 +16,10 @@ const shapeIndex = (
 	return hash % count;
 };
 
+export type FieldPlaceholderProps = Readonly<{
+	className?: string;
+}>;
+
 /**
  * A field-shaped placeholder, standing in for a control whose code is still on
  * its way. Holds the label and control heights so the form does not jump when
@@ -23,12 +28,14 @@ const shapeIndex = (
  * @example
  * <Suspense fallback={<FieldPlaceholder />}>{field}</Suspense>
  */
-export const FieldPlaceholder = (): ReactNode => {
+export const FieldPlaceholder = ({
+	className,
+}: FieldPlaceholderProps): ReactNode => {
 	const shape =
 		SHAPES[shapeIndex(useId(), SHAPES.length)] ?? "single";
 
 	return (
-		<div className={style.placeholder}>
+		<div className={clsx(style.placeholder, className)}>
 			<Skeleton className={style.label} />
 			<div className={style.controls}>
 				<Skeleton className={style.control} />
