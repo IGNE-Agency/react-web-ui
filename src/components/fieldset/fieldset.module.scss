@@ -26,6 +26,7 @@
 			display: grid;
 			grid-row: 1 / -1;
 			grid-template-rows: subgrid;
+			grid-template-columns: minmax(0, 1fr);
 			row-gap: 0;
 		}
 	}
