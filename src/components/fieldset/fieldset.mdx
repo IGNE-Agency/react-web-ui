@@ -45,7 +45,11 @@ A line is the message as the app's validator wrote it, which reads best when the
 
 ### The group lines its fields up, and the app sets the columns
 
-`Fieldset.Fields` puts its fields side by side on one grid, and every field's label, control, description and error take that grid's rows through `subgrid`, so a label that wraps or one field's error moves that row for all of them; see [things that belong together line up](?path=/docs/design-system-principles-layout--docs#things-that-belong-together-line-up). Any field shorthand dropped into the row lines up without asking. The columns are equal by default, each `minmax(0, 1fr)` so a field can shrink below its control's natural width; the app sets others through the `--field-group-columns` knob, such as `2fr 1fr 1fr`, or through its own class.
+`Fieldset.Fields` puts its fields side by side on one grid, and every field's label, control, description and error take that grid's rows through `subgrid`, so a label that wraps or one field's error moves that row for all of them. Each part takes the row named for it (`label`, `control`, `extra` for a part such as a counter, `description`, `error`), not the next one free, so a field whose label is visually hidden or that has no description leaves that row empty and its control stays level with its neighbours'; see [things that belong together line up](?path=/docs/design-system-principles-layout--docs#things-that-belong-together-line-up). Any field shorthand dropped into the row lines up without asking. The columns are equal by default, each `minmax(0, 1fr)` so a field can shrink below its control's natural width; the app sets others through the `--field-group-columns` knob, such as `2fr 1fr 1fr`, or through its own class.
+
+### A group of choices stays out of the row
+
+A radio group or a checkbox group is a fieldset of its own, named by a legend, and its legend and options do not take the row's tracks. Placed in `Fieldset.Fields`, its options do not line up with the controls beside it. Put a group of choices above or below the row.
 
 ### A shorthand is for the common case, and a custom layout drops to the raw tier
 

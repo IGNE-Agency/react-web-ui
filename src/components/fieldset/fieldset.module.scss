@@ -13,39 +13,20 @@
 	}
 
 	.fields {
-		--fields-rows: 1;
-
 		display: grid;
 		grid-auto-flow: column;
 		grid-auto-columns: minmax(0, 1fr);
+		grid-template-rows:
+			[label] auto [control] auto [extra] auto
+			[description] auto [error] auto;
 		grid-template-columns: var(--field-group-columns, none);
-		gap: var(--field-gap, var(--sys-unit-4))
-			var(--field-group-gap, var(--sys-unit-8));
-
-		&:has(> * > :nth-child(2)) {
-			--fields-rows: 2;
-		}
-
-		&:has(> * > :nth-child(3)) {
-			--fields-rows: 3;
-		}
-
-		&:has(> * > :nth-child(4)) {
-			--fields-rows: 4;
-		}
-
-		&:has(> * > :nth-child(5)) {
-			--fields-rows: 5;
-		}
-
-		&:has(> * > :nth-child(6)) {
-			--fields-rows: 6;
-		}
+		column-gap: var(--field-group-gap, var(--sys-unit-8));
 
 		> [data-field-group-member] {
 			display: grid;
-			grid-row: span var(--fields-rows);
+			grid-row: 1 / -1;
 			grid-template-rows: subgrid;
+			row-gap: 0;
 		}
 	}
 }

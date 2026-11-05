@@ -291,7 +291,14 @@ const FieldError = ({
 			match
 			{...props}
 			render={renderProps => (
-				<ErrorText el="span" role="alert" {...renderProps}>
+				<ErrorText
+					el="span"
+					role="alert"
+					{...renderProps}
+					className={clsx(
+						style.error,
+						renderProps.className,
+					)}>
 					{messages}
 				</ErrorText>
 			)}

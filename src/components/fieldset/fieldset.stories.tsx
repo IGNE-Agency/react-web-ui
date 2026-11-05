@@ -94,6 +94,8 @@ type AddressFormProps = Readonly<{
 	houseNumberLabel?: string;
 	busy?: boolean;
 	narrow?: boolean;
+	additionLabelHidden?: boolean;
+	additionMaxLength?: number;
 }>;
 
 const AddressForm = ({
@@ -105,6 +107,8 @@ const AddressForm = ({
 	houseNumberLabel = HOUSE_NUMBER_LABEL,
 	busy = false,
 	narrow = false,
+	additionLabelHidden = false,
+	additionMaxLength,
 }: AddressFormProps): ReactElement => {
 	const schema = terse ? TERSE_SCHEMA : SCHEMA;
 	const form = useAppForm({
@@ -146,6 +150,8 @@ const AddressForm = ({
 					{field => (
 						<field.TextField
 							label={ADDITION_LABEL}
+							labelHidden={additionLabelHidden}
+							maxLength={additionMaxLength}
 							requiredness="optional"
 							optionalLabel={OPTIONAL_LABEL}
 						/>
@@ -279,6 +285,46 @@ export const WrappingLabel: Story = {
 			narrow
 		/>
 	),
+};
+
+export const HiddenLabel: Story = {
+	render: args => (
+		<AddressForm
+			group={args}
+			start={{ ...VALID, postalCode: "12" }}
+			additionLabelHidden
+			checkedOnMount
+		/>
+	),
+	play: async ({ canvas }) => {
+		const postalCode = textbox(canvas, POSTAL_CODE_LABEL);
+		const addition = textbox(canvas, ADDITION_LABEL);
+
+		await expect(addition.getBoundingClientRect().top).toBe(
+			postalCode.getBoundingClientRect().top,
+		);
+	},
+};
+
+export const WithCounter: Story = {
+	render: args => (
+		<AddressForm
+			group={args}
+			start={{ ...VALID, addition: "A" }}
+			additionMaxLength={4}
+		/>
+	),
+	play: async ({ canvas }) => {
+		const addition = textbox(canvas, ADDITION_LABEL);
+		const group = addition.parentElement;
+		const counterText = document.createRange();
+		counterText.selectNodeContents(canvas.getByText("1/4"));
+
+		await expect(group).not.toBeNull();
+		await expect(
+			counterText.getBoundingClientRect().right,
+		).toBe(group?.getBoundingClientRect().right);
+	},
 };
 
 export const FormattedErrors: Story = {
