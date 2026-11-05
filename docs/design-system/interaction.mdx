@@ -399,7 +399,10 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={<Icon svg={CheckIcon} label="" />}>Save</Button>
+						<Button
+							icon={<Icon svg={CheckIcon} label="" />}>
+							Save
+						</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -447,7 +450,10 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={<Icon svg={CheckIcon} label="" />}>Save</Button>
+						<Button
+							icon={<Icon svg={CheckIcon} label="" />}>
+							Save
+						</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -1226,7 +1232,10 @@ An icon-only control is the button component's icon-only form, which requires a 
 <Example kind="do" caption="The menu trigger is the icon-only button.">
 
 ```tsx
-<Menu.Trigger icon={<MoreVertIcon />} label={m.row_actions()} />
+<Menu.Trigger
+	icon={<MoreVertIcon />}
+	label={m.row_actions()}
+/>
 ```
 
 </Example>

@@ -193,8 +193,7 @@ export const Invalid: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description:
-			"Shows only invoices with this status.",
+		description: "Shows only invoices with this status.",
 	},
 };
 

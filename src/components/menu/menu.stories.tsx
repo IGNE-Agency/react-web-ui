@@ -42,13 +42,19 @@ const MenuItems = () => {
 	return (
 		<Menu.Content container={container} sideOffset={8}>
 			<Menu.Arrow />
-			<Menu.Item icon={<Icon svg={DownloadIcon} label="" />} onClick={download}>
+			<Menu.Item
+				icon={<Icon svg={DownloadIcon} label="" />}
+				onClick={download}>
 				{DOWNLOAD}
 			</Menu.Item>
-			<Menu.Item icon={<Icon svg={CommentIcon} label="" />} onClick={comment}>
+			<Menu.Item
+				icon={<Icon svg={CommentIcon} label="" />}
+				onClick={comment}>
 				{ADD_COMMENT}
 			</Menu.Item>
-			<Menu.Item icon={<Icon svg={ArchiveIcon} label="" />} disabled>
+			<Menu.Item
+				icon={<Icon svg={ArchiveIcon} label="" />}
+				disabled>
 				{ARCHIVE}
 			</Menu.Item>
 			<Menu.Separator />
@@ -67,7 +73,10 @@ const MenuItems = () => {
 
 const MenuExample = (props: MenuExampleProps) => (
 	<Menu.Root {...props}>
-		<Menu.Trigger icon={<Icon svg={MoreVertIcon} label="" />} label={ROW_ACTIONS} />
+		<Menu.Trigger
+			icon={<Icon svg={MoreVertIcon} label="" />}
+			label={ROW_ACTIONS}
+		/>
 		<MenuItems />
 	</Menu.Root>
 );

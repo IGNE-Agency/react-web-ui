@@ -19,7 +19,9 @@ import {
 const LABEL = "Go to the overview";
 const START_PATH = "/story";
 
-const ICONS = { arrowForward: <Icon svg={ArrowForwardIcon} label="" /> };
+const ICONS = {
+	arrowForward: <Icon svg={ArrowForwardIcon} label="" />,
+};
 
 const { history, decorator, reset } =
 	createStoryRouter(START_PATH);

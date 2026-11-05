@@ -105,7 +105,9 @@ const DestinationLink = ({
 		label={label}
 		labelled={labelled}
 		activeOptions={{ exact: to === "/" }}>
-		<NavItemView.Icon><Icon svg={icon} label="" /></NavItemView.Icon>
+		<NavItemView.Icon>
+			<Icon svg={icon} label="" />
+		</NavItemView.Icon>
 		<NavItemView.Label>{label}</NavItemView.Label>
 	</NavLink>
 );
@@ -172,7 +174,9 @@ const Rail = (args: NavRootProps): ReactElement => (
 				<NavItemView.Root
 					label={SIGN_OUT}
 					onClick={signOut}>
-					<NavItemView.Icon><Icon svg={LogoutIcon} label="" /></NavItemView.Icon>
+					<NavItemView.Icon>
+						<Icon svg={LogoutIcon} label="" />
+					</NavItemView.Icon>
 					<NavItemView.Label>{SIGN_OUT}</NavItemView.Label>
 				</NavItemView.Root>
 			</Nav.Item>
@@ -230,7 +234,13 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			<Button
 				variant="tertiary"
 				iconOnly
-				icon={collapsed ? <Icon svg={MenuIcon} label="" /> : <Icon svg={MenuOpenIcon} label="" />}
+				icon={
+					collapsed ? (
+						<Icon svg={MenuIcon} label="" />
+					) : (
+						<Icon svg={MenuOpenIcon} label="" />
+					)
+				}
 				label={TOGGLE_RAIL}
 				onClick={() => setCollapsed(current => !current)}
 			/>
@@ -242,7 +252,9 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 						label={SIGN_OUT}
 						labelled={!collapsed}
 						onClick={signOut}>
-						<NavItemView.Icon><Icon svg={LogoutIcon} label="" /></NavItemView.Icon>
+						<NavItemView.Icon>
+							<Icon svg={LogoutIcon} label="" />
+						</NavItemView.Icon>
 						<NavItemView.Label>
 							{SIGN_OUT}
 						</NavItemView.Label>
@@ -280,7 +292,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 							activeOptions={{
 								exact: destination.to === "/",
 							}}>
-							<NavItemView.Icon><Icon svg={destination.icon} label="" /></NavItemView.Icon>
+							<NavItemView.Icon>
+								<Icon svg={destination.icon} label="" />
+							</NavItemView.Icon>
 							<NavItemView.Label>
 								{destination.label}
 							</NavItemView.Label>
@@ -296,7 +310,9 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 							data-active={
 								overflowIsCurrent ? "true" : undefined
 							}>
-							<NavItemView.Icon><Icon svg={MoreIcon} label="" /></NavItemView.Icon>
+							<NavItemView.Icon>
+								<Icon svg={MoreIcon} label="" />
+							</NavItemView.Icon>
 							<NavItemView.Label>{MORE}</NavItemView.Label>
 						</NavItemView.Root>
 						<Drawer.Portal>
@@ -321,7 +337,12 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 															to={destination.to}
 															label={destination.label}
 															onClick={() => more.close()}>
-															<NavItemView.Icon><Icon svg={destination.icon} label="" /></NavItemView.Icon>
+															<NavItemView.Icon>
+																<Icon
+																	svg={destination.icon}
+																	label=""
+																/>
+															</NavItemView.Icon>
 															<NavItemView.Label>
 																{destination.label}
 															</NavItemView.Label>

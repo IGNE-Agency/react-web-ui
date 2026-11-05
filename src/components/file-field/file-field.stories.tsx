@@ -179,7 +179,8 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "Add the invoice and any signed timesheet.",
+		description:
+			"Add the invoice and any signed timesheet.",
 	},
 };
 

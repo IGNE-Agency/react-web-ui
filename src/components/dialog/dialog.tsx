@@ -9,7 +9,11 @@ import styles from "./dialog.module.scss";
 
 export type DialogRootProps<Payload = unknown> = Omit<
 	BaseDialog.Root.Props<Payload>,
-	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+	| "open"
+	| "defaultOpen"
+	| "onOpenChange"
+	| "modal"
+	| "children"
 > &
 	Readonly<{
 		/** Whether the dialog is open. Leave it out for a dialog that keeps its own state. */

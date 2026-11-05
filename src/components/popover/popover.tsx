@@ -15,7 +15,11 @@ import styles from "./popover.module.scss";
 
 export type PopoverRootProps<Payload = unknown> = Omit<
 	BasePopover.Root.Props<Payload>,
-	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+	| "open"
+	| "defaultOpen"
+	| "onOpenChange"
+	| "modal"
+	| "children"
 > &
 	Readonly<{
 		/** Whether the popover is open. Leave it out for a popover that keeps its own state. */

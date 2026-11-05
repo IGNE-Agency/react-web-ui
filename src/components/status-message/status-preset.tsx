@@ -39,7 +39,9 @@ export const StatusPreset = ({
 	}>): ReactNode => (
 	<StatusMessage.Root live={live} className={className}>
 		{icon === undefined ? null : (
-			<StatusMessage.Icon tone={tone}>{icon}</StatusMessage.Icon>
+			<StatusMessage.Icon tone={tone}>
+				{icon}
+			</StatusMessage.Icon>
 		)}
 		<StatusMessage.Title>{title}</StatusMessage.Title>
 		{description === undefined ? null : (

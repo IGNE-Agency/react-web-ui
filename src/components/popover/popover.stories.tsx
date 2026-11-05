@@ -27,8 +27,16 @@ type PopoverExampleProps = ComponentProps<
 >;
 
 const ROWS = [
-	{ label: "KvK number:", value: "12345678", numeric: true },
-	{ label: "Debtor number:", value: "123456789", numeric: true },
+	{
+		label: "KvK number:",
+		value: "12345678",
+		numeric: true,
+	},
+	{
+		label: "Debtor number:",
+		value: "123456789",
+		numeric: true,
+	},
 	{ label: "Purchase order required:", value: "Yes" },
 	{ label: "Rate card:", value: "RC05" },
 	{ label: "Industry:", value: INDUSTRY },

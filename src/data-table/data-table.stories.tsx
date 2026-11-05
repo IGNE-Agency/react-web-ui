@@ -162,19 +162,14 @@ const AmountCell = ({
 		maximumFractionDigits: 2,
 	}).format(amount);
 
-const clientColumn: ColumnDef<
-	DataTableFeatures,
-	Invoice
-> = {
-	accessorKey: "client",
-	header: () => CLIENT_HEADER,
-	enableSorting: true,
-};
+const clientColumn: ColumnDef<DataTableFeatures, Invoice> =
+	{
+		accessorKey: "client",
+		header: () => CLIENT_HEADER,
+		enableSorting: true,
+	};
 
-const codeColumn: ColumnDef<
-	DataTableFeatures,
-	Invoice
-> = {
+const codeColumn: ColumnDef<DataTableFeatures, Invoice> = {
 	accessorKey: "code",
 	header: () => CODE_HEADER,
 	enableSorting: false,
@@ -426,13 +421,7 @@ const ComposedDataTable = (
 
 const SelectableDataTable = (
 	props: DataTableExampleProps,
-) => (
-	<InvoiceTable
-		{...props}
-		rows={INVOICES}
-		selectable
-	/>
-);
+) => <InvoiceTable {...props} rows={INVOICES} selectable />;
 
 const DATA_VIEW_TABLE_ID = "story-data-table";
 
@@ -567,7 +556,9 @@ const DataViewTable = ({
 								loadBrokenLabel="Clients could not be loaded, and trying again won't help."
 								retryLabel={RETRY_LABEL}
 								noOptionsLabel="No clients."
-								checkIcon={<Icon svg={CheckIcon} label="" />}
+								checkIcon={
+									<Icon svg={CheckIcon} label="" />
+								}
 								onValueChange={next => {
 									filters.setDraft(
 										"client",
@@ -929,9 +920,7 @@ export const Selectable: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			selectionBarStatus(canvas),
-		).toHaveTextContent(
-			invoicesTotal(INVOICES.length),
-		);
+		).toHaveTextContent(invoicesTotal(INVOICES.length));
 		await expect(pageCheckbox(canvas)).not.toBeChecked();
 	},
 };

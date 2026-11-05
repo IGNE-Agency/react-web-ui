@@ -49,7 +49,9 @@ const Mark = (): ReactNode => (
 const CONTENT = {
 	empty: (
 		<>
-			<StatusMessage.Icon><Icon svg={InboxIcon} label="" /></StatusMessage.Icon>
+			<StatusMessage.Icon>
+				<Icon svg={InboxIcon} label="" />
+			</StatusMessage.Icon>
 			<StatusMessage.Title>
 				{EMPTY_TITLE}
 			</StatusMessage.Title>
@@ -60,7 +62,9 @@ const CONTENT = {
 	),
 	error: (
 		<>
-			<StatusMessage.Icon tone="error"><Icon svg={ErrorIcon} label="" /></StatusMessage.Icon>
+			<StatusMessage.Icon tone="error">
+				<Icon svg={ErrorIcon} label="" />
+			</StatusMessage.Icon>
 			<StatusMessage.Title>
 				{ERROR_TITLE}
 			</StatusMessage.Title>

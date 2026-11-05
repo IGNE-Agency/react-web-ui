@@ -14,7 +14,10 @@ const BROKEN =
 	"Trying again won't help. Report this to the app's administrator.";
 const RETRY = "Try again";
 
-const ICONS = { none: undefined, error: <Icon svg={ErrorIcon} label="" /> };
+const ICONS = {
+	none: undefined,
+	error: <Icon svg={ErrorIcon} label="" />,
+};
 
 const ACTIONS = {
 	none: undefined,

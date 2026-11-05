@@ -44,7 +44,10 @@ Three tiers: a solid brand fill, a tonal container, and a transparent one. Pill 
   }>
 
 ```tsx
-<Button variant="primary" tone="danger" icon={<DeleteIcon />}>
+<Button
+	variant="primary"
+	tone="danger"
+	icon={<DeleteIcon />}>
 	Delete
 </Button>
 ```
@@ -161,7 +164,11 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   }>
 
 ```tsx
-<Button variant="tertiary" iconOnly icon={<ChevronLeft />} />
+<Button
+	variant="tertiary"
+	iconOnly
+	icon={<ChevronLeft />}
+/>
 ```
 
 </Example>
@@ -232,7 +239,10 @@ Default to an icon on every button, not only the icon-only ones. A glyph and a w
   }>
 
 ```tsx
-<Button variant="primary" icon={<CheckIcon />} onClick={apply}>
+<Button
+	variant="primary"
+	icon={<CheckIcon />}
+	onClick={apply}>
 	Apply
 </Button>
 ```
@@ -267,8 +277,13 @@ Leave the icon off where it costs more than it gives: when no glyph means the ac
 	caption="Where no glyph means the action, an invented one is one more thing to decode."
 	visual={
 		<div className={styles.row}>
-			<Button icon={<Icon svg={BubbleChartIcon} label="" />}>Reconcile</Button>
-			<Button icon={<Icon svg={InsightsIcon} label="" />}>Allocate</Button>
+			<Button
+				icon={<Icon svg={BubbleChartIcon} label="" />}>
+				Reconcile
+			</Button>
+			<Button icon={<Icon svg={InsightsIcon} label="" />}>
+				Allocate
+			</Button>
 		</div>
 	}
 />

@@ -250,23 +250,23 @@ const PaginationLast = (
 
 /** The step buttons' names and glyphs. */
 export type PaginationStepLabels = Readonly<{
-		/** The first-page button's name, such as "First page". */
-		firstLabel: string;
-		/** The previous-page button's name, such as "Previous page". */
-		previousLabel: string;
-		/** The next-page button's name, such as "Next page". */
-		nextLabel: string;
-		/** The last-page button's name, such as "Last page". */
-		lastLabel: string;
-		/** The first-page button's glyph. */
-		firstIcon: ReactNode;
-		/** The previous-page button's glyph. */
-		previousIcon: ReactNode;
-		/** The next-page button's glyph. */
-		nextIcon: ReactNode;
-		/** The last-page button's glyph. */
-		lastIcon: ReactNode;
-	}>;
+	/** The first-page button's name, such as "First page". */
+	firstLabel: string;
+	/** The previous-page button's name, such as "Previous page". */
+	previousLabel: string;
+	/** The next-page button's name, such as "Next page". */
+	nextLabel: string;
+	/** The last-page button's name, such as "Last page". */
+	lastLabel: string;
+	/** The first-page button's glyph. */
+	firstIcon: ReactNode;
+	/** The previous-page button's glyph. */
+	previousIcon: ReactNode;
+	/** The next-page button's glyph. */
+	nextIcon: ReactNode;
+	/** The last-page button's glyph. */
+	lastIcon: ReactNode;
+}>;
 
 export type PaginationControlsProps = Omit<
 	useRender.ComponentProps<"div">,

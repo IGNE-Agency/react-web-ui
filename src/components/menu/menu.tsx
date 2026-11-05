@@ -7,7 +7,11 @@ import styles from "./menu.module.scss";
 
 export type MenuRootProps<Payload = unknown> = Omit<
 	BaseMenu.Root.Props<Payload>,
-	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children"
+	| "open"
+	| "defaultOpen"
+	| "onOpenChange"
+	| "modal"
+	| "children"
 > &
 	Readonly<{
 		/** Whether the menu is open. Leave it out for a menu that keeps its own state. */

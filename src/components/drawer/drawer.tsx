@@ -9,7 +9,12 @@ import styles from "./drawer.module.scss";
 
 export type DrawerRootProps<Payload = unknown> = Omit<
 	BaseDrawer.Root.Props<Payload>,
-	"open" | "defaultOpen" | "onOpenChange" | "modal" | "children" | "swipeDirection"
+	| "open"
+	| "defaultOpen"
+	| "onOpenChange"
+	| "modal"
+	| "children"
+	| "swipeDirection"
 > &
 	Readonly<{
 		/** Whether the drawer is open. Leave it out for a drawer that keeps its own state. */

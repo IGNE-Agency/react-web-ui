@@ -1,7 +1,5 @@
 {
-	"accordion": [
-		"accordion/accordion"
-	],
+	"accordion": ["accordion/accordion"],
 	"active-filters": [
 		"tag-group/tag-group",
 		"tooltip/tooltip"
@@ -12,28 +10,21 @@
 		"skeleton/skeleton",
 		"tooltip/tooltip"
 	],
-	"avatar": [
-		"avatar/avatar"
-	],
+	"avatar": ["avatar/avatar"],
 	"avatar-group": [
 		"avatar-group/avatar-group",
 		"avatar/avatar",
 		"popover/popover",
 		"skeleton/skeleton"
 	],
-	"badge": [
-		"badge/badge"
-	],
+	"badge": ["badge/badge"],
 	"breadcrumbs": [
 		"breadcrumbs/breadcrumbs",
 		"button/button",
 		"menu/menu",
 		"tooltip/tooltip"
 	],
-	"button": [
-		"button/button",
-		"tooltip/tooltip"
-	],
+	"button": ["button/button", "tooltip/tooltip"],
 	"checkbox-field": [
 		"checkbox-field/checkbox",
 		"error-text/error-text",
@@ -47,9 +38,7 @@
 		"field/field",
 		"spinner/spinner"
 	],
-	"collapsible": [
-		"collapsible/collapsible"
-	],
+	"collapsible": ["collapsible/collapsible"],
 	"combobox-field": [
 		"button/button",
 		"combobox-field/combobox",
@@ -111,17 +100,13 @@
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"detail-list": [
-		"detail-list/detail-list"
-	],
+	"detail-list": ["detail-list/detail-list"],
 	"dialog": [
 		"button/button",
 		"dialog/dialog",
 		"tooltip/tooltip"
 	],
-	"divider": [
-		"divider/divider"
-	],
+	"divider": ["divider/divider"],
 	"drawer": [
 		"button/button",
 		"drawer/drawer",
@@ -135,20 +120,14 @@
 		"text-field/text-field",
 		"tooltip/tooltip"
 	],
-	"empty-message": [
-		"status-message/status-message"
-	],
+	"empty-message": ["status-message/status-message"],
 	"error-boundary": [
 		"button/button",
 		"status-message/status-message",
 		"tooltip/tooltip"
 	],
-	"error-message": [
-		"status-message/status-message"
-	],
-	"error-text": [
-		"error-text/error-text"
-	],
+	"error-message": ["status-message/status-message"],
+	"error-text": ["error-text/error-text"],
 	"field": [
 		"error-text/error-text",
 		"field/field",
@@ -194,30 +173,16 @@
 	],
 	"forms": [],
 	"hooks": [],
-	"icon": [
-		"icon/icon"
-	],
-	"link": [
-		"link/link"
-	],
-	"link-button": [
-		"button/button"
-	],
+	"icon": ["icon/icon"],
+	"link": ["link/link"],
+	"link-button": ["button/button"],
 	"loading-message": [
 		"spinner/spinner",
 		"status-message/status-message"
 	],
 	"locale-provider": [],
-	"menu": [
-		"button/button",
-		"menu/menu",
-		"tooltip/tooltip"
-	],
-	"nav": [
-		"button/button",
-		"nav/nav",
-		"tooltip/tooltip"
-	],
+	"menu": ["button/button", "menu/menu", "tooltip/tooltip"],
+	"nav": ["button/button", "nav/nav", "tooltip/tooltip"],
 	"number-field": [
 		"button/button",
 		"error-text/error-text",
@@ -266,10 +231,7 @@
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"popover": [
-		"popover/popover",
-		"skeleton/skeleton"
-	],
+	"popover": ["popover/popover", "skeleton/skeleton"],
 	"radio-group-field": [
 		"error-text/error-text",
 		"field/field",
@@ -298,21 +260,15 @@
 		"spinner/spinner",
 		"tooltip/tooltip"
 	],
-	"skeleton": [
-		"skeleton/skeleton"
-	],
-	"spinner": [
-		"spinner/spinner"
-	],
+	"skeleton": ["skeleton/skeleton"],
+	"spinner": ["spinner/spinner"],
 	"stale": [
 		"button/button",
 		"spinner/spinner",
 		"stale/stale",
 		"tooltip/tooltip"
 	],
-	"status-message": [
-		"status-message/status-message"
-	],
+	"status-message": ["status-message/status-message"],
 	"storage": [],
 	"switch-field": [
 		"error-text/error-text",
@@ -321,17 +277,9 @@
 		"switch-field/switch"
 	],
 	"table-storage": [],
-	"tabs": [
-		"badge/badge",
-		"tabs/tabs"
-	],
-	"tag": [
-		"tag/tag"
-	],
-	"tag-group": [
-		"tag-group/tag-group",
-		"tooltip/tooltip"
-	],
+	"tabs": ["badge/badge", "tabs/tabs"],
+	"tag": ["tag/tag"],
+	"tag-group": ["tag-group/tag-group", "tooltip/tooltip"],
 	"text-field": [
 		"button/button",
 		"error-text/error-text",
@@ -370,9 +318,7 @@
 		"toggle-group-field/toggle-group"
 	],
 	"tone": [],
-	"tooltip": [
-		"tooltip/tooltip"
-	],
+	"tooltip": ["tooltip/tooltip"],
 	"unsaved-changes": [
 		"button/button",
 		"confirm-dialog/confirm-dialog",

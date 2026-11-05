@@ -11,7 +11,10 @@ const TITLE = "No invoices yet";
 const DESCRIPTION = "Invoices you send show up here.";
 const ADD = "New invoice";
 
-const ICONS = { none: undefined, inbox: <Icon svg={InboxIcon} label="" /> };
+const ICONS = {
+	none: undefined,
+	inbox: <Icon svg={InboxIcon} label="" />,
+};
 
 const ACTIONS = {
 	none: undefined,

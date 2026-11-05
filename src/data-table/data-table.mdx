@@ -21,7 +21,9 @@ import { Skeleton } from "../components/skeleton/skeleton.tsx";
 import * as DataTableStories from "./data-table.stories.tsx";
 
 export const Box = ({ indeterminate, ...props }) => (
-	<Checkbox.Control indeterminate={indeterminate} {...props}>
+	<Checkbox.Control
+		indeterminate={indeterminate}
+		{...props}>
 		<Checkbox.Indicator>
 			<Icon
 				svg={indeterminate ? RemoveIcon : CheckIcon}
