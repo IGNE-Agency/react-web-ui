@@ -58,7 +58,11 @@ const sortOf = (
 	columnId: string,
 ): false | SortDirection => {
 	const entry = sorting.find(sort => sort.id === columnId);
-	return entry === undefined ? false : entry.desc ? "desc" : "asc";
+	return entry === undefined
+		? false
+		: entry.desc
+			? "desc"
+			: "asc";
 };
 
 type Pin = Readonly<{
