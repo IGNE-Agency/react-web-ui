@@ -82,6 +82,7 @@ const ClientFilterBar = ({
 			<FilterBar.Search
 				label={SEARCH_LABEL}
 				clearLabel={CLEAR_SEARCH_LABEL}
+				optionalLabel="optional"
 			/>
 			<FilterBar.Drawer
 				swipeDirection="right"

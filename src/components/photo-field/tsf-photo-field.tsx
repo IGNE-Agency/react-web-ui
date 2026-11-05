@@ -7,11 +7,16 @@ import {
 	PhotoField,
 	type PhotoFieldProps,
 } from "./photo-field.tsx";
+import type { PhotoInputPreviewProps } from "./photo-input.tsx";
 
 export type TSFPhotoFieldProps = Omit<
 	PhotoFieldProps,
-	keyof ConnectedFieldProps | "value" | "onValueChange"
+	| keyof ConnectedFieldProps
+	| keyof PhotoInputPreviewProps
+	| "value"
+	| "onValueChange"
 > &
+	PhotoInputPreviewProps &
 	Readonly<{
 		/** Runs alongside the field's own change handling, for side effects. */
 		onValueChange?: (file: File | undefined) => void;
@@ -24,7 +29,7 @@ export type TSFPhotoFieldProps = Omit<
  *
  * @example
  * <form.AppField name="photo">
- * 	{field => <field.PhotoField label="Profile photo" optionalLabel="optional" hasStoredImage {...photoCopy} />}
+ * 	{field => <field.PhotoField label="Profile photo" optionalLabel="optional" hasStoredImage defaultPreview={<Avatar name={user.name} src={user.photo} />} {...photoCopy} />}
  * </form.AppField>
  */
 export const TSFPhotoField = ({

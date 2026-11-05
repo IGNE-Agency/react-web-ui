@@ -7,13 +7,19 @@ import {
 } from "../field/index.ts";
 import {
 	PhotoInput,
+	type PhotoInputPreviewProps,
 	type PhotoInputProps,
 } from "./photo-input.tsx";
 
 export type PhotoFieldProps = Omit<
 	PhotoInputProps,
-	"labelledBy" | "describedBy" | "invalid" | "pending"
+	| keyof PhotoInputPreviewProps
+	| "labelledBy"
+	| "describedBy"
+	| "invalid"
+	| "pending"
 > &
+	PhotoInputPreviewProps &
 	FieldProps &
 	Readonly<{
 		/** Applied to the field, where a caller lays it out itself. */
