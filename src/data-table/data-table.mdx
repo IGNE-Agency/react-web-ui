@@ -49,8 +49,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
             </tbody>
           </table>
         </div>
@@ -78,8 +78,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={MoreVertIcon} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
             </tbody>
           </table>
         </div>
@@ -227,8 +227,8 @@ A table-level action menu is a labelled button beside the filters button, not an
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.tableWithToolbar}>
         <div className={styles.toolbar}>
-          <Button size="sm" icon={FilterListIcon}>Filters</Button>
-          <Button size="sm" icon={MoreVertIcon}>Table actions</Button>
+          <Button size="sm" icon={<Icon svg={FilterListIcon} label="" />}>Filters</Button>
+          <Button size="sm" icon={<Icon svg={MoreVertIcon} label="" />}>Table actions</Button>
         </div>
         <div className={styles.tableCard}>
           <table className={`${styles.table} ${styles.tableContent}`}>
@@ -246,7 +246,7 @@ A table-level action menu is a labelled button beside the filters button, not an
   }>
 
 ```tsx
-<Button icon={MoreVertIcon} render={<Menu.Trigger />}>
+<Button icon={<MoreVertIcon />} render={<Menu.Trigger />}>
 	Table actions
 </Button>
 ```
@@ -259,7 +259,7 @@ A table-level action menu is a labelled button beside the filters button, not an
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.tableWithToolbar}>
         <div className={styles.toolbar}>
-          <Button size="sm" icon={FilterListIcon}>Filters</Button>
+          <Button size="sm" icon={<Icon svg={FilterListIcon} label="" />}>Filters</Button>
         </div>
         <div className={styles.tableCard}>
           <table className={`${styles.table} ${styles.tableContent}`}>

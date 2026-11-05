@@ -5,7 +5,6 @@ import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.sv
 import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../icon/index.ts";
 import {
 	expect,
 	screen,

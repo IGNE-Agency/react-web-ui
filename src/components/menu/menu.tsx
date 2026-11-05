@@ -2,11 +2,7 @@ import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
-import {
-	Button,
-	type ButtonIcon,
-} from "../button/button.tsx";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
+import { Button } from "../button/button.tsx";
 import styles from "./menu.module.scss";
 
 type TriggerBaseProps = Omit<
@@ -16,7 +12,7 @@ type TriggerBaseProps = Omit<
 
 type IconTriggerProps = TriggerBaseProps &
 	Readonly<{
-		icon: ButtonIcon;
+		icon: ReactNode;
 		/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
 		label: string;
 		children?: never;
@@ -25,7 +21,7 @@ type IconTriggerProps = TriggerBaseProps &
 type TextTriggerProps = TriggerBaseProps &
 	Readonly<{
 		/** Optional leading icon rendered before the label. */
-		icon?: ButtonIcon;
+		icon?: ReactNode;
 		children: ReactNode;
 		label?: never;
 	}>;
@@ -150,7 +146,7 @@ export type MenuItemProps = ComponentProps<
 > &
 	Readonly<{
 		/** Optional leading icon, rendered decoratively before the label. */
-		icon?: SvgComponent;
+		icon?: ReactNode;
 	}>;
 
 /** An action, with an optional leading icon. */
@@ -163,7 +159,7 @@ const Item = ({
 	<BaseMenu.Item
 		className={clsx(styles.item, className)}
 		{...props}>
-		{icon && <Icon svg={icon} label="" />}
+		{icon}
 		{children}
 	</BaseMenu.Item>
 );
@@ -238,10 +234,10 @@ type MenuParts = Readonly<{
  *
  * @example
  * <Menu.Root>
- *   <Menu.Trigger icon={MoreIcon} label="Row actions" />
+ *   <Menu.Trigger icon={<MoreIcon />} label="Row actions" />
  *   <Menu.Content sideOffset={8}>
  *     <Menu.Arrow />
- *     <Menu.Item icon={DownloadIcon} onClick={download}>
+ *     <Menu.Item icon={<DownloadIcon />} onClick={download}>
  *       Download
  *     </Menu.Item>
  *   </Menu.Content>

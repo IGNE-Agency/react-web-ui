@@ -6,12 +6,6 @@ import type {
 } from "react";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import { buttonAttributes } from "./button-attributes.ts";
-import {
-	type ButtonIcon,
-	renderButtonIcon,
-} from "./button-icon.tsx";
-
-export type { ButtonIcon } from "./button-icon.tsx";
 
 /** A button's visual tier. */
 export type ButtonVariant =
@@ -53,7 +47,7 @@ type TextButtonProps = BaseProps &
 	Readonly<{
 		iconOnly?: false;
 		/** Optional leading icon rendered before the label. */
-		icon?: ButtonIcon;
+		icon?: ReactNode;
 		children: ReactNode;
 	}>;
 
@@ -61,7 +55,7 @@ type IconOnlyButtonProps = BaseProps &
 	Readonly<{
 		iconOnly: true;
 		/** Icon to render; required in icon-only mode. */
-		icon: ButtonIcon;
+		icon: ReactNode;
 		/** Accessible name, surfaced as the tooltip hint and set as `aria-label`, since the icon alone conveys no text. */
 		label: string;
 		children?: never;
@@ -107,7 +101,7 @@ export const Button = (props: ButtonProps): ReactNode => {
 					})}
 					data-icon-only={iconOnly}
 					{...nativeProps}>
-					{renderButtonIcon(icon)}
+					{icon}
 				</ButtonElement>
 			</Tooltip>
 		);
@@ -135,7 +129,7 @@ export const Button = (props: ButtonProps): ReactNode => {
 				className,
 			})}
 			{...nativeProps}>
-			{renderButtonIcon(icon)}
+			{icon}
 			{children}
 		</ButtonElement>
 	);

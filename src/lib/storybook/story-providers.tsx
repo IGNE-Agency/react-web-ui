@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -24,14 +23,18 @@ export const STORY_TOAST_VIEWPORT_LABEL = "Notifications";
 /**
  * The context every story renders inside, built from the kit's own providers:
  * the story locale and time zone, the toast and tooltip providers, and a fresh
- * query client per story.
+ * query client per story. `toastCloseIcon` fills every toast's close button.
  *
  * @example
- * decorators: [Story => <StoryProviders><Story /></StoryProviders>]
+ * decorators: [Story => <StoryProviders toastCloseIcon={<CloseIcon />}><Story /></StoryProviders>]
  */
 export const StoryProviders = ({
+	toastCloseIcon,
 	children,
-}: Readonly<{ children: ReactNode }>): ReactNode => {
+}: Readonly<{
+	toastCloseIcon: ReactNode;
+	children: ReactNode;
+}>): ReactNode => {
 	const [queryClient] = useState(() => new QueryClient());
 
 	return (
@@ -41,7 +44,7 @@ export const StoryProviders = ({
 					<Tooltip.Provider>
 						<ToastProvider
 							closeLabel={STORY_TOAST_CLOSE_LABEL}
-							closeIcon={<CloseIcon />}
+							closeIcon={toastCloseIcon}
 							viewportLabel={STORY_TOAST_VIEWPORT_LABEL}>
 							{children}
 						</ToastProvider>

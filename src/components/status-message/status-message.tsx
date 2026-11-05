@@ -2,7 +2,6 @@ import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type { ReactElement, ReactNode } from "react";
 import type { Tone } from "../../lib/tone.ts";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import style from "./status-message.module.scss";
 
 /**
@@ -22,11 +21,11 @@ export type StatusMessageRootProps = Readonly<{
 }>;
 
 export type StatusMessageIconProps = Readonly<{
-	/** The glyph, from a SVGR `?react` import. */
-	svg: SvgComponent;
 	/** The disc's colour. @default "neutral" */
 	tone?: Tone;
 	className?: string;
+	/** The app's icon, drawn at `1em` in `currentColor`; the disc sizes it. */
+	children: ReactNode;
 }>;
 
 export type StatusMessageIllustrationProps = Readonly<{
@@ -66,15 +65,16 @@ const Root = ({
 
 /** The caller's glyph, on a disc tinted in `tone`. */
 const StatusIcon = ({
-	svg,
 	tone = "neutral",
 	className,
+	children,
 }: StatusMessageIconProps): ReactNode => (
 	<span
 		data-tone={tone}
 		data-variant="subtle"
+		aria-hidden="true"
 		className={clsx(style.disc, className)}>
-		<Icon svg={svg} label="" size={2} />
+		{children}
 	</span>
 );
 
@@ -141,7 +141,7 @@ type StatusMessageNamespace = Readonly<{
  *
  * @example
  * <StatusMessage.Root live="status">
- * 	<StatusMessage.Icon svg={InboxIcon} />
+ * 	<StatusMessage.Icon><InboxIcon /></StatusMessage.Icon>
  * 	<StatusMessage.Title>Your inbox is empty</StatusMessage.Title>
  * 	<StatusMessage.Description>New messages show up here.</StatusMessage.Description>
  * </StatusMessage.Root>

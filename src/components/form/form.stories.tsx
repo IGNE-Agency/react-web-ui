@@ -30,7 +30,6 @@ import { z } from "zod";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
 import { OPTIONS_LOAD_LABELS } from "../../lib/storybook/options-load.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
-import { Icon } from "../icon/index.ts";
 import { Form, type FormRootProps } from "./index.ts";
 import style from "./form.stories.module.scss";
 

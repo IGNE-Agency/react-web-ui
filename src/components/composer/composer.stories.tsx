@@ -29,6 +29,7 @@ import type {
 	MentionSource,
 } from "./mention-sources.ts";
 import { serializeMention } from "./mention-text.tsx";
+import { Icon } from "../icon/index.ts";
 
 type Person = Readonly<{
 	id: string;
@@ -120,7 +121,7 @@ const ComposerParts = ({
 		<Composer.Attachments
 			label={ATTACHMENTS}
 			removeLabel={REMOVE}
-			removeIcon={<CloseIcon />}
+			removeIcon={<Icon svg={CloseIcon} label="" />}
 			fileHint={fileHint}
 		/>
 		<Composer.AttachmentsError
@@ -137,10 +138,10 @@ const ComposerParts = ({
 		<Composer.Toolbar>
 			<Composer.MaxLength />
 			<Composer.AttachButton label={ADD_ATTACHMENT}>
-				<AttachIcon />
+				<Icon svg={AttachIcon} label="" />
 			</Composer.AttachButton>
 			<Composer.SendButton label={SEND}>
-				<SendIcon />
+				<Icon svg={SendIcon} label="" />
 			</Composer.SendButton>
 		</Composer.Toolbar>
 	</Composer.Root>

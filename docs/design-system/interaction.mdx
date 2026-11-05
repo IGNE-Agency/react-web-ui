@@ -20,6 +20,7 @@ import styles from "./interaction.module.scss";
 import { Illustration } from "./illustration";
 import { InteractionDrawing } from "./interaction-drawing";
 import { PromisesDrawing } from "./interaction-figures";
+import { Icon } from "../../src/components/icon/index.ts";
 
 <Meta title="Design system/Principles/Interaction" />
 
@@ -398,7 +399,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={CheckIcon}>Save</Button>
+						<Button icon={<Icon svg={CheckIcon} label="" />}>Save</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -406,7 +407,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 					<span className={styles.pointed}>
 						<Button
 							variant="primary"
-							icon={SendIcon}
+							icon={<Icon svg={SendIcon} label="" />}
 							disabled>
 							Submit
 						</Button>
@@ -446,7 +447,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 				</span>
 				<span className={styles.cursorButtons}>
 					<span className={styles.pointed}>
-						<Button icon={CheckIcon}>Save</Button>
+						<Button icon={<Icon svg={CheckIcon} label="" />}>Save</Button>
 						<span className={styles.cursorAt}>
 							<Cursor shape="pointer" />
 						</span>
@@ -454,7 +455,7 @@ A label isn't in that list. It's the field with a larger target, not a separate 
 					<span className={styles.pointed}>
 						<Button
 							variant="primary"
-							icon={SendIcon}
+							icon={<Icon svg={SendIcon} label="" />}
 							disabled>
 							Submit
 						</Button>
@@ -1225,7 +1226,7 @@ An icon-only control is the button component's icon-only form, which requires a 
 <Example kind="do" caption="The menu trigger is the icon-only button.">
 
 ```tsx
-<Menu.Trigger icon={MoreVertIcon} label={m.row_actions()} />
+<Menu.Trigger icon={<MoreVertIcon />} label={m.row_actions()} />
 ```
 
 </Example>

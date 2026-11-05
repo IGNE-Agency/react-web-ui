@@ -8,10 +8,6 @@ import type {
 	ButtonVariant,
 } from "../button/button.tsx";
 import { buttonAttributes } from "../button/button-attributes.ts";
-import {
-	type ButtonIcon,
-	renderButtonIcon,
-} from "../button/button-icon.tsx";
 
 export type LinkButtonProps = ComponentPropsWithRef<"a"> &
 	Readonly<{
@@ -22,7 +18,7 @@ export type LinkButtonProps = ComponentPropsWithRef<"a"> &
 		/** Colour role. @default "brand" */
 		tone?: ButtonTone;
 		/** Optional leading icon rendered before the label. */
-		icon?: ButtonIcon;
+		icon?: ReactNode;
 		children: ReactNode;
 	}>;
 
@@ -51,7 +47,7 @@ export const LinkButton = ({
 			className,
 		})}
 		{...anchorProps}>
-		{renderButtonIcon(icon)}
+		{icon}
 		{children}
 	</a>
 );

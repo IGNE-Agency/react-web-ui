@@ -2,6 +2,7 @@ import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.
 import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
 import SaveIcon from "@material-design-icons/svg/outlined/save.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import {
 	expect,
 	fn,
@@ -22,9 +23,9 @@ const tooltipShown = () =>
 	);
 
 const ICONS = {
-	save: SaveIcon,
-	delete: DeleteIcon,
-	chevronRight: ChevronRightIcon,
+	save: <Icon svg={SaveIcon} label="" />,
+	delete: <Icon svg={DeleteIcon} label="" />,
+	chevronRight: <Icon svg={ChevronRightIcon} label="" />,
 };
 
 const meta = {

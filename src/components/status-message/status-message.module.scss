@@ -26,6 +26,7 @@
 			var(--sys-unit-32)
 		);
 		border-radius: var(--sys-radius-full);
+		font-size: var(--status-message-icon-size, 2em);
 		background: var(
 			--status-message-disc-bg,
 			var(--_status-message-disc-bg)

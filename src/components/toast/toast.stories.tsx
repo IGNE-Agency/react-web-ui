@@ -27,6 +27,7 @@ import {
 	toastManager,
 } from "./toast.ts";
 import { ToastProvider } from "./toast-provider.tsx";
+import { Icon } from "../icon/index.ts";
 
 const SENT = "Invoice sent.";
 const SEND_FAILED = "Invoice failed to send.";
@@ -87,7 +88,7 @@ const SuccessToast = () => (
 	<ToastTrigger
 		tone="success"
 		body={SENT}
-		icon={<CheckCircleIcon />}
+		icon={<Icon svg={CheckCircleIcon} label="" />}
 		timeout={0}
 	/>
 );
@@ -96,7 +97,7 @@ const ErrorToast = () => (
 	<ToastTrigger
 		tone="error"
 		body={SEND_FAILED}
-		icon={<ErrorIcon />}
+		icon={<Icon svg={ErrorIcon} label="" />}
 		timeout={0}
 	/>
 );
@@ -105,7 +106,7 @@ const InfoToast = () => (
 	<ToastTrigger
 		tone="info"
 		body={DRAFT_SAVED}
-		icon={<InfoIcon />}
+		icon={<Icon svg={InfoIcon} label="" />}
 		timeout={0}
 	/>
 );
@@ -114,7 +115,7 @@ const WarningToast = () => (
 	<ToastTrigger
 		tone="warning"
 		body={OFFLINE}
-		icon={<WarningIcon />}
+		icon={<Icon svg={WarningIcon} label="" />}
 		timeout={0}
 	/>
 );

@@ -36,15 +36,15 @@ Three tiers: a solid brand fill, a tonal container, and a transparent one. Pill 
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
-        <Button variant="primary" tone="danger" icon={DeleteIcon}>Delete</Button>
-        <Button tone="danger" icon={DeleteIcon}>Delete</Button>
-        <Button variant="tertiary" tone="danger" icon={DeleteIcon}>Delete</Button>
+        <Button variant="primary" tone="danger" icon={<Icon svg={DeleteIcon} label="" />}>Delete</Button>
+        <Button tone="danger" icon={<Icon svg={DeleteIcon} label="" />}>Delete</Button>
+        <Button variant="tertiary" tone="danger" icon={<Icon svg={DeleteIcon} label="" />}>Delete</Button>
       </div>
     </div>
   }>
 
 ```tsx
-<Button variant="primary" tone="danger" icon={DeleteIcon}>
+<Button variant="primary" tone="danger" icon={<DeleteIcon />}>
 	Delete
 </Button>
 ```
@@ -56,7 +56,7 @@ Three tiers: a solid brand fill, a tonal container, and a transparent one. Pill 
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
-        <Button variant="primary" icon={DownloadIcon}>Export</Button>
+        <Button variant="primary" icon={<Icon svg={DownloadIcon} label="" />}>Export</Button>
         <button type="button" className={styles.dangerTier}>Delete</button>
       </div>
     </div>
@@ -85,15 +85,15 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.row}>
-          <Button iconOnly icon={FilterListIcon} label="Filters" />
-          <Button iconOnly icon={DownloadIcon} label="Export" />
-          <Button iconOnly icon={MoreVertIcon} label="More actions" />
+          <Button iconOnly icon={<Icon svg={FilterListIcon} label="" />} label="Filters" />
+          <Button iconOnly icon={<Icon svg={DownloadIcon} label="" />} label="Export" />
+          <Button iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="More actions" />
         </div>
     </div>
   }>
 
 ```tsx
-<Button iconOnly icon={DownloadIcon} label="Export" />
+<Button iconOnly icon={<DownloadIcon />} label="Export" />
 ```
 
 </Example>
@@ -103,15 +103,15 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
-        <Button icon={FilterListIcon} aria-label="Filters">{null}</Button>
-        <Button icon={DownloadIcon} aria-label="Export">{null}</Button>
-        <Button icon={MoreVertIcon} aria-label="More actions">{null}</Button>
+        <Button icon={<Icon svg={FilterListIcon} label="" />} aria-label="Filters">{null}</Button>
+        <Button icon={<Icon svg={DownloadIcon} label="" />} aria-label="Export">{null}</Button>
+        <Button icon={<Icon svg={MoreVertIcon} label="" />} aria-label="More actions">{null}</Button>
       </div>
     </div>
   }>
 
 ```tsx
-<Button icon={DownloadIcon} aria-label="Export">
+<Button icon={<DownloadIcon />} aria-label="Export">
 	{null}
 </Button>
 ```
@@ -126,7 +126,7 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.stack}>
-          <Button variant="tertiary" iconOnly icon={ChevronLeftIcon} label="Previous page" />
+          <Button variant="tertiary" iconOnly icon={<Icon svg={ChevronLeftIcon} label="" />} label="Previous page" />
           <span className={styles.announce}>
             Screen reader says: <span className={styles.spoken}>“Previous page”</span>
           </span>
@@ -138,7 +138,7 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
 <Button
 	variant="tertiary"
 	iconOnly
-	icon={ChevronLeft}
+	icon={<ChevronLeft />}
 	label="Previous page"
 />
 ```
@@ -161,7 +161,7 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   }>
 
 ```tsx
-<Button variant="tertiary" iconOnly icon={ChevronLeft} />
+<Button variant="tertiary" iconOnly icon={<ChevronLeft />} />
 ```
 
 </Example>
@@ -179,8 +179,8 @@ A button has two shapes: a pill with text, a circle when icon-only. Both are str
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.actionBar}>
           <span className={styles.actionBarText}>3 selected</span>
-          <Button size="sm" icon={DownloadIcon}>Export</Button>
-          <Button size="sm" iconOnly icon={CloseIcon} label="Clear selection" />
+          <Button size="sm" icon={<Icon svg={DownloadIcon} label="" />}>Export</Button>
+          <Button size="sm" iconOnly icon={<Icon svg={CloseIcon} label="" />} label="Clear selection" />
         </div>
     </div>
   }>
@@ -200,8 +200,8 @@ A button has two shapes: a pill with text, a circle when icon-only. Both are str
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.actionBar}>
           <span className={styles.actionBarText}>3 selected</span>
-          <Button size="sm" icon={DownloadIcon} className={styles.barCornered}>Export</Button>
-          <Button size="sm" iconOnly icon={CloseIcon} label="Clear selection" className={styles.barCornered} />
+          <Button size="sm" icon={<Icon svg={DownloadIcon} label="" />} className={styles.barCornered}>Export</Button>
+          <Button size="sm" iconOnly icon={<Icon svg={CloseIcon} label="" />} label="Clear selection" className={styles.barCornered} />
         </div>
     </div>
   }>
@@ -225,14 +225,14 @@ Default to an icon on every button, not only the icon-only ones. A glyph and a w
   caption="A glyph beside each word tells adjacent buttons apart before either is read."
   visual={
     <div className={styles.row}>
-      <Button variant="primary" icon={CheckIcon}>Apply</Button>
-      <Button icon={RestartIcon}>Reset</Button>
-      <Button icon={DownloadIcon}>Export</Button>
+      <Button variant="primary" icon={<Icon svg={CheckIcon} label="" />}>Apply</Button>
+      <Button icon={<Icon svg={RestartIcon} label="" />}>Reset</Button>
+      <Button icon={<Icon svg={DownloadIcon} label="" />}>Export</Button>
     </div>
   }>
 
 ```tsx
-<Button variant="primary" icon={CheckIcon} onClick={apply}>
+<Button variant="primary" icon={<CheckIcon />} onClick={apply}>
 	Apply
 </Button>
 ```
@@ -267,8 +267,8 @@ Leave the icon off where it costs more than it gives: when no glyph means the ac
 	caption="Where no glyph means the action, an invented one is one more thing to decode."
 	visual={
 		<div className={styles.row}>
-			<Button icon={BubbleChartIcon}>Reconcile</Button>
-			<Button icon={InsightsIcon}>Allocate</Button>
+			<Button icon={<Icon svg={BubbleChartIcon} label="" />}>Reconcile</Button>
+			<Button icon={<Icon svg={InsightsIcon} label="" />}>Allocate</Button>
 		</div>
 	}
 />
@@ -288,8 +288,8 @@ Disabled is the disabled role's pale fill with its faint ink, and [a not-allowed
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
-        <Button variant="primary" icon={DownloadIcon} disabled>Export</Button>
-        <Button icon={DownloadIcon} disabled>Export</Button>
+        <Button variant="primary" icon={<Icon svg={DownloadIcon} label="" />} disabled>Export</Button>
+        <Button icon={<Icon svg={DownloadIcon} label="" />} disabled>Export</Button>
       </div>
     </div>
   }>
@@ -309,8 +309,8 @@ Disabled is the disabled role's pale fill with its faint ink, and [a not-allowed
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.row}>
-        <Button variant="primary" icon={DownloadIcon} className={styles.faded}>Export</Button>
-        <Button icon={DownloadIcon} className={styles.faded}>Export</Button>
+        <Button variant="primary" icon={<Icon svg={DownloadIcon} label="" />} className={styles.faded}>Export</Button>
+        <Button icon={<Icon svg={DownloadIcon} label="" />} className={styles.faded}>Export</Button>
       </div>
     </div>
   }>

@@ -319,7 +319,7 @@ type NavParts = Readonly<{
  * 	<Nav.List>
  * 		<Nav.Item>
  * 			<NavLink to="/" label="Home" activeOptions={{ exact: true }}>
- * 				<NavItemView.Icon svg={HomeIcon} />
+ * 				<NavItemView.Icon><HomeIcon /></NavItemView.Icon>
  * 				<NavItemView.Label>Home</NavItemView.Label>
  * 			</NavLink>
  * 		</Nav.Item>

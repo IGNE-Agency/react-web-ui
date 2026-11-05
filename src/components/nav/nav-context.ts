@@ -19,6 +19,3 @@ export type NavContextValue = Readonly<{
 
 export const NavContext: Context<NavContextValue | null> =
 	createContext<NavContextValue | null>(null);
-
-export const NavItemLayoutContext: Context<NavLayout> =
-	createContext<NavLayout>("row");

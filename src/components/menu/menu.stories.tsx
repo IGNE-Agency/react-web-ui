@@ -18,6 +18,7 @@ import {
 	withOverlayFrame,
 } from "../../lib/storybook/overlay-frame.tsx";
 import { Menu } from "./menu.tsx";
+import { Icon } from "../icon/index.ts";
 
 type MenuExampleProps = ComponentProps<typeof Menu.Root>;
 
@@ -41,13 +42,13 @@ const MenuItems = () => {
 	return (
 		<Menu.Content container={container} sideOffset={8}>
 			<Menu.Arrow />
-			<Menu.Item icon={DownloadIcon} onClick={download}>
+			<Menu.Item icon={<Icon svg={DownloadIcon} label="" />} onClick={download}>
 				{DOWNLOAD}
 			</Menu.Item>
-			<Menu.Item icon={CommentIcon} onClick={comment}>
+			<Menu.Item icon={<Icon svg={CommentIcon} label="" />} onClick={comment}>
 				{ADD_COMMENT}
 			</Menu.Item>
-			<Menu.Item icon={ArchiveIcon} disabled>
+			<Menu.Item icon={<Icon svg={ArchiveIcon} label="" />} disabled>
 				{ARCHIVE}
 			</Menu.Item>
 			<Menu.Separator />
@@ -66,7 +67,7 @@ const MenuItems = () => {
 
 const MenuExample = (props: MenuExampleProps) => (
 	<Menu.Root {...props}>
-		<Menu.Trigger icon={MoreVertIcon} label={ROW_ACTIONS} />
+		<Menu.Trigger icon={<Icon svg={MoreVertIcon} label="" />} label={ROW_ACTIONS} />
 		<MenuItems />
 	</Menu.Root>
 );

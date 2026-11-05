@@ -12,7 +12,6 @@ import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import UnfoldMoreIcon from "@material-design-icons/svg/outlined/unfold_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../components/icon/index.ts";
 import {
 	QueryClient,
 	queryOptions,

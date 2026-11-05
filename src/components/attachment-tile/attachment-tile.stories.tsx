@@ -21,6 +21,7 @@ import {
 	type AttachmentTileProps,
 	SentAttachmentTile,
 } from "./attachment-tile.tsx";
+import { Icon } from "../icon/index.ts";
 
 const TILE_ID = "invoice";
 const REMOVE = "Remove";
@@ -32,7 +33,7 @@ const SCAN = pngFile("receipt.png");
 
 const ICONS = {
 	none: undefined,
-	document: <DescriptionIcon />,
+	document: <Icon svg={DescriptionIcon} label="" />,
 };
 
 const removed =
@@ -131,7 +132,7 @@ const SentDownload = () => (
 		name={INVOICE.name}
 		hint="invoice-july.pdf (8 B)"
 		src={undefined}
-		icon={<DescriptionIcon />}
+		icon={<Icon svg={DescriptionIcon} label="" />}
 		href="#invoice-july.pdf"
 		label="Download invoice-july.pdf"
 	/>

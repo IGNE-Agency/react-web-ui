@@ -1,5 +1,6 @@
 import ArrowForwardIcon from "@material-design-icons/svg/outlined/arrow_forward.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../icon/index.ts";
 import { createLink } from "@tanstack/react-router";
 import type { ReactElement } from "react";
 import {
@@ -18,7 +19,7 @@ import {
 const LABEL = "Go to the overview";
 const START_PATH = "/story";
 
-const ICONS = { arrowForward: ArrowForwardIcon };
+const ICONS = { arrowForward: <Icon svg={ArrowForwardIcon} label="" /> };
 
 const { history, decorator, reset } =
 	createStoryRouter(START_PATH);

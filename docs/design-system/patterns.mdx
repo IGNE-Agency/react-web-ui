@@ -146,7 +146,7 @@ A failure is the moment a screen is most tempted to throw everything away, and t
 					<Button
 						variant="tertiary"
 						size="sm"
-						icon={RestartIcon}>
+						icon={<Icon svg={RestartIcon} label="" />}>
 						Try again
 					</Button>
 				</div>
@@ -213,7 +213,7 @@ Offering to try again is a promise that it might work. A failure that can pass b
 					This page could not be loaded, and trying again
 					won't help.
 				</span>
-				<Button variant="primary" icon={RestartIcon}>
+				<Button variant="primary" icon={<Icon svg={RestartIcon} label="" />}>
 					Try again
 				</Button>
 			</div>
@@ -1133,7 +1133,7 @@ Neither carries a subtitle. A heading with a line of explanatory grey under it i
 							<Button
 								variant="tertiary"
 								iconOnly
-								icon={CloseIcon}
+								icon={<Icon svg={CloseIcon} label="" />}
 								label="Close filters"
 							/>
 						</div>
@@ -1283,7 +1283,7 @@ A timeout, a rate limit or a server fault is retried in the background, then off
 ```tsx
 {
 	isRetryable(error) ? (
-		<Button icon={RestartIcon} onClick={retry}>
+		<Button icon={<RestartIcon />} onClick={retry}>
 			{m.data_table_retry()}
 		</Button>
 	) : null;
@@ -1294,7 +1294,7 @@ A timeout, a rate limit or a server fault is retried in the background, then off
 <Example kind="dont" caption="Every failure offers a retry, including the ones that will fail again.">
 
 ```tsx
-<Button icon={RestartIcon} onClick={retry}>
+<Button icon={<RestartIcon />} onClick={retry}>
 	{m.data_table_retry()}
 </Button>
 ```

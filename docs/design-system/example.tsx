@@ -6,6 +6,7 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import type { ReactNode } from "react";
 import { Button } from "../../src/components/button/index.ts";
 import styles from "./example.module.scss";
+import { Icon } from "../../src/components/icon/index.ts";
 
 const KINDS = {
 	do: { label: "Do", Icon: CheckIcon },
@@ -34,7 +35,7 @@ export const Example = ({
 	visual?: ReactNode;
 	children?: ReactNode;
 }>) => {
-	const { label, Icon } = KINDS[kind];
+	const { label, Icon: KindIcon } = KINDS[kind];
 
 	return (
 		<figure className={`${styles.example} sb-unstyled`}>
@@ -47,7 +48,7 @@ export const Example = ({
 					<div className={styles.frame}>{visual}</div>
 				)}
 				<div className={styles.bar} data-kind={kind}>
-					<Icon aria-hidden />
+					<KindIcon aria-hidden />
 					{label}
 				</div>
 			</div>
@@ -62,7 +63,7 @@ export const Example = ({
 					<Button
 						variant="tertiary"
 						size="sm"
-						icon={CodeIcon}
+						icon={<Icon svg={CodeIcon} label="" />}
 						render={<Collapsible.Trigger />}>
 						Code
 					</Button>

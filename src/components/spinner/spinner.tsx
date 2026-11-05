@@ -1,6 +1,5 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
-import SpinnerSvg from "../../assets/spinner.svg?react";
 import style from "./spinner.module.scss";
 
 export type SpinnerProps = Readonly<{
@@ -21,9 +20,21 @@ export const Spinner = ({
 	size = 1.5,
 	className,
 }: SpinnerProps): ReactNode => (
-	<SpinnerSvg
+	<svg
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
 		className={clsx(style.spinner, className)}
 		style={{ width: `${size}em`, height: `${size}em` }}
-		aria-hidden="true"
-	/>
+		aria-hidden="true">
+		<g className={style.ring}>
+			<circle
+				className={style.arc}
+				cx="12"
+				cy="12"
+				r="9.5"
+				strokeWidth="3"
+			/>
+		</g>
+	</svg>
 );

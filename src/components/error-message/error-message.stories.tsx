@@ -5,6 +5,7 @@ import { expect, fn } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "../button/button.tsx";
 import { ErrorMessage } from "./error-message.tsx";
+import { Icon } from "../icon/index.ts";
 
 const TITLE = "The invoices could not be loaded";
 const RETRYABLE =
@@ -13,14 +14,14 @@ const BROKEN =
 	"Trying again won't help. Report this to the app's administrator.";
 const RETRY = "Try again";
 
-const ICONS = { none: undefined, error: ErrorIcon };
+const ICONS = { none: undefined, error: <Icon svg={ErrorIcon} label="" /> };
 
 const ACTIONS = {
 	none: undefined,
 	retry: (
 		<Button
 			variant="primary"
-			icon={<RestartIcon />}
+			icon={<Icon svg={RestartIcon} label="" />}
 			onClick={fn()}>
 			{RETRY}
 		</Button>

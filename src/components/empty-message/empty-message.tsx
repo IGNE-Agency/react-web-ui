@@ -13,7 +13,7 @@ export type EmptyMessageProps = StatusPresetProps;
  *
  * @example
  * <EmptyMessage
- * 	icon={InboxIcon}
+ * 	icon={<InboxIcon />}
  * 	title="No invoices yet"
  * 	description="Invoices you send show up here."
  * />

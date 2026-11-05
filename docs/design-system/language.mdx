@@ -12,6 +12,7 @@ import {
 	WrapDrawing,
 } from "./language-figures";
 import styles from "./language.module.scss";
+import { Icon } from "../../src/components/icon/index.ts";
 
 <Meta title="Design system/Principles/Language" />
 
@@ -88,7 +89,7 @@ A button is a promise. Its label tells the reader what will happen when they pre
 		kind="do"
 		caption="The label is the action."
 		visual={
-			<Button variant="primary" icon={DownloadIcon}>
+			<Button variant="primary" icon={<Icon svg={DownloadIcon} label="" />}>
 				Download selection
 			</Button>
 		}

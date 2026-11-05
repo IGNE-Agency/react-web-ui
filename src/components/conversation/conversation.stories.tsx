@@ -28,6 +28,7 @@ import {
 	groupByBurst,
 	groupByDay,
 } from "./group-messages.ts";
+import { Icon } from "../icon/index.ts";
 
 const OWN = "Sanne de Vries";
 const OTHER = "Mark Jansen";
@@ -79,13 +80,13 @@ const FILES = (
 				name={name}
 				hint={name}
 				src={undefined}
-				icon={<DescriptionIcon />}
+				icon={<Icon svg={DescriptionIcon} label="" />}
 			/>
 		))}
 		<Conversation.MessageFilesDownloadAll
 			label={DOWNLOAD_ALL}
 			onClick={downloadAll}>
-			<DownloadIcon />
+			<Icon svg={DownloadIcon} label="" />
 		</Conversation.MessageFilesDownloadAll>
 	</>
 );
@@ -197,7 +198,7 @@ const SCROLL_BUTTON = {
 		<Conversation.ScrollToBottom
 			label={SCROLL_TO_LATEST}
 			onClick={scrollToBottom}>
-			<ScrollDownIcon />
+			<Icon svg={ScrollDownIcon} label="" />
 		</Conversation.ScrollToBottom>
 	),
 };

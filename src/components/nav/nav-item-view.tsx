@@ -7,10 +7,8 @@ import {
 	type ReactNode,
 	use,
 } from "react";
-import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import {
 	NavContext,
-	NavItemLayoutContext,
 	type NavLayout,
 } from "./nav-context.ts";
 import style from "./nav.module.scss";
@@ -35,26 +33,21 @@ type EntryShellProps = NavEntryProps &
  * is unlabelled. Outside a `Nav.Root` the element stands alone.
  */
 export const EntryShell = ({
-	layout = "row",
 	labelled = true,
 	label,
 	element,
 }: EntryShellProps): ReactNode => {
 	const nav = use(NavContext);
 
-	return (
-		<NavItemLayoutContext value={layout}>
-			{nav === null ? (
-				element
-			) : (
-				<BaseTooltip.Trigger
-					handle={nav.hint}
-					payload={label}
-					disabled={labelled}
-					render={element}
-				/>
-			)}
-		</NavItemLayoutContext>
+	return nav === null ? (
+		element
+	) : (
+		<BaseTooltip.Trigger
+			handle={nav.hint}
+			payload={label}
+			disabled={labelled}
+			render={element}
+		/>
 	);
 };
 
@@ -115,30 +108,25 @@ const Root = ({
 );
 
 export type NavItemIconProps = Readonly<{
-	svg: SvgComponent;
 	className?: string;
+	/** The app's icon, drawn at `1em` in `currentColor`; the slot sizes it. */
+	children: ReactNode;
 }>;
 
 /**
- * The entry's glyph. A stacked entry's icon carries the destination on its own,
- * so it takes 24px over the row's text-matched 16px.
+ * The entry's icon slot. A stacked entry's icon carries the destination on its
+ * own, so it takes 1.5em over the row's text-matched 1em.
  */
 const NavItemIcon = ({
-	svg,
 	className,
-}: NavItemIconProps): ReactNode => {
-	const layout = use(NavItemLayoutContext);
-
-	return (
-		<span className={clsx(style.iconSlot, className)}>
-			<Icon
-				svg={svg}
-				label=""
-				size={layout === "stack" ? 1.5 : 1}
-			/>
-		</span>
-	);
-};
+	children,
+}: NavItemIconProps): ReactNode => (
+	<span
+		aria-hidden="true"
+		className={clsx(style.iconSlot, className)}>
+		{children}
+	</span>
+);
 
 /** The entry's text. Fades out where the entry is named by its tooltip instead. */
 const Label = ({
@@ -164,7 +152,7 @@ type NavItemViewParts = Readonly<{
  *
  * @example
  * <NavItemView.Root render={<Drawer.Trigger />} label="More" layout="stack">
- * 	<NavItemView.Icon svg={MoreIcon} />
+ * 	<NavItemView.Icon><MoreIcon /></NavItemView.Icon>
  * 	<NavItemView.Label>More</NavItemView.Label>
  * </NavItemView.Root>
  */

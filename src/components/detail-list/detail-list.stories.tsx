@@ -73,7 +73,7 @@ const ROWS = {
 						variant="tertiary"
 						size="sm"
 						iconOnly
-						icon={<EditIcon />}
+						icon={<Icon svg={EditIcon} label="" />}
 						label={CHANGE_PHONE}
 						onClick={changePhone}
 					/>
