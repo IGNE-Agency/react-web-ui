@@ -5,16 +5,16 @@ import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { Button } from "../button/index.ts";
 import {
-	detachHiddenInput,
 	Field,
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
-	focusControlOnRim,
 	useFieldFocus,
 	useFieldState,
-	withFieldFocus,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
+import { focusControlOnRim } from "../field/rim-focus.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import {
 	InputError,
 	type InputErrorProps,

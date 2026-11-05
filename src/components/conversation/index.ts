@@ -1,8 +1,7 @@
-export {
-	type ConversationMessageContextValue,
-	type ConversationMessageSide,
-	type ConversationMessageStatus,
-	useConversationMessageContext,
+export type {
+	ConversationMessageContextValue,
+	ConversationMessageSide,
+	ConversationMessageStatus,
 } from "./conversation.context.ts";
 export * from "./conversation.tsx";
 export * from "./group-messages.ts";

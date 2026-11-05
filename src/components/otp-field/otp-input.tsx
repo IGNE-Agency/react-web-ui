@@ -8,7 +8,6 @@ import {
 	fieldStateAttributes,
 	useFieldFocus,
 	useFieldState,
-	withFieldFocus,
 } from "../field/index.ts";
 import {
 	InputError,
@@ -19,6 +18,7 @@ import {
 	InputPending,
 	type InputPendingProps,
 } from "../field/input-parts.tsx";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import {
 	type OtpInputBaseProps,
 	OtpInputContext,

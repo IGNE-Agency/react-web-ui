@@ -1,11 +1,8 @@
 import { type ReactNode, useRef } from "react";
 import { useInfiniteScroll } from "../../lib/use-infinite-scroll.ts";
 import { Button } from "../button/index.ts";
-import {
-	type OptionsLoad,
-	type OptionsLoadLabels,
-	optionsLoadMessage,
-} from "../field/index.ts";
+import { type OptionsLoad, type OptionsLoadLabels } from "../field/index.ts";
+import { optionsLoadMessage } from "../field/options-load.ts";
 import { Spinner } from "../spinner/index.ts";
 import { Combobox } from "./combobox.tsx";
 import type {

@@ -5,10 +5,10 @@ import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 	fieldStateAttributes,
 	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import {
 	Checkbox,
 	type CheckboxProps,

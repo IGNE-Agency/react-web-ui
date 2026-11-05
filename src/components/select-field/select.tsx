@@ -9,13 +9,15 @@ import {
 	Field,
 	type FieldState,
 	fieldStateAttributes,
-	OPTIONS_LOADED,
 	type OptionsLoad,
 	type OptionsLoadLabels,
-	optionsLoadMessage,
 	useFieldFocus,
-	withFieldFocus,
 } from "../field/index.ts";
+import {
+	OPTIONS_LOADED,
+	optionsLoadMessage,
+} from "../field/options-load.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import { Icon } from "../icon/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import {

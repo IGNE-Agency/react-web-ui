@@ -22,8 +22,8 @@ import {
 	type FieldState,
 	fieldStateAttributes,
 	useFieldFocus,
-	withFieldFocus,
 } from "../field/index.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import { Icon } from "../icon/index.ts";
 import { Tooltip } from "../tooltip/index.ts";
 import style from "./combobox.module.scss";

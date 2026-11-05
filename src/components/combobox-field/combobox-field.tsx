@@ -7,7 +7,6 @@ import {
 	useState,
 } from "react";
 import {
-	detachHiddenInput,
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
@@ -15,6 +14,7 @@ import {
 	fieldStateAttributes,
 	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { Combobox } from "./combobox.tsx";
 import {
 	type ComboboxItems,

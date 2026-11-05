@@ -124,7 +124,7 @@ const push = (
 	return id;
 };
 
-/** The toast push helpers {@link toast} and {@link useToast} hand out. */
+/** The toast push helpers {@link toast} hands out. */
 export type ToastHelpers = Readonly<{
 	/** Pushes a success toast. Returns the toast id. */
 	success: (
@@ -174,13 +174,3 @@ export const toast: ToastHelpers = {
 		push(tone, body, options),
 	dismiss: id => toastManager.close(id),
 };
-
-/**
- * The stable toast push helpers, for components that prefer a hook over
- * importing {@link toast}.
- *
- * @example
- * const { success } = useToast();
- * success("Comment sent.");
- */
-export const useToast = (): ToastHelpers => toast;

@@ -1,15 +1,15 @@
 import { type ReactNode, useRef } from "react";
 import {
-	detachHiddenInput,
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	type FieldState,
-	OPTIONS_LOADED,
 	type OptionsLoad,
 	type OptionsLoadLabels,
 	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
+import { OPTIONS_LOADED } from "../field/options-load.ts";
 import { Select, type SelectRootProps } from "./select.tsx";
 import style from "./select.module.scss";
 

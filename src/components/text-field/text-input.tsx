@@ -20,10 +20,8 @@ import {
 	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
-	focusControlOnRim,
 	useFieldFocus,
 	useFieldState,
-	withFieldFocus,
 } from "../field/index.ts";
 import {
 	InputError,
@@ -34,6 +32,8 @@ import {
 	InputPending,
 	type InputPendingProps,
 } from "../field/input-parts.tsx";
+import { focusControlOnRim } from "../field/rim-focus.ts";
+import { withFieldFocus } from "../field/use-field-focus.ts";
 import type { SvgComponent } from "../icon/index.ts";
 import {
 	TextInputContext,

@@ -1,11 +1,7 @@
 import type { Switch as BaseSwitch } from "@base-ui/react/switch";
 import type { ReactNode } from "react";
-import {
-	Field,
-	type FieldBlurHandler,
-	type FieldProps,
-	detachHiddenInput,
-} from "../field/index.ts";
+import { Field, type FieldBlurHandler, type FieldProps } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { Switch } from "./switch.tsx";
 
 export type SwitchFieldProps = FieldProps &

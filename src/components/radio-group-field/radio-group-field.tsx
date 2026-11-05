@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import {
 	type FieldBlurHandler,
 	type FieldProps,
-	detachHiddenInput,
 	type ChoiceOption,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { RadioGroup } from "./radio-group.tsx";
 
 export type RadioGroupFieldProps = FieldProps &
