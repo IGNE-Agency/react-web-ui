@@ -2,13 +2,13 @@ import type { Plugin } from "vite";
 import svgr from "vite-plugin-svgr";
 
 /**
- * SVGR as the kit renders `?react` SVG imports, shared by the library build and
- * Storybook.
+ * SVGR for the `?react` SVG imports of stories and docs pages, such as the
+ * Material icons that fill the kit's icon slots.
  *
  * @example
- * plugins: [kitSvgr()]
+ * plugins: [storySvgr()]
  */
-export const kitSvgr = (): Plugin =>
+export const storySvgr = (): Plugin =>
 	svgr({
 		svgrOptions: {
 			plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],

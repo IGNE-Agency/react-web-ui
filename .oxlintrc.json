@@ -90,6 +90,14 @@
 							"@js-temporal/*"
 						],
 						"message": "Import from \"temporal-polyfill\" only; its other entries touch globals."
+					},
+					{
+						"group": ["@material-design-icons/*"],
+						"message": "The kit renders no icons. Take the icon as a slot: a part's children, or a <job>Icon prop."
+					},
+					{
+						"regex": "\\.svg\\?react$",
+						"message": "The kit renders no icons. Take the icon as a slot: a part's children, or a <job>Icon prop."
 					}
 				]
 			}
@@ -115,6 +123,43 @@
 				"no-restricted-imports": [
 					"error",
 					{
+						"patterns": [
+							{
+								"group": [
+									"temporal-polyfill/*",
+									"@js-temporal/*"
+								],
+								"message": "Import from \"temporal-polyfill\" only; its other entries touch globals."
+							},
+							{
+								"group": ["@material-design-icons/*"],
+								"message": "The kit renders no icons. Take the icon as a slot: a part's children, or a <job>Icon prop."
+							},
+							{
+								"regex": "\\.svg\\?react$",
+								"message": "The kit renders no icons. Take the icon as a slot: a part's children, or a <job>Icon prop."
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"files": [
+				"**/*.stories.tsx",
+				"docs/**",
+				".storybook/**"
+			],
+			"rules": {
+				"no-restricted-imports": [
+					"error",
+					{
+						"paths": [
+							{
+								"name": "@internationalized/date",
+								"message": "Use Temporal from temporal-polyfill. @internationalized/date belongs to the react-aria date and time pickers."
+							}
+						],
 						"patterns": [
 							{
 								"group": [

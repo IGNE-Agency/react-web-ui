@@ -12,7 +12,6 @@ import {
 	type UserConfig,
 } from "vite";
 import { libInjectCss } from "vite-plugin-lib-inject-css";
-import { kitSvgr } from "./kit-svgr.ts";
 import manifest from "./package.json" with { type: "json" };
 
 const root = import.meta.dirname;
@@ -59,7 +58,6 @@ const externalPackages = [
 
 /** Whether an import resolves to a package the app installs, rather than one bundled into the kit. */
 const isExternal = (id: string): boolean =>
-	!id.includes("?") &&
 	externalPackages.some(
 		name => id === name || id.startsWith(`${name}/`),
 	);
@@ -87,15 +85,11 @@ const stylesheets = (): Plugin => ({
 	},
 });
 
-/**
- * Names an emitted module after its source file, without the stylesheet or SVG
- * extension. A module compiled from a package goes under `vendor/`, since npm
- * never packs a `node_modules` folder.
- */
+/** Names an emitted module after its source file, without the stylesheet extension. */
 const entryFileName = ({
 	name,
 }: Readonly<{ name: string }>): string =>
-	`${name.replace(/^node_modules\//, "vendor/").replace(/\.(s?css|svg_react)$/, "")}.js`;
+	`${name.replace(/\.s?css$/, "")}.js`;
 
 /** Names an emitted asset after its source, with `.module.css` emitted as plain `.css`. */
 const assetFileName = ({
@@ -110,7 +104,6 @@ const assetFileName = ({
 const config: UserConfig = defineConfig({
 	plugins: [
 		react({ compiler: true }),
-		kitSvgr(),
 		libInjectCss(),
 		stylesheets(),
 	],
