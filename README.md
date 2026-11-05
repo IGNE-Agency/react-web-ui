@@ -1,13 +1,13 @@
-# @maanlamp/react-web-ui
+# @igne-agency/react-web-ui
 
-IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control in three tiers with a TanStack Form bridge, and DTCG design tokens that each app themes. It is the web counterpart of `@maanlamp/react-native-ui`, with the same names and semantics where both have the concept.
+IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control in three tiers with a TanStack Form bridge, and DTCG design tokens that each app themes. It is the web counterpart of `@igne-agency/react-native-ui`, with the same names and semantics where both have the concept.
 
 The package ships built ESM, one module per source file, each importing only its own CSS. An app needs no Vite, Sass or React Compiler configuration for it.
 
 ## Install
 
 ```sh
-bun add @maanlamp/react-web-ui
+bun add @igne-agency/react-web-ui
 bun add react react-dom @base-ui/react react-aria-components @internationalized/date @tanstack/react-form temporal-polyfill
 ```
 
@@ -15,27 +15,27 @@ Some entry points need an optional peer as well:
 
 | Import | Needs |
 | --- | --- |
-| `@maanlamp/react-web-ui/composer` | `lexical`, `@lexical/react`, `@lexical/history`, `@lexical/plain-text` |
-| `@maanlamp/react-web-ui/data-table` | `@tanstack/react-table` |
-| `@maanlamp/react-web-ui/data-view` | `@tanstack/react-query` |
-| `@maanlamp/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
-| `@maanlamp/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/plugin-css` |
+| `@igne-agency/react-web-ui/composer` | `lexical`, `@lexical/react`, `@lexical/history`, `@lexical/plain-text` |
+| `@igne-agency/react-web-ui/data-table` | `@tanstack/react-table` |
+| `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query` |
+| `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
+| `@igne-agency/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/plugin-css` |
 
 Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
 
 ## Imports
 
-Import each component from its own subpath, such as `@maanlamp/react-web-ui/button`. Everything else has one too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`. The app then loads the CSS of what it imports and of the components those render, and no other.
+Import each component from its own subpath, such as `@igne-agency/react-web-ui/button`. Everything else has one too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`. The app then loads the CSS of what it imports and of the components those render, and no other.
 
-The root, `@maanlamp/react-web-ui`, re-exports all of it but the entries that need an optional peer. A production build tree-shakes it, but Vite's dev server pre-bundles a package import with every export it has, so a single import from the root loads every component's stylesheet in development.
+The root, `@igne-agency/react-web-ui`, re-exports all of it but the entries that need an optional peer. A production build tree-shakes it, but Vite's dev server pre-bundles a package import with every export it has, so a single import from the root loads every component's stylesheet in development.
 
 ## Styles
 
 Import the reset and a theme once, at the app's entry:
 
 ```ts
-import "@maanlamp/react-web-ui/base.css";
-import "@maanlamp/react-web-ui/tokens.css";
+import "@igne-agency/react-web-ui/base.css";
+import "@igne-agency/react-web-ui/tokens.css";
 ```
 
 `base.css` resets the user agent's styles and sets the body's font and colour, `::selection`, links and their focus ring. It also sets `isolation: isolate` on `#root` and `position: relative` on `body`, which base-ui's popups need. It loads no fonts; the app loads its own.
@@ -57,10 +57,10 @@ An app with its own brand builds its own `tokens.css` instead of importing the k
 		"base": {
 			"sources": [
 				{
-					"$ref": "../../node_modules/@maanlamp/react-web-ui/tokens/ref.tokens.json"
+					"$ref": "../../node_modules/@igne-agency/react-web-ui/tokens/ref.tokens.json"
 				},
 				{
-					"$ref": "../../node_modules/@maanlamp/react-web-ui/tokens/sys.tokens.json"
+					"$ref": "../../node_modules/@igne-agency/react-web-ui/tokens/sys.tokens.json"
 				},
 				{ "$ref": "brand.tokens.json" }
 			]
@@ -72,7 +72,7 @@ An app with its own brand builds its own `tokens.css` instead of importing the k
 				"light": [],
 				"dark": [
 					{
-						"$ref": "../../node_modules/@maanlamp/react-web-ui/tokens/dark.tokens.json"
+						"$ref": "../../node_modules/@igne-agency/react-web-ui/tokens/dark.tokens.json"
 					}
 				]
 			},
@@ -91,7 +91,7 @@ The `./terrazzo` preset builds it into the custom properties the components read
 ```ts
 // terrazzo.config.ts
 import { defineConfig } from "@terrazzo/cli";
-import kitTokens from "@maanlamp/react-web-ui/terrazzo";
+import kitTokens from "@igne-agency/react-web-ui/terrazzo";
 
 export default defineConfig({
 	tokens: ["./src/style/tokens/app.resolver.json"],
@@ -109,10 +109,10 @@ The kit owns no breakpoints and no gutters; those are the app's layout.
 The kit has no catch-all provider. Wrap the app in the ones it uses:
 
 ```tsx
-import { LocaleProvider } from "@maanlamp/react-web-ui/locale-provider";
-import { TimeZoneProvider } from "@maanlamp/react-web-ui/time-zone-provider";
-import { ToastProvider } from "@maanlamp/react-web-ui/toast";
-import { Tooltip } from "@maanlamp/react-web-ui/tooltip";
+import { LocaleProvider } from "@igne-agency/react-web-ui/locale-provider";
+import { TimeZoneProvider } from "@igne-agency/react-web-ui/time-zone-provider";
+import { ToastProvider } from "@igne-agency/react-web-ui/toast";
+import { Tooltip } from "@igne-agency/react-web-ui/tooltip";
 
 export const Providers = ({
 	children,
@@ -147,15 +147,15 @@ Every control comes in three tiers:
 
 ```ts
 // src/form.ts
-import { TSFEmailField } from "@maanlamp/react-web-ui/email-field";
-import { createAppForm } from "@maanlamp/react-web-ui/forms";
+import { TSFEmailField } from "@igne-agency/react-web-ui/email-field";
+import { createAppForm } from "@igne-agency/react-web-ui/forms";
 
 export const { useAppForm, withForm, withFieldGroup } =
 	createAppForm({ EmailField: TSFEmailField });
 ```
 
 ```tsx
-import { Form } from "@maanlamp/react-web-ui/form";
+import { Form } from "@igne-agency/react-web-ui/form";
 import { useAppForm } from "./form.ts";
 
 const SignUp = () => {
@@ -189,7 +189,7 @@ Every field takes `requiredness` (`"required"`, `"optional"`, or left out to sho
 `Form.Root` reports unsaved changes to the page's leave guards (`useLeaveGuard`, or `useRouterLeaveGuard` from `./unsaved-changes/tanstack-router`) while its `leaveGuard` policy returns true for the form's live state. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. Pass `never` for a form whose edits need not survive leaving, or any `(state) => boolean`:
 
 ```tsx
-import { never } from "@maanlamp/react-web-ui/unsaved-changes";
+import { never } from "@igne-agency/react-web-ui/unsaved-changes";
 
 <Form.Root form={filters} leaveGuard={never}>
 	…

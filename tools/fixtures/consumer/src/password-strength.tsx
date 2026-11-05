@@ -1,5 +1,5 @@
-import { LocaleProvider } from "@maanlamp/react-web-ui/locale-provider";
-import { PasswordStrength } from "@maanlamp/react-web-ui/password-field";
+import { LocaleProvider } from "@igne-agency/react-web-ui/locale-provider";
+import { PasswordStrength } from "@igne-agency/react-web-ui/password-field";
 import { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 

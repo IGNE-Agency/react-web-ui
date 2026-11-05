@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-You are working in a published TypeScript + React component kit for the web, `@maanlamp/react-web-ui`. Apps install it from npm as built ESM, so every change ships to every app that upgrades. Make safe, minimal, maintainable changes that fit the existing architecture.
+You are working in a published TypeScript + React component kit for the web, `@igne-agency/react-web-ui`. Apps install it from npm as built ESM, so every change ships to every app that upgrades. Make safe, minimal, maintainable changes that fit the existing architecture.
 
 **Primary rule**: before changing code, read the surrounding files and follow the patterns already present. Prefer the pattern used closest to the code you are editing.
 
@@ -88,7 +88,7 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 - `bun run tokens` builds them through the kit's own preset (`src/terrazzo/`) into `src/style/tokens.gen.css`: the token's path, dots as hyphens, with no prefix (`--ref-*`, `--sys-*`).
 - **A component reads only `--sys-*`.** Never `--ref-*`, and never a hard-coded colour, size or duration that a role covers. A token's use is its `$description`.
 - The kit owns no breakpoints and no gutters. They are app layout, and a media query cannot read a custom property. Where a component would react to the viewport, it takes the answer from the caller or from a knob.
-- The token files hold the same values as the native kit's (`@maanlamp/react-native-ui`). A change to one is made in both.
+- The token files hold the same values as the native kit's (`@igne-agency/react-native-ui`). A change to one is made in both.
 
 ### Cascade layers
 

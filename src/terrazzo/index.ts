@@ -111,7 +111,7 @@ const dark = (contents: string): string =>
  * @example
  *   // terrazzo.config.ts
  *   import { defineConfig } from "@terrazzo/cli";
- *   import kitTokens from "@maanlamp/react-web-ui/terrazzo";
+ *   import kitTokens from "@igne-agency/react-web-ui/terrazzo";
  *
  *   export default defineConfig({
  *   	tokens: ["./src/style/tokens/app.resolver.json"],
