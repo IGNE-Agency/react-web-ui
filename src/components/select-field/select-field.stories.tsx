@@ -14,6 +14,7 @@ import {
 	OPTIONS_LOADS,
 } from "../../lib/storybook/options-load.ts";
 import {
+	optionFocused,
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
@@ -266,7 +267,7 @@ export const Keyboard: Story = {
 		await expect(control).toHaveFocus();
 
 		await userEvent.keyboard("{ArrowDown}");
-		await optionHighlighted(OPEN_LABEL);
+		await optionFocused(OPEN_LABEL);
 		await userEvent.keyboard("{ArrowDown}");
 		await optionHighlighted(SENT_LABEL);
 		await userEvent.keyboard("{Escape}");
@@ -274,13 +275,13 @@ export const Keyboard: Story = {
 		await expect(control).toHaveFocus();
 
 		await userEvent.keyboard(" ");
-		await optionHighlighted(OPEN_LABEL);
+		await optionFocused(OPEN_LABEL);
 		await userEvent.keyboard("{Escape}");
 		await roleGone("listbox");
 		await expect(valueChange).not.toHaveBeenCalled();
 
 		await userEvent.keyboard("{Enter}");
-		await optionHighlighted(OPEN_LABEL);
+		await optionFocused(OPEN_LABEL);
 		await userEvent.keyboard("{ArrowDown}{ArrowDown}");
 		await optionHighlighted(PAID_LABEL);
 		await userEvent.keyboard("{ArrowUp}");
@@ -348,7 +349,7 @@ export const BlurOnLeave: Story = {
 		await userEvent.tab();
 		await expect(control).toHaveFocus();
 		await userEvent.keyboard("{Enter}");
-		await optionHighlighted(OPEN_LABEL);
+		await optionFocused(OPEN_LABEL);
 		await userEvent.keyboard("{Enter}");
 		await roleGone("listbox");
 		await expect(control).toHaveFocus();

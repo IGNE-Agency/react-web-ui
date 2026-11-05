@@ -99,6 +99,13 @@ const tag = (name: string) =>
 const searchBox = () =>
 	screen.findByRole("combobox", { name: SEARCH_LABEL });
 
+const searchFocused = () =>
+	waitFor(() =>
+		expect(
+			screen.getByRole("combobox", { name: SEARCH_LABEL }),
+		).toHaveFocus(),
+	);
+
 const meta = {
 	parameters: {
 		test: { clearMocks: true },
@@ -217,7 +224,7 @@ export const Open: Story = {
 				name: statusLabel("sent"),
 			}),
 		).toHaveAttribute("aria-selected", "true");
-		await expect(await searchBox()).toHaveFocus();
+		await searchFocused();
 	},
 };
 
@@ -296,7 +303,7 @@ export const Failed: Story = {
 		await expect(
 			OPTIONS_LOADS.failed.retry,
 		).toHaveBeenCalledOnce();
-		await expect(await searchBox()).toHaveFocus();
+		await searchFocused();
 	},
 };
 
@@ -375,7 +382,7 @@ export const Keyboard: Story = {
 		await expect(trigger).toHaveFocus();
 
 		await userEvent.keyboard("{ArrowDown}");
-		await expect(await searchBox()).toHaveFocus();
+		await searchFocused();
 		await optionHighlighted(statusLabel("open"));
 
 		await userEvent.keyboard("{Escape}");
@@ -383,7 +390,7 @@ export const Keyboard: Story = {
 		await expect(trigger).toHaveFocus();
 
 		await userEvent.keyboard("{Enter}");
-		await expect(await searchBox()).toHaveFocus();
+		await searchFocused();
 		await userEvent.keyboard(
 			statusLabel("paid").slice(0, 3),
 		);
@@ -398,11 +405,12 @@ export const Keyboard: Story = {
 				STATUSES.length,
 			),
 		);
+		await optionHighlighted(statusLabel("open"));
 		await userEvent.keyboard("{ArrowDown}{ArrowDown}");
 		await optionHighlighted(statusLabel("paid"));
 		await userEvent.keyboard("{ArrowUp}");
 		await optionHighlighted(statusLabel("sent"));
-		await expect(await searchBox()).toHaveFocus();
+		await searchFocused();
 
 		await userEvent.keyboard("{Enter}");
 		await roleGone("listbox");
@@ -475,6 +483,7 @@ export const MultipleKeyboard: Story = {
 
 		await userEvent.tab();
 		await userEvent.keyboard("{ArrowDown}");
+		await searchFocused();
 		await optionHighlighted(statusLabel("open"));
 		await userEvent.keyboard(
 			"{Enter}{ArrowDown}{ArrowDown}",
