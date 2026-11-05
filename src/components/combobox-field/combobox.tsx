@@ -297,7 +297,7 @@ export type ComboboxSearchProps = Omit<
 > &
 	Readonly<{
 		/** The search box's accessible name. */
-		label: string;
+		"aria-label": string;
 	}>;
 
 /**
@@ -307,11 +307,9 @@ export type ComboboxSearchProps = Omit<
  */
 const ComboboxSearch = ({
 	className,
-	label,
 	...props
 }: ComboboxSearchProps): ReactNode => (
 	<BaseCombobox.Input
-		aria-label={label}
 		aria-labelledby={undefined}
 		className={clsx(style.search, className)}
 		{...props}
@@ -437,7 +435,7 @@ export type ComboboxParts = Omit<
  * 	<Combobox.Portal>
  * 		<Combobox.Positioner anchor={anchorRef}>
  * 			<Combobox.Popup>
- * 				<Combobox.Search label="Search" />
+ * 				<Combobox.Search aria-label="Search" />
  * 				<Combobox.List>
  * 					{(status: string) => <Combobox.Option key={status} value={status}>{status}</Combobox.Option>}
  * 				</Combobox.List>

@@ -47,7 +47,7 @@ const DialogExample = (props: DialogExampleProps) => {
 				<Dialog.Popup>
 					<Dialog.Header>
 						<Dialog.Title>{TITLE}</Dialog.Title>
-						<Dialog.CloseButton label={CLOSE_LABEL} />
+						<Dialog.CloseButton closeLabel={CLOSE_LABEL} />
 					</Dialog.Header>
 					<Dialog.Body>
 						<Dialog.Description>{BODY}</Dialog.Description>

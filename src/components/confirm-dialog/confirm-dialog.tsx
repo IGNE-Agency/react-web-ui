@@ -9,7 +9,10 @@ import {
 	useState,
 } from "react";
 import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
-import { Button } from "../button/button.tsx";
+import {
+	Button,
+	type ButtonTone,
+} from "../button/button.tsx";
 import { Spinner } from "../spinner/spinner.tsx";
 import styles from "./confirm-dialog.module.scss";
 
@@ -178,15 +181,15 @@ export type ConfirmDialogConfirmProps = Readonly<{
 	 * stays open when it rejects, so the caller can show the error.
 	 */
 	onConfirm: ConfirmAction;
-	/** Points the action at the error role, for something irreversible. */
-	destructive?: boolean;
+	/** The action's colour role; `danger` for something irreversible. @default "brand" */
+	tone?: ButtonTone;
 	children: ReactNode;
 }>;
 
 /** Acts, then closes once the action has settled. */
 const ConfirmDialogConfirm = ({
 	onConfirm,
-	destructive = false,
+	tone = "brand",
 	children,
 }: ConfirmDialogConfirmProps): ReactNode => {
 	const { pending, confirm } = useContext(ConfirmContext);
@@ -195,7 +198,7 @@ const ConfirmDialogConfirm = ({
 	return (
 		<Button
 			variant="primary"
-			tone={destructive ? "danger" : "brand"}
+			tone={tone}
 			aria-busy={pending || undefined}
 			aria-disabled={pending || undefined}
 			onClick={() => confirm(onConfirm)}>
@@ -229,7 +232,7 @@ const ConfirmDialogShorthand = ({
 	confirmLabel,
 	cancelLabel,
 	onConfirm,
-	destructive,
+	tone,
 }: ConfirmDialogProps): ReactNode => (
 	<ConfirmDialogRoot
 		open={open}
@@ -244,7 +247,7 @@ const ConfirmDialogShorthand = ({
 			</ConfirmDialogCancel>
 			<ConfirmDialogConfirm
 				onConfirm={onConfirm}
-				destructive={destructive}>
+				tone={tone}>
 				{confirmLabel}
 			</ConfirmDialogConfirm>
 		</ConfirmDialogFooter>
@@ -265,7 +268,7 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
  * Confirmation over base-ui's AlertDialog, fully controlled via `open` /
  * `onOpenChange`. `onConfirm` may return a promise: the dialog stays busy and
  * undismissable while it is pending, closes when it resolves and stays open when
- * it rejects. `destructive` repoints the confirm action to the error role. The
+ * it rejects. `tone="danger"` repoints the confirm action to the error role. The
  * parts hanging off it compose a confirmation with a body of its own.
  *
  * @example
@@ -277,7 +280,7 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
  * 	confirmLabel="Delete"
  * 	cancelLabel="Cancel"
  * 	onConfirm={() => deleteDeclaration(id)}
- * 	destructive
+ * 	tone="danger"
  * />
  */
 export const ConfirmDialog: ConfirmDialogParts =

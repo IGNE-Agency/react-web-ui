@@ -229,7 +229,7 @@ export const FileField = ({
 			</FileInput.Legend>
 
 			<FileInput.DropTarget
-				label={dropTargetLabel}
+				aria-label={dropTargetLabel}
 				state={fieldState}
 				isDisabled={field.disabled}
 				getDropOperation={

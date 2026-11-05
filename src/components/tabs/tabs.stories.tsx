@@ -34,7 +34,7 @@ const changed = fn().mockName("onValueChange");
 
 const TabsExample = (args: TabsRootProps): ReactElement => (
 	<Tabs.Root {...args}>
-		<Tabs.Bar aria-label={BAR_LABEL} />
+		<Tabs.Bar label={BAR_LABEL} />
 		{args.tabs.map(tab => (
 			<Tabs.Panel key={tab.value} value={tab.value}>
 				<p>{`${tab.label} of declaration 2041.`}</p>

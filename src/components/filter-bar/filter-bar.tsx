@@ -173,7 +173,9 @@ const FilterDrawer = ({
 						<Drawer.Content>
 							<Drawer.Header>
 								<Drawer.Title>{title}</Drawer.Title>
-								<Drawer.CloseButton label={closeLabel} />
+								<Drawer.CloseButton
+									closeLabel={closeLabel}
+								/>
 							</Drawer.Header>
 
 							<div

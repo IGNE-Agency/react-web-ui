@@ -299,7 +299,7 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 										<Drawer.Header>
 											<Drawer.Title>{MORE}</Drawer.Title>
 											<Drawer.CloseButton
-												label={CLOSE_MORE}
+												closeLabel={CLOSE_MORE}
 											/>
 										</Drawer.Header>
 										<Nav.Root aria-label={MORE}>

@@ -133,7 +133,7 @@ export const useLeaveGuard = (
 
 /**
  * What a `LeaveGuardDialog` takes: the guard it answers for and the question's
- * copy. `destructive` defaults to true, since leaving loses the changes.
+ * copy. `tone` defaults to `"danger"`, since leaving loses the changes.
  */
 export type LeaveGuardDialogProps = Pick<
 	ConfirmDialogProps,
@@ -141,7 +141,7 @@ export type LeaveGuardDialogProps = Pick<
 	| "description"
 	| "confirmLabel"
 	| "cancelLabel"
-	| "destructive"
+	| "tone"
 > &
 	Readonly<{ guard: LeaveGuard }>;
 
@@ -159,7 +159,7 @@ export type LeaveGuardDialogProps = Pick<
  */
 export const LeaveGuardDialog = ({
 	guard,
-	destructive = true,
+	tone = "danger",
 	...copy
 }: LeaveGuardDialogProps): ReactNode => (
 	<ConfirmDialog
@@ -171,6 +171,6 @@ export const LeaveGuardDialog = ({
 			}
 		}}
 		onConfirm={guard.agree}
-		destructive={destructive}
+		tone={tone}
 	/>
 );

@@ -60,7 +60,7 @@ export type FileInputDropTargetProps = Omit<
 > &
 	Readonly<{
 		/** Accessible name for the drop target, which is not a labelable element. */
-		label: string;
+		"aria-label": string;
 
 		/** The states projected onto the target as `data-*` attributes. */
 		state?: FieldState;
@@ -69,13 +69,11 @@ export type FileInputDropTargetProps = Omit<
 	}>;
 
 const FileInputDropTarget = ({
-	label,
 	state,
 	className,
 	...props
 }: FileInputDropTargetProps): ReactNode => (
 	<AriaDropZone
-		aria-label={label}
 		className={clsx(style.dropTarget, className)}
 		{...fieldStateAttributes(state ?? {})}
 		{...props}
@@ -217,7 +215,7 @@ export type FileInputParts = Readonly<{
  * @example
  * <FileInput.Root state={{ requiredness: "optional" }}>
  * 	<FileInput.Legend optionalLabel="optional">Attachments</FileInput.Legend>
- * 	<FileInput.DropTarget label="Drop zone for attachments" onDrop={onDrop}>
+ * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
  * 		<FileInput.Hint>Drag files here</FileInput.Hint>
  * 		<FileInput.Trigger label="Choose files" onSelect={onSelect} />
  * 		<FileInput.List label="Files for attachments" onRemove={onRemove}>

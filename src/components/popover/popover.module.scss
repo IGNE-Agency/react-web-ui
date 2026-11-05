@@ -77,7 +77,7 @@
 		);
 	}
 
-	.heading {
+	.title {
 		margin-block-end: var(--sys-unit-8);
 		color: var(--sys-color-text);
 		font: var(--sys-font-label-large);
@@ -134,7 +134,7 @@
 		transform: translateY(-50%);
 	}
 
-	.headingSkeleton {
+	.titleSkeleton {
 		min-inline-size: 12ch;
 	}
 

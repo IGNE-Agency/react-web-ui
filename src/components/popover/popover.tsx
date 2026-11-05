@@ -144,7 +144,7 @@ const Arrow = ({
 	</BasePopover.Arrow>
 );
 
-const Heading = ({
+const Title = ({
 	className,
 	children,
 	...props
@@ -153,11 +153,11 @@ const Heading = ({
 
 	return (
 		<BasePopover.Title
-			className={clsx(styles.heading, className)}
+			className={clsx(styles.title, className)}
 			{...props}>
 			{loading ? (
 				<>
-					<SkeletonText className={styles.headingSkeleton}>
+					<SkeletonText className={styles.titleSkeleton}>
 						{children}
 					</SkeletonText>
 					<span className={styles.visuallyHidden}>
@@ -224,7 +224,7 @@ type PopoverParts = Readonly<{
 	Positioner: typeof Positioner;
 	Popup: typeof Popup;
 	Arrow: typeof Arrow;
-	Heading: typeof Heading;
+	Title: typeof Title;
 	Rows: typeof Rows;
 	Row: typeof Row;
 	Description: typeof BasePopover.Description;
@@ -233,7 +233,7 @@ type PopoverParts = Readonly<{
 }>;
 
 /**
- * Rich light popover over base-ui's Popover. Adds a styled `Heading` and a
+ * Rich light popover over base-ui's Popover. Adds a styled `Title` and a
  * labelled `Row` slot (label on the left, value on the right) for cell-level
  * composition explainers. The positioner keeps `--popup-edge-padding` from the
  * viewport's edges.
@@ -247,7 +247,7 @@ type PopoverParts = Readonly<{
  *     <Popover.Positioner>
  *       <Popover.Popup loading={rate.isPending} loadingLabel="Loading the rate">
  *         <Popover.Arrow />
- *         <Popover.Heading>Rate breakdown</Popover.Heading>
+ *         <Popover.Title>Rate breakdown</Popover.Title>
  *         <Popover.Rows>
  *           <Popover.Row numeric label="Base">{rate.data?.base}</Popover.Row>
  *         </Popover.Rows>
@@ -263,7 +263,7 @@ export const Popover: PopoverParts = {
 	Positioner,
 	Popup,
 	Arrow,
-	Heading,
+	Title,
 	Rows,
 	Row,
 	Description: BasePopover.Description,

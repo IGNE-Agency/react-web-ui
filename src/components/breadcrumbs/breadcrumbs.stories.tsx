@@ -125,7 +125,7 @@ const meta = {
 	decorators: [decorator],
 	beforeEach: reset,
 	args: {
-		"aria-label": TRAIL_LABEL,
+		label: TRAIL_LABEL,
 		overflowLabel: MORE,
 		crumbs: CRUMBS,
 	},
