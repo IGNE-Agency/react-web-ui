@@ -15,7 +15,7 @@ const YOU = "(you)";
 const ORGANISER = "(organiser)";
 
 const overflowLabel = (count: number) =>
-	`Show all invitees (+${count})`;
+	`+${count}, show all invitees`;
 
 const PEOPLE = [
 	{ id: "1", name: "Ada Lovelace" },

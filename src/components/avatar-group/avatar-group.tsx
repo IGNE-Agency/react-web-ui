@@ -105,7 +105,7 @@ export type AvatarGroupOverflowProps = Omit<
 		className?: string;
 		/** How many people the stack leaves out, shown as a signed count such as "+3". */
 		count: number;
-		/** The button's name, saying what it opens, such as "Show all invitees (+3)". */
+		/** The button's name, saying what it opens, such as "+3, show all invitees". */
 		label: string;
 		/** What the popover lists, usually an `AvatarGroup.List`. */
 		children: ReactNode;
@@ -242,7 +242,7 @@ export type AvatarGroupProps = Readonly<{
 	people: ReadonlyArray<AvatarGroupPerson>;
 	/** Accessible name of the group and its list, such as "Invitees". */
 	label: string;
-	/** The overflow button's name, given how many people it folds away, such as `count => \`Show all invitees (+${count})\``. */
+	/** The overflow button's name, given how many people it folds away, such as `count => \`+${count}, show all invitees\``. */
 	overflowLabel: (count: number) => string;
 	/** The person viewing, and what their row in the list says after their name, such as "(you)". */
 	currentUser?: Readonly<{ id: string; label: string }>;
@@ -317,7 +317,7 @@ export type AvatarGroupParts = typeof Prefab &
  * <AvatarGroup
  * 	people={invitees}
  * 	label="Invitees"
- * 	overflowLabel={count => `Show all invitees (+${count})`}
+ * 	overflowLabel={count => `+${count}, show all invitees`}
  * 	currentUser={{ id: me.id, label: "(you)" }}
  * />
  */
