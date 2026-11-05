@@ -29,8 +29,9 @@ export type TSFCheckboxGroupFieldProps = Omit<
 export const TSFCheckboxGroupField = (
 	props: TSFCheckboxGroupFieldProps,
 ): ReactNode => {
-	const { field, props: connected } =
-		useConnectedField<string[]>();
+	const { field, props: connected } = useConnectedField<
+		string[]
+	>(props.label);
 
 	return (
 		<CheckboxGroupField

@@ -29,7 +29,7 @@ export const TSFCheckboxField = (
 	props: TSFCheckboxFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<boolean>();
+		useConnectedField<boolean>(props.label);
 
 	return (
 		<CheckboxField

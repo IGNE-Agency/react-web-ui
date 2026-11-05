@@ -25,8 +25,9 @@ export type TSFFileFieldProps = Omit<
 export const TSFFileField = (
 	props: TSFFileFieldProps,
 ): ReactNode => {
-	const { field, props: connected } =
-		useConnectedField<readonly File[]>();
+	const { field, props: connected } = useConnectedField<
+		readonly File[]
+	>(props.label);
 
 	return (
 		<FileField

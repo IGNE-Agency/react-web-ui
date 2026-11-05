@@ -29,8 +29,9 @@ export type TSFSelectFieldProps<T extends string> = Omit<
 export const TSFSelectField = <T extends string>(
 	props: TSFSelectFieldProps<T>,
 ): ReactNode => {
-	const { field, props: connected } =
-		useConnectedField<T>();
+	const { field, props: connected } = useConnectedField<T>(
+		props.label,
+	);
 
 	return (
 		<SelectField<T>

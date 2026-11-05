@@ -1,0 +1,51 @@
+@use "../../style/layers.scss";
+
+@layer kit.components {
+	.description {
+		color: var(
+			--fieldset-description-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--fieldset-description-font,
+			var(--sys-font-body-medium)
+		);
+	}
+
+	.fields {
+		--fields-rows: 1;
+
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+		grid-template-columns: var(--field-group-columns, none);
+		gap: var(--field-gap, var(--sys-unit-4))
+			var(--field-group-gap, var(--sys-unit-8));
+
+		&:has(> * > :nth-child(2)) {
+			--fields-rows: 2;
+		}
+
+		&:has(> * > :nth-child(3)) {
+			--fields-rows: 3;
+		}
+
+		&:has(> * > :nth-child(4)) {
+			--fields-rows: 4;
+		}
+
+		&:has(> * > :nth-child(5)) {
+			--fields-rows: 5;
+		}
+
+		&:has(> * > :nth-child(6)) {
+			--fields-rows: 6;
+		}
+
+		> [data-field-group-member] {
+			display: grid;
+			grid-row: span var(--fields-rows);
+			grid-template-rows: subgrid;
+		}
+	}
+}

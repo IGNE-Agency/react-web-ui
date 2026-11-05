@@ -28,7 +28,7 @@ export const TSFSegmentedControlField = (
 ): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		string | null
-	>();
+	>(props.label);
 
 	return (
 		<SegmentedControlField

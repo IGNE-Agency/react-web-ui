@@ -31,7 +31,7 @@ export const TSFRadioGroupField = (
 ): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		string | null
-	>();
+	>(props.label);
 
 	return (
 		<RadioGroupField

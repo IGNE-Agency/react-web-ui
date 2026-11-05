@@ -38,7 +38,7 @@ export const TSFPhotoField = ({
 }: TSFPhotoFieldProps): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		File | undefined
-	>();
+	>(props.label);
 
 	return (
 		<PhotoField

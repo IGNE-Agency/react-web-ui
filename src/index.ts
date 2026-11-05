@@ -25,6 +25,7 @@ export * from "./components/error-message/index.ts";
 export * from "./components/error-text/index.ts";
 export * from "./components/field/index.ts";
 export * from "./components/field-placeholder/index.ts";
+export * from "./components/fieldset/index.ts";
 export * from "./components/file-field/index.ts";
 export * from "./components/filter-bar/index.ts";
 export * from "./components/form/index.ts";

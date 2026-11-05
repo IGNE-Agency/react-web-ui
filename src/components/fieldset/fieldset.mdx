@@ -1,0 +1,54 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as FieldsetStories from "./fieldset.stories.tsx";
+
+<Meta of={FieldsetStories} />
+
+<DocsPage>
+
+## Rules
+
+### Related fields share one legend and one error
+
+A field group is a fieldset of fields that answer one question together, such as the postal code, house number and addition of an address. Its legend names them, and its error is the only place their problems show: every line of the fields it collects, in field order, then the lines about the group as a whole, such as a failed address lookup. Each field still takes `aria-invalid`, its invalid treatment, and focus after a failed submit when it is the first invalid control.
+
+```tsx
+<form.FieldGroup
+	legend="Address"
+	optionalLabel="optional"
+	names={["postalCode", "houseNumber", "addition"]}
+	errors={lookupErrors}>
+	<form.AppField name="postalCode">
+		{field => (
+			<field.TextField
+				label="Postal code"
+				requiredness="required"
+				optionalLabel="optional"
+			/>
+		)}
+	</form.AppField>
+	…
+</form.FieldGroup>
+```
+
+### The group's error is its only live region, and each control is described by its own lines
+
+A submit that fails three fields is announced once, by the group's alert, not three times. Every line has its own id, and a collected field's control chains its own description and its own lines into `aria-describedby`, never the whole error; see [a description and an error chain into aria-describedby](?path=/docs/design-system-principles-accessibility--docs#a-description-and-an-error-chain-into-aria-describedby). The fieldset itself is described by its description and, while the group has errors of its own, by its error.
+
+### The group collects only the fields it names
+
+`TSFFieldGroup` takes the `names` of the fields whose errors it shows, in the order it shows them. A field inside the group that it does not name keeps its own error under itself, as it would anywhere else. A field is matched by the name of the TanStack Form field it renders in.
+
+### The kit writes no error copy
+
+A line is the message as the app's validator wrote it, which reads best when the validator names the field ("Enter a postal code"). An app whose validators say only "Required" passes `formatError`, which receives the field's name and label and the message, so the punctuation and the word order stay the app's.
+
+### The group lines its fields up, and the app sets the columns
+
+`Fieldset.Fields` puts its fields side by side on one grid, and every field's label, control, description and error take that grid's rows through `subgrid`, so a label that wraps or one field's error moves that row for all of them; see [things that belong together line up](?path=/docs/design-system-principles-layout--docs#things-that-belong-together-line-up). Any field shorthand dropped into the row lines up without asking. The columns are equal by default, each `minmax(0, 1fr)` so a field can shrink below its control's natural width; the app sets others through the `--field-group-columns` knob, such as `2fr 1fr 1fr`, or through its own class.
+
+### A shorthand is for the common case, and a custom layout drops to the raw tier
+
+`FieldGroup`, `TextField` and the other shorthands take no prop that switches them to another anatomy. A layout they do not cover is built from `Fieldset` and each control's raw parts, bound to the form with `useConnectedField` and placed by the app's own grid, as the custom layout story does.
+
+</DocsPage>

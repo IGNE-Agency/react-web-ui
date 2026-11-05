@@ -30,7 +30,7 @@ export const TSFTextField = (
 	props: TSFTextFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<string>();
+		useConnectedField<string>(props.label);
 	return (
 		<TextField
 			{...props}

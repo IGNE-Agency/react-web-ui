@@ -26,7 +26,7 @@ export const TSFTextareaField = (
 	props: TSFTextareaFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<string>();
+		useConnectedField<string>(props.label);
 	return (
 		<TextareaField
 			{...props}

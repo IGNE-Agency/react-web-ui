@@ -38,7 +38,7 @@ const SingleField = <TItem, TData, TKey extends QueryKey>({
 	props: Connected<TItem, TData, TKey>;
 }>): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<TItem | null>();
+		useConnectedField<TItem | null>(props.label);
 	return (
 		<ComboboxField<TItem, TData, TKey>
 			{...props}
@@ -59,8 +59,9 @@ const MultipleField = <
 	props: Connected<TItem, TData, TKey> &
 		ComboboxMultipleLabels;
 }>): ReactNode => {
-	const { field, props: connected } =
-		useConnectedField<readonly TItem[]>();
+	const { field, props: connected } = useConnectedField<
+		readonly TItem[]
+	>(props.label);
 	return (
 		<ComboboxField<TItem, TData, TKey>
 			{...props}

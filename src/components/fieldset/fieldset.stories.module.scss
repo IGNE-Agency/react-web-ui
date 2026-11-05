@@ -1,0 +1,38 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--sys-unit-12);
+	inline-size: 36rem;
+	max-inline-size: 100%;
+}
+
+.narrow {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--sys-unit-12);
+	inline-size: 24rem;
+	max-inline-size: 100%;
+}
+
+.customRow {
+	display: grid;
+	grid-template-rows: [label] auto [control] auto;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--sys-unit-4) var(--sys-unit-8);
+}
+
+.customField {
+	display: grid;
+	grid-row: label / span 2;
+	grid-template-rows: subgrid;
+}
+
+.customLabel {
+	grid-row: label;
+}
+
+.customControl {
+	grid-row: control;
+}

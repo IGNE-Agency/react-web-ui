@@ -161,6 +161,12 @@
 		"field-placeholder/field-placeholder",
 		"skeleton/skeleton"
 	],
+	"fieldset": [
+		"error-text/error-text",
+		"field/field",
+		"fieldset/fieldset",
+		"spinner/spinner"
+	],
 	"file-field": [
 		"attachment-tile/attachment-tile",
 		"button/button",

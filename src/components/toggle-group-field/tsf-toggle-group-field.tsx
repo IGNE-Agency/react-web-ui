@@ -26,8 +26,9 @@ export type TSFToggleGroupFieldProps = Omit<
 export const TSFToggleGroupField = (
 	props: TSFToggleGroupFieldProps,
 ): ReactNode => {
-	const { field, props: connected } =
-		useConnectedField<readonly string[]>();
+	const { field, props: connected } = useConnectedField<
+		readonly string[]
+	>(props.label);
 
 	return (
 		<ToggleGroupField

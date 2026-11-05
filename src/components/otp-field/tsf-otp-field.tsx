@@ -26,7 +26,7 @@ export const TSFOtpField = (
 	props: TSFOtpFieldProps,
 ): ReactNode => {
 	const { field, props: connected } =
-		useConnectedField<string>();
+		useConnectedField<string>(props.label);
 	return (
 		<OtpField
 			{...props}

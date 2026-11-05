@@ -8,7 +8,7 @@ import {
 	FieldsetLegend,
 	FieldsetRoot,
 	type FieldsetRootProps,
-} from "../field/fieldset.tsx";
+} from "../fieldset/fieldset-root.tsx";
 import style from "./checkbox-group.module.scss";
 
 export type CheckboxGroupRootProps = FieldsetRootProps;

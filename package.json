@@ -145,6 +145,10 @@
 			"types": "./dist/components/field-placeholder/index.d.ts",
 			"default": "./dist/components/field-placeholder/index.js"
 		},
+		"./fieldset": {
+			"types": "./dist/components/fieldset/index.d.ts",
+			"default": "./dist/components/fieldset/index.js"
+		},
 		"./file-field": {
 			"types": "./dist/components/file-field/index.d.ts",
 			"default": "./dist/components/file-field/index.js"
