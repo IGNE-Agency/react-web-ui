@@ -5,6 +5,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import {
 	type ReactNode,
 	type RefObject,
+	useEffectEvent,
 	useLayoutEffect,
 	useRef,
 	useState,
@@ -96,15 +97,17 @@ export const CalendarYear = ({
 		scrollToOffset,
 	} = useYearRows(matches.length, list);
 
-	useLayoutEffect(() => {
-		if (list === null) {
-			return;
-		}
+	const centreFocusedYear = useEffectEvent(() => {
 		const index = matches.indexOf(focused.year);
 		if (index >= 0) {
 			scrollToIndex(index, { align: "center" });
 		}
-		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- centres the focused year once, when the list mounts; typing scrolls to the top instead
+	});
+
+	useLayoutEffect(() => {
+		if (list !== null) {
+			centreFocusedYear();
+		}
 	}, [list]);
 
 	return (
