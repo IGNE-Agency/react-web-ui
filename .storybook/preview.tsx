@@ -13,6 +13,7 @@ import {
 	StoryProviders,
 } from "../src/lib/storybook/story-providers.tsx";
 import { registerContrastChecks } from "./contrast-checks.ts";
+import { docCommentOf } from "./doc-comment.ts";
 import { DocsPage } from "./docs-page.tsx";
 import { mdxComponents } from "./mdx-components.tsx";
 import { themeOf } from "./theme-global.ts";
@@ -29,13 +30,6 @@ axe.reset = () => {
 	resetAxe();
 	registerContrastChecks();
 };
-
-const linkify = (text: string) =>
-	text.replace(
-		/\{@link\s+([^}\s|]+)(?:[\s|]+([^}]+))?\}/g,
-		(_, name: string, label: string | undefined) =>
-			`\`${label ?? name}\``,
-	);
 
 const docgenInfo = z.object({ description: z.string() });
 
@@ -67,7 +61,7 @@ const preview: Preview = {
 							)
 						: undefined;
 				return info?.success === true
-					? linkify(info.data.description)
+					? docCommentOf(info.data.description).markdown
 					: null;
 			},
 		},
@@ -114,15 +108,31 @@ const preview: Preview = {
 	argTypesEnhancers: [
 		({ argTypes }) =>
 			Object.fromEntries(
-				Object.entries(argTypes).map(([name, argType]) => [
-					name,
-					argType.description === undefined
-						? argType
-						: {
-								...argType,
-								description: linkify(argType.description),
-							},
-				]),
+				Object.entries(argTypes).map(([name, argType]) => {
+					if (argType.description === undefined) {
+						return [name, argType];
+					}
+					const { markdown, defaultValue } = docCommentOf(
+						argType.description,
+					);
+					return [
+						name,
+						{
+							...argType,
+							description: markdown,
+							table:
+								defaultValue === undefined ||
+								argType.table?.defaultValue !== undefined
+									? argType.table
+									: {
+											...argType.table,
+											defaultValue: {
+												summary: defaultValue,
+											},
+										},
+						},
+					];
+				}),
 			),
 	],
 	initialGlobals: {
