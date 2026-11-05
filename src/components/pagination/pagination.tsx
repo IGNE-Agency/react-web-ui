@@ -248,11 +248,8 @@ const PaginationLast = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="last" {...props} />;
 
-export type PaginationControlsProps = Omit<
-	useRender.ComponentProps<"div">,
-	"children"
-> &
-	Readonly<{
+/** The step buttons' names and glyphs. */
+export type PaginationStepLabels = Readonly<{
 		/** The first-page button's name, such as "First page". */
 		firstLabel: string;
 		/** The previous-page button's name, such as "Previous page". */
@@ -270,6 +267,12 @@ export type PaginationControlsProps = Omit<
 		/** The last-page button's glyph. */
 		lastIcon: ReactNode;
 	}>;
+
+export type PaginationControlsProps = Omit<
+	useRender.ComponentProps<"div">,
+	"children"
+> &
+	PaginationStepLabels;
 
 /** `First`, `Previous`, `Next` and `Last` in a row. */
 const PaginationControls = ({
@@ -312,45 +315,136 @@ const PaginationControls = ({
 		},
 	});
 
-/** The parts of a pagination. */
-export type PaginationParts = Readonly<{
-	Root: typeof PaginationRoot;
-	PageSize: typeof PaginationPageSize;
-	Index: typeof PaginationIndex;
-	Controls: typeof PaginationControls;
-	First: typeof PaginationFirst;
-	Previous: typeof PaginationPrevious;
-	Next: typeof PaginationNext;
-	Last: typeof PaginationLast;
-}>;
+/** What the ready-made pager says and shows, besides where the list stands. */
+export type PaginationContentProps = PaginationStepLabels &
+	Readonly<{
+		/** The page-size field's label, such as "Rows per page". */
+		pageSizeLabel: string;
+		/** What the index says, such as `Page 3 of 12`, from where the list stands. */
+		indexLabel: (page: PaginationPage) => string;
+		/** The mark beside the page size in effect, in the open list. */
+		checkIcon: ReactNode;
+		/** The chevron after the page size. Left out, none shows. */
+		expandIcon?: ReactNode;
+	}>;
+
+const PaginationContent = ({
+	pageSizeLabel,
+	indexLabel,
+	checkIcon,
+	expandIcon,
+	...controls
+}: PaginationContentProps): ReactNode => (
+	<>
+		<PaginationPageSize>
+			<Select.Label>{pageSizeLabel}</Select.Label>
+			<Select.Trigger icon={expandIcon} />
+			<Select.Portal>
+				<Select.Positioner>
+					<Select.Popup>
+						<Select.List>
+							<Select.Items checkIcon={checkIcon} />
+						</Select.List>
+					</Select.Popup>
+				</Select.Positioner>
+			</Select.Portal>
+		</PaginationPageSize>
+		<PaginationIndex label={indexLabel} />
+		<PaginationControls {...controls} />
+	</>
+);
+
+export type PaginationProps = Omit<
+	PaginationRootProps,
+	"children"
+> &
+	PaginationContentProps;
+
+/** The page size, the index and the four step buttons, in a `Root`. */
+const Prefab = ({
+	pageSizeLabel,
+	indexLabel,
+	checkIcon,
+	expandIcon,
+	firstLabel,
+	previousLabel,
+	nextLabel,
+	lastLabel,
+	firstIcon,
+	previousIcon,
+	nextIcon,
+	lastIcon,
+	...props
+}: PaginationProps): ReactNode => (
+	<PaginationRoot {...props}>
+		<PaginationContent
+			pageSizeLabel={pageSizeLabel}
+			indexLabel={indexLabel}
+			checkIcon={checkIcon}
+			expandIcon={expandIcon}
+			firstLabel={firstLabel}
+			previousLabel={previousLabel}
+			nextLabel={nextLabel}
+			lastLabel={lastLabel}
+			firstIcon={firstIcon}
+			previousIcon={previousIcon}
+			nextIcon={nextIcon}
+			lastIcon={lastIcon}
+		/>
+	</PaginationRoot>
+);
+
+/** The parts of a pagination, hanging off its prefab. */
+export type PaginationParts = typeof Prefab &
+	Readonly<{
+		Root: typeof PaginationRoot;
+		PageSize: typeof PaginationPageSize;
+		Index: typeof PaginationIndex;
+		Controls: typeof PaginationControls;
+		First: typeof PaginationFirst;
+		Previous: typeof PaginationPrevious;
+		Next: typeof PaginationNext;
+		Last: typeof PaginationLast;
+	}>;
 
 /**
- * The pager for a paged list, over any source: `Root` holds where the list
- * stands, `PageSize` picks rows per page, `Index` says which page is on screen
- * and `Controls` go to the first, previous, next and last page. Leave out the
- * parts a list has no room for, and compose `First`, `Previous`, `Next` and
- * `Last` where the buttons need another order or markup.
+ * The pager for a paged list, over any source: the page size, which page is on
+ * screen, and buttons to the first, previous, next and last page. Its parts
+ * compose another pager: `Root` holds where the list stands, `PageSize` picks
+ * rows per page, `Index` says which page is on screen, and `Controls`, or
+ * `First`, `Previous`, `Next` and `Last` on their own, step through the pages.
  *
  * @example
- * <Pagination.Root
+ * <Pagination
  * 	pageIndex={pageIndex}
  * 	pageCount={pageCount}
  * 	pageSize={pageSize}
  * 	pageSizes={[10, 20, 50]}
  * 	onPageIndexChange={setPageIndex}
- * 	onPageSizeChange={setPageSize}>
- * 	<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
- * 	<Pagination.Previous label="Previous page"><ChevronLeftIcon /></Pagination.Previous>
- * 	<Pagination.Next label="Next page"><ChevronRightIcon /></Pagination.Next>
- * </Pagination.Root>
+ * 	onPageSizeChange={setPageSize}
+ * 	pageSizeLabel="Rows per page"
+ * 	indexLabel={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`}
+ * 	firstLabel="First page"
+ * 	previousLabel="Previous page"
+ * 	nextLabel="Next page"
+ * 	lastLabel="Last page"
+ * 	firstIcon={<FirstPageIcon />}
+ * 	previousIcon={<ChevronLeftIcon />}
+ * 	nextIcon={<ChevronRightIcon />}
+ * 	lastIcon={<LastPageIcon />}
+ * 	checkIcon={<CheckIcon />}
+ * />
  */
-export const Pagination: PaginationParts = {
-	Root: PaginationRoot,
-	PageSize: PaginationPageSize,
-	Index: PaginationIndex,
-	Controls: PaginationControls,
-	First: PaginationFirst,
-	Previous: PaginationPrevious,
-	Next: PaginationNext,
-	Last: PaginationLast,
-};
+export const Pagination: PaginationParts = Object.assign(
+	Prefab,
+	{
+		Root: PaginationRoot,
+		PageSize: PaginationPageSize,
+		Index: PaginationIndex,
+		Controls: PaginationControls,
+		First: PaginationFirst,
+		Previous: PaginationPrevious,
+		Next: PaginationNext,
+		Last: PaginationLast,
+	},
+);

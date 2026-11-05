@@ -10,20 +10,34 @@ import {
 	type CheckboxControlProps,
 } from "./checkbox.tsx";
 
-export type CheckboxFieldProps = FieldProps &
+export type CheckboxFieldBaseProps = FieldProps &
 	Omit<
 		CheckboxControlProps,
-		"className" | "onBlur" | "children"
+		"className" | "onBlur" | "children" | "indeterminate"
 	> &
 	Readonly<{
 		onBlur?: FieldBlurHandler;
 		/** The mark the box shows while checked, such as a tick. */
 		checkIcon: ReactNode;
-		/** The mark the box shows while indeterminate, such as a dash. */
-		indeterminateIcon: ReactNode;
 		/** Applied to the field wrapper, so callers can place the row. */
 		className?: string;
 	}>;
+
+/** The indeterminate state, with the mark it needs only when it is used. */
+export type CheckboxFieldIndeterminateProps =
+	| Readonly<{
+			/** The box shows neither checked nor unchecked, for a parent over a mixed set. */
+			indeterminate: boolean;
+			/** The mark the box shows while indeterminate, such as a dash. */
+			indeterminateIcon: ReactNode;
+	  }>
+	| Readonly<{
+			indeterminate?: undefined;
+			indeterminateIcon?: undefined;
+	  }>;
+
+export type CheckboxFieldProps = CheckboxFieldBaseProps &
+	CheckboxFieldIndeterminateProps;
 
 /**
  * The assembled checkbox: the label beside the box, which also toggles it, then
@@ -34,7 +48,6 @@ export type CheckboxFieldProps = FieldProps &
  * 	label="I agree to the terms"
  * 	optionalLabel="optional"
  * 	checkIcon={<CheckIcon />}
- * 	indeterminateIcon={<RemoveIcon />}
  * 	checked={agreed}
  * 	onCheckedChange={setAgreed}
  * />

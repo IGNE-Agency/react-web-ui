@@ -63,7 +63,6 @@ const meta = {
 		label: LABEL,
 		optionalLabel: OPTIONAL_LABEL,
 		checkIcon: <Icon svg={CheckIcon} label="" />,
-		indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},
@@ -77,6 +76,13 @@ export const Unchecked: Story = {};
 
 export const Checked: Story = {
 	args: { checked: true },
+};
+
+export const Indeterminate: Story = {
+	args: {
+		indeterminate: true,
+		indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
+	},
 };
 
 export const Disabled: Story = {

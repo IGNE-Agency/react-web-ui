@@ -91,6 +91,7 @@ const ClientField = ({ filters }: ClientFieldProps) => (
 		loadBrokenLabel="Clients could not be loaded, and trying again won't help."
 		retryLabel="Try again"
 		noOptionsLabel="No clients."
+		checkIcon={<Icon svg={CheckIcon} label="" />}
 		onValueChange={next => {
 			filters.setDraft(
 				"client",

@@ -100,10 +100,10 @@ export type InlineLabelTextProps = RequirednessProps &
  * `fieldLabel` above the row would otherwise carry.
  *
  * @example
- * <BaseField.Label>
- * 	<Checkbox />
+ * <Checkbox.Label>
+ * 	<Checkbox.Control><Checkbox.Indicator><CheckIcon /></Checkbox.Indicator></Checkbox.Control>
  * 	<Field.InlineLabelText label={label} requiredness="optional" optionalLabel="optional" />
- * </BaseField.Label>
+ * </Checkbox.Label>
  */
 const InlineLabelText = ({
 	label,

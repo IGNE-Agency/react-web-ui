@@ -4,10 +4,12 @@ import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import FilterIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react";
 import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.svg?react";
 import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
 import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import UnfoldMoreIcon from "@material-design-icons/svg/outlined/unfold_more.svg?react";
@@ -38,11 +40,7 @@ import { Drawer } from "../components/drawer/drawer.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
 import { Icon } from "../components/icon/icon.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
-import {
-	Pagination,
-	type PaginationPage,
-} from "../components/pagination/pagination.tsx";
-import { Select } from "../components/select-field/select.tsx";
+import type { PaginationPage } from "../components/pagination/pagination.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
 import { Stale } from "../components/stale/stale.tsx";
 import {
@@ -202,6 +200,8 @@ const selectColumn = selectionColumn<Declaration>({
 	sticky: "start",
 	selectPageLabel: SELECT_PAGE_LABEL,
 	selectRowLabel: SELECT_ROW_LABEL,
+	checkIcon: <Icon svg={CheckIcon} label="" />,
+	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
 });
 
 const selectableColumns = [selectColumn, ...dataColumns];
@@ -309,32 +309,20 @@ const TableParts = () => {
 };
 
 const TablePagination = () => (
-	<DataTable.Pagination>
-		<Pagination.PageSize>
-			<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
-			<Select.Trigger />
-			<Select.Portal>
-				<Select.Positioner>
-					<Select.Popup>
-						<Select.List>
-							<Select.Items />
-						</Select.List>
-					</Select.Popup>
-				</Select.Positioner>
-			</Select.Portal>
-		</Pagination.PageSize>
-		<Pagination.Index label={indexLabel} />
-		<Pagination.Controls
-			firstLabel={FIRST_LABEL}
-			previousLabel={PREVIOUS_LABEL}
-			nextLabel={NEXT_LABEL}
-			lastLabel={LAST_LABEL}
-			firstIcon={<Icon svg={FirstPageIcon} label="" />}
-			previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
-			nextIcon={<Icon svg={ChevronRightIcon} label="" />}
-			lastIcon={<Icon svg={LastPageIcon} label="" />}
-		/>
-	</DataTable.Pagination>
+	<DataTable.Pagination
+		pageSizeLabel={PAGE_SIZE_LABEL}
+		indexLabel={indexLabel}
+		firstLabel={FIRST_LABEL}
+		previousLabel={PREVIOUS_LABEL}
+		nextLabel={NEXT_LABEL}
+		lastLabel={LAST_LABEL}
+		firstIcon={<Icon svg={FirstPageIcon} label="" />}
+		previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
+		nextIcon={<Icon svg={ChevronRightIcon} label="" />}
+		lastIcon={<Icon svg={LastPageIcon} label="" />}
+		checkIcon={<Icon svg={CheckIcon} label="" />}
+		expandIcon={<Icon svg={ExpandMoreIcon} label="" />}
+	/>
 );
 
 type SelectionBarProps = Readonly<{ totalRows: number }>;
@@ -579,6 +567,7 @@ const DataViewTable = ({
 								loadBrokenLabel="Clients could not be loaded, and trying again won't help."
 								retryLabel={RETRY_LABEL}
 								noOptionsLabel="No clients."
+								checkIcon={<Icon svg={CheckIcon} label="" />}
 								onValueChange={next => {
 									filters.setDraft(
 										"client",

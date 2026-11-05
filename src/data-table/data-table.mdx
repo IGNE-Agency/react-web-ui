@@ -1,8 +1,10 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import FilterListIcon from "@material-design-icons/svg/outlined/filter_list.svg?react";
 import MouseIcon from "@material-design-icons/svg/outlined/mouse.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
+import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { DocsPage } from "../../.storybook/docs-page";
 import styles from "../../docs/design-system/components.module.scss";
@@ -17,6 +19,17 @@ import { Icon } from "../components/icon/icon.tsx";
 import { Spinner } from "../components/spinner/spinner.tsx";
 import { Skeleton } from "../components/skeleton/skeleton.tsx";
 import * as DataTableStories from "./data-table.stories.tsx";
+
+export const Box = ({ indeterminate, ...props }) => (
+	<Checkbox.Control indeterminate={indeterminate} {...props}>
+		<Checkbox.Indicator>
+			<Icon
+				svg={indeterminate ? RemoveIcon : CheckIcon}
+				label=""
+			/>
+		</Checkbox.Indicator>
+	</Checkbox.Control>
+);
 
 export const Live = ({ children }) => (
 	<StoryProviders>{children}</StoryProviders>
@@ -311,11 +324,11 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
       <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
         <table className={`${styles.table} ${styles.tableContent}`}>
           <thead>
-            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={`${styles.fit} ${styles.pinEnd}`} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={`${styles.fit} ${styles.pinEnd}`}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -336,11 +349,11 @@ On a table that scrolls sideways, the controls you drive it with stay pinned to 
       <div className={`${styles.tableCard} ${styles.tableCardNarrow} ${styles.snapScroll}`}>
         <table className={`${styles.table} ${styles.tableContent}`}>
           <thead>
-            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
+            <tr><th className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select page" /></th><th className={styles.pinData}>Client</th><th>Date</th><th className={styles.snapHere}>Description</th><th className={styles.end}>Amount (€)</th><th className={styles.fit} aria-label="Actions" /></tr>
           </thead>
           <tbody>
-            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
-            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Checkbox aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>A. de Vries</td><td>02-10-2026</td><td>Intake and assessment</td><td className={styles.end}>112,50</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
+            <tr className={styles.stripe}><td className={`${styles.fit} ${styles.pinStart}`}><Box aria-label="Select row" /></td><td className={styles.pinData}>J. Bakker</td><td>03-10-2026</td><td>Treatment session</td><td className={styles.end}>45,00</td><td className={styles.fit}><span className={styles.rowIcon}><Icon svg={MoreVertIcon} label="" /></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -693,7 +706,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     					<thead>
     						<tr>
     							<th className={styles.fit}>
-    								<Checkbox
+    								<Box
     									indeterminate
     									aria-label="Select page"
     								/>
@@ -704,7 +717,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     					<tbody>
     						<tr>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -713,7 +726,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     						</tr>
     						<tr className={styles.stripe}>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -722,7 +735,7 @@ Selection is a leading [control column](#a-control-column-collapses-to-its-conte
     						</tr>
     						<tr>
     							<td className={styles.fit}>
-    								<Checkbox
+    								<Box
     									checked
     									aria-label="Select row"
     								/>
@@ -961,39 +974,25 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ### The pager is the kit's pagination
 
-`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. It holds the `Pagination` parts it is given, and everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
+`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. With labels and icons it is the ready-made `Pagination`; with children it holds the `Pagination` parts it is given instead. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
 
 ```tsx
-<DataTable.Pagination>
-	<Pagination.PageSize>
-		<Select.Label>Rows per page</Select.Label>
-		<Select.Trigger />
-		<Select.Portal>
-			<Select.Positioner>
-				<Select.Popup>
-					<Select.List>
-						<Select.Items />
-					</Select.List>
-				</Select.Popup>
-			</Select.Positioner>
-		</Select.Portal>
-	</Pagination.PageSize>
-	<Pagination.Index
-		label={({ pageIndex, pageCount }) =>
-			`Page ${pageIndex + 1} of ${pageCount}`
-		}
-	/>
-	<Pagination.Controls
-		firstLabel="First page"
-		previousLabel="Previous page"
-		nextLabel="Next page"
-		lastLabel="Last page"
-		firstIcon={<FirstPageIcon />}
-		previousIcon={<ChevronLeftIcon />}
-		nextIcon={<ChevronRightIcon />}
-		lastIcon={<LastPageIcon />}
-	/>
-</DataTable.Pagination>
+<DataTable.Pagination
+	pageSizeLabel="Rows per page"
+	indexLabel={({ pageIndex, pageCount }) =>
+		`Page ${pageIndex + 1} of ${pageCount}`
+	}
+	firstLabel="First page"
+	previousLabel="Previous page"
+	nextLabel="Next page"
+	lastLabel="Last page"
+	firstIcon={<FirstPageIcon />}
+	previousIcon={<ChevronLeftIcon />}
+	nextIcon={<ChevronRightIcon />}
+	lastIcon={<LastPageIcon />}
+	checkIcon={<CheckIcon />}
+	expandIcon={<ExpandMoreIcon />}
+/>
 ```
 
 ### Content is the whole table; its parts are the same table in your markup
@@ -1127,12 +1126,12 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
       <div className={styles.tableCard}>
         <table className={`${styles.table} ${styles.tableFull}`}>
           <thead>
-            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+            <tr><th className={styles.fit}><Box aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
-            <tr className={styles.stripe}><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
-            <tr><td className={styles.fit}><Checkbox aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr className={styles.stripe}><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
+            <tr><td className={styles.fit}><Box aria-label="Select row" /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>
           </tbody>
         </table>
       </div>
@@ -1144,7 +1143,11 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
 	id: "select",
 	meta: {
 		fit: true,
-		placeholderCell: () => <Checkbox aria-label={selectRowLabel} />,
+		placeholderCell: () => (
+			<Checkbox.Control aria-label={selectRowLabel}>
+				<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
+			</Checkbox.Control>
+		),
 	},
 	header: () => <PageCheckbox />,
 	cell: ({ row }) => <RowCheckbox rowId={row.id} />,
@@ -1160,7 +1163,7 @@ Controls are chrome, not content. A row checkbox, an expand toggle and a row men
       <div className={styles.tableCard}>
         <table className={`${styles.table} ${styles.tableFull}`}>
           <thead>
-            <tr><th className={styles.fit}><Checkbox aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
+            <tr><th className={styles.fit}><Box aria-label="Select page" /></th><th>Client</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
             <tr><td className={styles.fit}><Skeleton /></td><td><Skeleton className={styles.bar} /></td><td><Skeleton /></td></tr>

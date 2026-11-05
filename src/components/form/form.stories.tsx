@@ -333,9 +333,6 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.CheckboxField
 						label={TERMS_LABEL}
 						checkIcon={CHECK_ICON}
-						indeterminateIcon={
-							<Icon svg={RemoveIcon} label="" />
-						}
 						requiredness="required"
 						optionalLabel={OPTIONAL_LABEL}
 					/>

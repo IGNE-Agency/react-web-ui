@@ -1,6 +1,8 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactElement } from "react";
@@ -15,10 +17,10 @@ import {
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { Icon } from "../icon/icon.tsx";
-import { Select } from "../select-field/select.tsx";
 import {
 	Pagination,
 	type PaginationPage,
+	type PaginationProps,
 	type PaginationRootProps,
 } from "./pagination.tsx";
 
@@ -41,22 +43,6 @@ const pageSizeChange = fn<
 	(pageSize: number) => void
 >().mockName("onPageSizeChange");
 
-const PageSize = (): ReactElement => (
-	<Pagination.PageSize>
-		<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
-		<Select.Trigger />
-		<Select.Portal>
-			<Select.Positioner>
-				<Select.Popup>
-					<Select.List>
-						<Select.Items />
-					</Select.List>
-				</Select.Popup>
-			</Select.Positioner>
-		</Select.Portal>
-	</Pagination.PageSize>
-);
-
 const Controls = (): ReactElement => (
 	<Pagination.Controls
 		firstLabel={FIRST_LABEL}
@@ -70,21 +56,13 @@ const Controls = (): ReactElement => (
 	/>
 );
 
-const Parts = (): ReactElement => (
-	<>
-		<PageSize />
-		<Pagination.Index label={pageLabel} />
-		<Controls />
-	</>
-);
-
 const ControlledPagination = (
-	args: PaginationRootProps,
+	args: PaginationProps,
 ): ReactElement => {
-	const [, updateArgs] = useArgs<PaginationRootProps>();
+	const [, updateArgs] = useArgs<PaginationProps>();
 
 	return (
-		<Pagination.Root
+		<Pagination
 			{...args}
 			onPageIndexChange={pageIndex => {
 				args.onPageIndexChange(pageIndex);
@@ -93,33 +71,44 @@ const ControlledPagination = (
 			onPageSizeChange={pageSize => {
 				args.onPageSizeChange(pageSize);
 				updateArgs({ pageSize, pageIndex: 0 });
-			}}>
-			<Parts />
-		</Pagination.Root>
+			}}
+		/>
 	);
 };
 
 const PlainPagination = (
-	args: PaginationRootProps,
-): ReactElement => (
-	<Pagination.Root {...args}>
-		<Parts />
-	</Pagination.Root>
-);
+	args: PaginationProps,
+): ReactElement => <Pagination {...args} />;
+
+const rootOf = ({
+	pageIndex,
+	pageCount,
+	pageSize,
+	pageSizes,
+	onPageIndexChange,
+	onPageSizeChange,
+}: PaginationProps): PaginationRootProps => ({
+	pageIndex,
+	pageCount,
+	pageSize,
+	pageSizes,
+	onPageIndexChange,
+	onPageSizeChange,
+});
 
 const ControlsOnly = (
-	args: PaginationRootProps,
+	args: PaginationProps,
 ): ReactElement => (
-	<Pagination.Root {...args}>
+	<Pagination.Root {...rootOf(args)}>
 		<Pagination.Index label={pageLabel} />
 		<Controls />
 	</Pagination.Root>
 );
 
 const PreviousAndNext = (
-	args: PaginationRootProps,
+	args: PaginationProps,
 ): ReactElement => (
-	<Pagination.Root {...args}>
+	<Pagination.Root {...rootOf(args)}>
 		<Pagination.Previous label={PREVIOUS_LABEL}>
 			<Icon svg={ChevronLeftIcon} label="" />
 		</Pagination.Previous>
@@ -150,7 +139,7 @@ const meta = {
 		],
 		test: { clearMocks: true },
 	},
-	component: Pagination.Root,
+	component: Pagination,
 	render: ControlledPagination,
 	args: {
 		pageIndex: 2,
@@ -159,8 +148,20 @@ const meta = {
 		pageSizes: [10, 20, 50, 100],
 		onPageIndexChange: pageIndexChange,
 		onPageSizeChange: pageSizeChange,
+		pageSizeLabel: PAGE_SIZE_LABEL,
+		indexLabel: pageLabel,
+		firstLabel: FIRST_LABEL,
+		previousLabel: PREVIOUS_LABEL,
+		nextLabel: NEXT_LABEL,
+		lastLabel: LAST_LABEL,
+		firstIcon: <Icon svg={FirstPageIcon} label="" />,
+		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
+		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
+		lastIcon: <Icon svg={LastPageIcon} label="" />,
+		checkIcon: <Icon svg={CheckIcon} label="" />,
+		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 	},
-} satisfies Meta<typeof Pagination.Root>;
+} satisfies Meta<typeof Pagination>;
 
 export default meta;
 
