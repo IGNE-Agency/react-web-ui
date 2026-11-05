@@ -16,7 +16,10 @@
 
 	.popup {
 		box-sizing: border-box;
-		min-inline-size: min(22rem, var(--available-width));
+		min-inline-size: min(
+			var(--popover-min-inline-size, 22rem),
+			var(--available-width)
+		);
 		max-inline-size: min(28rem, var(--available-width));
 		border: none;
 		border-radius: var(

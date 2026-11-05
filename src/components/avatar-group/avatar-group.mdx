@@ -14,6 +14,35 @@ The stack shows up to four avatars and folds everyone after them into a count, s
 
 ### Everyone in the group can be found by name
 
-The avatars say nothing to a screen reader, so the group itself carries a name for what the people are, such as "Invitees", and opens a list of everyone by name on hover, on a tap or from the keyboard. The person viewing is marked in that list, in their own words, such as "(you)".
+The avatars say nothing to a screen reader, so the group itself carries a name for what the people are, such as "Invitees". The stack is content, not a control. Only the count is a button: it is named for what it opens, such as "Show all invitees (+3)", with the count it shows inside that name, and it opens a list of everyone by name on hover, on a tap or from the keyboard. A group with no count has no button and no list. The person viewing is marked in that list, in their own words, such as "(you)".
+
+### The prefab is the parts, composed
+
+`AvatarGroup` takes `people` and composes the parts hanging off it: `Root` names the stack and sets the avatar size, `Avatar` is one overlapping member, `Overflow` is the count's button with the popover's content as its children, and `List` and `ListItem` are the usual list of everyone, with a muted `suffix` after a name. Compose the parts by hand where the stack or the list needs other markup, such as listing only the people the stack leaves out.
+
+```tsx
+<AvatarGroup.Root label="Invitees">
+	{shown.map(person => (
+		<AvatarGroup.Avatar
+			key={person.id}
+			name={person.name}
+			src={person.src}
+		/>
+	))}
+	<AvatarGroup.Overflow
+		count={rest.length}
+		label={`Show all invitees (+${rest.length})`}>
+		<AvatarGroup.List>
+			{rest.map(person => (
+				<AvatarGroup.ListItem
+					key={person.id}
+					name={person.name}
+					src={person.src}
+				/>
+			))}
+		</AvatarGroup.List>
+	</AvatarGroup.Overflow>
+</AvatarGroup.Root>
+```
 
 </DocsPage>
