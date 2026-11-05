@@ -2,7 +2,6 @@
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"composite": true,
-		"isolatedDeclarations": false,
 		"noEmit": false,
 		"emitDeclarationOnly": true,
 		"outDir": "node_modules/.cache/tsconfig.node",
@@ -13,9 +12,8 @@
 		"*.ts",
 		"package.json",
 		".storybook/vite.config.ts",
-		"tools",
-		"src/terrazzo"
+		"tools"
 	],
-	"exclude": ["tools/fixtures"],
+	"exclude": ["tools/fixtures", "terrazzo.config.ts"],
 	"references": []
 }
