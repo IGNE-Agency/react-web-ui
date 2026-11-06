@@ -32,7 +32,7 @@ A colour on its own doesn't say much. Is it the brand? Something that went well?
 
 Decisions come in kinds, too. Some are about raw material, like which greens exist at all. Some are about meaning, like which green says success. And some belong to one component, like what colour a button is. Give each kind its own layer, and every question has exactly one place to be answered: you can rethink what success looks like without opening a single component.
 
-Because names point at other names, the relationships between them are part of the design. A success badge pairs a light and a dark green from the same family, and that pairing still holds when the brand colour changes. Think in relationships rather than swatches, and a whole theme, like dark mode, becomes one change instead of a redesign.
+Because names point at other names, the relationships between them are part of the design. A success badge pairs a light and a dark green from the same family, and that pairing still holds when the brand colour changes. Think in relationships rather than swatches, and a whole theme, like the dark one, becomes one change instead of a redesign.
 
 <Illustration caption="Each colour family pairs a light fill with a dark mark of its own kind. Turn the hue and the pairing holds.">
 	<RelationDrawing />
@@ -48,15 +48,15 @@ Every product that follows our approach builds its tokens this way. It's not the
 
 ## Speaking in roles
 
-A component asks for a role, like the background of a success badge, never for a particular shade. A component that picks its own shade stops following the theme, and breaks without anyone noticing when dark mode re-points the roles. The same goes for type: a component names [a type role instead of a size](?path=/docs/design-system-foundation-type--docs#roles).
+A component asks for a role, like the background of a success badge, never for a particular shade. A component that picks its own shade stops following the theme, and breaks without anyone noticing when the dark theme re-points the roles. The same goes for type: a component names [a type role instead of a size](?path=/docs/design-system-foundation-type--docs#roles).
 
-<Illustration caption="A tag that reads its roles crosses into dark mode and changes with the page, without anyone touching the tag.">
+<Illustration caption="A tag that reads its roles crosses into the dark theme and changes with the page, without anyone touching the tag.">
 	<ThemeDrawing />
 </Illustration>
 
 ## One home for every value
 
-Every colour is declared once, in the token files, and everything else points at it by name. A colour written anywhere else is missed when [the dark theme re-points the roles](?path=/docs/design-system-foundation-colour--docs#a-theme-re-points-the-roles-and-touches-nothing-else), and will be wrong in dark mode.
+Every colour is declared once, in the token files, and everything else points at it by name. A colour written anywhere else is missed when [the dark theme re-points the roles](?path=/docs/design-system-foundation-colour--docs#a-theme-re-points-the-roles-and-touches-nothing-else), and will be wrong in the dark theme.
 
 ## Technical rules
 
@@ -92,11 +92,11 @@ A component reads system tokens, never reference tokens, so it follows the theme
   caption="The tag names a role, so the dark theme re-points it with everything else."
   visual={
     <div className={styles.themes}>
-      <div className={`${styles.stage} ${styles.stageLight}`}>
-        <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
+      <div data-theme="light" className={styles.stage}>
+        <span className={`${styles.chip} ${styles.chipSuccess}`}>Approved</span>
       </div>
-      <div className={`${styles.stage} ${styles.stageDark}`}>
-        <span className={`${styles.chip} ${styles.chipDark}`}>Approved</span>
+      <div data-theme="dark" className={styles.stage}>
+        <span className={`${styles.chip} ${styles.chipSuccess}`}>Approved</span>
       </div>
     </div>
   }>
@@ -114,10 +114,10 @@ A component reads system tokens, never reference tokens, so it follows the theme
   caption="Pinned to a light step, the tag glares on a dark page."
   visual={
     <div className={styles.themes}>
-      <div className={`${styles.stage} ${styles.stageLight}`}>
+      <div data-theme="light" className={styles.stage}>
         <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
       </div>
-      <div className={`${styles.stage} ${styles.stageDark}`}>
+      <div data-theme="dark" className={styles.stage}>
         <span className={`${styles.chip} ${styles.chipLight}`}>Approved</span>
       </div>
     </div>
@@ -156,7 +156,7 @@ Layers 2 and 3 are pure `var()`.
 ```
 
 </Example>
-<Example kind="dont" caption="A colour written outside the tokens files cannot be re-themed and will be wrong in dark mode.">
+<Example kind="dont" caption="A colour written outside the tokens files cannot be re-themed and will be wrong in the dark theme.">
 
 ```scss
 .panel {
@@ -348,7 +348,7 @@ Each token in the JSON carries a `$description` that says what it's for. When yo
 
 <Details title="Dark values re-point the roles and leave the ramps alone">
 
-`dark.tokens.json` only overrides roles. The ramps are the same in both themes, so the dark theme is a different choice of steps, not a different set of colours. The build writes the dark values under `html[data-theme="dark"]`, and under the dark colour-scheme preference when no theme is pinned.
+`dark.tokens.json` only overrides roles. The ramps are the same in both themes, so the dark theme is a different choice of steps, not a different set of colours. The build writes the dark values on any element with `data-theme="dark"`, and on `<html>` under the dark colour-scheme preference while the mode is auto.
 
 </Details>
 

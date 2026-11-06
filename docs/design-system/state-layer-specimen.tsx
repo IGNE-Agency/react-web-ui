@@ -1,11 +1,11 @@
 import styles from "./state-layer-specimen.module.scss";
 import {
-	colourIn,
 	groupOf,
 	nameOf,
 	numberOf,
 	THEMES,
 } from "./tokens";
+import { variableNameOf } from "../../src/terrazzo/index";
 
 /**
  * Each interaction state's layer, from rest to dragged, painted over a surface
@@ -23,19 +23,7 @@ export const StateLayerSpecimen = () => {
 				<div
 					key={theme}
 					className={styles.stage}
-					style={{
-						"--canvas": colourIn("sys.color.bg", theme),
-						"--surface": colourIn(
-							"sys.color.surface",
-							theme,
-						),
-						"--text": colourIn("sys.color.text", theme),
-						"--muted": colourIn(
-							"sys.color.text-muted",
-							theme,
-						),
-						"--edge": colourIn("sys.color.border", theme),
-					}}>
+					data-theme={theme}>
 					<span className={styles.theme}>
 						{theme === "light" ? "Light" : "Dark"}
 					</span>
@@ -51,7 +39,9 @@ export const StateLayerSpecimen = () => {
 								<div key={id} className={styles.state}>
 									<span
 										className={styles.tile}
-										style={{ "--layer": opacity }}
+										style={{
+											"--layer": `var(${variableNameOf(id)})`,
+										}}
 										aria-hidden
 									/>
 									<span className={styles.name}>

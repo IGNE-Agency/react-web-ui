@@ -68,19 +68,17 @@ The kit has three levels. Level 0 is the page and everything in its flow, and ca
 
 A shadow earns its place only on an element that floats over the page and has no other way to say how far above it sits. Work down [the order of separation tools](?path=/docs/design-system-principles-separation--docs#work-down-space-surface-elevation-and-line-and-stop-at-the-first-that-works) first: space, then surface tier, then elevation.
 
-A shadow is also the one separation tool that does not survive a theme. Over a dark fill a soft black penumbra is nearly invisible, which is why an overlay signals its height with [a lighter surface tier](?path=/docs/design-system-foundation-colour--docs#surfaces) and treats the shadow as reinforcement that happens to work in light mode.
+A shadow is also the one separation tool that does not survive a theme. Over a dark fill a soft black penumbra is nearly invisible, which is why an overlay signals its height with [a lighter surface tier](?path=/docs/design-system-foundation-colour--docs#surfaces) and treats the shadow as reinforcement that happens to work in the light theme.
 
     <Example
     	kind="caution"
     	caption="Over a dark fill a shadow is nearly invisible, so an overlay rises by getting lighter."
     	visual={
     		<div className={styles.themes}>
-    			<div
-    				className={`${styles.stage} ${styles.stageLight}`}>
+    			<div data-theme="light" className={styles.stage}>
     				<div className={styles.floating}>Saved</div>
     			</div>
-    			<div
-    				className={`${styles.stage} ${styles.stageDark}`}>
+    			<div data-theme="dark" className={styles.stage}>
     				<div className={styles.floating}>Saved</div>
     			</div>
     		</div>
@@ -335,7 +333,7 @@ A popup with no arrow (tooltip, select list, typeahead, toast) keeps `box-shadow
 <Details title="A shadow is a token, never a literal">
 
 <DoDont>
-<Example kind="do" caption="The level comes from the scale, so it matches every other popup and deepens in dark mode.">
+<Example kind="do" caption="The level comes from the scale, so it matches every other popup and deepens in the dark theme.">
 
 ```scss
 .toast {

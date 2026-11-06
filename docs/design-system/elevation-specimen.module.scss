@@ -10,13 +10,13 @@
 		display: grid;
 		gap: var(--sys-unit-12);
 		border-radius: var(--sys-radius-lg);
-		background: var(--canvas);
+		background: var(--sys-color-bg);
 		padding: var(--sys-unit-12) var(--sys-unit-16)
 			var(--sys-unit-20);
 	}
 
 	.theme {
-		color: var(--muted);
+		color: var(--sys-color-text-muted);
 		font: var(--docs-type-label-small-strong);
 	}
 
@@ -34,7 +34,11 @@
 		}
 		padding-block-end: var(--sys-unit-4);
 		border-block-end: 1.5px dashed
-			color-mix(in oklab, var(--muted) 45%, transparent);
+			color-mix(
+				in oklab,
+				var(--sys-color-text-muted) 45%,
+				transparent
+			);
 	}
 
 	.level {
@@ -44,10 +48,11 @@
 		margin-block-end: calc(
 			var(--sys-unit-4) * var(--level)
 		);
-		outline: 1px solid var(--edge);
+		outline: 1px solid var(--sys-color-border);
 		outline-offset: -1px;
 		border-radius: var(--sys-radius-md);
 		background: var(--surface);
+		box-shadow: var(--elevation);
 		padding: var(--sys-unit-6);
 		block-size: var(--sys-unit-56);
 
@@ -57,12 +62,12 @@
 	}
 
 	.number {
-		color: var(--text);
+		color: var(--sys-color-text);
 		font: var(--docs-type-heading-medium);
 	}
 
 	.use {
-		color: var(--muted);
+		color: var(--sys-color-text-muted);
 		font: var(--docs-type-body-small);
 	}
 }

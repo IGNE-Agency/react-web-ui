@@ -148,7 +148,8 @@ That circle is also its catch. White, black and greys have no real hue, so the p
 		visual={
 			<div className={styles.stripePair}>
 				<div
-					className={`${styles.stripeTable} ${styles.stripeOklab} ${styles.stripeOnWhite}`}>
+					data-theme="light"
+					className={`${styles.stripeTable} ${styles.stripeOklab}`}>
 					<div />
 					<div />
 					<div />
@@ -156,7 +157,8 @@ That circle is also its catch. White, black and greys have no real hue, so the p
 					<div />
 				</div>
 				<div
-					className={`${styles.stripeTable} ${styles.stripeOklab} ${styles.stripeOnCharcoal}`}>
+					data-theme="dark"
+					className={`${styles.stripeTable} ${styles.stripeOklab}`}>
 					<div />
 					<div />
 					<div />
@@ -172,7 +174,8 @@ That circle is also its catch. White, black and greys have no real hue, so the p
 		visual={
 			<div className={styles.stripePair}>
 				<div
-					className={`${styles.stripeTable} ${styles.stripeOklch} ${styles.stripeOnWhite}`}>
+					data-theme="light"
+					className={`${styles.stripeTable} ${styles.stripeOklch}`}>
 					<div />
 					<div />
 					<div />
@@ -180,7 +183,8 @@ That circle is also its catch. White, black and greys have no real hue, so the p
 					<div />
 				</div>
 				<div
-					className={`${styles.stripeTable} ${styles.stripeOklch} ${styles.stripeOnCharcoal}`}>
+					data-theme="dark"
+					className={`${styles.stripeTable} ${styles.stripeOklch}`}>
 					<div />
 					<div />
 					<div />
@@ -331,7 +335,7 @@ Text contrast is judged by APCA rather than by WCAG 2's ratio. The reasons, and 
 
 A screen is a stack of surfaces: the page itself, the cards that sit on it, the fills inside those cards, and the popups that float above everything. Each level gets a tier of its own, so you can tell at a glance what sits on what. The kit has seven: a page canvas, a dimmest card, the default card, a nested fill, the deepest recess, an overlay for popups and tooltips, and a higher overlay for toasts.
 
-A surface gets **more tinted as you nest** and **lighter as you rise**. In light mode those pull in opposite directions, which is the thing to get straight: a nested fill is _darker_ than the card it sits in, while a popup floating above that card is not. Write the tier you mean rather than reasoning from "higher number means lighter".
+A surface gets **more tinted as you nest** and **lighter as you rise**. In the light theme those pull in opposite directions, which is the thing to get straight: a nested fill is _darker_ than the card it sits in, while a popup floating above that card is not. Write the tier you mean rather than reasoning from "higher number means lighter".
 
 <DoDont>
 	<Example
@@ -376,7 +380,7 @@ A surface gets **more tinted as you nest** and **lighter as you rise**. In light
 	/>
 </DoDont>
 
-The overlay tier is the same step as the default card in light mode and a lighter one in dark. That is what makes elevation legible under a dark theme, where a shadow over a dark fill is close to invisible, so [popups rise by lightness, not by shadow](?path=/docs/design-system-foundation-elevation--docs#in-the-dark-theme-a-higher-level-is-a-lighter-surface). Every floating popup reads that tier, including [a popup arrow's fill](?path=/docs/design-system-principles-separation--docs#an-arrow-on-an-unoutlined-popup-has-no-stroke). A toast floats a level higher, so its tier is one step lighter again in dark.
+The overlay tier is the same step as the default card in the light theme and a lighter one in the dark theme. That is what makes elevation legible under a dark theme, where a shadow over a dark fill is close to invisible, so [popups rise by lightness, not by shadow](?path=/docs/design-system-foundation-elevation--docs#in-the-dark-theme-a-higher-level-is-a-lighter-surface). Every floating popup reads that tier, including [a popup arrow's fill](?path=/docs/design-system-principles-separation--docs#an-arrow-on-an-unoutlined-popup-has-no-stroke). A toast floats a level higher, so its tier is one step lighter again in the dark theme.
 
 <DoDont>
 	<Example
@@ -384,8 +388,7 @@ The overlay tier is the same step as the default card in light mode and a lighte
 		caption="Popup and arrow both read the overlay tier, so they are one shape in either theme."
 		visual={
 			<div className={styles.themes}>
-				<div
-					className={`${styles.stage} ${styles.stageLight}`}>
+				<div data-theme="light" className={styles.stage}>
 					<div
 						className={`${styles.tip} ${styles.arrowOverlay}`}>
 						<span className={styles.tipBody}>
@@ -395,8 +398,7 @@ The overlay tier is the same step as the default card in light mode and a lighte
 					</div>
 					<span className={styles.tipAnchor} />
 				</div>
-				<div
-					className={`${styles.stage} ${styles.stageDark}`}>
+				<div data-theme="dark" className={styles.stage}>
 					<div
 						className={`${styles.tip} ${styles.arrowOverlay}`}>
 						<span className={styles.tipBody}>
@@ -414,8 +416,7 @@ The overlay tier is the same step as the default card in light mode and a lighte
 		caption="The arrow reads the card tier: right in light, a dark notch under the popup in dark."
 		visual={
 			<div className={styles.themes}>
-				<div
-					className={`${styles.stage} ${styles.stageLight}`}>
+				<div data-theme="light" className={styles.stage}>
 					<div
 						className={`${styles.tip} ${styles.arrowCard}`}>
 						<span className={styles.tipBody}>
@@ -425,8 +426,7 @@ The overlay tier is the same step as the default card in light mode and a lighte
 					</div>
 					<span className={styles.tipAnchor} />
 				</div>
-				<div
-					className={`${styles.stage} ${styles.stageDark}`}>
+				<div data-theme="dark" className={styles.stage}>
 					<div
 						className={`${styles.tip} ${styles.arrowCard}`}>
 						<span className={styles.tipBody}>
@@ -682,8 +682,7 @@ Past a certain darkness every step resolves to black or to something indistingui
 		kind="do"
 		caption="The dark ladder sits where each tier is still visibly a step above the last."
 		visual={
-			<div
-				className={`${styles.darkLadder} ${styles.ladderBand}`}>
+			<div data-theme="dark" className={styles.ladder}>
 				<div className={styles.ladderCard}>
 					<span className={styles.cardTitle}>Invoices</span>
 					<span className={styles.ladderNested}>
@@ -701,7 +700,8 @@ Past a certain darkness every step resolves to black or to something indistingui
 		caption="Built at the bottom of the ramp: one black field, and the accent glares."
 		visual={
 			<div
-				className={`${styles.darkLadder} ${styles.ladderBottom}`}>
+				data-theme="dark"
+				className={`${styles.ladder} ${styles.ladderBottom}`}>
 				<div className={styles.ladderCard}>
 					<span className={styles.cardTitle}>Invoices</span>
 					<span className={styles.ladderNested}>
@@ -725,17 +725,16 @@ Three things follow, and they are the difference between a dark theme that works
 		kind="do"
 		caption="Chosen per ramp so every status fill lifts off the surface equally."
 		visual={
-			<div className={styles.darkSurface}>
+			<div data-theme="dark" className={styles.chipStage}>
 				<span
-					className={`${styles.darkChip} ${styles.darkSuccess}`}>
+					className={`${styles.chip} ${styles.success}`}>
 					Approved
 				</span>
-				<span
-					className={`${styles.darkChip} ${styles.darkInfo}`}>
+				<span className={`${styles.chip} ${styles.info}`}>
 					In review
 				</span>
 				<span
-					className={`${styles.darkChip} ${styles.darkWarning}`}>
+					className={`${styles.chip} ${styles.warning}`}>
 					Needs attention
 				</span>
 			</div>
@@ -745,17 +744,17 @@ Three things follow, and they are the difference between a dark theme that works
 		kind="dont"
 		caption="Tidied into a column, so the info tag vanishes and the warning shouts."
 		visual={
-			<div className={styles.darkSurface}>
+			<div data-theme="dark" className={styles.chipStage}>
 				<span
-					className={`${styles.darkChip} ${styles.darkSuccess}`}>
+					className={`${styles.chip} ${styles.success}`}>
 					Approved
 				</span>
 				<span
-					className={`${styles.darkChip} ${styles.darkInfoTidied}`}>
+					className={`${styles.chip} ${styles.darkInfoTidied}`}>
 					In review
 				</span>
 				<span
-					className={`${styles.darkChip} ${styles.darkWarning}`}>
+					className={`${styles.chip} ${styles.warning}`}>
 					Needs attention
 				</span>
 			</div>
@@ -763,19 +762,18 @@ Three things follow, and they are the difference between a dark theme that works
 	/>
 </DoDont>
 
-**Dark ink is not near-white.** Body text sits about the same distance from its surface in both themes, which in dark mode is a light grey. Ink pinned to the top of the ramp over a dark surface glares, and it leaves muted ink nowhere to go: muted is one notch closer to the surface than body text, in both themes.
+**Dark ink is not near-white.** Body text sits about the same distance from its surface in both themes, which in the dark theme is a light grey. Ink pinned to the top of the ramp over a dark surface glares, and it leaves muted ink nowhere to go: muted is one notch closer to the surface than body text, in both themes.
 
 <DoDont>
 	<Example
 		kind="do"
 		caption="Body ink is a light grey, which leaves muted ink a visible notch to step down."
 		visual={
-			<div
-				className={`${styles.darkText} ${styles.inkGrey}`}>
-				<span className={styles.darkBody}>
+			<div data-theme="dark" className={styles.inkStage}>
+				<span className={styles.inkBody}>
 					Design review
 				</span>
-				<span className={styles.darkMuted}>
+				<span className={styles.inkMuted}>
 					Submitted 12 March
 				</span>
 			</div>
@@ -786,11 +784,12 @@ Three things follow, and they are the difference between a dark theme that works
 		caption="White ink glares on charcoal, and muted ink one notch below it reads the same."
 		visual={
 			<div
-				className={`${styles.darkText} ${styles.inkWhite}`}>
-				<span className={styles.darkBody}>
+				data-theme="dark"
+				className={`${styles.inkStage} ${styles.inkWhite}`}>
+				<span className={styles.inkBody}>
 					Design review
 				</span>
-				<span className={styles.darkMuted}>
+				<span className={styles.inkMuted}>
 					Submitted 12 March
 				</span>
 			</div>
@@ -805,9 +804,8 @@ Three things follow, and they are the difference between a dark theme that works
 		kind="do"
 		caption="Given a wider gap on charcoal, the border still reads as restrained."
 		visual={
-			<div className={styles.darkFieldStage}>
-				<div
-					className={`${styles.darkField} ${styles.borderSeparated}`}>
+			<div data-theme="dark" className={styles.fieldStage}>
+				<div className={styles.fieldSample}>
 					Search clients
 				</div>
 			</div>
@@ -817,15 +815,29 @@ Three things follow, and they are the difference between a dark theme that works
 		kind="dont"
 		caption="A gap that reads as a hairline on white disappears on charcoal."
 		visual={
-			<div className={styles.darkFieldStage}>
+			<div data-theme="dark" className={styles.fieldStage}>
 				<div
-					className={`${styles.darkField} ${styles.borderHairline}`}>
+					className={`${styles.fieldSample} ${styles.borderHairline}`}>
 					Search clients
 				</div>
 			</div>
 		}
 	/>
 </DoDont>
+
+## Mode and theme
+
+Two settings decide which colours a screen wears, and they are easy to mix up. The **mode** is the user's: light, dark, or auto, which follows the operating system. A **theme** is a complete set of roles a design picks, and the kit ships two, light and dark. Dark mode puts the dark theme on the page. A section of that page, like a band on a home page, can [pick a theme of its own whatever the mode](#a-section-picks-a-theme-with-data-theme-and-the-mode-stays-the-users), and the mode stays the user's.
+
+A section that picks a theme takes the whole set, so everything inside it, from body text to the focus ring, is tuned for that theme. A theme re-points roles and paints nothing, so [the section paints its own background](#a-themed-section-paints-its-own-background) from them. A popup opened from inside floats above the page rather than inside the section, so it opens in the page's theme unless [it is given the section's theme itself](#a-popup-in-a-themed-section-takes-data-theme-itself).
+
+A section can behave in one of three ways as the mode changes:
+
+- **Pinned:** the same theme in both modes, like a dark band that stays dark. Once the mode is dark, the band sits in the same theme as the page around it, and the light and dark alternation that set it apart in light mode is gone.
+- **Inverted:** the opposite theme to the page, dark on a light page and light on a dark one. It keeps the alternation in both modes.
+- **Bespoke:** a role set of its own, like a band tinted with the brand. It starts from the nearer of the kit's two themes and [re-points the few roles that make it bespoke](#a-bespoke-section-theme-re-points-a-few-roles-on-top-of-data-theme), so every role it leaves alone is still right.
+
+Which of the three a section is, is a design decision, and it has to be made in both modes. Get the dark-mode design before building the page: a section designed in light mode alone leaves the choice to whoever builds it.
 
 ## Technical rules
 
@@ -1058,7 +1070,7 @@ Skeletons, placeholders, captions and status dots at rest stay one step off the 
 
 <Details title="A surface tier is named by where a thing sits, never by how light it should look">
 
-A surface gets more tinted as you nest and lighter as you rise, so in light mode a nested fill is darker than its card while a popup over it is not. Explained in [Surfaces](#surfaces).
+A surface gets more tinted as you nest and lighter as you rise, so in the light theme a nested fill is darker than its card while a popup over it is not. Explained in [Surfaces](#surfaces).
 
 <DoDont>
 <Example kind="do" caption="The nested fill is darker than its card, and the menu floating over both is not.">
@@ -1316,7 +1328,7 @@ Body text sits about the same distance from its surface in both themes, and mute
 
 ```json
 "text": { "$value": "{ref.neutral.50}" },
-"text-muted": { "$value": "{ref.neutral.200}" }
+"text-muted": { "$value": "{ref.neutral.150}" }
 ```
 
 </Example>
@@ -1357,6 +1369,129 @@ Contrast compresses at the dark end, so the gap that reads as a hairline on whit
 
 </Details>
 
+<Details title="A section picks a theme with data-theme, and the mode stays the user's">
+
+Set `data-theme` to `light` or `dark` on the section's own element. The token build writes every role on any element that carries it, and the base styles give it that theme's text colour again, so everything inside reads the section's theme at any depth. The attribute on `<html>` is the user's mode, which `useTheme` owns; a section never sets it. Explained in [Mode and theme](#mode-and-theme).
+
+<DoDont>
+<Example kind="do" caption="The section names a theme, and every role inside it follows.">
+
+```tsx
+<section data-theme="dark" className={styles.band}>
+	<Button>Book a call</Button>
+</section>
+```
+
+</Example>
+<Example kind="dont" caption="A theme copied by hand: every role it misses stays tuned for light.">
+
+```scss
+.band {
+	--sys-color-bg: var(--ref-neutral-800);
+	--sys-color-text: var(--ref-neutral-50);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A themed section paints its own background">
+
+The attribute re-points the roles and paints no fill, so a brand tint or an image behind the section has nothing to undo. The section sets its background from its theme's roles itself. Explained in [Mode and theme](#mode-and-theme).
+
+<DoDont>
+<Example kind="do" caption="The band fills itself from the dark theme's canvas.">
+
+```scss
+.band {
+	background-color: var(--sys-color-bg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="No fill: the dark theme's light ink lands on the light page.">
+
+```tsx
+<section data-theme="dark">
+	<h2>Book a call</h2>
+</section>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A popup in a themed section takes data-theme itself">
+
+A popup is portalled out of the section to the end of the page, so it opens in the page's theme. A part that holds the popup spreads its props onto it, so `data-theme` on that part opens the popup in the section's theme. A prefab builds its popup itself and opens it in the page's theme. Explained in [Mode and theme](#mode-and-theme).
+
+<DoDont>
+<Example kind="do" caption="The popup is given the section's theme, so it reads as part of the band.">
+
+```tsx
+<section data-theme="dark" className={styles.band}>
+	<Popover.Root>
+		<Popover.Trigger>Rates</Popover.Trigger>
+		<Popover.Content data-theme="dark">
+			<Popover.Title>Rate breakdown</Popover.Title>
+		</Popover.Content>
+	</Popover.Root>
+</section>
+```
+
+</Example>
+<Example kind="dont" caption="The popup leaves the section, so it opens light over a dark band.">
+
+```tsx
+<section data-theme="dark" className={styles.band}>
+	<Popover.Root>
+		<Popover.Trigger>Rates</Popover.Trigger>
+		<Popover.Content>
+			<Popover.Title>Rate breakdown</Popover.Title>
+		</Popover.Content>
+	</Popover.Root>
+</section>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A bespoke section theme re-points a few roles on top of data-theme">
+
+Put the nearer of the kit's themes on the section, and a class beside it that re-points only the roles that make it bespoke. Every role the class leaves alone stays right for that theme, and a section nested inside picks its own theme again. Explained in [Mode and theme](#mode-and-theme).
+
+<DoDont>
+<Example kind="do" caption="The dark theme beneath it, and two roles re-pointed to a green tint.">
+
+```scss
+.brandBand {
+	--sys-color-bg: var(--ref-green-800);
+	--sys-color-surface: var(--ref-green-700);
+
+	background-color: var(--sys-color-bg);
+}
+```
+
+</Example>
+<Example kind="dont" caption="Restyled part by part, so every component the list misses keeps the dark theme's surface.">
+
+```scss
+.brandBand .card,
+.brandBand .field {
+	background-color: var(--ref-green-700);
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
 <Details title="A theme re-points the roles and touches nothing else">
 
 A theme re-points layer 2 and touches nothing else. A component that needs to know the active theme is a component that [read a ramp step instead of a role](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step).
@@ -1390,7 +1525,7 @@ html[data-theme="dark"] .card {
 
 <Details title="The dark theme is two conditions, kept behind one mixin">
 
-A theme is two conditions, not one. The stored preference pins a theme, and its default follows the operating system — so a dark document is either the attribute or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the preference is mounted. Because the condition is a pair of selectors, it lives behind a mixin (`theme.dark` inside a rule, while the token build writes both halves for the roles) so no file spells out half of it.
+The page's theme is two conditions, not one. A stored mode pins it, and auto follows the operating system — so a dark page is either the attribute on `<html>` or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the mode is mounted. The token build writes the dark roles on any `[data-theme="dark"]` element and on the auto-dark `<html>`, so a component that reads roles needs no condition at all. The mixin stays page-level, for a value that follows the page rather than a section, like the scrim behind a dialog or drawer that dims the whole viewport: because the condition is a pair of selectors, it lives behind `theme.dark` so no file spells out half of it.
 
 <DoDont>
 <Example kind="do" caption="The mixin carries both halves of the dark condition.">
@@ -1419,14 +1554,14 @@ html[data-theme="dark"] .backdrop {
 
 <Details title="Each theme states its color-scheme outright">
 
-A theme declares `color-scheme`. Parts of the page are drawn by the browser, not by this system: scrollbars, form-control internals, spell-check underlines, the canvas behind an overscroll. <Pull>They follow `color-scheme` and nothing else, so a theme that only re-points tokens leaves light scrollbars framing a dark app.</Pull> State the value outright rather than leaving it to `light dark`: the preference has already been resolved by the time the attribute is set, and the browser should not resolve it a second time and disagree.
+A theme declares `color-scheme`. Parts of the page are drawn by the browser, not by this system: scrollbars, form-control internals, spell-check underlines, the canvas behind an overscroll. <Pull>They follow `color-scheme` and nothing else, so a theme that only re-points tokens leaves light scrollbars framing a dark app.</Pull> State the value outright rather than leaving it to `light dark`: the mode has already been resolved by the time the attribute is set, and the browser should not resolve it a second time and disagree.
 
 <DoDont>
 <Example
   kind="do"
   caption="Each theme states its colour scheme outright, so the browser's own scrollbar goes dark too."
   visual={
-    <div className={`${styles.scroller} ${styles.schemeDark}`}>
+    <div data-theme="dark" className={styles.scroller}>
       <p>Design review · € 120</p>
       <p>Workshop · € 85</p>
       <p>Copywriting · € 32</p>
@@ -1436,11 +1571,12 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
   }>
 
 ```css
-:root {
+:root,
+[data-theme="light"] {
 	color-scheme: light;
 }
 
-html[data-theme="dark"] {
+[data-theme="dark"] {
 	color-scheme: dark;
 }
 
@@ -1456,7 +1592,9 @@ html[data-theme="dark"] {
   kind="dont"
   caption="The tokens went dark and the browser's own parts stayed light."
   visual={
-    <div className={`${styles.scroller} ${styles.schemeLight}`}>
+    <div
+      data-theme="dark"
+      className={`${styles.scroller} ${styles.schemeLight}`}>
       <p>Design review · € 120</p>
       <p>Workshop · € 85</p>
       <p>Copywriting · € 32</p>
@@ -1478,10 +1616,10 @@ html[data-theme="dark"] {
 
 <Details title="The theme is resolved in the HTML shell, before the first paint">
 
-Resolve the theme before first paint, in the HTML shell. A framework cannot do this: its effects run after the browser has painted, so a dark-mode user gets a white flash on every full page load. The stylesheet is no help either — it is a module the app pulls in, so it lands after the first paint too. That takes two things in the shell: an inline script that pins the stored preference on the root element, and an inline style that states the canvas colour and `color-scheme` for both themes. Set the canvas colour on the root element as well as the body so nothing paints white behind the page.
+Resolve the theme before first paint, in the HTML shell. A framework cannot do this: its effects run after the browser has painted, so a dark-mode user gets a white flash on every full page load. The stylesheet is no help either — it is a module the app pulls in, so it lands after the first paint too. That takes two things in the shell: an inline script that pins the stored mode on the root element, and an inline style that states the canvas colour and `color-scheme` for both themes. Set the canvas colour on the root element as well as the body so nothing paints white behind the page.
 
 <DoDont>
-<Example kind="do" caption="The shell pins the stored theme before the browser paints anything.">
+<Example kind="do" caption="The shell pins the stored mode before the browser paints anything.">
 
 ```html
 <script>

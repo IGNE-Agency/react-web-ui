@@ -12,20 +12,10 @@
 	padding: var(--sys-unit-10);
 }
 
-.stageLight {
-	--stage-fill: var(--ref-neutral-0);
-	--stage-ink: var(--ref-neutral-500);
-}
-
-.stageDark {
-	--stage-fill: var(--ref-neutral-700);
-	--stage-ink: var(--ref-neutral-50);
-}
-
 .stage,
 .floating {
-	background: var(--stage-fill);
-	color: var(--stage-ink);
+	background: var(--sys-color-surface);
+	color: var(--sys-color-text);
 }
 
 .floating {
