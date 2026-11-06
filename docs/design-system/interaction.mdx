@@ -189,7 +189,7 @@ The same wash covers every variant, so a new variant brings no new hover colours
 
 ## Where the keyboard is
 
-For someone on the keyboard, focus is the cursor. Lose sight of it and they're lost on the page, with no way of knowing what the next key will press. So anything you can click, you can also reach with the keyboard, and wherever the keyboard lands, the ring is there. Leaving it off doesn't bring back the browser's own outline: this product removes that everywhere, so a control without the ring shows no focus at all.
+For someone on the keyboard, focus is the cursor. Lose sight of it and they're lost on the page, with no way of knowing what the next key will press. So anything you can click, you can also reach with the keyboard, and wherever the keyboard lands, the ring is there. Leaving it off doesn't bring back the browser's own outline: the kit removes that everywhere, so a control without the ring shows no focus at all.
 
 Focus is two states, not one. <Pull>A field's border warms whenever focus is anywhere inside it, however it arrived; the ring is keyboard focus and only keyboard focus.</Pull> Merge the two and a mouse click draws a keyboard ring, or a field you clicked into looks untouched.
 
@@ -515,7 +515,7 @@ A link in running text is the one place the brand colour is spent on words, and 
 	/>
 </DoDont>
 
-A solid underline already means one thing: this goes somewhere. <Pull>A trigger that reveals more on hover or click does not navigate, and borrowing the link's line would overload it.</Pull> So anything that opens more in a popover, like a name in a table cell or a row of chips that opens as one, carries a dotted underline instead. It keeps its own colours, and the dots follow the colour of the text above them, faded at rest and at full strength on hover and while the popover is open. In a group of chips the dots go under each chip's label, never under the group, because they mark the text. A tooltip that only [names an icon button](#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name) is a label, not disclosure, and takes none of this.
+A solid underline already means one thing: this goes somewhere. <Pull>A trigger that reveals more on hover or click does not navigate, and borrowing the link's line would overload it.</Pull> So anything that opens more in a popover, like a name in a table cell or a row of tags that opens as one, carries a dotted underline instead. It keeps its own colours, and the dots follow the colour of the text above them, faded at rest and at full strength on hover and while the popover is open. In a group of tags the dots go under each tag's label, never under the group, because they mark the text. A tooltip that only [names an icon button](#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name) is a label, not disclosure, and takes none of this.
 
 <DoDont>
 	<Example
@@ -674,7 +674,7 @@ So a control that shows only an icon always carries two
 things with the same words: a name that assistive technology
 reads out, and a tooltip that shows on hover and focus. That
 goes for menu triggers, close buttons, paging arrows, a
-chip's remove button and toolbar actions alike, and [the
+tag's remove button and toolbar actions alike, and [the
 icon-only
 button](?path=/docs/components-button--docs#an-icon-only-button-is-a-circle-with-an-accessible-label)
 gives both for free.
@@ -744,7 +744,7 @@ The browser's own hint, the `title` attribute, does neither job. Screen readers 
 	/>
 </DoDont>
 
-A hint added to stop a cut-off label from being lost is a layout problem wearing a hint. [Fix the layout instead](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled), so the whole label is on screen for everyone.
+A hint added to stop a cut-off label from being lost is a layout problem wearing a hint. [Fix the layout instead](?path=/docs/design-system-foundation-type--docs#text-that-has-to-be-read-whole-is-folded-or-given-room-never-elided), so the whole label is on screen for everyone.
 
 <DoDont>
 	<Example
@@ -796,7 +796,7 @@ The layer paints a translucent wash of the element's own content colour over its
 
 ```scss
 .nav-item {
-	border-radius: var(--radius-full);
+	border-radius: var(--sys-radius-full);
 
 	@include state.layer;
 }
@@ -827,7 +827,7 @@ Table rows and tabs hover to a tint, so they read as picked out rather than dimm
 
 ```scss
 .row:hover {
-	background: var(--row-hover);
+	background: var(--table-row-hover);
 }
 ```
 
@@ -955,7 +955,7 @@ An outward ring is clipped by the container's edge. Shown in [Where the keyboard
 .tab {
 	@include focus.ring;
 
-	outline-offset: calc(-1 * var(--focus-ring-width));
+	outline-offset: calc(-1 * var(--sys-focus-ring-width));
 }
 ```
 
@@ -1116,7 +1116,7 @@ Declare it as a zero-specificity default so links that are not body copy overrid
 
 <Details title="Progressive disclosure is underlined dotted, not styled as a link">
 
-The trigger sets the line and the text draws it: faded at rest, full strength on hover and while the popup is open, in the text's own colour. In a group of chips that opens as one trigger, the line goes in each chip, and the trigger owns the states. Explained in [Promises before the click](#promises-before-the-click).
+The trigger sets the line and the text draws it: faded at rest, full strength on hover and while the popup is open, in the text's own colour. In a group of tags that opens as one trigger, the line goes in each tag, and the trigger owns the states. Explained in [Promises before the click](#promises-before-the-click).
 
 <DoDont>
 <Example kind="do" caption="The trigger sets the line, the text draws it.">
@@ -1203,7 +1203,7 @@ When the item's silhouette changes, the marker moves onto the part that still ha
 	background: none;
 
 	> .icon {
-		border-radius: var(--radius-full);
+		border-radius: var(--sys-radius-full);
 		background: var(--sys-color-primary-container);
 	}
 }
@@ -1214,7 +1214,7 @@ When the item's silhouette changes, the marker moves onto the part that still ha
 
 ```scss
 .item[data-stacked="true"] {
-	border-radius: var(--radius-full);
+	border-radius: var(--sys-radius-full);
 	background: var(--sys-color-primary-container);
 }
 ```

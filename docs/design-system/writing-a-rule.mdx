@@ -9,7 +9,7 @@ import { WritingARuleDrawing } from "./writing-a-rule-drawing";
 
 # Writing a rule
 
-A design guide is read in two ways. Someone new reads a page from top to bottom to learn how the product thinks. Someone in the middle of a task, person or agent, comes looking for one rule and leaves again. A good page serves both: prose that makes the case, and every rule stated once, in a sentence that can be found.
+A design guide is read in two ways. Someone new reads a page from top to bottom to learn how the kit thinks. Someone in the middle of a task, person or agent, comes looking for one rule and leaves again. A good page serves both: prose that makes the case, and every rule stated once, in a sentence that can be found.
 
 <Illustration caption="A section, part by part: a heading that introduces it, the prose that makes the case and a visual that shows it. The rule itself, in one sentence, waits folded at the foot of the page.">
 	<WritingARuleDrawing />
@@ -17,7 +17,7 @@ A design guide is read in two ways. Someone new reads a page from top to bottom 
 
 ## What belongs here
 
-Design decisions that hold for the whole product. A decision about a single component goes on [that component's page](#component-pages).
+Design decisions that hold for the whole kit. A decision about a single component goes on [that component's page](#component-pages).
 
 Most rules here are one of two kinds:
 
@@ -28,7 +28,7 @@ Each rule is written once, on the page it belongs to. Everywhere else that depen
 
 ## The shape of a page
 
-Every page runs from the general to the particular. It opens with a short lede and a drawing that say what the topic is about. Then it explains the idea the way it would hold for any product: what it's for, why it matters, the theory behind it. Only after that does it say how this product does it, with its own scale, its own levels, its own roles. A reader who knows the theory can skip ahead, and one who doesn't is never handed a product's choices before the reasons for them.
+Every page runs from the general to the particular. It opens with a short lede and a drawing that say what the topic is about. Then it explains the idea the way it would hold for any product: what it's for, why it matters, the theory behind it. Only after that does it say how the kit does it, with its own scale, its own levels, its own roles. A reader who knows the theory can skip ahead, and one who doesn't is never handed a product's choices before the reasons for them.
 
 Headings are few. A reader scans them first, and a long contents list hides the shape of the page. A heading introduces its section in plain words, like "The anatomy of a shadow", rather than cramming a whole rule into one line. The rule lives in the prose below it, where there is room to say why.
 
@@ -38,7 +38,7 @@ At the foot of every page sits its rule index, under Technical rules: every rule
 
 Write it the way you'd explain it to a colleague: plain words, the purpose before the mechanics, and why the choice beat the alternative, in a sentence or two. If a pull request or a discussion settled it, link to that at the end.
 
-A choice this product made is told as a choice, not as a law of nature. Reserving contrast for what matters is a decision another product might not take. The guide describes this product and never names another one.
+A choice the kit made is told as a choice, not as a law of nature. Reserving contrast for what matters is a decision another product might not take. The guide describes the kit and never names a product.
 
 Each topic has one home. When something moves to the page it belongs on, the old place keeps a sentence pointing to it. What is stale, or only describes how something happens to be built today, comes out everywhere it appears.
 
@@ -50,9 +50,9 @@ A page needs pictures for two reasons: to show what a sentence claims, and to gi
 
 An illustration is editorial, not a screenshot: one idea, drawn big and cropped boldly, often laid out on the page's own grid. It is never a mock-up of the interface, because a mock-up invites the reader to check details that don't matter. Its background stands apart from the page in both themes, and in the light theme it is never lighter than the page itself. It is a picture, so its text can't be selected.
 
-A section about an idea may borrow the drawing accents, colours turned off the brand green, because it isn't showing the product. Anything about the product itself, like its brand or its colours, uses only the product's real colours, so the page never shows a colour the product doesn't have.
+A section about an idea may borrow the drawing accents, colours taken from IGNE's brand, because it isn't showing the kit. Anything about the kit itself, like its colours, uses only the kit's real colours, so the page never shows a colour the kit doesn't have.
 
-A specimen samples the real thing: a handful of steps or roles rather than the full set, on the product's own surfaces, outlined so each sample holds its edge. The full set lives in the tokens files.
+A specimen samples the real thing: a handful of steps or roles rather than the full set, on the kit's own surfaces, outlined so each sample holds its edge. The full set lives in the tokens files.
 
 ## Linking
 
@@ -105,7 +105,7 @@ A pattern page has [the same shape as every other page](#the-shape-of-a-page), w
 
 1. **The name** is the group or the moments the pattern governs, like "Popups" or "Patterns". Under it, a short lede and a drawing on the problem it solves, the way it holds for any product.
 2. **Applies to:** every component the pattern covers, each one linked. They are listed in text, so that someone working on one of them, person or agent, finds out the pattern applies without having to recognise it in a picture. Each of those components lists the pattern under [Follows](#follows).
-3. **Sections** under plain headings that introduce them, general first and this product's answer after, with their do and don't specimens. Anything that holds for only one of the components goes on that component's page.
+3. **Sections** under plain headings that introduce them, general first and the kit's answer after, with their do and don't specimens. Anything that holds for only one of the components goes on that component's page.
 4. **Exceptions:** a component in Applies to that deliberately breaks one of the rules, which rule, and why. Without the entry, the next person to notice will fix it.
 5. **Known issues**, [as on a component page](#known-issues).
 6. **Technical rules:** every rule the pattern makes, [one block each](#every-rule-a-page-makes-is-one-block-in-its-technical-rules), with its code.
@@ -116,7 +116,7 @@ Every rule on this page, one sentence each, for looking up rather than reading. 
 
 <DetailsList>
 
-<Details title="A rule here is a design decision that holds for the whole product">
+<Details title="A rule here is a design decision that holds for the whole kit">
 
 A decision about one component goes on that component's page, and one about a group of components on a pattern page. Explained in [What belongs here](#what-belongs-here).
 
@@ -128,9 +128,9 @@ Every other page that depends on it links to it rather than repeating it. Explai
 
 </Details>
 
-<Details title="A page runs from the general idea to this product's specifics">
+<Details title="A page runs from the general idea to the kit's specifics">
 
-The lede and opening drawing, then the idea as it holds for any product, then how this product does it, then the rule index. Explained in [The shape of a page](#the-shape-of-a-page).
+The lede and opening drawing, then the idea as it holds for any product, then how the kit does it, then the rule index. Explained in [The shape of a page](#the-shape-of-a-page).
 
 </Details>
 
@@ -147,7 +147,7 @@ The block's title states the rule as one sentence, and its anchor is that senten
 ```mdx
 <Details title="A control never carries a shadow">
 
-Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
+Buttons, inputs, selects, checkboxes, tags and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
 
 </Details>
 ```
@@ -207,7 +207,7 @@ The page it left keeps a sentence that links to its new home. Explained in [Writ
 
 <Details title="A rule uses generic role names, never names from our code">
 
-Tokens, props, hooks and file names go stale on the first rename. Examples use generic role names, like `--sys-color-surface`; the real names are in `src/style/`. Explained in [Writing for people](#writing-for-people).
+Tokens, props, hooks and file names go stale on the first rename. Examples use generic role names, like `--sys-color-surface`; the real names are in `tokens/`. Explained in [Writing for people](#writing-for-people).
 
 <DoDont>
 <Example kind="do" caption="The decision, in words that still hold after a rename.">
@@ -283,11 +283,11 @@ In the light theme it is never lighter than the page. The illustration frame mak
 
 <Details title="Only a section about an idea borrows the drawing accents">
 
-A drawing about the product, like its brand or its colours, uses only the product's own ramps. Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
+A drawing about the kit, like its colours, uses only the kit's own ramps. Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
 
 </Details>
 
-<Details title="A specimen shows a handful, on the product's own surfaces, outlined">
+<Details title="A specimen shows a handful, on the kit's own surfaces, outlined">
 
 Explained in [Pictures that earn their place](#pictures-that-earn-their-place).
 

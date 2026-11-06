@@ -7,8 +7,8 @@
 ///       @include specimen.name;
 ///   }
 @mixin name {
-	color: var(--sys-color-text);
-	font: var(--sys-font-label-medium);
+	color: var(--docs-color-ink);
+	font: var(--docs-type-label-medium);
 }
 
 /// What a token is for, or the value it resolves to, under its name.
@@ -30,8 +30,8 @@
 ///       @include specimen.group;
 ///   }
 @mixin group {
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-label-small-strong);
+	color: var(--docs-color-muted);
+	font: var(--docs-type-label-small-strong);
 }
 
 /// A dashed construction line drawn with CSS, in the illustrations' style:
@@ -45,7 +45,7 @@
 	border-#{$side}: 1.5px dashed
 		color-mix(
 			in oklab,
-			var(--sys-color-text-muted) 45%,
+			var(--docs-color-muted) 45%,
 			transparent
 		);
 }

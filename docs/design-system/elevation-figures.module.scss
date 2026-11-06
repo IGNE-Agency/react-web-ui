@@ -1,41 +1,43 @@
 @use "./drawing";
 
-.parts,
-.height {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.parts,
+	.height {
+		@include drawing.palette("neutral");
+	}
 
-.wall,
-.umbra {
-	fill: var(--drawing-hot-muted);
-}
+	.wall,
+	.umbra {
+		fill: var(--drawing-hot-muted);
+	}
 
-.floor {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 45%,
-		var(--drawing-paper)
-	);
-}
-
-.penumbra {
-	fill: var(--drawing-hot-vivid);
-}
-
-.paper {
-	fill: var(--drawing-paper);
-}
-
-.night {
-	fill: var(--drawing-cool-muted);
-}
-
-@for $level from 0 through 3 {
-	.terrace#{$level} {
+	.floor {
 		fill: color-mix(
 			in oklab,
-			var(--drawing-paper) #{12% + $level * 16%},
-			var(--drawing-cool-muted)
+			var(--drawing-hot-vivid) 45%,
+			var(--drawing-paper)
 		);
+	}
+
+	.penumbra {
+		fill: var(--drawing-hot-vivid);
+	}
+
+	.paper {
+		fill: var(--drawing-paper);
+	}
+
+	.night {
+		fill: var(--drawing-cool-muted);
+	}
+
+	@for $level from 0 through 3 {
+		.terrace#{$level} {
+			fill: color-mix(
+				in oklab,
+				var(--drawing-paper) #{12% + $level * 16%},
+				var(--drawing-cool-muted)
+			);
+		}
 	}
 }

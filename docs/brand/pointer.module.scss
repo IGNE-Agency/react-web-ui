@@ -1,0 +1,10 @@
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.pointer {
+		display: inline-block;
+		margin-block: calc(-1 * var(--sys-unit-4));
+		margin-inline-start: var(--sys-unit-4);
+		vertical-align: middle;
+		color: var(--guide-accent, var(--docs-color-blue));
+		scale: -1 1;
+	}
+}

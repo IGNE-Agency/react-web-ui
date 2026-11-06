@@ -1,57 +1,59 @@
 @use "./drawing";
 @use "./specimen";
 
-.radii {
-	display: grid;
-	grid-template-columns: repeat(
-		auto-fill,
-		minmax(min(100%, 9rem), 1fr)
-	);
-	gap: var(--sys-unit-24) var(--sys-unit-12);
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.radii {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 9rem), 1fr)
+		);
+		gap: var(--sys-unit-24) var(--sys-unit-12);
+	}
 
-.radius {
-	display: flex;
-	flex-direction: column;
-	align-items: start;
-	gap: var(--sys-unit-2);
-}
+	.radius {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		gap: var(--sys-unit-2);
+	}
 
-.drawing {
-	@include drawing.palette("neutral");
+	.drawing {
+		@include drawing.palette("neutral");
 
-	display: block;
-	margin-block-end: var(--sys-unit-6);
-	border-radius: var(--sys-radius-md);
-	inline-size: 100%;
-	block-size: auto;
-}
+		display: block;
+		margin-block-end: var(--sys-unit-6);
+		border-radius: var(--sys-radius-md);
+		inline-size: 100%;
+		block-size: auto;
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-field);
+	}
 
-.rule {
-	@include drawing.rule;
+	.rule {
+		@include drawing.rule;
 
-	stroke-dasharray: 6 6;
-	stroke-width: 1.5px;
-	vector-effect: non-scaling-stroke;
-}
+		stroke-dasharray: 6 6;
+		stroke-width: 1.5px;
+		vector-effect: non-scaling-stroke;
+	}
 
-.surface {
-	@include drawing.outline;
+	.surface {
+		@include drawing.outline;
 
-	stroke-width: 2px;
-	vector-effect: non-scaling-stroke;
+		stroke-width: 2px;
+		vector-effect: non-scaling-stroke;
 
-	fill: var(--drawing-paper);
-}
+		fill: var(--drawing-paper);
+	}
 
-.dot {
-	fill: var(--drawing-deep);
-}
+	.dot {
+		fill: var(--drawing-deep);
+	}
 
-.value {
-	@include specimen.meta;
+	.value {
+		@include specimen.meta;
+	}
 }

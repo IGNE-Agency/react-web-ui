@@ -3,69 +3,72 @@
 
 $hue: 35deg;
 
-.dials,
-.perceptual {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.dials,
+	.perceptual {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--ref-neutral-600);
-}
+	.field {
+		fill: var(--drawing-ink);
+	}
 
-.rule {
-	@include drawing.rule;
+	.rule {
+		@include drawing.rule;
 
-	stroke: var(--drawing-paper);
-}
+		stroke: var(--drawing-paper);
+	}
 
-@for $row from 0 through 5 {
-	@for $column from 0 through 6 {
-		.tile#{$row}x#{$column} {
-			fill: oklch(
-				(95% - $row * 10%) math.div($column, 6) * 0.17 $hue
-			);
+	@for $row from 0 through 5 {
+		@for $column from 0 through 6 {
+			.tile#{$row}x#{$column} {
+				fill: oklch(
+					(95% - $row * 10%) math.div($column, 6) * 0.17
+						$hue
+				);
+			}
 		}
 	}
-}
 
-@for $slice from 0 through 11 {
-	.hue#{$slice} {
-		fill: oklch(70% 0.15 $slice * 30deg);
+	@for $slice from 0 through 11 {
+		.hue#{$slice} {
+			fill: oklch(70% 0.15 $slice * 30deg);
+		}
 	}
-}
 
-.ring,
-.thumb {
-	fill: none;
-	stroke: var(--drawing-paper);
-	stroke-width: 6;
-}
+	.ring,
+	.thumb {
+		fill: none;
+		stroke: var(--drawing-paper);
+		stroke-width: 6;
+	}
 
-.picked {
-	fill: oklch(75% math.div(5, 6) * 0.17 $hue);
-}
+	.picked {
+		fill: oklch(75% math.div(5, 6) * 0.17 $hue);
+	}
 
-.divider {
-	stroke: var(--ref-neutral-600);
-	stroke-width: 24;
-}
+	.divider {
+		stroke: var(--drawing-ink);
+		stroke-width: 24;
+	}
 
-.reserve {
-	@include drawing.palette("inverted");
-}
+	.reserve {
+		@include drawing.palette("inverted");
+	}
 
-.reserveField {
-	fill: var(--drawing-field);
-}
+	.reserveField {
+		fill: var(--drawing-field);
+	}
 
-.reserveQuiet {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-mid) 44%,
-		var(--drawing-field)
-	);
-}
+	.reserveQuiet {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-mid) 44%,
+			var(--drawing-field)
+		);
+	}
 
-.reserveAction {
-	fill: var(--drawing-paper);
+	.reserveAction {
+		fill: var(--drawing-paper);
+	}
 }

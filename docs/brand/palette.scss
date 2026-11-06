@@ -1,0 +1,109 @@
+$-type-roles: (
+	"heading-large": "heading",
+	"heading-medium": "heading",
+	"heading-small": "heading",
+	"body-large": "body",
+	"body-medium": "body",
+	"body-medium-strong": "body",
+	"body-small": "body",
+	"label-large": "body",
+	"label-large-strong": "body",
+	"label-medium": "body",
+	"label-medium-strong": "body",
+	"label-small": "body",
+	"label-small-strong": "body",
+);
+
+@mixin -dark {
+	--docs-color-paper: oklch(26% 0.006 60);
+	--docs-color-surface: oklch(33.3% 0.006 60);
+	--docs-color-sand: oklch(37% 0.008 60);
+	--docs-color-sand-strong: oklch(46% 0.012 60);
+	--docs-color-ink: oklch(97% 0.006 60);
+	--docs-color-body: oklch(91% 0.012 60);
+	--docs-color-muted: oklch(84% 0.014 60);
+	--docs-color-on-ink: var(--docs-color-paper);
+
+	--docs-color-yellow-mark: var(--docs-color-yellow);
+	--docs-color-blue: oklch(70% 0.11 252);
+	--docs-color-green: oklch(70% 0.11 164);
+	--docs-color-yellow-tint: oklch(36% 0.05 89);
+	--docs-color-blue-tint: oklch(34% 0.04 252);
+	--docs-color-green-tint: oklch(34% 0.04 164);
+
+	--docs-color-do-bg: oklch(40% 0.07 164);
+	--docs-color-do-fg: oklch(93% 0.04 164);
+	--docs-color-dont-bg: oklch(40% 0.09 25);
+	--docs-color-dont-fg: oklch(93% 0.04 25);
+
+	--docs-tile-opacity: 0.06;
+}
+
+:root {
+	--docs-font-body: "Satoshi", system-ui, sans-serif;
+	--docs-font-heading: var(--docs-font-body);
+	--docs-font-accent: "Kalam", var(--docs-font-body);
+
+	@each $role, $family in $-type-roles {
+		--docs-type-#{$role}: var(
+				--sys-font-#{$role}-font-weight
+			)
+			var(--sys-font-#{$role}-font-size) /
+				var(--sys-font-#{$role}-line-height)
+			var(--docs-font-#{$family});
+	}
+
+	--docs-type-eyebrow: 700 1.25rem / 1.2
+		var(--docs-font-accent);
+
+	--docs-color-paper: #f8f4f1;
+	--docs-color-surface: #fff;
+	--docs-color-sand: oklch(
+		from #f8f4f1 calc(l - 0.035) 0.01 h
+	);
+	--docs-color-sand-strong: #d8cac0;
+	--docs-color-border: var(--docs-color-sand-strong);
+	--docs-color-ink: #363636;
+	--docs-color-body: #454140;
+	--docs-color-muted: #655e5d;
+	--docs-color-on-ink: var(--docs-color-paper);
+
+	--docs-color-yellow: #ffd86f;
+	--docs-color-yellow-strong: #ecc251;
+	--docs-color-yellow-mark: var(--docs-color-yellow-strong);
+	--docs-color-blue: #5490d1;
+	--docs-color-blue-strong: #3171b5;
+	--docs-color-green: #2fa278;
+	--docs-color-green-strong: #237b5b;
+	--docs-color-on-yellow: #363636;
+	--docs-color-on-blue: #fff;
+	--docs-color-on-green: #fff;
+	--docs-color-yellow-tint: oklch(95% 0.06 89);
+	--docs-color-blue-tint: oklch(94% 0.03 252);
+	--docs-color-green-tint: oklch(94% 0.035 164);
+
+	--docs-color-link: var(--docs-color-ink);
+	--docs-color-link-underline: var(--docs-color-blue);
+	--docs-color-link-underline-hover: var(
+		--docs-color-blue-strong
+	);
+
+	--docs-color-do-bg: oklch(88% 0.06 164);
+	--docs-color-do-fg: oklch(36% 0.08 164);
+	--docs-color-dont-bg: oklch(88% 0.06 25);
+	--docs-color-dont-fg: oklch(40% 0.14 25);
+	--docs-color-caution-bg: var(--docs-color-yellow);
+	--docs-color-caution-fg: var(--docs-color-on-yellow);
+
+	--docs-tile-opacity: 0.35;
+}
+
+html[data-theme="dark"] {
+	@include -dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-theme="light"]) {
+		@include -dark;
+	}
+}

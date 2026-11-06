@@ -140,7 +140,7 @@ const toneAt = (
 	chroma: number,
 	turn: number,
 ) =>
-	`oklch(from var(--ref-green-500) ${lightness} ${chroma} calc(h + ${turn}))`;
+	`oklch(from var(--drawing-neighbour-vivid) ${lightness} ${chroma} calc(h + ${turn}))`;
 
 /**
  * Pairs that hold as the family changes: tall light capsules running off the

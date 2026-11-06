@@ -11,7 +11,9 @@
 	display: grid;
 	inline-size: min(26rem, var(--available-width));
 	border-radius: var(--sys-radius-lg);
+	background: var(--docs-color-surface);
 	padding: 0;
+	color: var(--docs-color-body);
 }
 
 .arrow {
@@ -28,13 +30,10 @@
 }
 
 .arrowFill {
-	fill: var(--sys-color-surface-overlay);
+	fill: var(--docs-color-surface);
 
 	.arrow[data-drawing][data-side="bottom"] & {
-		fill: var(
-			--preview-field,
-			var(--sys-color-surface-high)
-		);
+		fill: var(--preview-field, var(--docs-color-sand));
 	}
 }
 
@@ -44,7 +43,7 @@
 	overflow: hidden;
 	border-start-start-radius: var(--sys-radius-lg);
 	border-start-end-radius: var(--sys-radius-lg);
-	background: var(--sys-color-surface-high);
+	background: var(--docs-color-sand);
 
 	> * {
 		grid-area: 1 / 1;
@@ -93,7 +92,7 @@
 
 .loader {
 	place-self: center;
-	color: var(--sys-color-text-muted);
+	color: var(--docs-color-muted);
 
 	@media not (prefers-reduced-motion) {
 		animation: appear var(--sys-motion-short)
@@ -130,19 +129,19 @@
 
 .numeral {
 	grid-row: 1 / span 3;
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-heading-large);
+	color: var(--docs-color-muted);
+	font: var(--docs-type-heading-large);
 	font-variant-numeric: tabular-nums;
 }
 
 .kicker {
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-label-small);
+	color: var(--docs-color-muted);
+	font: var(--docs-type-label-small);
 }
 
 .title {
-	color: var(--sys-color-text);
-	font: var(--sys-font-heading-small);
+	color: var(--docs-color-ink);
+	font: var(--docs-type-heading-small);
 	text-wrap: balance;
 }
 
@@ -150,8 +149,8 @@
 	display: -webkit-box;
 	margin: var(--sys-unit-6) 0 0;
 	overflow: hidden;
-	color: var(--sys-color-text);
-	font: var(--sys-font-body-small);
+	color: var(--docs-color-body);
+	font: var(--docs-type-body-small);
 	text-wrap: pretty;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 4;
@@ -159,20 +158,20 @@
 
 .kickerSkeleton {
 	inline-size: 30%;
-	font: var(--sys-font-label-small);
+	font: var(--docs-type-label-small);
 }
 
 .titleSkeleton {
 	inline-size: 80%;
 	margin-block-start: var(--sys-unit-2);
-	font: var(--sys-font-heading-small);
+	font: var(--docs-type-heading-small);
 }
 
 .leadSkeleton {
 	display: grid;
 	row-gap: var(--sys-unit-4);
 	margin-block-start: var(--sys-unit-8);
-	font: var(--sys-font-body-small);
+	font: var(--docs-type-body-small);
 }
 
 .lastLine {

@@ -1,59 +1,61 @@
 @use "./drawing";
 
-.puzzle,
-.readers {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.puzzle,
+	.readers {
+		@include drawing.palette("neutral");
+	}
 
-.puzzle {
-	--figure-field: var(--drawing-hot-muted);
-}
+	.puzzle {
+		--figure-field: var(--drawing-hot-muted);
+	}
 
-.readers {
-	--figure-field: var(--drawing-neighbour-vivid);
-}
+	.readers {
+		--figure-field: var(--drawing-neighbour-vivid);
+	}
 
-.field {
-	fill: var(--figure-field);
-}
+	.field {
+		fill: var(--figure-field);
+	}
 
-.paper {
-	fill: var(--drawing-paper);
-}
+	.paper {
+		fill: var(--drawing-paper);
+	}
 
-.mark {
-	fill: var(--drawing-neighbour-muted);
-}
+	.mark {
+		fill: var(--drawing-neighbour-muted);
+	}
 
-.sightline {
-	@include drawing.rule;
+	.sightline {
+		@include drawing.rule;
 
-	stroke: var(--drawing-neighbour-muted);
-}
+		stroke: var(--drawing-neighbour-muted);
+	}
 
-.toneOne {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 70%,
-		var(--drawing-hot-muted)
-	);
-}
+	.toneOne {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-vivid) 70%,
+			var(--drawing-hot-muted)
+		);
+	}
 
-.toneTwo {
-	fill: var(--drawing-hot-vivid);
-}
+	.toneTwo {
+		fill: var(--drawing-hot-vivid);
+	}
 
-.toneThree {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 60%,
-		var(--drawing-paper)
-	);
-}
+	.toneThree {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-vivid) 60%,
+			var(--drawing-paper)
+		);
+	}
 
-.piece {
-	paint-order: stroke;
-	stroke: var(--figure-field);
-	stroke-linejoin: round;
-	stroke-width: 8;
+	.piece {
+		paint-order: stroke;
+		stroke: var(--figure-field);
+		stroke-linejoin: round;
+		stroke-width: 8;
+	}
 }

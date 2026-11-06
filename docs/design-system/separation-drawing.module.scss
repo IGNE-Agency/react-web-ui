@@ -1,19 +1,21 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--drawing-neighbour-vivid);
-}
+	.field {
+		fill: var(--drawing-neighbour-vivid);
+	}
 
-.boxed {
-	fill: none;
-	stroke: var(--drawing-neighbour-muted);
-	stroke-width: 4;
-}
+	.boxed {
+		fill: none;
+		stroke: var(--drawing-neighbour-muted);
+		stroke-width: 4;
+	}
 
-.free {
-	fill: var(--drawing-paper);
+	.free {
+		fill: var(--drawing-paper);
+	}
 }

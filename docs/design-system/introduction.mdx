@@ -1,10 +1,13 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Pointer } from "../brand/pointer.tsx";
 import { Illustration } from "./illustration";
 import { IntroductionDrawing } from "./introduction-drawing";
 import {
 	ReadersDrawing,
 	ScreensDrawing,
 } from "./introduction-figures";
+
+export const guide = { accent: "blue", hero: "straight" };
 
 <Meta title="Design system/Introduction" />
 
@@ -52,7 +55,8 @@ The foundation and the principles can change, but only after the team has talked
 
 ## Where to go
 
-- **[Getting started](?path=/docs/design-system-getting-started--docs)**: new here? Start with this.
+- **[Getting started](?path=/docs/design-system-getting-started--docs)**: new here? Start with this. <Pointer />
+- **[Brand](?path=/docs/design-system-brand--docs)**: the look these docs wear, and why the kit wears none of it.
 - **Foundation**: the values every screen is made of. Read about [Token architecture](?path=/docs/design-system-foundation-token-architecture--docs), [Colour](?path=/docs/design-system-foundation-colour--docs), [Spacing](?path=/docs/design-system-foundation-spacing--docs), [Shape](?path=/docs/design-system-foundation-shape--docs), [Elevation](?path=/docs/design-system-foundation-elevation--docs), [Motion](?path=/docs/design-system-foundation-motion--docs), [Type](?path=/docs/design-system-foundation-type--docs), [Iconography](?path=/docs/design-system-foundation-iconography--docs) and [States](?path=/docs/design-system-foundation-states--docs).
 - **[Principles](?path=/docs/design-system-principles-overview--docs)**: how the foundation is put to use. Read about [Separation](?path=/docs/design-system-principles-separation--docs), [Interaction](?path=/docs/design-system-principles-interaction--docs), [Accessibility](?path=/docs/design-system-principles-accessibility--docs), [Layout](?path=/docs/design-system-principles-layout--docs), [Responsiveness](?path=/docs/design-system-principles-responsiveness--docs) and [Language](?path=/docs/design-system-principles-language--docs).
 - **[Patterns](?path=/docs/design-system-patterns--docs)**: solutions that work across components.

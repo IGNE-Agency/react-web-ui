@@ -110,6 +110,14 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 - A rule under the dark theme goes through `theme.dark`, which follows `data-theme` and, without one, the OS.
 - Motion sits inside `@media not (prefers-reduced-motion)`.
 
+### Docs chrome
+
+- The docs wear IGNE's brand; the kit stays neutral. The brand never enters `src/` or `tokens/`.
+- The chrome reads its colour and type from the `--docs-*` palette in `docs/brand/palette.scss`. Spacing, radius and motion stay the kit's `--sys-*`. Specimen samples keep reading the kit tokens they show.
+- Every chrome stylesheet under `docs/` and `.storybook/` sits in `@scope (.sbdocs, .docs-preview) to (.kit-preview, .sb-story, .docs-story)`; `.docs-preview` is the portalled link-preview card. In a CSS module the prelude is `@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory))`: Vite's CSS modules split the prelude on "to". Inside it, start a selector with `:scope` or a plain selector, never `&`. A selector that names an ancestor of the root needs `:scope` after it; under the dark theme use `docs/brand/theme.scss`'s `dark`, not the kit's. A module whose classes render only inside an `Example` visual is kit content and stays unscoped.
+- A kit component shown in the chrome sits in a `.kit-preview` (or a story). The boundary rule in `.storybook/docs.scss` gives it the kit's font and colour back.
+- Two checks hold it: `Docs/Brand checks` proves a kit component in the chrome computes the kit's font, colour and link colour in both themes, and `tools/check-docs-tokens.ts` (in `bun check`) fails if the docs declare a `--sys-*` or `--ref-*` property.
+
 ---
 
 ## Generated files

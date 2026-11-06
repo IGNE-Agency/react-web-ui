@@ -1,128 +1,111 @@
 @use "sass:map";
-@use "../../src/style/theme.scss" as theme;
+@use "../brand/theme.scss";
+
+@function -blend($colour, $share, $base) {
+	@return "color-mix(in oklab, #{$colour} #{$share}, #{$base})";
+}
+
+@function -tone($colour, $lightness, $chroma) {
+	@return "oklch(from #{$colour} #{$lightness} #{$chroma} h)";
+}
+
+$-paper: "var(--drawing-paper)";
+$-dark: "var(--docs-color-on-yellow)";
+$-yellow: "var(--docs-color-yellow)";
+$-yellow-strong: "var(--docs-color-yellow-strong)";
+$-blue: "var(--docs-color-blue)";
+$-blue-strong: "var(--docs-color-blue-strong)";
+$-green: "var(--docs-color-green)";
+$-green-strong: "var(--docs-color-green-strong)";
+
+$-on-light: (
+	"deep": -blend($-yellow-strong, 15%, $-dark),
+	"mid": -blend($-yellow-strong, 65%, $-dark),
+	"pale": $-yellow,
+	"ink": $-dark,
+	"shade": "oklch(from #{$-dark} calc(l * 0.5) c h)",
+);
 
 $-families: (
 	"saturated": (
-		"light": (
-			"field": "green-500",
-			"deep": "green-750",
-			"mid": "green-650",
-			"pale": "green-200",
-			"ink": "green-900",
-			"shade": "green-900",
-		),
-		"dark": (
-			"field": "green-550",
-		),
+		"light":
+			map.merge(
+				$-on-light,
+				(
+					"field": $-yellow-strong,
+				)
+			),
 	),
 	"pale": (
-		"light": (
-			"field": "green-200",
-			"deep": "green-700",
-			"mid": "green-450",
-			"pale": "green-100",
-			"ink": "green-900",
-			"shade": "green-900",
-		),
-		"dark": (
-			"field": "green-300",
-			"deep": "green-750",
-		),
+		"light":
+			map.merge(
+				$-on-light,
+				(
+					"field": -blend($-yellow, 50%, $-paper),
+				)
+			),
 	),
 	"sand": (
-		"light": (
-			"field": "sand-200",
-			"deep": "green-700",
-			"mid": "green-450",
-			"pale": "green-150",
-			"ink": "sand-850",
-			"shade": "sand-900",
-		),
+		"light":
+			map.merge(
+				$-on-light,
+				(
+					"field": "var(--docs-color-sand-strong)",
+				)
+			),
 		"dark": (
-			"field": "sand-300",
-			"deep": "green-750",
+			"field":
+				"oklch(from #{$-paper} calc(l - 0.12) calc(c * 3.5) h)",
 		),
 	),
 	"inverted": (
 		"light": (
-			"field": "green-750",
-			"deep": "green-650",
-			"mid": "green-400",
-			"pale": "green-200",
-			"ink": "green-100",
-			"shade": "green-950",
-		),
-		"dark": (
-			"field": "green-750",
+			"field": $-dark,
+			"deep": -blend($-yellow-strong, 25%, $-dark),
+			"mid": -blend($-yellow-strong, 65%, $-dark),
+			"pale": $-yellow,
+			"ink": -blend($-yellow, 25%, $-paper),
+			"shade": "oklch(from #{$-dark} calc(l * 0.4) c h)",
 		),
 	),
 	"neutral": (
-		"light": (
-			"field": "neutral-150",
-			"deep": "green-700",
-			"mid": "green-450",
-			"pale": "green-100",
-			"ink": "neutral-850",
-			"shade": "neutral-900",
-		),
-		"dark": (
-			"field": "neutral-250",
-			"deep": "green-750",
-		),
+		"light":
+			map.merge(
+				$-on-light,
+				(
+					"field": -blend($-paper, 80%, $-dark),
+				)
+			),
 	),
 );
 
 $-accents: (
-	"neighbour": (
-		"turn": -45,
-		"vivid": 91% 0.19,
-		"muted": 42% 0.09,
-	),
-	"warm": (
-		"turn": -75,
-		"vivid": 92% 0.16,
-		"muted": 46% 0.09,
-	),
-	"hot": (
-		"turn": -135,
-		"vivid": 70% 0.17,
-		"muted": 40% 0.12,
-	),
-	"cool": (
-		"turn": 115,
-		"vivid": 78% 0.12,
-		"muted": 38% 0.11,
-	),
-	"opposite": (
-		"turn": 180,
-		"vivid": 82% 0.12,
-		"muted": 40% 0.11,
-	),
+	"neighbour-vivid": $-yellow,
+	"neighbour-muted": -tone($-yellow-strong, 40%, 0.04),
+	"warm-vivid": $-yellow-strong,
+	"warm-muted": -tone($-yellow-strong, 52%, 0.09),
+	"hot-vivid": $-green,
+	"hot-muted": -tone($-green-strong, 36%, 0.07),
+	"cool-vivid": $-blue,
+	"cool-muted": -tone($-blue-strong, 36%, 0.08),
+	"opposite-vivid": -blend($-blue, 45%, $-paper),
+	"opposite-muted": $-blue-strong,
 );
 
 @mixin -roles($roles) {
-	@each $role, $step in $roles {
-		--drawing-#{$role}: var(--ref-#{$step});
+	@each $role, $value in $roles {
+		--drawing-#{$role}: #{$value};
 	}
 }
 
-@mixin -accents {
-	@each $name, $accent in $-accents {
-		$turn: map.get($accent, "turn");
-
-		@each $tone in ("vivid", "muted") {
-			--drawing-#{$name}-#{$tone}: #{"oklch(from var(--ref-green-500) #{map.get($accent, $tone)} calc(h + #{$turn}))"};
-		}
-	}
-}
-
-/// The illustrations' spot-colour palette, set on a drawing: one field family
-/// (`saturated`, `pale`, `sand`, `inverted` or `neutral`) as the roles field,
-/// deep, mid, pale, paper, ink and shade, read from the green, sand and
-/// neutral ramps, with a counterpart for the dark theme. Beside them, five
-/// accents turned from the brand's hue, each as a vivid and a muted tone:
-/// `neighbour` (a lime), `warm` (a butter yellow), `hot` (a coral), `cool` (a
-/// lilac) and `opposite` (a pink), as `--drawing-cool-vivid` and so on.
+/// The illustrations' spot-colour palette, set on a drawing and read from the
+/// docs palette. One field family (`saturated`, `pale`, `sand`, `inverted` or
+/// `neutral`) sets the roles field, deep, mid, pale, ink and shade beside
+/// paper: yellow fields for `saturated` and `pale`, sand, ink and grey for the
+/// rest, with yellow and ink for deep, mid and pale. Five accents each come as
+/// a vivid and a muted tone: `neighbour` and `warm` in yellow, `hot` in green,
+/// `cool` and `opposite` in blue, as `--drawing-cool-vivid` and so on. Paper
+/// stays light and ink dark in both themes.
 ///
 /// @example
 ///   .drawing {
@@ -131,13 +114,15 @@ $-accents: (
 @mixin palette($family) {
 	$steps: map.get($-families, $family);
 
-	--drawing-paper: var(--ref-sand-10);
+	--drawing-paper: var(--docs-color-paper);
 
-	@include -accents;
+	@include -roles($-accents);
 	@include -roles(map.get($steps, "light"));
 
 	@include theme.dark {
-		@include -roles(map.get($steps, "dark"));
+		--drawing-paper: var(--docs-color-ink);
+
+		@include -roles(map.get($steps, "dark") or ());
 	}
 }
 

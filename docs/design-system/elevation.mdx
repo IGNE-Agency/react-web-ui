@@ -50,7 +50,7 @@ A shadow is darkness, and darkness doesn't show on something that's already dark
 
 ## Levels
 
-This product has three levels. Level 0 is the page and everything in its flow, and casts no shadow. Level 1 holds tooltips, menus, select popups and popovers. Level 2 holds toasts. Each floating level is a tight umbra plus a wide, soft penumbra, and in the dark theme each is also a lighter surface than the one below it.
+The kit has three levels. Level 0 is the page and everything in its flow, and casts no shadow. Level 1 holds tooltips, menus, select popups and popovers. Level 2 holds toasts. Each floating level is a tight umbra plus a wide, soft penumbra, and in the dark theme each is also a lighter surface than the one below it.
 
 <Specimen caption="Each level stands a step higher and casts a wider shadow. On the dark canvas the shadow all but disappears, and each level's lighter surface does the work.">
 	<ElevationSpecimen
@@ -137,7 +137,7 @@ Cards, panels, placeholder tiles, rails and bars in document flow are [separated
 
 ## Controls sit flat
 
-Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. A shadowed button is the clearest sign a component has drifted into stock Material.
+Buttons, inputs, selects, checkboxes, tags and text composers all sit flat. A shadowed button is the clearest sign a component has drifted into stock Material.
 
 <DoDont>
 	<Example
@@ -203,7 +203,7 @@ Cards, tables, panels, placeholder tiles, rails and bars in document flow are to
 
 ```scss
 .card {
-	border-radius: var(--radius-md);
+	border-radius: var(--sys-radius-md);
 	background: var(--sys-color-surface);
 }
 ```
@@ -213,9 +213,9 @@ Cards, tables, panels, placeholder tiles, rails and bars in document flow are to
 
 ```scss
 .card {
-	border-radius: var(--radius-md);
+	border-radius: var(--sys-radius-md);
 	background: var(--sys-color-surface);
-	box-shadow: var(--elevation-1);
+	box-shadow: var(--sys-elevation-1);
 }
 ```
 
@@ -226,7 +226,7 @@ Cards, tables, panels, placeholder tiles, rails and bars in document flow are to
 
 <Details title="A control never carries a shadow">
 
-Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
+Buttons, inputs, selects, checkboxes, tags and text composers all sit flat. Shown in [Controls sit flat](#controls-sit-flat).
 
 <DoDont>
 <Example kind="do" caption="The button sits flat.">
@@ -243,7 +243,7 @@ Buttons, inputs, selects, checkboxes, chips and text composers all sit flat. Sho
 ```scss
 .button {
 	background: var(--sys-color-primary);
-	box-shadow: var(--elevation-1);
+	box-shadow: var(--sys-elevation-1);
 }
 ```
 
@@ -271,7 +271,7 @@ An arrow nub is a sibling element, not part of the popup box, so a `box-shadow` 
 
 ```scss
 .positioner {
-	filter: var(--elevation-1-filter);
+	filter: var(--sys-elevation-1-filter);
 }
 
 .popup {
@@ -319,7 +319,7 @@ A popup with no arrow (tooltip, select list, typeahead, toast) keeps `box-shadow
 
 ```scss
 .select-positioner {
-	filter: var(--elevation-1-filter);
+	filter: var(--sys-elevation-1-filter);
 }
 
 .select-popup {
@@ -339,7 +339,7 @@ A popup with no arrow (tooltip, select list, typeahead, toast) keeps `box-shadow
 
 ```scss
 .toast {
-	box-shadow: var(--elevation-2);
+	box-shadow: var(--sys-elevation-2);
 }
 ```
 

@@ -11,6 +11,7 @@ const config: StorybookConfig = {
 		"../src/**/*.stories.tsx",
 		"../src/**/*.mdx",
 		"../docs/**/*.mdx",
+		"../docs/**/*.stories.tsx",
 	],
 	addons: [
 		{
@@ -41,6 +42,9 @@ const config: StorybookConfig = {
 		"@storybook/addon-themes",
 	],
 	framework: "@storybook/react-vite",
+	staticDirs: [
+		{ from: "../docs/brand/assets", to: "/brand" },
+	],
 	core: {
 		builder: {
 			name: "@storybook/builder-vite",

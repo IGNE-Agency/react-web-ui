@@ -14,7 +14,7 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 
 1. **The raw compound**, such as `TextInput` or `Select`, owns the control and nothing else. It has no label, description or error, and it does not lay itself out. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control.
 2. **The shorthand**, such as `TextField`, assembles the raw parts with `Field` into the ordinary case: a label above a full-width control, then the description, then the error. It is built from the parts, never a second implementation of them, and it takes no prop that switches it to another anatomy. A control that should not be a stacked field drops to the raw tier.
-3. **The bridge**, such as `TSFTextField`, wires the shorthand to TanStack Form. It is registered in the kit's form hook and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix.
+3. **The bridge**, such as `TSFTextField`, wires the shorthand to TanStack Form. It is registered in the form hook an app builds with `createAppForm` and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix.
 
 ### Every field takes the same props on every tier
 

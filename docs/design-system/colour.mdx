@@ -18,6 +18,8 @@ import { Specimen } from "./specimen";
 import { RampSpecimen } from "./ramp-specimen";
 import { RoleSpecimen } from "./role-specimen";
 
+export const guide = { accent: "green" };
+
 <Meta title="Design system/Foundation/Colour" />
 
 # Colour
@@ -30,7 +32,7 @@ Colour is the first thing anyone takes in on a screen, before a single word is r
 
 ## What colour does
 
-Every colour on a screen is doing something. A tint behind a row says it's selected. A red border says something went wrong. A green button says this is the thing to press. Because colour is read so fast, it's the strongest signal a screen has, and the easiest one to wear out: paint everything and nothing stands out any more.
+Every colour on a screen is doing something. A tint behind a row says it's selected. A red border says something went wrong. A filled button says this is the thing to press. Because colour is read so fast, it's the strongest signal a screen has, and the easiest one to wear out: paint everything and nothing stands out any more.
 
 Colour also never works alone. Some people see fewer colours than others, screens get washed out by sunlight, and printers turn everything grey. So whatever colour says, a word, an icon or a shape says it too.
 
@@ -48,7 +50,7 @@ Change just one of them and you get the words designers use every day. Mix a col
 
 A palette with meaning isn't a collection of nice colours. It hands each hue one job and keeps it there. One hue is the brand's accent. A few hues are kept for status: success, information, warning, error. Neutrals carry the surfaces and the text. When a hue takes a second job, both jobs get weaker.
 
-The brand colour is the accent. A status colour is a status colour and nothing else: it belongs on status chips, badges and toasts. It is never the hover, focus or generic accent, which is the default a lot of applications fall into, and never [the colour of selected text](?path=/docs/design-system-principles-interaction--docs#selected-text-is-a-role-not-a-browser-default).
+The brand colour is the accent. A status colour is a status colour and nothing else: it belongs on status tags, badges and toasts. It is never the hover, focus or generic accent, which is the default a lot of applications fall into, and never [the colour of selected text](?path=/docs/design-system-principles-interaction--docs#selected-text-is-a-role-not-a-browser-default).
 
 <DoDont>
 	<Example
@@ -192,7 +194,7 @@ That circle is also its catch. White, black and greys have no real hue, so the p
 
 ## Ramps
 
-This product's palette is six ramps: four status ramps, and two neutrals, a warm one for surfaces and a cool one for text and the accent. Each runs from near-white to near-black, with extra steps crowded at both ends, where surfaces, lines and their tiers are chosen.
+The kit's palette is six ramps: four status ramps, and two neutrals, a warm one that no role reads and a cool one for surfaces, text and the accent. Each runs from near-white to near-black, with extra steps crowded at both ends, where surfaces, lines and their tiers are chosen.
 
 <Specimen caption="Six ramps, each from near-white to near-black. The steps crowd together towards both ends, because that is where surfaces, lines and their tiers are chosen, in both themes. Hover a swatch for its token.">
 	<RampSpecimen />
@@ -284,7 +286,7 @@ That gap is worth checking in a theme you did not tune. Roles cluster at the end
 
 ## Contrast, held in reserve
 
-This product's palette is soft and close-toned on purpose. <Pull>Contrast is a signal, not a texture: it belongs to what the user can act on and to what needs their attention, and it is spent sparingly even there.</Pull> Anything passive (a skeleton, a placeholder, a caption, a status dot at rest) sits one quiet step off the surface it is drawn on: enough to be seen at a glance, and never climbing toward the ink.
+The kit's palette is soft and close-toned on purpose. <Pull>Contrast is a signal, not a texture: it belongs to what the user can act on and to what needs their attention, and it is spent sparingly even there.</Pull> Anything passive (a skeleton, a placeholder, a caption, a status dot at rest) sits one quiet step off the surface it is drawn on: enough to be seen at a glance, and never climbing toward the ink.
 
 <Illustration caption="One action carries the contrast; the rest stay quiet beside it, at the same height.">
 	<ReserveDrawing />
@@ -327,7 +329,7 @@ Text contrast is judged by APCA rather than by WCAG 2's ratio. The reasons, and 
 
 ## Surfaces
 
-A screen is a stack of surfaces: the page itself, the cards that sit on it, the fills inside those cards, and the popups that float above everything. Each level gets a tier of its own, so you can tell at a glance what sits on what. This product has seven: a page canvas, a dimmest card, the default card, a nested fill, the deepest recess, an overlay for popups and tooltips, and a higher overlay for toasts.
+A screen is a stack of surfaces: the page itself, the cards that sit on it, the fills inside those cards, and the popups that float above everything. Each level gets a tier of its own, so you can tell at a glance what sits on what. The kit has seven: a page canvas, a dimmest card, the default card, a nested fill, the deepest recess, an overlay for popups and tooltips, and a higher overlay for toasts.
 
 A surface gets **more tinted as you nest** and **lighter as you rise**. In light mode those pull in opposite directions, which is the thing to get straight: a nested fill is _darker_ than the card it sits in, while a popup floating above that card is not. Write the tier you mean rather than reasoning from "higher number means lighter".
 
@@ -741,7 +743,7 @@ Three things follow, and they are the difference between a dark theme that works
 	/>
 	<Example
 		kind="dont"
-		caption="Tidied into a column, so the info chip vanishes and the warning shouts."
+		caption="Tidied into a column, so the info tag vanishes and the warning shouts."
 		visual={
 			<div className={styles.darkSurface}>
 				<span
@@ -839,7 +841,7 @@ Whatever a colour says, a word, an icon or a shape says too, for anyone who sees
 
 <Details title="The brand colour is the accent, and a status colour marks a status and nothing else">
 
-Status colours belong on status chips, badges and toasts. Hover, focus, selection and any generic accent take the brand roles, such as the brand container. Explained in [A palette with meaning](#a-palette-with-meaning).
+Status colours belong on status tags, badges and toasts. Hover, focus, selection and any generic accent take the brand roles, such as the brand container. Explained in [A palette with meaning](#a-palette-with-meaning).
 
 <DoDont>
 <Example kind="do" caption="An avatar fallback or mention pill is brand-tinted.">
@@ -962,7 +964,7 @@ A status role's container and ink are a pair, like the brand fill and its ink: t
 <Example kind="do" caption="The warning fill carries its own warning ink.">
 
 ```scss
-.chip[data-tone="warning"] {
+.tag[data-tone="warning"] {
 	background: var(--sys-color-warning-bg);
 	color: var(--sys-color-warning-fg);
 }
@@ -972,7 +974,7 @@ A status role's container and ink are a pair, like the brand fill and its ink: t
 <Example kind="dont" caption="An unpaired fill has no guaranteed contrast against the ink.">
 
 ```scss
-.chip[data-tone="warning"] {
+.tag[data-tone="warning"] {
 	background: var(--sys-color-warning-bg);
 	color: var(--sys-color-text);
 }
@@ -1029,7 +1031,7 @@ Skeletons, placeholders, captions and status dots at rest stay one step off the 
 .skeleton {
 	background-color: var(--sys-color-surface-highest);
 	opacity: 0.75;
-	animation: pulse 2.4s var(--motion-standard) infinite;
+	animation: pulse 2.4s var(--sys-motion-standard) infinite;
 }
 ```
 
@@ -1128,31 +1130,27 @@ How far differs per theme and per case; that the edge is plainly there does not.
 <DoDont>
 <Example kind="do" caption="The card sits visibly off the canvas, at the distance this theme sets.">
 
-```scss
-:root {
-	--sys-color-bg: var(--ref-sand-25);
-	--sys-color-surface: var(--ref-neutral-0);
-}
+```json
+"bg": { "$value": "{ref.neutral.25}" },
+"surface": { "$value": "{ref.neutral.0}" }
+```
 
-@include theme.dark-root {
-	--sys-color-bg: var(--ref-neutral-800);
-	--sys-color-surface: var(--ref-neutral-700);
-}
+```json
+"bg": { "$value": "{ref.neutral.800}" },
+"surface": { "$value": "{ref.neutral.700}" }
 ```
 
 </Example>
 <Example kind="dont" caption="The canvas one notch off the card, so the card's edge is all but gone.">
 
-```scss
-:root {
-	--sys-color-bg: var(--ref-sand-10);
-	--sys-color-surface: var(--ref-neutral-0);
-}
+```json
+"bg": { "$value": "{ref.neutral.10}" },
+"surface": { "$value": "{ref.neutral.0}" }
+```
 
-@include theme.dark-root {
-	--sys-color-bg: var(--ref-neutral-750);
-	--sys-color-surface: var(--ref-neutral-700);
-}
+```json
+"bg": { "$value": "{ref.neutral.750}" },
+"surface": { "$value": "{ref.neutral.700}" }
 ```
 
 </Example>
@@ -1167,23 +1165,19 @@ Two tiers pointed at one step leave whoever needs one of them with the same colo
 <DoDont>
 <Example kind="do" caption="Every tier is its own step, so each level of nesting shows.">
 
-```scss
-:root {
-	--sys-color-surface: var(--ref-neutral-0);
-	--sys-color-surface-high: var(--ref-sand-50);
-	--sys-color-surface-highest: var(--ref-sand-100);
-}
+```json
+"surface": { "$value": "{ref.neutral.0}" },
+"surface-high": { "$value": "{ref.neutral.50}" },
+"surface-highest": { "$value": "{ref.neutral.100}" }
 ```
 
 </Example>
 <Example kind="dont" caption="Three tiers on one step: the nested fill and its well vanish into the card.">
 
-```scss
-:root {
-	--sys-color-surface: var(--ref-neutral-0);
-	--sys-color-surface-high: var(--ref-neutral-0);
-	--sys-color-surface-highest: var(--ref-neutral-0);
-}
+```json
+"surface": { "$value": "{ref.neutral.0}" },
+"surface-high": { "$value": "{ref.neutral.0}" },
+"surface-highest": { "$value": "{ref.neutral.0}" }
 ```
 
 </Example>
@@ -1206,7 +1200,7 @@ The routed `<main>` declares no background, so every sheet on it is read against
 
 ```scss
 .main {
-	padding: var(--unit-16);
+	padding: var(--sys-unit-16);
 }
 
 .table {
@@ -1237,7 +1231,7 @@ A level that would repeat its parent's fill is set apart by space, its own heade
 
 ```scss
 .group + .group {
-	margin-block-start: var(--unit-12);
+	margin-block-start: var(--sys-unit-12);
 }
 ```
 
@@ -1266,23 +1260,19 @@ Past a certain darkness every step reads as black, leaving no tiers and making e
 <DoDont>
 <Example kind="do" caption="The dark ladder sits where each tier is still visibly a step above the last.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-bg: var(--ref-neutral-800);
-	--sys-color-surface: var(--ref-neutral-700);
-	--sys-color-surface-high: var(--ref-neutral-650);
-}
+```json
+"bg": { "$value": "{ref.neutral.800}" },
+"surface": { "$value": "{ref.neutral.700}" },
+"surface-high": { "$value": "{ref.neutral.650}" }
 ```
 
 </Example>
 <Example kind="dont" caption="Built at the bottom of the ramp: one black field, and the accent glares.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-bg: var(--ref-neutral-975);
-	--sys-color-surface: var(--ref-neutral-950);
-	--sys-color-surface-high: var(--ref-neutral-900);
-}
+```json
+"bg": { "$value": "{ref.neutral.975}" },
+"surface": { "$value": "{ref.neutral.950}" },
+"surface-high": { "$value": "{ref.neutral.900}" }
 ```
 
 </Example>
@@ -1297,23 +1287,19 @@ Ramps diverge at the dark end, so each dark status role takes the step that land
 <DoDont>
 <Example kind="do" caption="Chosen per ramp so every status fill lifts off the surface equally.">
 
-```scss
-html[data-theme="dark"] {
-	--sys-color-success-bg: var(--ref-green-750);
-	--sys-color-info-bg: var(--ref-blue-700);
-	--sys-color-warning-bg: var(--ref-orange-750);
-}
+```json
+"success": { "bg": { "$value": "{ref.green.750}" } },
+"info": { "bg": { "$value": "{ref.blue.700}" } },
+"warning": { "bg": { "$value": "{ref.orange.750}" } }
 ```
 
 </Example>
-<Example kind="dont" caption="Tidied into a column, so the info chip vanishes and the warning shouts.">
+<Example kind="dont" caption="Tidied into a column, so the info tag vanishes and the warning shouts.">
 
-```scss
-html[data-theme="dark"] {
-	--sys-color-success-bg: var(--ref-green-750);
-	--sys-color-info-bg: var(--ref-blue-750);
-	--sys-color-warning-bg: var(--ref-orange-750);
-}
+```json
+"success": { "bg": { "$value": "{ref.green.750}" } },
+"info": { "bg": { "$value": "{ref.blue.750}" } },
+"warning": { "bg": { "$value": "{ref.orange.750}" } }
 ```
 
 </Example>
@@ -1328,21 +1314,17 @@ Body text sits about the same distance from its surface in both themes, and mute
 <DoDont>
 <Example kind="do" caption="Body ink is a light grey, which leaves muted ink a visible notch to step down.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-text: var(--ref-neutral-50);
-	--sys-color-text-muted: var(--ref-neutral-200);
-}
+```json
+"text": { "$value": "{ref.neutral.50}" },
+"text-muted": { "$value": "{ref.neutral.200}" }
 ```
 
 </Example>
 <Example kind="dont" caption="White ink glares on charcoal, and muted ink one notch below it reads the same.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-text: var(--ref-neutral-0);
-	--sys-color-text-muted: var(--ref-neutral-10);
-}
+```json
+"text": { "$value": "{ref.neutral.0}" },
+"text-muted": { "$value": "{ref.neutral.10}" }
 ```
 
 </Example>
@@ -1357,21 +1339,17 @@ Contrast compresses at the dark end, so the gap that reads as a hairline on whit
 <DoDont>
 <Example kind="do" caption="Given a wider gap on charcoal, the border still reads as restrained.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-surface: var(--ref-neutral-700);
-	--sys-color-border: var(--ref-neutral-500);
-}
+```json
+"surface": { "$value": "{ref.neutral.700}" },
+"border": { "$value": "{ref.neutral.500}" }
 ```
 
 </Example>
 <Example kind="dont" caption="A gap that reads as a hairline on white disappears on charcoal.">
 
-```scss
-@include theme.dark-root {
-	--sys-color-surface: var(--ref-neutral-700);
-	--sys-color-border: var(--ref-neutral-650);
-}
+```json
+"surface": { "$value": "{ref.neutral.700}" },
+"border": { "$value": "{ref.neutral.650}" }
 ```
 
 </Example>
@@ -1412,14 +1390,16 @@ html[data-theme="dark"] .card {
 
 <Details title="The dark theme is two conditions, kept behind one mixin">
 
-A theme is two conditions, not one. The stored preference pins a theme, and its default follows the operating system — so a dark document is either the attribute or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the preference is mounted. Because the condition is a pair of selectors, it lives behind a mixin (`theme.dark-root` at the root, `theme.dark` inside a rule) so no file spells out half of it.
+A theme is two conditions, not one. The stored preference pins a theme, and its default follows the operating system — so a dark document is either the attribute or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the preference is mounted. Because the condition is a pair of selectors, it lives behind a mixin (`theme.dark` inside a rule, while the token build writes both halves for the roles) so no file spells out half of it.
 
 <DoDont>
 <Example kind="do" caption="The mixin carries both halves of the dark condition.">
 
 ```scss
-@include theme.dark-root {
-	--sys-color-bg: var(--ref-neutral-800);
+.backdrop {
+	@include theme.dark {
+		--overlay-dim: 0.6;
+	}
 }
 ```
 
@@ -1427,8 +1407,8 @@ A theme is two conditions, not one. The stored preference pins a theme, and its 
 <Example kind="dont" caption="Pinned dark works, auto never updates.">
 
 ```scss
-html[data-theme="dark"] {
-	--sys-color-bg: var(--ref-neutral-800);
+html[data-theme="dark"] .backdrop {
+	--overlay-dim: 0.6;
 }
 ```
 
@@ -1455,13 +1435,19 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
     </div>
   }>
 
-```scss
+```css
 :root {
 	color-scheme: light;
 }
 
-@include theme.dark-root {
+html[data-theme="dark"] {
 	color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-theme="light"]) {
+		color-scheme: dark;
+	}
 }
 ```
 
@@ -1479,8 +1465,8 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
     </div>
   }>
 
-```scss
-@include theme.dark-root {
+```css
+html[data-theme="dark"] {
 	--sys-color-bg: var(--ref-neutral-800);
 }
 ```
@@ -1492,7 +1478,7 @@ A theme declares `color-scheme`. Parts of the page are drawn by the browser, not
 
 <Details title="The theme is resolved in the HTML shell, before the first paint">
 
-Resolve the theme before first paint, in the HTML shell. A framework cannot do this: its effects run after the browser has painted, so a dark-mode user gets a white flash on every full page load, including the reload that switching locale performs. The stylesheet is no help either — it is a module the app pulls in, so it lands after the first paint too. That takes two things in the shell: an inline script that pins the stored preference on the root element, and an inline style that states the canvas colour and `color-scheme` for both themes. Set the canvas colour on the root element as well as the body so nothing paints white behind the page.
+Resolve the theme before first paint, in the HTML shell. A framework cannot do this: its effects run after the browser has painted, so a dark-mode user gets a white flash on every full page load. The stylesheet is no help either — it is a module the app pulls in, so it lands after the first paint too. That takes two things in the shell: an inline script that pins the stored preference on the root element, and an inline style that states the canvas colour and `color-scheme` for both themes. Set the canvas colour on the root element as well as the body so nothing paints white behind the page.
 
 <DoDont>
 <Example kind="do" caption="The shell pins the stored theme before the browser paints anything.">
@@ -1528,7 +1514,7 @@ The shell is the one exception to [colour values living only in the tokens files
 
 ```css
 html {
-	background-color: var(--sys-color-bg, #1f2329);
+	background-color: var(--sys-color-bg, #0b0d11);
 }
 ```
 
@@ -1537,7 +1523,7 @@ html {
 
 ```css
 html {
-	background-color: #1f2329;
+	background-color: #0b0d11;
 }
 ```
 
@@ -1556,13 +1542,12 @@ The one legitimate use of a theme selector inside a component file is a value th
 
 ```scss
 .backdrop {
-	--backdrop-opacity: 0.22;
+	--overlay-dim: 0.4;
 
-	background-color: black;
-	opacity: var(--backdrop-opacity);
+	background-color: rgb(0 0 0 / var(--overlay-dim));
 
 	@include theme.dark {
-		--backdrop-opacity: 0.4;
+		--overlay-dim: 0.6;
 	}
 }
 ```

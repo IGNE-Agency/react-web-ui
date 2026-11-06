@@ -50,7 +50,7 @@ The space between two things belongs to the pair, so it's set once, on whatever 
 <DoDont>
 	<Example
 		kind="do"
-		caption="The gap spaces the chips along each line and between the lines, and nowhere else."
+		caption="The gap spaces the tags along each line and between the lines, and nowhere else."
 		visual={
 			<div className={`${styles.chips} ${styles.chipsGap}`}>
 				<Tag.Root>Design</Tag.Root>
@@ -63,7 +63,7 @@ The space between two things belongs to the pair, so it's set once, on whatever 
 	/>
 	<Example
 		kind="dont"
-		caption="Margins on the chips space them along the line only, so the wrapped lines touch."
+		caption="Margins on the tags space them along the line only, so the wrapped lines touch."
 		visual={
 			<div
 				className={`${styles.chips} ${styles.chipsMargin}`}>
@@ -79,9 +79,9 @@ The space between two things belongs to the pair, so it's set once, on whatever 
 
 ## The scale
 
-This product's scale has every step from 0 to 64, and a step's number is its size in eighths of a rem.
+The kit's scale has every step from 0 to 64, and a step's number is its size in eighths of a rem.
 
-<Specimen caption="A panel at true size with its spacing redlined: 12 around the edge, 8 beside the avatar, 4 between the lines. Below, a handful of the steps this product reaches for most, each at its true size.">
+<Specimen caption="A panel at true size with its spacing redlined: 12 around the edge, 8 beside the avatar, 4 between the lines. Below, a handful of the steps the kit reaches for most, each at its true size.">
 	<SpacingSpecimen
 		units={[
 			"sys.unit.4",
@@ -150,7 +150,7 @@ Every gap, padding and margin is a step of the spacing scale, never a fresh numb
 
 ```scss
 .toolbar {
-	gap: var(--unit-8);
+	gap: var(--sys-unit-8);
 }
 ```
 
@@ -159,7 +159,7 @@ Every gap, padding and margin is a step of the spacing scale, never a fresh numb
 
 ```scss
 .toolbar {
-	gap: var(--unit-md);
+	gap: var(--sys-unit-md);
 }
 
 .panel {
@@ -177,27 +177,27 @@ Every gap, padding and margin is a step of the spacing scale, never a fresh numb
 The space between items is a `gap` on whatever holds them, set once, not a margin on each item. Shown in [Between, not around](#between-not-around).
 
 <DoDont>
-<Example kind="do" caption="The gap spaces the chips along each line and between the lines, and nowhere else.">
+<Example kind="do" caption="The gap spaces the tags along each line and between the lines, and nowhere else.">
 
 ```scss
-.chips {
+.tags {
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--unit-4);
+	gap: var(--sys-unit-4);
 }
 ```
 
 </Example>
-<Example kind="dont" caption="Margins on the chips space them along the line only, so the wrapped lines touch.">
+<Example kind="dont" caption="Margins on the tags space them along the line only, so the wrapped lines touch.">
 
 ```scss
-.chips {
+.tags {
 	display: flex;
 	flex-wrap: wrap;
 }
 
-.chip {
-	margin-inline-end: var(--unit-4);
+.tag {
+	margin-inline-end: var(--sys-unit-4);
 }
 ```
 
@@ -215,7 +215,7 @@ The global reset unsets everything, so nothing arrives with a margin. A `margin:
 
 ```scss
 .title {
-	margin-block-end: var(--unit-4);
+	margin-block-end: var(--sys-unit-4);
 }
 ```
 
@@ -228,7 +228,7 @@ The global reset unsets everything, so nothing arrives with a margin. A `margin:
 }
 
 .title {
-	margin: 0 0 var(--unit-4);
+	margin: 0 0 var(--sys-unit-4);
 }
 ```
 
@@ -252,7 +252,7 @@ Look up the source value in pixels, then pick the token here with that pixel siz
 
 ```scss
 .panel {
-	padding: var(--unit-8);
+	padding: var(--sys-unit-8);
 }
 ```
 
@@ -261,7 +261,7 @@ Look up the source value in pixels, then pick the token here with that pixel siz
 
 ```scss
 .panel {
-	padding: var(--unit-4);
+	padding: var(--sys-unit-4);
 }
 ```
 

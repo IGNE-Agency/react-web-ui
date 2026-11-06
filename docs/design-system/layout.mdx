@@ -92,7 +92,7 @@ Reading text has a comfortable width of its own, too. Lines much longer than abo
 
 ## Giving way gracefully
 
-A narrow window has to take room from somewhere, and something always gives. The question is only whether anyone decided what. Content that can scroll or wrap is the natural thing to give way, like a strip of tabs or a long table. Content that has to stay whole keeps its room, like a total or [an unbreakable word](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled). <Pull>Left undecided, the widest thing on screen wins and pushes its neighbour off the edge, and nothing looks wrong until the window is narrow.</Pull>
+A narrow window has to take room from somewhere, and something always gives. The question is only whether anyone decided what. Content that can scroll or wrap is the natural thing to give way, like a strip of tabs or a long table. Content that has to stay whole keeps its room, like a total or [an unbreakable word](?path=/docs/design-system-foundation-type--docs#text-that-has-to-be-read-whole-is-folded-or-given-room-never-elided). <Pull>Left undecided, the widest thing on screen wins and pushes its neighbour off the edge, and nothing looks wrong until the window is narrow.</Pull>
 
 So each region of a screen says up front what it will give up. How the whole arrangement then changes with the width of the window is up to Responsiveness, which keeps [one responsive system to each file](?path=/docs/design-system-principles-responsiveness--docs#one-responsive-system-per-file) and [sizes a full-height screen to the small viewport first](?path=/docs/design-system-principles-responsiveness--docs#full-height-uses-svh-then-dvh).
 
@@ -279,7 +279,7 @@ A grid or flex item never shrinks below its own content unless you say so, so st
 
 <Details title="A panel opens to fit its content, not to a guess">
 
-A transition can't animate into an intrinsic size like `max-content` on its own. Opting in with `interpolate-size` fixes that where it's supported, so keep a length as the fallback everywhere else. Clip the panel while it moves, and stop its labels from folding: [a label folds when its box might be too small for it](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled), and a box measured from the label never is. Explained in [Made to measure](#made-to-measure).
+A transition can't animate into an intrinsic size like `max-content` on its own. Opting in with `interpolate-size` fixes that where it's supported, so keep a length as the fallback everywhere else. Clip the panel while it moves, and stop its labels from folding: [a label folds when its box might be too small for it](?path=/docs/design-system-foundation-type--docs#text-that-has-to-be-read-whole-is-folded-or-given-room-never-elided), and a box measured from the label never is. Explained in [Made to measure](#made-to-measure).
 
 <DoDont>
 <Example kind="do" caption="The rail animates to the width its labels need, and the labels never fold.">
@@ -292,8 +292,8 @@ A transition can't animate into an intrinsic size like `max-content` on its own.
 	overflow: hidden;
 
 	@media not (prefers-reduced-motion) {
-		transition: inline-size var(--motion-medium)
-			var(--motion-standard);
+		transition: inline-size var(--sys-motion-medium)
+			var(--sys-motion-standard);
 	}
 }
 
@@ -365,7 +365,7 @@ Write `inline-size` and `padding-inline` rather than `width` and `padding-left`,
 ```scss
 .panel {
 	max-inline-size: 32rem;
-	padding-inline: var(--unit-12);
+	padding-inline: var(--sys-unit-12);
 }
 ```
 
@@ -375,8 +375,8 @@ Write `inline-size` and `padding-inline` rather than `width` and `padding-left`,
 ```scss
 .panel {
 	max-width: 32rem;
-	padding-left: var(--unit-12);
-	padding-right: var(--unit-12);
+	padding-left: var(--sys-unit-12);
+	padding-right: var(--sys-unit-12);
 }
 ```
 

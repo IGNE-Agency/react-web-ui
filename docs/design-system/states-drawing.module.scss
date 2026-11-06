@@ -1,37 +1,39 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("inverted");
+	}
 
-.field {
-	fill: var(--drawing-cool-muted);
-}
+	.field {
+		fill: var(--drawing-cool-muted);
+	}
 
-.control {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-cool-vivid) 40%,
-		var(--drawing-cool-muted)
-	);
-}
+	.control {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-cool-vivid) 40%,
+			var(--drawing-cool-muted)
+		);
+	}
 
-.focused {
-	fill: var(--drawing-paper);
-}
+	.focused {
+		fill: var(--drawing-paper);
+	}
 
-.ring {
-	fill: none;
-	stroke: var(--drawing-hot-vivid);
-}
+	.ring {
+		fill: none;
+		stroke: var(--drawing-hot-vivid);
+	}
 
-.mark {
-	fill: var(--drawing-cool-muted);
-}
+	.mark {
+		fill: var(--drawing-cool-muted);
+	}
 
-.markStroke {
-	fill: none;
-	stroke: var(--drawing-cool-muted);
-	stroke-linecap: round;
-	stroke-linejoin: round;
+	.markStroke {
+		fill: none;
+		stroke: var(--drawing-cool-muted);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
 }

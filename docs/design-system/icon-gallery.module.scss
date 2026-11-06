@@ -1,43 +1,45 @@
 @use "./specimen";
 
-.groups {
-	display: grid;
-	gap: var(--sys-unit-24);
-}
-
-.group {
-	display: grid;
-	gap: var(--sys-unit-8);
-}
-
-.title {
-	@include specimen.group;
-}
-
-.glyphs {
-	display: grid;
-	grid-template-columns: repeat(
-		auto-fill,
-		minmax(min(100%, 7rem), 1fr)
-	);
-	gap: var(--sys-unit-8) var(--sys-unit-4);
-}
-
-.glyph {
-	display: grid;
-	justify-items: center;
-	gap: var(--sys-unit-6);
-	padding-block: var(--sys-unit-8);
-	color: var(--sys-color-text);
-	text-align: center;
-
-	svg {
-		color: inherit;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.groups {
+		display: grid;
+		gap: var(--sys-unit-24);
 	}
-}
 
-.name {
-	@include specimen.meta;
+	.group {
+		display: grid;
+		gap: var(--sys-unit-8);
+	}
 
-	white-space: nowrap;
+	.title {
+		@include specimen.group;
+	}
+
+	.glyphs {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 7rem), 1fr)
+		);
+		gap: var(--sys-unit-8) var(--sys-unit-4);
+	}
+
+	.glyph {
+		display: grid;
+		justify-items: center;
+		gap: var(--sys-unit-6);
+		padding-block: var(--sys-unit-8);
+		color: var(--docs-color-ink);
+		text-align: center;
+
+		svg {
+			color: inherit;
+		}
+	}
+
+	.name {
+		@include specimen.meta;
+
+		white-space: nowrap;
+	}
 }

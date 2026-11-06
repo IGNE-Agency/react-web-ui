@@ -1,86 +1,86 @@
 @use "./drawing";
 
-.name,
-.relation,
-.theme {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.name,
+	.relation,
+	.theme {
+		@include drawing.palette("neutral");
+	}
 
-.name {
-	--figure-field: var(--drawing-cool-muted);
-}
+	.name {
+		--figure-field: var(--drawing-cool-muted);
+	}
 
-.relation {
-	--figure-field: var(--ref-neutral-700);
-}
+	.relation {
+		--figure-field: var(--drawing-ink);
+	}
 
-.field {
-	fill: var(--figure-field);
-}
+	.field {
+		fill: var(--figure-field);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.rule {
+		@include drawing.rule;
+	}
 
-.accent {
-	fill: var(--drawing-hot-vivid);
-}
+	.accent {
+		fill: var(--drawing-hot-vivid);
+	}
 
-.quiet {
-	fill: var(--drawing-cool-vivid);
-}
+	.quiet {
+		fill: var(--drawing-cool-vivid);
+	}
 
-.paper {
-	fill: var(--drawing-paper);
-}
+	.paper {
+		fill: var(--drawing-paper);
+	}
 
-.hole {
-	fill: var(--figure-field);
-}
+	.hole {
+		fill: var(--figure-field);
+	}
 
-.ring {
-	fill: none;
-	stroke: var(--drawing-hot-vivid);
-	stroke-width: 14;
-}
+	.ring {
+		fill: none;
+		stroke: var(--drawing-hot-vivid);
+		stroke-width: 14;
+	}
 
-.mark {
-	fill: none;
-	stroke: var(--drawing-paper);
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	stroke-width: 12;
-}
+	.mark {
+		fill: none;
+		stroke: var(--drawing-paper);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 12;
+	}
 
-.lightPage {
-	fill: var(--ref-sand-100);
-}
+	.lightPage {
+		fill: var(--drawing-field);
+	}
 
-.darkPage {
-	fill: var(--ref-neutral-800);
-}
+	.darkPage {
+		fill: var(--drawing-shade);
+	}
 
-.lightChip {
-	fill: var(--ref-green-50);
-}
+	.lightChip,
+	.darkInk {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-cool-vivid) 20%,
+			var(--drawing-paper)
+		);
+	}
 
-.lightInk {
-	fill: var(--ref-green-700);
-}
+	.lightInk,
+	.darkChip {
+		fill: var(--drawing-cool-muted);
+	}
 
-.darkChip {
-	fill: var(--ref-green-750);
-}
+	.chipText {
+		font: var(--docs-type-label-large-strong);
+		font-size: 120px;
+	}
 
-.darkInk {
-	fill: var(--ref-green-150);
-}
-
-.chipText {
-	font: var(--sys-font-label-large-strong);
-	font-size: 120px;
-}
-
-.theme .rule {
-	stroke: var(--drawing-mid);
+	.theme .rule {
+		stroke: var(--drawing-mid);
+	}
 }

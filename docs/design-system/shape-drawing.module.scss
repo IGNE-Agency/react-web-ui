@@ -1,17 +1,19 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("inverted");
+	}
 
-.field {
-	fill: var(--drawing-neighbour-vivid);
-}
+	.field {
+		fill: var(--drawing-neighbour-vivid);
+	}
 
-.tile {
-	fill: var(--drawing-neighbour-muted);
-}
+	.tile {
+		fill: var(--drawing-neighbour-muted);
+	}
 
-.picked {
-	fill: var(--drawing-paper);
+	.picked {
+		fill: var(--drawing-paper);
+	}
 }

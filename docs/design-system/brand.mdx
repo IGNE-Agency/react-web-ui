@@ -1,0 +1,336 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Logo } from "../brand/logo.tsx";
+import { Pointer } from "../brand/pointer.tsx";
+import examples from "./brand-examples.module.scss";
+import { Beside } from "./beside";
+import { BrandDrawing } from "./brand-drawing";
+import {
+	DoodleSpecimen,
+	LogoGrounds,
+	PaletteSpecimen,
+	TypeSpecimen,
+} from "./brand-figures";
+import { Details, DetailsList } from "./details";
+import { DoDont } from "./do-dont";
+import { Example } from "./example";
+import { Illustration } from "./illustration";
+import { Specimen } from "./specimen";
+
+export const guide = {
+	accent: "blue",
+	hero: "wave",
+	headingStops: true,
+};
+
+<Meta title="Design system/Brand" />
+
+# Brand
+
+These docs wear IGNE's brand: a yellow logo box, sand pages, Satoshi and the odd hand-drawn line. The kit they document wears none of it. This page says what the brand is made of, and where each part of it goes.
+
+<Illustration caption="The logo is one more tile in the grid, only larger and in yellow.">
+	<BrandDrawing />
+</Illustration>
+
+## Whose brand this is
+
+The kit is a neutral base. Every product built on it dresses it in that product's own brand, so the kit ships none: its components are plain on purpose, with [one accent and a few status colours](?path=/docs/design-system-foundation-colour--docs#a-palette-with-meaning) for a product to replace.
+
+The docs are different. They are IGNE's own showcase, so they look like IGNE. The pages, the drawings and the frames around specimens take the brand. Every kit component on a page, in a story or an example, keeps the kit's own type and colour, so what you see there is what a product gets. <Pointer />
+
+That line is kept by the code rather than by care. The brand lives in the docs alone, and a test fails when a kit component on a docs page picks up the brand's font or colour.
+
+## The logo
+
+The logo is the lowercase wordmark in a rounded box. The box is part of the logo, so the docs never show the wordmark without it. It comes in two colours: the yellow box with a dark wordmark, which is the one to use, and the dark box with a yellow wordmark, for a yellow ground.
+
+The proportions are the brand book's. The wordmark takes about two thirds of the box's width, with equal room on either side, and sits in its optical middle. The corners are rounded, never square.
+
+<Specimen caption="The yellow logo on the page, in either theme, and the dark logo on yellow.">
+	<LogoGrounds />
+</Specimen>
+
+The book names four ways to get it wrong. Yellow on yellow loses the box, so a yellow ground takes the dark logo.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="On yellow, the dark logo."
+		visual={
+			<div className={examples.ground} data-ground="yellow">
+				<Logo
+					variant="dark"
+					label="The dark IGNE logo"
+					className={examples.logo}
+				/>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="The yellow logo on yellow. The box disappears."
+		visual={
+			<div className={examples.ground} data-ground="yellow">
+				<Logo
+					variant="yellow"
+					label="The yellow IGNE logo"
+					className={examples.logo}
+				/>
+			</div>
+		}
+	/>
+</DoDont>
+
+The logo stands upright and at full strength, whatever is behind it.
+
+<DoDont>
+	<Example
+		kind="dont"
+		caption="Turned. The logo always stands upright."
+		visual={
+			<Logo
+				variant="yellow"
+				label="The yellow IGNE logo"
+				className={`${examples.logo} ${examples.rotated}`}
+			/>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Faded. The logo is never see-through."
+		visual={
+			<Logo
+				variant="yellow"
+				label="The yellow IGNE logo"
+				className={`${examples.logo} ${examples.faded}`}
+			/>
+		}
+	/>
+</DoDont>
+
+<Beside>
+
+The box keeps its radius at every size. Square corners, or a different curve, make it a different shape, and the logo is that shape as much as it is the word.
+
+<Example
+	kind="dont"
+	caption="Squared off. The corners are always rounded."
+	visual={
+		<Logo
+			variant="yellow"
+			label="The yellow IGNE logo"
+			className={`${examples.logo} ${examples.square}`}
+		/>
+	}
+/>
+
+</Beside>
+
+## Colour
+
+Yellow is the brand's colour, and the docs' scheme: the logo box, a fill, a mark beside a heading. It is only ever a fill or a decoration. As text on a light surface it is barely there, so text on yellow is ink, and yellow is never the text.
+
+Blue and green are IGNE's domain colours: blue for its work in the public sector, green for healthcare. The docs don't sort pages by sector, so here they are free accents, picked for what suits the page rather than for a meaning. When blue or green carries text, the fill is the strong shade, because white on the lighter one is too faint to read.
+
+Everything else is sand and ink. A page is light sand and a card on it is white, with a darker sand for lines and the tile grid. Text is a warm near-black in three strengths: headings, running text, and a lighter one for captions.
+
+The book has no dark theme, so the docs derive one from the brand's own dark grey: warm, dark sands, light ink, and the same yellow, still carrying dark text.
+
+<Specimen caption="The docs' palette, with each colour's value in the brand book. The dark theme keeps the yellow and derives the rest.">
+	<PaletteSpecimen />
+</Specimen>
+
+## Type
+
+Satoshi sets every word in the docs: titles, running text, labels and tables. It is plain and easy to read, and its heavier weights carry a title on their own.
+
+Kalam, a handwritten face, has one job: the eyebrow, a short line above a page title that names its section. Handwriting is slow to read at any length, so Kalam never sets a sentence.
+
+<Specimen caption="Satoshi in the four weights the docs load, and a Kalam eyebrow over a Satoshi title.">
+	<TypeSpecimen />
+</Specimen>
+
+Neither font is part of the repository. Satoshi's licence forbids putting its files in a public one, so both come from their foundries' services, and a page without them falls back to the system font.
+
+## Voice
+
+The brand book gives IGNE four traits: friendly, smart, interested and bold. Everything it writes should be accessible, expert, sincere, innovative and human-centred. In the docs, that comes down to a few habits:
+
+- **Accessible:** plain words, the purpose before the mechanics, and nothing the reader has to know already.
+- **Expert:** say why a choice was made, with the theory behind it, so the reader learns something.
+- **Sincere:** a choice is told as a choice, and a known problem is named on the page.
+- **Innovative:** take a position. A page that weighs everything and decides nothing helps no one.
+- **Human-centred:** write for the person reading, the way you'd explain it to a colleague.
+
+This is the docs' voice. The words inside the product keep [the quiet voice](?path=/docs/design-system-principles-language--docs#the-quiet-voice) of the kit's own rules.
+
+## Signatures
+
+A few details make a page look like IGNE. Each has its fixed places and appears nowhere else: used everywhere, they would stop meaning anything.
+
+- **A coloured full stop** ends every design-system page title, and every section heading on this page. It is yellow unless a page picks blue or green. Screen readers skip it.
+- **A Kalam eyebrow** names the section above a design-system page title, like "Foundation" or "Principles". A page at the top of the sidebar has no section to name, and a title that already names it goes without. Screen readers skip it too, because the sidebar already says it.
+- **Doodles** go on Introduction, Getting started and Brand only: a hand-drawn underline under the title, and at most one arrow, pointing at the one thing to notice.
+- **The link underline:** every link in the docs is ink text with a thick blue underline.
+- **The tiled background** sits behind the opening of Introduction, Getting started and Brand, faint in both themes.
+- **Tilted pills** carry New on the changelog's entries. A pill holds a word, never a sentence.
+
+The doodles are the docs' own, drawn in the brand's loose hand. The ones in the brand's design files are stock with a licence nobody knows, so they aren't used, or traced.
+
+<Specimen caption="Every doodle the docs draw. Each is a single loose stroke in the text colour.">
+	<DoodleSpecimen />
+</Specimen>
+
+## When the book and the kit disagree
+
+The brand book was made for marketing pages. The docs are also a reference that has to work for everyone, and on three points the kit's rules ask more. Where the two disagree, the kit's rules win.
+
+- **Contrast:** every pair of text and ground passes [the kit's contrast check](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2), in both themes. That rules out the book's yellow lettering on sand, and white on the lighter blue and green.
+- **Accessibility:** the full stop, the eyebrow, the doodles and the tiles are [decoration, hidden from screen readers](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden).
+- **Motion:** the book sets none. A signature that ever moves [moves only for someone who hasn't asked for less motion](?path=/docs/design-system-foundation-motion--docs#every-transition-runs-only-for-someone-who-hasnt-asked-for-less-motion).
+
+## Technical rules
+
+Every rule on this page, one sentence each, for looking up rather than reading. Open one for the details and the code.
+
+<DetailsList>
+
+<Details title="The brand dresses the docs and never the kit">
+
+The brand's colours and fonts are the docs' own palette, and nothing under the kit's source or tokens reads them. Docs styles read the palette's properties and never declare a kit token; a kit component on a docs page sits in a preview, which gives it the kit's font and colour back, so it still shows [the kit's own accent](?path=/docs/design-system-foundation-colour--docs#the-brand-colour-is-the-accent-and-a-status-colour-marks-a-status-and-nothing-else). Explained in [Whose brand this is](#whose-brand-this-is).
+
+```scss
+.caption {
+	color: var(--docs-color-muted);
+	font: var(--docs-type-body-small);
+}
+```
+
+</Details>
+
+<Details title="The logo is the wordmark in its rounded box, yellow by default and dark on yellow">
+
+The box is 140 square with a radius of 16; the wordmark spans about 66% of its width, with about 17% on either side, optically centred. The files are in `docs/brand/assets/`; on a page, use the logo component with a label: it names the company, so unlike [decoration](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden) it is never hidden. Explained in [The logo](#the-logo).
+
+```tsx
+<Logo variant="yellow" label="IGNE" />
+```
+
+</Details>
+
+<Details title="The logo is never turned, faded, squared off or set yellow on yellow">
+
+Every variant keeps the book's radius; like [every corner in the kit](?path=/docs/design-system-foundation-shape--docs#nothing-has-a-square-corner), the logo's is never square. Explained in [The logo](#the-logo).
+
+</Details>
+
+<Details title="Yellow is a fill or a decoration, never text on a light surface">
+
+Text on yellow is ink, in both themes. Yellow text on a light surface falls far short of [the kit's contrast threshold](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2). Explained in [Colour](#colour).
+
+</Details>
+
+<Details title="Blue and green are free accents, and text sits only on their strong shades">
+
+In the docs they carry no meaning, so a page picks either. White text goes on the strong blue or green, never the base one: only the strong shades pass [the kit's contrast threshold](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2) under white. Explained in [Colour](#colour).
+
+</Details>
+
+<Details title="The docs stand on sand and are written in ink">
+
+The page is the paper colour, a card on it is the surface colour, and lines are the strong sand. Headings are ink, running text the body colour and captions the muted one, each passing [the kit's contrast thresholds](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2) on every surface in both themes. Explained in [Colour](#colour).
+
+</Details>
+
+<Details title="Satoshi sets every word, and Kalam only the eyebrow">
+
+Both load from their foundries' services; no font file is committed. The type roles carry the family, so a style never names one. The kit itself names no typeface: [an app sets its own and loads it](?path=/docs/design-system-foundation-type--docs#an-app-sets-its-typeface-through-the-family-properties-on-the-root-and-loads-the-font-itself), and the docs leave the kit's previews in the kit's. Explained in [Type](#type).
+
+```scss
+.eyebrow {
+	font: var(--docs-type-eyebrow);
+}
+```
+
+</Details>
+
+<Details title="The docs write in IGNE's voice, and the product keeps its quiet one">
+
+Docs pages write in the brand's voice; the words inside the product keep [the quiet voice](?path=/docs/design-system-principles-language--docs#the-quiet-voice). Explained in [Voice](#voice).
+
+</Details>
+
+<Details title="A coloured full stop ends design-system page titles and the section headings on this page">
+
+Yellow by default, blue or green by the page's choice. A yellow stop on the light page takes the strong shade, because the base one barely shows on sand. It is generated content with empty alternative text, so, like [all decoration](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden), it is never read out. The guide adds it; a page picks its accent, and this page its headings' stops, in its `guide` export. Explained in [Signatures](#signatures).
+
+```mdx
+export const guide = { accent: "green" };
+```
+
+```scss
+[data-stop]::after {
+	content: "." / "";
+	color: var(--guide-accent);
+}
+```
+
+</Details>
+
+<Details title="A Kalam eyebrow names the section above a design-system page title">
+
+The guide takes it from the page's sidebar path, and leaves it out of a top-level page and of a title that already names its section. It is generated content with empty alternative text: [decoration, hidden from assistive technology](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden). Explained in [Signatures](#signatures).
+
+</Details>
+
+<Details title="Doodles appear only on Introduction, Getting started and Brand">
+
+An underline under the title, and at most one arrow per page, after the sentence it points at. A doodle is a single stroke in the page's accent, keeps its stroke width at any size, and is [decoration, hidden from assistive technology](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden). The `hero` option draws the underline and the tiles; the arrow is a `Pointer`. Explained in [Signatures](#signatures).
+
+```mdx
+export const guide = { accent: "blue", hero: "wave" };
+
+So what you see there is what a product gets. <Pointer />
+```
+
+</Details>
+
+<Details title="A link in the docs is ink with a thick blue underline">
+
+A link inside a kit preview keeps [the kit's own link style](?path=/docs/design-system-principles-interaction--docs#a-link-carries-the-brand-colour-and-is-underlined). Explained in [Signatures](#signatures).
+
+```scss
+a {
+	color: var(--docs-color-link);
+	text-decoration-color: var(--docs-color-link-underline);
+	text-decoration-thickness: 3px;
+	text-underline-offset: 0.2em;
+}
+```
+
+</Details>
+
+<Details title="The tiled background sits only behind the openings of Introduction, Getting started and Brand">
+
+Faint in both themes, and [decoration, hidden from assistive technology](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden). Explained in [Signatures](#signatures).
+
+</Details>
+
+<Details title="A tilted pill holds a word: New on a changelog entry">
+
+The word is [in sentence case](?path=/docs/design-system-principles-language--docs#copy-is-sentence-case), like every label. The pill is yellow with ink text, turned 5 degrees back. Explained in [Signatures](#signatures).
+
+```mdx
+- <Pill>New</Pill> **5 November.** The docs wear IGNE's
+  brand.
+```
+
+</Details>
+
+<Details title="Where the brand book and the kit's rules disagree, the kit's rules win">
+
+Contrast meets [the kit's APCA thresholds](?path=/docs/design-system-principles-accessibility--docs#contrast-is-judged-by-apca-not-wcag-2), decoration is [hidden from assistive technology](?path=/docs/design-system-principles-accessibility--docs#decoration-is-aria-hidden), and anything that moves [respects a request for less motion](?path=/docs/design-system-foundation-motion--docs#every-transition-runs-only-for-someone-who-hasnt-asked-for-less-motion). Explained in [When the book and the kit disagree](#when-the-book-and-the-kit-disagree).
+
+</Details>
+
+</DetailsList>

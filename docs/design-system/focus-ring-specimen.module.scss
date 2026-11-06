@@ -1,72 +1,74 @@
 @use "./specimen";
 
-.specimen {
-	display: grid;
-	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-	gap: var(--sys-unit-24);
-	align-items: center;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.specimen {
+		display: grid;
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		gap: var(--sys-unit-24);
+		align-items: center;
 
-	@media (width < 40rem) {
-		grid-template-columns: minmax(0, 1fr);
-	}
-}
-
-.shapes {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--sys-unit-16);
-	align-items: center;
-	padding: var(--sys-unit-6);
-}
-
-.shape {
-	display: grid;
-	place-items: center;
-	outline: var(--sys-focus-ring-width) solid
-		var(--sys-color-focus-ring);
-	outline-offset: var(--sys-focus-ring-offset);
-	background: var(--sys-color-surface);
-	color: var(--sys-color-text);
-	font: var(--sys-font-label-medium);
-
-	&[data-shape="pill"] {
-		border-radius: var(--sys-radius-full);
-		background: var(--sys-color-primary);
-		padding: var(--sys-unit-6) var(--sys-unit-12);
-		color: var(--sys-color-on-primary);
+		@media (width < 40rem) {
+			grid-template-columns: minmax(0, 1fr);
+		}
 	}
 
-	&[data-shape="card"] {
-		border-radius: var(--sys-radius-md);
-		padding: var(--sys-unit-12) var(--sys-unit-16);
-	}
-
-	&[data-shape="circle"] {
-		border-radius: var(--sys-radius-circle);
-		background: var(--sys-color-primary-container);
-		block-size: var(--sys-unit-20);
-		inline-size: var(--sys-unit-20);
-		color: var(--sys-color-on-primary-container);
-	}
-}
-
-.values {
-	display: grid;
-	gap: var(--sys-unit-4);
-
-	> div {
+	.shapes {
 		display: flex;
-		gap: var(--sys-unit-6);
-		align-items: baseline;
+		flex-wrap: wrap;
+		gap: var(--sys-unit-16);
+		align-items: center;
+		padding: var(--sys-unit-6);
 	}
 
-	dt {
-		@include specimen.name;
+	.shape {
+		display: grid;
+		place-items: center;
+		outline: var(--sys-focus-ring-width) solid
+			var(--sys-color-focus-ring);
+		outline-offset: var(--sys-focus-ring-offset);
+		background: var(--sys-color-surface);
+		color: var(--sys-color-text);
+		font: var(--sys-font-label-medium);
+
+		&[data-shape="pill"] {
+			border-radius: var(--sys-radius-full);
+			background: var(--sys-color-primary);
+			padding: var(--sys-unit-6) var(--sys-unit-12);
+			color: var(--sys-color-on-primary);
+		}
+
+		&[data-shape="card"] {
+			border-radius: var(--sys-radius-md);
+			padding: var(--sys-unit-12) var(--sys-unit-16);
+		}
+
+		&[data-shape="circle"] {
+			border-radius: var(--sys-radius-circle);
+			background: var(--sys-color-primary-container);
+			block-size: var(--sys-unit-20);
+			inline-size: var(--sys-unit-20);
+			color: var(--sys-color-on-primary-container);
+		}
 	}
 
-	dd {
-		@include specimen.meta;
+	.values {
+		display: grid;
+		gap: var(--sys-unit-4);
 
-		white-space: nowrap;
+		> div {
+			display: flex;
+			gap: var(--sys-unit-6);
+			align-items: baseline;
+		}
+
+		dt {
+			@include specimen.name;
+		}
+
+		dd {
+			@include specimen.meta;
+
+			white-space: nowrap;
+		}
 	}
 }

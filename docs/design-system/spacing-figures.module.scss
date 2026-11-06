@@ -1,42 +1,44 @@
 @use "./drawing";
 
-.proximity,
-.scale {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.proximity,
+	.scale {
+		@include drawing.palette("neutral");
+	}
 
-.proximity {
-	--figure-field: var(--drawing-cool-muted);
-}
+	.proximity {
+		--figure-field: var(--drawing-cool-muted);
+	}
 
-.scale {
-	--figure-field: var(--drawing-neighbour-vivid);
-}
+	.scale {
+		--figure-field: var(--drawing-neighbour-vivid);
+	}
 
-.field {
-	fill: var(--figure-field);
-}
+	.field {
+		fill: var(--figure-field);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.rule {
+		@include drawing.rule;
+	}
 
-.scale .rule {
-	stroke: var(--drawing-neighbour-muted);
-}
+	.scale .rule {
+		stroke: var(--drawing-neighbour-muted);
+	}
 
-.dot {
-	fill: var(--drawing-paper);
-}
+	.dot {
+		fill: var(--drawing-paper);
+	}
 
-.proximity .picked {
-	fill: var(--drawing-hot-vivid);
-}
+	.proximity .picked {
+		fill: var(--drawing-hot-vivid);
+	}
 
-.step {
-	fill: var(--drawing-neighbour-muted);
-}
+	.step {
+		fill: var(--drawing-neighbour-muted);
+	}
 
-.scale .picked {
-	fill: var(--drawing-paper);
+	.scale .picked {
+		fill: var(--drawing-paper);
+	}
 }

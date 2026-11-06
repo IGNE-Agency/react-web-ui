@@ -1,0 +1,12 @@
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.pill {
+		display: inline-block;
+		margin-inline-end: var(--sys-unit-2);
+		border-radius: var(--sys-radius-full);
+		padding: var(--sys-unit-1) var(--sys-unit-6);
+		background: var(--docs-color-yellow);
+		color: var(--docs-color-on-yellow);
+		font: var(--docs-type-label-medium-strong);
+		rotate: -5deg;
+	}
+}

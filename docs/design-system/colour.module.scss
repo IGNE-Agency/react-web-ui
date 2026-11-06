@@ -430,7 +430,7 @@
 }
 
 .stageLight {
-	--stage-bg: var(--ref-sand-25);
+	--stage-bg: var(--ref-neutral-25);
 	--stage-overlay: var(--ref-neutral-0);
 	--stage-card: var(--ref-neutral-0);
 	--stage-ink: var(--ref-neutral-500);
@@ -536,9 +536,9 @@
 .ladderAccent {
 	justify-self: start;
 	border-radius: var(--sys-radius-full);
-	background: var(--ref-green-200);
+	background: var(--ref-neutral-50);
 	padding: var(--sys-unit-4) var(--sys-unit-12);
-	color: var(--ref-green-900);
+	color: var(--ref-neutral-900);
 	font: var(--sys-font-label-medium);
 }
 

@@ -1,29 +1,31 @@
 @use "./drawing";
 
-.promises {
-	@include drawing.palette("inverted");
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.promises {
+		@include drawing.palette("inverted");
 
-	text-rendering: geometricPrecision;
-}
+		text-rendering: geometricPrecision;
+	}
 
-.field {
-	fill: var(--drawing-cool-muted);
-}
+	.field {
+		fill: var(--drawing-cool-muted);
+	}
 
-.paper {
-	fill: var(--drawing-paper);
-}
+	.paper {
+		fill: var(--drawing-paper);
+	}
 
-.letter,
-.marked {
-	font: var(--sys-font-body-large);
-	font-size: 100px;
-}
+	.letter,
+	.marked {
+		font: var(--docs-type-body-large);
+		font-size: 100px;
+	}
 
-.letter {
-	fill: var(--drawing-cool-vivid);
-}
+	.letter {
+		fill: var(--drawing-cool-vivid);
+	}
 
-.marked {
-	fill: var(--drawing-paper);
+	.marked {
+		fill: var(--drawing-paper);
+	}
 }

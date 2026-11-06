@@ -1,38 +1,31 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("pale");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-hot-vivid);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.angular {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-muted) 50%,
+			var(--drawing-hot-vivid)
+		);
+	}
 
-.track {
-	fill: none;
-	stroke: var(--drawing-deep);
-	stroke-linecap: round;
-	stroke-width: 24;
-}
+	.square {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-muted) 72%,
+			var(--drawing-hot-vivid)
+		);
+	}
 
-.card {
-	@include drawing.outline;
-
-	fill: var(--drawing-paper);
-}
-
-.pale {
-	fill: var(--drawing-pale);
-}
-
-.mark {
-	fill: var(--drawing-deep);
-}
-
-.paper {
-	fill: var(--drawing-paper);
+	.paper {
+		fill: var(--drawing-paper);
+	}
 }

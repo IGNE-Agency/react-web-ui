@@ -1,179 +1,149 @@
 import styles from "./patterns-drawing.module.scss";
 
-type Card = Readonly<{
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-}>;
+type Point = Readonly<{ x: number; y: number }>;
+type Shape = (center: Point) => string;
 
-const LOADING: Card = {
-	x: 60,
-	y: 150,
-	width: 200,
-	height: 220,
+const round = (value: number) =>
+	Math.round(value * 100) / 100;
+
+const polar = (
+	center: Point,
+	radius: number,
+	degrees: number,
+): Point => {
+	const radians = (degrees * Math.PI) / 180;
+	return {
+		x: round(center.x + radius * Math.cos(radians)),
+		y: round(center.y + radius * Math.sin(radians)),
+	};
 };
-const EMPTY: Card = {
-	x: 530,
-	y: 40,
-	width: 180,
-	height: 160,
+
+const polygon = (points: readonly Point[]) =>
+	`M${points.map(point => `${point.x} ${point.y}`).join(" L")} Z`;
+
+const regular = (
+	center: Point,
+	radius: number,
+	sides: number,
+	turn = -90,
+) =>
+	polygon(
+		Array.from({ length: sides }, (_, side) =>
+			polar(center, radius, turn + (360 / sides) * side),
+		),
+	);
+
+const circle = (center: Point, radius: number) =>
+	`M${round(center.x - radius)} ${center.y} a${radius} ${radius} 0 1 0 ${radius * 2} 0 a${radius} ${radius} 0 1 0 ${-radius * 2} 0 Z`;
+
+const box = (
+	center: Point,
+	width: number,
+	height: number,
+	radius = 0,
+) => {
+	const x = center.x - width / 2;
+	const y = center.y - height / 2;
+	const r = Math.min(radius, width / 2, height / 2);
+	return r === 0
+		? `M${x} ${y} h${width} v${height} h${-width} Z`
+		: `M${x + r} ${y} h${width - 2 * r} a${r} ${r} 0 0 1 ${r} ${r} v${height - 2 * r} a${r} ${r} 0 0 1 ${-r} ${r} h${-(width - 2 * r)} a${r} ${r} 0 0 1 ${-r} ${-r} v${-(height - 2 * r)} a${r} ${r} 0 0 1 ${r} ${-r} Z`;
 };
-const FAILED: Card = {
-	x: 530,
-	y: 330,
-	width: 180,
-	height: 160,
+
+const arch = (
+	center: Point,
+	width: number,
+	height: number,
+) => {
+	const r = width / 2;
+	const left = center.x - r;
+	const bottom = center.y + height / 2;
+	return `M${left} ${bottom} V${bottom - height + r} A${r} ${r} 0 0 1 ${left + width} ${bottom - height + r} V${bottom} Z`;
 };
-const READY: Card = {
-	x: 800,
-	y: 60,
-	width: 340,
-	height: 400,
+
+const halfDisc = (center: Point, radius: number) =>
+	`M${center.x - radius} ${center.y - radius / 2} h${radius * 2} A${radius} ${radius} 0 0 1 ${center.x - radius} ${center.y - radius / 2} Z`;
+
+const ell = (
+	center: Point,
+	size: number,
+	thick: number,
+) => {
+	const x = center.x - size / 2;
+	const y = center.y - size / 2;
+	return `M${x} ${y} h${thick} v${size - thick} h${size - thick} v${thick} h${-size} Z`;
 };
-const RADIUS = 28;
-const INSET = 32;
-const MAIN = LOADING.y + LOADING.height / 2;
-const FORK = 340;
-const BEND = 150;
-const TURN = 50;
-const RETRY = 550;
-const OVERLAP = 20;
-const SKELETON = [40, 80, 120, 160] as const;
-const ROWS = [70, 135, 200, 265, 330] as const;
-const SELECTED_ROW = 1;
 
-const middle = (card: Card) => ({
-	x: card.x + card.width / 2,
-	y: card.y + card.height / 2,
-});
+const plus = (center: Point, size: number, thick: number) =>
+	`${box(center, thick, size)} ${box(center, size, thick)}`;
 
-const branch = (card: Card) =>
-	`M${FORK} ${MAIN} C${FORK + BEND} ${MAIN} ${FORK + BEND / 2} ${middle(card).y} ${FORK + BEND} ${middle(card).y} H${card.x + OVERLAP}`;
+const CELL = 172;
+const PART = 150;
+const CLUSTERS = [205, 600, 995] as const;
+const ROWS = [214, 386] as const;
 
-const retry = `M${middle(FAILED).x} ${FAILED.y + FAILED.height - OVERLAP} V${RETRY - TURN} A${TURN} ${TURN} 0 0 1 ${middle(FAILED).x - TURN} ${RETRY} H${middle(LOADING).x + TURN} A${TURN} ${TURN} 0 0 1 ${middle(LOADING).x} ${RETRY - TURN} V${LOADING.y + LOADING.height - OVERLAP}`;
+const ANGULAR: readonly Shape[] = [
+	center =>
+		regular({ x: center.x, y: center.y + 18 }, 82, 3),
+	center => regular(center, PART / 2, 4),
+	center =>
+		regular({ x: center.x, y: center.y - 18 }, 82, 3, 90),
+	center => regular(center, PART / 2, 6, 0),
+];
+const ROUND: readonly Shape[] = [
+	center => circle(center, PART / 2),
+	center => box(center, 92, PART, 46),
+	center => arch(center, PART, PART),
+	center =>
+		halfDisc({ x: center.x, y: center.y + 18 }, PART / 2),
+];
+const SQUARE: readonly Shape[] = [
+	center => box(center, PART, PART),
+	center => ell(center, PART, 52),
+	center => plus(center, PART, 52),
+	center => box(center, 92, PART),
+];
 
-const Frame = ({ x, y, width, height }: Card) => (
-	<rect
-		className={styles.card}
-		x={x}
-		y={y}
-		width={width}
-		height={height}
-		rx={RADIUS}
-	/>
-);
+const cluster = (shapes: readonly Shape[], x: number) =>
+	shapes
+		.map((shape, index) =>
+			shape({
+				x: x + (index % 2 === 0 ? -CELL / 2 : CELL / 2),
+				y: ROWS[index < 2 ? 0 : 1],
+			}),
+		)
+		.join(" ");
 
 /**
- * The guide's Patterns opener: a region of data starts loading and ends ready,
- * empty or failed, and a failure loops back to load again.
+ * The guide's Patterns opener: mixed shapes sorted into families by what they
+ * share, the round-ended family in white.
  *
  * @example
  * <Illustration caption={caption}>
  * 	<PatternsDrawing />
  * </Illustration>
  */
-export const PatternsDrawing = () => (
-	<svg viewBox="0 0 1200 600" className={styles.drawing}>
-		<rect
-			className={styles.field}
-			width="1200"
-			height="600"
-		/>
-		{[middle(EMPTY).y, middle(FAILED).y].map(y => (
-			<line
-				key={y}
-				className={styles.rule}
-				x1="0"
-				x2="1200"
-				y1={y}
-				y2={y}
-			/>
-		))}
-		<line
-			className={styles.rule}
-			x1={FORK}
-			x2={FORK}
-			y1="0"
-			y2="600"
-		/>
-		<line
-			className={styles.track}
-			x1={LOADING.x + LOADING.width - OVERLAP}
-			x2={READY.x + OVERLAP}
-			y1={MAIN}
-			y2={MAIN}
-		/>
-		<path className={styles.track} d={branch(EMPTY)} />
-		<path className={styles.track} d={branch(FAILED)} />
-		<path className={styles.track} d={retry} />
-		<circle
-			className={styles.card}
-			cx={FORK}
-			cy={MAIN}
-			r="26"
-		/>
-		<Frame {...LOADING} />
-		{SKELETON.map((offset, index) => (
+export const PatternsDrawing = () => {
+	const [left, middle, right] = CLUSTERS;
+	return (
+		<svg viewBox="0 0 1200 600" className={styles.drawing}>
 			<rect
-				key={offset}
-				className={styles.pale}
-				x={LOADING.x + INSET}
-				y={LOADING.y + offset}
-				width={LOADING.width - 2 * INSET - (index % 2) * 48}
-				height="20"
-				rx="10"
+				className={styles.field}
+				width="1200"
+				height="600"
 			/>
-		))}
-		<Frame {...EMPTY} />
-		<rect
-			className={styles.rule}
-			x={EMPTY.x + INSET}
-			y={EMPTY.y + INSET}
-			width={EMPTY.width - 2 * INSET}
-			height={EMPTY.height - 2 * INSET}
-			rx="16"
-		/>
-		<Frame {...FAILED} />
-		<g
-			transform={`translate(${middle(FAILED).x} ${middle(FAILED).y})`}>
-			<circle className={styles.mark} r="44" />
-			<rect
+			<path
+				className={styles.angular}
+				d={cluster(ANGULAR, left)}
+			/>
+			<path
 				className={styles.paper}
-				x="-6"
-				y="-26"
-				width="12"
-				height="32"
-				rx="6"
+				d={cluster(ROUND, middle)}
 			/>
-			<circle className={styles.paper} cy="20" r="7" />
-		</g>
-		<Frame {...READY} />
-		{ROWS.map((offset, index) => (
-			<g key={offset}>
-				<circle
-					className={
-						index === SELECTED_ROW
-							? styles.mark
-							: styles.pale
-					}
-					cx={READY.x + 56}
-					cy={READY.y + offset}
-					r="18"
-				/>
-				<rect
-					className={
-						index === SELECTED_ROW
-							? styles.mark
-							: styles.pale
-					}
-					x={READY.x + 92}
-					y={READY.y + offset - 12}
-					width={READY.width - 92 - 40 - (index % 2) * 56}
-					height="24"
-					rx="12"
-				/>
-			</g>
-		))}
-	</svg>
-);
+			<path
+				className={styles.square}
+				d={cluster(SQUARE, right)}
+			/>
+		</svg>
+	);
+};

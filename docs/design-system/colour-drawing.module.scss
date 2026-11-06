@@ -1,7 +1,15 @@
-.field {
-	fill: var(--ref-green-900);
-}
+@use "./drawing";
 
-.arc {
-	fill: none;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("inverted");
+	}
+
+	.field {
+		fill: var(--drawing-field);
+	}
+
+	.arc {
+		fill: none;
+	}
 }

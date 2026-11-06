@@ -1,34 +1,36 @@
 @use "./caption";
 
-.illustration {
-	display: grid;
-	grid-template-columns: subgrid;
-	grid-column: 1 / -1;
-	align-items: start;
-	row-gap: var(--sys-unit-6);
-	margin: 0;
-	min-inline-size: 0;
-}
-
-.frame {
-	grid-row: 1;
-	grid-column: var(--illustration-drawing, 1 / -1);
-	border-radius: var(--sys-radius-md);
-	min-inline-size: 0;
-	overflow: hidden;
-	user-select: none;
-
-	> svg {
-		display: block;
-		inline-size: 100%;
-		block-size: auto;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.illustration {
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-column: 1 / -1;
+		align-items: start;
+		row-gap: var(--sys-unit-6);
+		margin: 0;
+		min-inline-size: 0;
 	}
-}
 
-.caption {
-	@include caption.register;
+	.frame {
+		grid-row: 1;
+		grid-column: var(--illustration-drawing, 1 / -1);
+		border-radius: var(--sys-radius-md);
+		min-inline-size: 0;
+		overflow: hidden;
+		user-select: none;
 
-	grid-row: var(--illustration-caption-row, 2);
-	grid-column: var(--illustration-caption, 1 / -1);
-	max-inline-size: 30rem;
+		> svg {
+			display: block;
+			inline-size: 100%;
+			block-size: auto;
+		}
+	}
+
+	.caption {
+		@include caption.register;
+
+		grid-row: var(--illustration-caption-row, 2);
+		grid-column: var(--illustration-caption, 1 / -1);
+		max-inline-size: 30rem;
+	}
 }

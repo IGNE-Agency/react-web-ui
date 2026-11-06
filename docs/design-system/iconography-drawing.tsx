@@ -95,8 +95,8 @@ const CELLS = Array.from(
 ).filter(({ column, row }) => !covered(column, row));
 
 /**
- * The guide's Iconography opener: a quiet grid of the outlined glyphs the
- * product draws, with two of them enlarged to fill a block of cells.
+ * The guide's Iconography opener: a quiet grid of the outlined glyphs these
+ * docs draw, with two of them enlarged to fill a block of cells.
  *
  * @example
  * <Illustration caption={caption}>

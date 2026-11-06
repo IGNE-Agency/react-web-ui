@@ -1,0 +1,166 @@
+@use "./specimen";
+
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.grounds {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fit,
+			minmax(min(100%, 16rem), 1fr)
+		);
+		gap: var(--sys-unit-8);
+	}
+
+	.ground {
+		display: grid;
+		place-items: center;
+		border-radius: var(--sys-radius-lg);
+		padding-block: var(--sys-unit-48);
+
+		&[data-ground="page"] {
+			box-shadow: inset 0 0 0 1px var(--docs-color-border);
+			background: var(--docs-color-paper);
+		}
+
+		&[data-ground="yellow"] {
+			background: var(--docs-color-yellow);
+		}
+	}
+
+	.logo {
+		display: block;
+		inline-size: 7rem;
+		block-size: 7rem;
+	}
+
+	.palette {
+		display: grid;
+		gap: var(--sys-unit-24);
+	}
+
+	.group {
+		display: grid;
+		gap: var(--sys-unit-8);
+	}
+
+	.group > h3.title.title {
+		@include specimen.group;
+
+		margin: 0;
+	}
+
+	.group > ul.colours {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 8.5rem), 1fr)
+		);
+		gap: var(--sys-unit-16);
+		margin: 0;
+		padding: 0;
+		max-inline-size: none;
+		list-style: none;
+	}
+
+	.colour {
+		display: grid;
+		align-content: start;
+		gap: var(--sys-unit-1);
+		margin: 0;
+		min-inline-size: 0;
+	}
+
+	.chip {
+		margin-block-end: var(--sys-unit-6);
+		border-radius: var(--sys-radius-md);
+		box-shadow: inset 0 0 0 1px var(--docs-color-border);
+		background: var(--chip);
+		block-size: var(--sys-unit-56);
+	}
+
+	.name {
+		@include specimen.name;
+	}
+
+	.meta {
+		@include specimen.meta;
+	}
+
+	.type {
+		display: grid;
+		gap: var(--sys-unit-24);
+	}
+
+	.type > ul.weights {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 7rem), 1fr)
+		);
+		gap: var(--sys-unit-16);
+		margin: 0;
+		padding: 0;
+		max-inline-size: none;
+		list-style: none;
+	}
+
+	.weight {
+		display: grid;
+		gap: var(--sys-unit-2);
+		margin: 0;
+	}
+
+	.glyphs {
+		color: var(--docs-color-ink);
+		font: var(--docs-type-heading-large);
+		font-size: 3rem;
+		line-height: 1.1;
+	}
+
+	.pairing {
+		display: grid;
+		justify-items: start;
+		gap: var(--sys-unit-2);
+	}
+
+	.eyebrow {
+		color: var(--docs-color-ink);
+		font: var(--docs-type-eyebrow);
+	}
+
+	.headline {
+		color: var(--docs-color-ink);
+		font: var(--docs-type-heading-large);
+	}
+
+	.doodles > ul.list {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 8rem), 1fr)
+		);
+		gap: var(--sys-unit-16);
+		margin: 0;
+		padding: 0;
+		max-inline-size: none;
+		list-style: none;
+	}
+
+	.doodle {
+		display: grid;
+		gap: var(--sys-unit-6);
+		margin: 0;
+	}
+
+	.mark {
+		display: grid;
+		place-items: center;
+		border-radius: var(--sys-radius-md);
+		background: var(--docs-color-surface);
+		block-size: 6rem;
+		color: var(--docs-color-ink);
+	}
+
+	.stroke {
+		display: block;
+	}
+}

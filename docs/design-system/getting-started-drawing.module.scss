@@ -1,34 +1,36 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("inverted");
+	}
 
-.field,
-.knob {
-	fill: var(--drawing-hot-muted);
-}
+	.field,
+	.knob {
+		fill: var(--drawing-hot-muted);
+	}
 
-.floor {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-muted) 80%,
-		var(--drawing-shade)
-	);
-}
+	.floor {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-muted) 80%,
+			var(--drawing-shade)
+		);
+	}
 
-.spill {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-paper) 55%,
-		var(--drawing-hot-vivid)
-	);
-}
+	.spill {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-paper) 55%,
+			var(--drawing-hot-vivid)
+		);
+	}
 
-.light {
-	fill: var(--drawing-paper);
-}
+	.light {
+		fill: var(--drawing-paper);
+	}
 
-.leaf {
-	fill: var(--drawing-hot-vivid);
+	.leaf {
+		fill: var(--drawing-hot-vivid);
+	}
 }

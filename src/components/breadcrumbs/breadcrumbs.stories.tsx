@@ -121,7 +121,7 @@ const meta = {
 			{
 				page: "Foundation/Type",
 				section:
-					"Text that does not fit is folded, never mangled",
+					"An ellipsis goes where items differ least, and the full text stays one step away",
 			},
 			{ component: "components/menu" },
 		],

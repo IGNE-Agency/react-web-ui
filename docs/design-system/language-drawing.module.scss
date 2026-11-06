@@ -1,13 +1,15 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--drawing-hot-muted);
-}
+	.field {
+		fill: var(--drawing-hot-muted);
+	}
 
-.glyph {
-	fill: var(--drawing-paper);
+	.glyph {
+		fill: var(--drawing-paper);
+	}
 }

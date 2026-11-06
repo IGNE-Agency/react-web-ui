@@ -352,7 +352,8 @@ export const PreviewLink = ({
 					sideOffset={8}
 					collisionPadding={16}
 					collisionAvoidance={{ fallbackAxisSide: "none" }}>
-					<PreviewCard.Popup className={styles.card}>
+					<PreviewCard.Popup
+						className={`${styles.card} docs-preview`}>
 						<Suspense fallback={<Placeholder />}>
 							<Preview
 								id={target.to}

@@ -1,61 +1,63 @@
-.stages {
-	display: grid;
-	gap: var(--sys-unit-12);
-}
-
-.stage {
-	display: grid;
-	gap: var(--sys-unit-12);
-	border-radius: var(--sys-radius-lg);
-	background: var(--canvas);
-	padding: var(--sys-unit-12) var(--sys-unit-16)
-		var(--sys-unit-16);
-}
-
-.theme {
-	color: var(--muted);
-	font: var(--sys-font-label-small-strong);
-}
-
-.states {
-	display: grid;
-	grid-template-columns: repeat(
-		auto-fit,
-		minmax(min(100%, 5.5rem), 1fr)
-	);
-	gap: var(--sys-unit-8);
-}
-
-.state {
-	display: grid;
-	gap: var(--sys-unit-1);
-}
-
-.tile {
-	position: relative;
-	margin-block-end: var(--sys-unit-4);
-	border-radius: var(--sys-radius-md);
-	background: var(--surface);
-	box-shadow: inset 0 0 0 1px var(--edge);
-	block-size: var(--sys-unit-32);
-
-	&::after {
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		background: var(--text);
-		content: "";
-		opacity: var(--layer, 0);
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.stages {
+		display: grid;
+		gap: var(--sys-unit-12);
 	}
-}
 
-.name {
-	color: var(--text);
-	font: var(--sys-font-label-medium);
-}
+	.stage {
+		display: grid;
+		gap: var(--sys-unit-12);
+		border-radius: var(--sys-radius-lg);
+		background: var(--canvas);
+		padding: var(--sys-unit-12) var(--sys-unit-16)
+			var(--sys-unit-16);
+	}
 
-.value {
-	color: var(--muted);
-	font: var(--sys-font-body-small);
-	font-variant-numeric: tabular-nums;
+	.theme {
+		color: var(--muted);
+		font: var(--docs-type-label-small-strong);
+	}
+
+	.states {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fit,
+			minmax(min(100%, 5.5rem), 1fr)
+		);
+		gap: var(--sys-unit-8);
+	}
+
+	.state {
+		display: grid;
+		gap: var(--sys-unit-1);
+	}
+
+	.tile {
+		position: relative;
+		margin-block-end: var(--sys-unit-4);
+		border-radius: var(--sys-radius-md);
+		background: var(--surface);
+		box-shadow: inset 0 0 0 1px var(--edge);
+		block-size: var(--sys-unit-32);
+
+		&::after {
+			position: absolute;
+			inset: 0;
+			border-radius: inherit;
+			background: var(--text);
+			content: "";
+			opacity: var(--layer, 0);
+		}
+	}
+
+	.name {
+		color: var(--text);
+		font: var(--docs-type-label-medium);
+	}
+
+	.value {
+		color: var(--muted);
+		font: var(--docs-type-body-small);
+		font-variant-numeric: tabular-nums;
+	}
 }

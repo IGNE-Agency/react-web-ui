@@ -26,6 +26,8 @@ export const Live = ({ children }) => (
 	<StoryProviders>{children}</StoryProviders>
 );
 
+export const guide = { accent: "green" };
+
 <Meta title="Design system/Principles/Responsiveness" />
 
 # Responsiveness
@@ -367,7 +369,7 @@ The glyph is sized for reading, the control for a fingertip. When space is tight
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-block-size: var(--unit-24);
+	min-block-size: var(--sys-unit-24);
 }
 ```
 
@@ -376,7 +378,7 @@ The glyph is sized for reading, the control for a fingertip. When space is tight
 
 ```scss
 .control {
-	padding: var(--unit-1);
+	padding: var(--sys-unit-1);
 }
 ```
 
@@ -436,9 +438,9 @@ Its padding on that edge is the larger of the padding it wants and the inset the
 
 ```scss
 .bar {
-	padding: var(--unit-2);
+	padding: var(--sys-unit-2);
 	padding-block-end: max(
-		var(--unit-2),
+		var(--sys-unit-2),
 		env(safe-area-inset-bottom)
 	);
 }
@@ -449,7 +451,7 @@ Its padding on that edge is the larger of the padding it wants and the inset the
 
 ```scss
 .bar {
-	padding: var(--unit-2);
+	padding: var(--sys-unit-2);
 }
 ```
 
