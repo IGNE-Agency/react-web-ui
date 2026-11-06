@@ -1,23 +1,25 @@
 @use "./drawing";
 
-.lines {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.lines {
+		@include drawing.palette("inverted");
+	}
 
-.field {
-	fill: var(--drawing-cool-muted);
-}
+	.field {
+		fill: var(--drawing-cool-muted);
+	}
 
-.glyph {
-	fill: var(--drawing-cool-vivid);
-}
+	.glyph {
+		fill: var(--drawing-cool-vivid);
+	}
 
-.line {
-	fill: var(--drawing-paper);
-}
+	.line {
+		fill: var(--drawing-paper);
+	}
 
-.outline {
-	fill: none;
-	stroke: var(--drawing-paper);
-	stroke-width: 8;
+	.outline {
+		fill: none;
+		stroke: var(--drawing-paper);
+		stroke-width: 8;
+	}
 }

@@ -14,62 +14,64 @@
 	);
 }
 
-.region {
-	@include drawing.palette("neutral");
-	@include -tones(
-		var(--drawing-hot-muted),
-		var(--drawing-hot-vivid),
-		20%,
-		46%
-	);
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.region {
+		@include drawing.palette("neutral");
+		@include -tones(
+			var(--drawing-hot-muted),
+			var(--drawing-hot-vivid),
+			20%,
+			46%
+		);
+	}
 
-.told {
-	@include drawing.palette("neutral");
-	@include -tones(
-		var(--drawing-neighbour-muted),
-		var(--drawing-neighbour-vivid),
-		20%,
-		46%
-	);
-}
+	.told {
+		@include drawing.palette("neutral");
+		@include -tones(
+			var(--drawing-neighbour-muted),
+			var(--drawing-neighbour-vivid),
+			20%,
+			46%
+		);
+	}
 
-.fields {
-	@include drawing.palette("pale");
-	@include -tones(
-		var(--drawing-field),
-		var(--drawing-deep),
-		18%,
-		40%
-	);
-}
+	.fields {
+		@include drawing.palette("pale");
+		@include -tones(
+			var(--drawing-field),
+			var(--drawing-deep),
+			18%,
+			40%
+		);
+	}
 
-.rail {
-	@include drawing.palette("saturated");
-	@include -tones(
-		var(--drawing-field),
-		var(--drawing-deep),
-		34%,
-		58%
-	);
-}
+	.rail {
+		@include drawing.palette("saturated");
+		@include -tones(
+			var(--drawing-field),
+			var(--drawing-deep),
+			34%,
+			58%
+		);
+	}
 
-.field {
-	fill: var(--f-field);
-}
+	.field {
+		fill: var(--f-field);
+	}
 
-.quiet {
-	fill: var(--f-quiet);
-}
+	.quiet {
+		fill: var(--f-quiet);
+	}
 
-.soft {
-	fill: var(--f-soft);
-}
+	.soft {
+		fill: var(--f-soft);
+	}
 
-.mark {
-	fill: var(--drawing-paper);
-}
+	.mark {
+		fill: var(--drawing-paper);
+	}
 
-.markInk {
-	fill: var(--f-field);
+	.markInk {
+		fill: var(--f-field);
+	}
 }

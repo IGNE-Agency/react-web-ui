@@ -1,64 +1,66 @@
 @use "./drawing";
 
-.drawing {
-	text-rendering: geometricPrecision;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		text-rendering: geometricPrecision;
 
-	@include drawing.palette("inverted");
-}
+		@include drawing.palette("inverted");
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-field);
+	}
 
-.paper {
-	fill: var(--drawing-paper);
-}
+	.paper {
+		fill: var(--drawing-paper);
+	}
 
-.neighbour {
-	fill: var(--drawing-neighbour-vivid);
-}
+	.neighbour {
+		fill: var(--drawing-neighbour-vivid);
+	}
 
-.letters {
-	fill: var(--drawing-neighbour-muted);
-	font: var(--sys-font-heading-large);
-	font-size: 360px;
-}
+	.letters {
+		fill: var(--drawing-neighbour-muted);
+		font: var(--docs-type-heading-large);
+		font-size: 360px;
+	}
 
-.baseline {
-	@include drawing.rule;
+	.baseline {
+		@include drawing.rule;
 
-	stroke: var(--drawing-neighbour-muted);
-}
+		stroke: var(--drawing-neighbour-muted);
+	}
 
-.opposite {
-	fill: var(--drawing-opposite-vivid);
-}
+	.opposite {
+		fill: var(--drawing-opposite-vivid);
+	}
 
-.oppositeMuted {
-	fill: var(--drawing-opposite-muted);
-}
+	.oppositeMuted {
+		fill: var(--drawing-opposite-muted);
+	}
 
-.warm {
-	fill: var(--drawing-warm-vivid);
-}
+	.warm {
+		fill: var(--drawing-warm-vivid);
+	}
 
-.hot {
-	fill: var(--drawing-hot-vivid);
-}
+	.hot {
+		fill: var(--drawing-hot-vivid);
+	}
 
-.cool {
-	fill: var(--drawing-cool-vivid);
-}
+	.cool {
+		fill: var(--drawing-cool-vivid);
+	}
 
-.hotLine,
-.coolLine {
-	stroke-width: 4;
-}
+	.hotLine,
+	.coolLine {
+		stroke-width: 4;
+	}
 
-.hotLine {
-	stroke: var(--drawing-hot-muted);
-}
+	.hotLine {
+		stroke: var(--drawing-hot-muted);
+	}
 
-.coolLine {
-	stroke: var(--drawing-cool-muted);
+	.coolLine {
+		stroke: var(--drawing-cool-muted);
+	}
 }

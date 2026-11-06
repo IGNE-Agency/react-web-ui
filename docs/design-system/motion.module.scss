@@ -295,7 +295,7 @@ $cycle: 6s;
 	inline-size: 5rem;
 }
 
-.indicator {
+.waitIndicator {
 	display: block;
 	inline-size: 3rem;
 	aspect-ratio: 1;
@@ -313,7 +313,7 @@ $cycle: 6s;
 	}
 }
 
-.once .indicator {
+.once .waitIndicator {
 	@media not (prefers-reduced-motion) {
 		animation-iteration-count: 1;
 	}

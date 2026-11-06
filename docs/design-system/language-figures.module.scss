@@ -1,85 +1,87 @@
 @use "./drawing";
 
-.figure {
-	@include drawing.palette("neutral");
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.figure {
+		@include drawing.palette("neutral");
 
-	--f-field: var(--drawing-cool-muted);
-	--f-tone: var(--drawing-cool-vivid);
+		--f-field: var(--drawing-cool-muted);
+		--f-tone: var(--drawing-cool-vivid);
 
-	text-rendering: geometricPrecision;
-}
+		text-rendering: geometricPrecision;
+	}
 
-.wrap {
-	@include drawing.palette("neutral");
+	.wrap {
+		@include drawing.palette("neutral");
 
-	--f-field: var(--drawing-hot-muted);
-	--f-tone: var(--drawing-hot-vivid);
-}
+		--f-field: var(--drawing-hot-muted);
+		--f-tone: var(--drawing-hot-vivid);
+	}
 
-.field {
-	fill: var(--f-field);
-}
+	.field {
+		fill: var(--f-field);
+	}
 
-.names {
-	font: var(--sys-font-body-large);
-	font-size: 72px;
-	word-spacing: 0.7em;
-}
+	.names {
+		font: var(--docs-type-body-large);
+		font-size: 72px;
+		word-spacing: 0.7em;
+	}
 
-.other {
-	fill: color-mix(
-		in oklab,
-		var(--f-tone) 44%,
-		var(--f-field)
-	);
-}
+	.other {
+		fill: color-mix(
+			in oklab,
+			var(--f-tone) 44%,
+			var(--f-field)
+		);
+	}
 
-.chosen {
-	fill: var(--drawing-paper);
-}
+	.chosen {
+		fill: var(--drawing-paper);
+	}
 
-.chip {
-	fill: color-mix(
-		in oklab,
-		var(--f-tone) 44%,
-		var(--f-field)
-	);
-}
+	.chip {
+		fill: color-mix(
+			in oklab,
+			var(--f-tone) 44%,
+			var(--f-field)
+		);
+	}
 
-.label {
-	fill: color-mix(
-		in oklab,
-		var(--f-tone) 60%,
-		var(--f-field)
-	);
-}
+	.label {
+		fill: color-mix(
+			in oklab,
+			var(--f-tone) 60%,
+			var(--f-field)
+		);
+	}
 
-.scripts {
-	@include drawing.palette("neutral");
+	.scripts {
+		@include drawing.palette("neutral");
 
-	--f-field: var(--drawing-neighbour-vivid);
-	--f-tone: var(--drawing-neighbour-muted);
-}
+		--f-field: var(--drawing-neighbour-vivid);
+		--f-tone: var(--drawing-neighbour-muted);
+	}
 
-.script,
-.pickedScript {
-	font: var(--sys-font-body-large);
-}
+	.script,
+	.pickedScript {
+		font: var(--sys-font-body-large);
+	}
 
-.script {
-	fill: color-mix(
-		in oklab,
-		var(--f-tone) 28%,
-		var(--f-field)
-	);
-	font-size: 46px;
-}
+	.script {
+		fill: color-mix(
+			in oklab,
+			var(--f-tone) 28%,
+			var(--f-field)
+		);
+		font-size: 46px;
+	}
 
-.tile {
-	fill: var(--f-tone);
-}
+	.tile {
+		fill: var(--f-tone);
+	}
 
-.pickedScript {
-	fill: var(--f-field);
-	font-size: 101.2px;
+	.pickedScript {
+		fill: var(--f-field);
+		font-size: 101.2px;
+	}
 }

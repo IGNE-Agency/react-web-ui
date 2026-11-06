@@ -1,51 +1,53 @@
 @use "./drawing";
 
-.keep,
-.speak {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.keep,
+	.speak {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--drawing-cool-muted);
-}
+	.field {
+		fill: var(--drawing-cool-muted);
+	}
 
-.control {
-	fill: var(--drawing-cool-vivid);
-}
+	.control {
+		fill: var(--drawing-cool-vivid);
+	}
 
-.onControl {
-	fill: var(--drawing-cool-muted);
-}
+	.onControl {
+		fill: var(--drawing-cool-muted);
+	}
 
-.slot {
-	fill: none;
-	stroke: var(--drawing-cool-vivid);
-	stroke-dasharray: 18 14;
-	stroke-width: 8;
-}
+	.slot {
+		fill: none;
+		stroke: var(--drawing-cool-vivid);
+		stroke-dasharray: 18 14;
+		stroke-width: 8;
+	}
 
-.ring {
-	fill: none;
-	stroke: var(--drawing-paper);
-	stroke-width: 12;
-}
+	.ring {
+		fill: none;
+		stroke: var(--drawing-paper);
+		stroke-width: 12;
+	}
 
-.speakField {
-	fill: var(--drawing-hot-muted);
-}
+	.speakField {
+		fill: var(--drawing-hot-muted);
+	}
 
-.key {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 55%,
-		var(--drawing-paper)
-	);
-}
+	.key {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-vivid) 55%,
+			var(--drawing-paper)
+		);
+	}
 
-.bubble {
-	fill: var(--drawing-paper);
-}
+	.bubble {
+		fill: var(--drawing-paper);
+	}
 
-.speaker {
-	fill: var(--drawing-hot-muted);
+	.speaker {
+		fill: var(--drawing-hot-muted);
+	}
 }

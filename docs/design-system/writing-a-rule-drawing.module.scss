@@ -1,63 +1,65 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("saturated");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("saturated");
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-field);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.rule {
+		@include drawing.rule;
+	}
 
-.card {
-	@include drawing.outline;
+	.card {
+		@include drawing.outline;
 
-	fill: var(--drawing-paper);
-}
+		fill: var(--drawing-paper);
+	}
 
-.heading {
-	fill: var(--drawing-deep);
-}
+	.heading {
+		fill: var(--drawing-deep);
+	}
 
-.line {
-	fill: var(--drawing-pale);
-}
+	.line {
+		fill: var(--drawing-pale);
+	}
 
-.tile {
-	fill: var(--drawing-field);
-}
+	.tile {
+		fill: var(--drawing-field);
+	}
 
-.pill {
-	fill: var(--drawing-paper);
-}
+	.pill {
+		fill: var(--drawing-paper);
+	}
 
-.pillOutline {
-	@include drawing.outline(var(--drawing-paper));
-}
+	.pillOutline {
+		@include drawing.outline(var(--drawing-paper));
+	}
 
-.note {
-	@include drawing.outline;
+	.note {
+		@include drawing.outline;
 
-	stroke-dasharray: 10 10;
-}
+		stroke-dasharray: 10 10;
+	}
 
-.code {
-	fill: var(--drawing-mid);
-}
+	.code {
+		fill: var(--drawing-mid);
+	}
 
-.leader {
-	@include drawing.outline(var(--drawing-deep));
-}
+	.leader {
+		@include drawing.outline(var(--drawing-deep));
+	}
 
-.callout {
-	fill: var(--drawing-deep);
-}
+	.callout {
+		fill: var(--drawing-deep);
+	}
 
-.numeral {
-	fill: var(--drawing-paper);
-	font: var(--sys-font-heading-large);
-	font-size: 40px;
+	.numeral {
+		fill: var(--drawing-paper);
+		font: var(--docs-type-heading-large);
+		font-size: 40px;
+	}
 }

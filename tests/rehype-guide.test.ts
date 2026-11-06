@@ -448,3 +448,166 @@ describe("rehypeGuide", () => {
 		expect(transform(tree)).toBe(tree);
 	});
 });
+
+const metaTitled = (title: string): Node => ({
+	type: "mdxJsxFlowElement",
+	name: "Meta",
+	attributes: [
+		{
+			type: "mdxJsxAttribute",
+			name: "title",
+			value: title,
+		},
+	],
+	children: [],
+});
+
+const guideExport = (
+	options: Readonly<Record<string, unknown>>,
+): Node => ({
+	type: "mdxjsEsm",
+	value: "export const guide = {};",
+	data: {
+		estree: {
+			type: "Program",
+			body: [
+				{
+					type: "ExportNamedDeclaration",
+					declaration: {
+						type: "VariableDeclaration",
+						declarations: [
+							{
+								type: "VariableDeclarator",
+								id: { type: "Identifier", name: "guide" },
+								init: {
+									type: "ObjectExpression",
+									properties: Object.entries(options).map(
+										([name, value]) => ({
+											type: "Property",
+											key: { type: "Identifier", name },
+											value: { type: "Literal", value },
+										}),
+									),
+								},
+							},
+						],
+					},
+				},
+			],
+		},
+	},
+});
+
+const guideOf = (...nodes: readonly Node[]) =>
+	transform({
+		type: "root",
+		children: nodes,
+	}).children?.find(node => node.tagName === "article");
+
+const titleOf = (guide: Node | undefined) =>
+	findAll(guide, node => node.tagName === "h1")[0];
+
+describe("rehypeGuide's signatures", () => {
+	test("ends the title in a full stop and names its section as an eyebrow", () => {
+		const guide = guideOf(
+			metaTitled("Design system/Foundation/Colour"),
+			element("h1", "Colour"),
+		);
+		const title = titleOf(guide);
+		expect(guide?.properties?.["dataAccent"]).toBe(
+			"yellow",
+		);
+		expect(guide?.properties?.["dataHero"]).toBeUndefined();
+		expect(title?.properties?.["dataEyebrow"]).toBe(
+			"Foundation",
+		);
+		expect(title?.children?.[0]?.properties).toEqual({
+			dataStop: "",
+		});
+		expect(textOf(title)).toBe("Colour");
+	});
+
+	test("leaves the eyebrow out of a top-level page and of a title that already names its section", () => {
+		expect(
+			titleOf(
+				guideOf(
+					metaTitled("Design system/Brand"),
+					element("h1", "Brand"),
+				),
+			)?.properties?.["dataEyebrow"],
+		).toBeUndefined();
+		expect(
+			titleOf(
+				guideOf(
+					metaTitled("Design system/Principles/Overview"),
+					element("h1", "Principles"),
+				),
+			)?.properties?.["dataEyebrow"],
+		).toBeUndefined();
+	});
+
+	test("takes the accent, the hero and the heading stops from the page's guide export", () => {
+		const guide = guideOf(
+			guideExport({
+				accent: "green",
+				hero: "wave",
+				headingStops: true,
+			}),
+			metaTitled("Design system/Brand"),
+			element("h1", "Brand"),
+			element("p", "The opener."),
+			element("h2", "Colour"),
+			element("p", "Yellow is the scheme."),
+		);
+		expect(guide?.properties).toMatchObject({
+			dataAccent: "green",
+			dataHero: "",
+		});
+		const opener = findAll(
+			guide,
+			node => node.properties?.["dataBeat"] !== undefined,
+		)[0];
+		expect(opener?.children?.[0]?.properties).toEqual({
+			dataTiles: "",
+		});
+		expect(opener?.children?.[0]?.children?.[0]?.name).toBe(
+			"GuideTiles",
+		);
+		expect(
+			findAll(
+				titleOf(guide),
+				node => node.name === "GuideUnderline",
+			)[0]?.attributes,
+		).toEqual([
+			{
+				type: "mdxJsxAttribute",
+				name: "shape",
+				value: "wave",
+			},
+		]);
+		expect(
+			findAll(guide, node => node.tagName === "h2")[0]
+				?.children?.[0]?.properties,
+		).toEqual({ dataStop: "" });
+	});
+
+	test("keeps section headings without a full stop unless the page asks", () => {
+		const guide = guideOf(
+			element("h1", "Colour"),
+			element("h2", "Ramps"),
+		);
+		expect(
+			findAll(guide, node => node.tagName === "h2")[0]
+				?.children?.[0]?.type,
+		).toBe("text");
+	});
+
+	test("rejects an option it does not know", () => {
+		expect(() =>
+			guideOf(
+				guideExport({ accent: "purple" }),
+				element("h1", "Colour"),
+			),
+		).toThrow();
+	});
+});

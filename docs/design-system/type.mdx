@@ -78,7 +78,7 @@ An app that has a typeface loads it itself, through `@font-face` or its font ser
 
 ## Roles
 
-There are three groups of roles. Headings title dialogs and pages. Labels name the things you act on: buttons, tabs, nav items, field labels and chips. Body roles carry copy. A few of them are set in themselves below, with the family, weight, size and line height each resolves to.
+There are three groups of roles. Headings title dialogs and pages. Labels name the things you act on: buttons, tabs, nav items, field labels and tags. Body roles carry copy. A few of them are set in themselves below, with the family, weight, size and line height each resolves to.
 
 <Specimen caption="Two roles from each group, set in themselves. Headings are the only roles in the heading family; the full set is in the tokens file.">
 	<TypeRoleSpecimen
@@ -145,11 +145,17 @@ That's why each label role has a strong twin at exactly the same size, and a sel
 
 ## When words don't fit
 
+A box that's too small for its text leaves three ways out that are always wrong. Shrinking the text breaks the scale and gives the longest string the smallest type. Breaking it mid-word is worse, because the reader can't tell a fold from a spelling mistake. And cutting it off at the edge with no sign of the cut passes a fragment off as the whole.
+
+Everything else is a choice, and which one is right depends on what the text is for. <Pull>The question is whether the reader needs every word, or only enough to recognise the thing and find the rest.</Pull> The answer comes from the product's goals and from where the text sits, so no single answer holds everywhere.
+
+### Text that has to be read whole
+
+A label on a control, a heading, an error, an amount, a name someone has to check: when the reader needs all of it, none of it may go. That leaves two ways to fit it. The box grows to the text, sized to its `max-content`, or at least its `min-content`, so its parent makes room. Or the text folds, so it fits whatever width it's given.
+
 <Beside>
 
-There are three ways to force text into a box that's too small, and none of them is allowed. Clipping it with an ellipsis hides the part that tells an item apart from its neighbours. Shrinking it breaks the scale and gives the longest string the smallest type. Breaking it mid-word is the worst of the three, because the reader can't tell a fold from a spelling mistake.
-
-What's left is folding where the language allows it: between words, and at a hyphenation point when a single word is longer than the box. The browser can only hyphenate when it knows which language it's reading, so the page's language follows the one the reader chose. <Pull>A word can't be relied on to have a hyphenation point, so a box that must hold any text is sized to fit its longest word.</Pull>
+Folding happens where the language allows it: between words, and at a hyphenation point when a single word is longer than the box. The browser can only hyphenate when it knows which language it's reading, so the page's language follows the one the reader chose. <Pull>A word can't be relied on to have a hyphenation point, so a box that must hold any text is sized to fit its longest word.</Pull>
 
     <Example
     	kind="caution"
@@ -168,18 +174,25 @@ What's left is folding where the language allows it: between words, and at a hyp
 <DoDont>
 	<Example
 		kind="do"
-		caption="Folded between words, and at a hyphenation point inside a word longer than the box."
+		caption="Folded between words and at a hyphenation point inside a word longer than the box, or given a box as wide as the text."
 		visual={
-			<span
-				lang="en"
-				className={`${styles.tile} ${styles.tileFolded} sb-unstyled`}>
-				{"Subcon­tractor invoice"}
-			</span>
+			<div className={`${styles.tiles} sb-unstyled`}>
+				<span
+					lang="en"
+					className={`${styles.tile} ${styles.tileFolded}`}>
+					{"Subcon­tractor invoice"}
+				</span>
+				<span
+					lang="en"
+					className={`${styles.tile} ${styles.tileSized}`}>
+					Subcontractor invoice
+				</span>
+			</div>
 		}
 	/>
 	<Example
 		kind="dont"
-		caption="Clipped before the part that tells it apart, broken with no relation to the word, or shrunk so the longest string gets the smallest type."
+		caption="A label that has to be read whole, clipped before the part that tells it apart, broken with no relation to the word, or shrunk so the longest string gets the smallest type."
 		visual={
 			<div className={`${styles.tiles} sb-unstyled`}>
 				<span
@@ -244,6 +257,120 @@ When the box really can't grow, the words go and something else names the contro
 				<Button className={styles.squeezed}>
 					<span className={styles.clipped}>Archive</span>
 				</Button>
+			</div>
+		}
+	/>
+</DoDont>
+
+### Text that only has to be recognised
+
+Not every string has to be read in full. In a list of files, a column of descriptions or a long breadcrumb trail, the reader is picking one item out from its neighbours, and the whole text is a hover, a focus or a click away. There an elision is fair: part of the text is left out, and an ellipsis says so.
+
+Where the ellipsis goes is the real decision. It goes in the part that tells items apart least. Titles that differ at the start lose their end, which is why the end is the usual place. File names often share a start and differ near the end, and their extension says what kind of file they are, so Finder cuts them in the middle and keeps both ends. A path keeps its last step, the place you're in, and loses the steps between. <Pull>An ellipsis in the wrong place cuts away exactly the part that made the item findable.</Pull>
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="File names that share a start keep their ending, so the ellipsis goes in the middle."
+		visual={
+			<ul className={`${styles.files} sb-unstyled`}>
+				{["draft", "final", "signed"].map(version => (
+					<li key={version} className={styles.file}>
+						<span className={styles.fileHead}>
+							Invoice 2026-10 subcontractor services
+						</span>
+						<span className={styles.fileTail}>
+							{` – ${version}.pdf`}
+						</span>
+					</li>
+				))}
+			</ul>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Cut at the end, three different files read the same."
+		visual={
+			<ul className={`${styles.files} sb-unstyled`}>
+				{["draft", "final", "signed"].map(version => (
+					<li
+						key={version}
+						className={`${styles.file} ${styles.fileClipped}`}>
+						{`Invoice 2026-10 subcontractor services – ${version}.pdf`}
+					</li>
+				))}
+			</ul>
+		}
+	/>
+</DoDont>
+
+Elided text is still all there for anyone who needs it. Its accessible name is the full text, a tooltip shows the rest on hover and on focus, and the item opens to the whole thing. A longer preview, like a message or a description, can be clamped to a few lines on the same terms, as long as the rest is one step away.
+
+### When a row of items doesn't fit
+
+Sometimes it's not one string that runs out of room but a row of them: tags on a card, filters above a table, a strip of tabs. Cutting each item would leave all of them unreadable, so the items stay whole and the row scrolls instead. Then the row has to show that it scrolls, or it looks just like one that was cut off.
+
+The scrollbar is the first sign, so it stays visible, thin if it has to be. It can't be the only one: macOS and iOS hide scrollbars until something is already scrolling, so there the row gives no hint at all. <Pull>The second sign is a shadow laid over each edge with more beyond it, as if the items slide under it.</Pull> It sits on top of the content, so the row still ends in solid items, and it goes when that edge is reached. A row that fades into the background instead looks like it simply ends. The row scrolls by touch, by trackpad and from the keyboard.
+
+<DoDont>
+	<Example
+		kind="do"
+		caption="The tags stay whole, the scrollbar shows, and a shadow over the end edge says more is waiting."
+		visual={
+			<div className={`${styles.scroller} sb-unstyled`}>
+				<div
+					className={styles.strip}
+					role="group"
+					aria-label="Tags"
+					tabIndex={0}>
+					{[
+						"Subcontractor",
+						"Travel",
+						"Training",
+						"Equipment",
+						"Software",
+					].map(tag => (
+						<span key={tag} className={styles.chip}>
+							{tag}
+						</span>
+					))}
+				</div>
+			</div>
+		}
+	/>
+	<Example
+		kind="dont"
+		caption="Cut off at the edge, or faded into the background with the scrollbar hidden, the row looks like it ends there."
+		visual={
+			<div className={`${styles.strips} sb-unstyled`}>
+				<div
+					className={`${styles.strip} ${styles.stripCut}`}>
+					{[
+						"Subcontractor",
+						"Travel",
+						"Training",
+						"Equipment",
+						"Software",
+					].map(tag => (
+						<span key={tag} className={styles.chip}>
+							{tag}
+						</span>
+					))}
+				</div>
+				<div
+					className={`${styles.strip} ${styles.stripFaded}`}>
+					{[
+						"Subcontractor",
+						"Travel",
+						"Training",
+						"Equipment",
+						"Software",
+					].map(tag => (
+						<span key={tag} className={styles.chip}>
+							{tag}
+						</span>
+					))}
+				</div>
 			</div>
 		}
 	/>
@@ -345,7 +472,7 @@ The token files name no family, and the kit loads no font. `--sys-font-family-bo
 
 <Details title="Headings title dialogs and pages, labels name what you act on, and body roles carry copy">
 
-Labels cover buttons, tabs, nav items, field labels and chips. Shown in [Roles](#roles).
+Labels cover buttons, tabs, nav items, field labels and tags. Shown in [Roles](#roles).
 
 </Details>
 
@@ -386,9 +513,9 @@ A selected, active or hovered item may change its weight and its colour, never i
 
 </Details>
 
-<Details title="Text that does not fit is folded, never mangled">
+<Details title="Text is never shrunk to fit, broken mid-word, or cut off without a sign">
 
-No ellipsis, no shrinking and no breaking mid-word. Text folds between words, and at a hyphenation point inside a word longer than its box. Explained in [When words don't fit](#when-words-dont-fit).
+These three are wrong wherever text runs out of room. Explained in [When words don't fit](#when-words-dont-fit).
 
 <DoDont>
 <Example kind="do" caption="Folded between words, and at a hyphenation point inside a word longer than the box.">
@@ -401,21 +528,54 @@ No ellipsis, no shrinking and no breaking mid-word. Text folds between words, an
 ```
 
 </Example>
-<Example kind="dont" caption="Clipped, broken with no relation to the word, or shrunk.">
+<Example kind="dont" caption="Broken with no relation to the word, shrunk, or clipped at the edge.">
 
 ```scss
-.label {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
 .label {
 	overflow-wrap: anywhere;
 }
 
 .label--long {
 	font-size: 0.75rem;
+}
+
+.label {
+	overflow: hidden;
+	white-space: nowrap;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="Text that has to be read whole is folded or given room, never elided">
+
+Its box grows to the text, at its `max-content` or at least its `min-content`, or the text folds between words and at a hyphenation point inside a word longer than its box. Explained in [Text that has to be read whole](#text-that-has-to-be-read-whole).
+
+<DoDont>
+<Example kind="do" caption="The label folds, or its box is as wide as the label.">
+
+```scss
+.label {
+	overflow-wrap: normal;
+	hyphens: auto;
+}
+
+.badge {
+	inline-size: max-content;
+}
+```
+
+</Example>
+<Example kind="dont" caption="A label the reader needs in full ends in an ellipsis.">
+
+```scss
+.label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 ```
 
@@ -426,19 +586,19 @@ No ellipsis, no shrinking and no breaking mid-word. Text folds between words, an
 
 <Details title="The document language follows the active locale">
 
-Automatic hyphenation picks its dictionary from the document's `lang`, so it has to change with the locale. Explained in [When words don't fit](#when-words-dont-fit).
+Automatic hyphenation picks its dictionary from the document's `lang`, so it has to change with the locale. Explained in [Text that has to be read whole](#text-that-has-to-be-read-whole).
 
 </Details>
 
 <Details title="A box that must hold any text is sized to fit its longest word">
 
-A word can't be relied on to have a hyphenation point. Explained in [When words don't fit](#when-words-dont-fit).
+A word can't be relied on to have a hyphenation point. Explained in [Text that has to be read whole](#text-that-has-to-be-read-whole).
 
 </Details>
 
 <Details title="When a box can't grow, the text goes and something else names the control">
 
-An icon-only control gets a tooltip and an accessible label, and any longer text moves to a caption elsewhere. Explained in [When words don't fit](#when-words-dont-fit).
+An icon-only control gets a tooltip and an accessible label, and any longer text moves to a caption elsewhere. Explained in [Text that has to be read whole](#text-that-has-to-be-read-whole).
 
 <DoDont>
 <Example kind="do" caption="The row cannot grow, so each icon is named by its tooltip and accessible label.">
@@ -458,6 +618,168 @@ An icon-only control gets a tooltip and an accessible label, and any longer text
 <Button className={styles.truncated}>
 	{m.invoice_download()}
 </Button>
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="An ellipsis goes where items differ least, and the full text stays one step away">
+
+At the end for text that differs at the start, in the middle for file names and identifiers whose ends matter, and before the last step of a path. The accessible name is the full text, a tooltip shows it on hover and focus, and the item opens to all of it. Explained in [Text that only has to be recognised](#text-that-only-has-to-be-recognised).
+
+<DoDont>
+<Example kind="do" caption="The name is split in two, and only the head gives way, so the ending and the extension stay.">
+
+```tsx
+<span className={styles.name}>
+	<span className={styles.head}>
+		{name.slice(0, -keep)}
+	</span>
+	<span className={styles.tail}>{name.slice(-keep)}</span>
+</span>
+```
+
+```scss
+.name {
+	display: flex;
+	min-inline-size: 0;
+	white-space: nowrap;
+}
+
+.head {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tail {
+	flex: none;
+}
+```
+
+</Example>
+<Example kind="dont" caption="File names that share a start, cut at the end, all read the same.">
+
+```scss
+.name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+```
+
+</Example>
+</DoDont>
+
+</Details>
+
+<Details title="A row of items that doesn't fit scrolls, keeps its scrollbar, and shades each edge with more beyond it">
+
+The items stay whole and the row scrolls by touch, trackpad and keyboard. The scrollbar stays visible, and because macOS and iOS hide it until something scrolls, a shadow overlay on each edge with more beyond it says so too, and goes when that edge is reached. Explained in [When a row of items doesn't fit](#when-a-row-of-items-doesnt-fit).
+
+<DoDont>
+<Example kind="do" caption="The row keeps a thin scrollbar and takes focus so the keyboard can scroll it. An overlay shades each edge with more beyond it, where the browser can tell.">
+
+```tsx
+<div className={styles.scroller}>
+	<div
+		className={styles.tags}
+		role="group"
+		aria-label={m.invoice_tags()}
+		tabIndex={0}>
+		{tags}
+	</div>
+</div>
+```
+
+```scss
+.scroller {
+	position: relative;
+	timeline-scope: --tags;
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		inline-size: var(--sys-unit-16);
+		pointer-events: none;
+	}
+
+	&::before {
+		inset-inline-start: 0;
+		background: linear-gradient(
+			to right,
+			var(--sys-shadow-umbra),
+			transparent
+		);
+		opacity: 0;
+	}
+
+	&::after {
+		inset-inline-end: 0;
+		background: linear-gradient(
+			to left,
+			var(--sys-shadow-umbra),
+			transparent
+		);
+	}
+}
+
+.tags {
+	display: flex;
+	overflow-x: auto;
+	scroll-timeline: --tags inline;
+
+	@include popup.thin-scrollbar;
+}
+
+@supports (animation-timeline: scroll()) {
+	.scroller::before {
+		animation: shade-in linear both;
+		animation-timeline: --tags;
+		animation-range: 0% 10%;
+	}
+
+	.scroller::after {
+		animation: shade-out linear both;
+		animation-timeline: --tags;
+		animation-range: 90% 100%;
+	}
+}
+
+@keyframes shade-in {
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes shade-out {
+	to {
+		opacity: 0;
+	}
+}
+```
+
+</Example>
+<Example kind="dont" caption="Clipped at the edge, or faded into nothing with the scrollbar hidden.">
+
+```scss
+.tags {
+	display: flex;
+	overflow: hidden;
+}
+
+.tags {
+	overflow-x: auto;
+	scrollbar-width: none;
+	mask-image: linear-gradient(
+		to right,
+		black 80%,
+		transparent
+	);
+}
 ```
 
 </Example>

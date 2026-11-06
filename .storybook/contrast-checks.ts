@@ -1,19 +1,26 @@
 import registerAPCACheck from "apca-check";
 import axe from "axe-core";
 
-const MUTED_ROLE = "--sys-color-text-muted";
+const MUTED_ROLES = [
+	"--sys-color-text-muted",
+	"--docs-color-muted",
+];
 
-const mutedColour = (node: Element) => {
+const roleColour = (node: Element, role: string) => {
 	const probe = node.ownerDocument.createElement("span");
-	probe.style.color = `var(${MUTED_ROLE})`;
+	probe.style.color = `var(${role})`;
 	node.ownerDocument.body.append(probe);
 	const colour = getComputedStyle(probe).color;
 	probe.remove();
 	return colour;
 };
 
-const isMuted = (node: Element) =>
-	getComputedStyle(node).color === mutedColour(node);
+const isMuted = (node: Element) => {
+	const colour = getComputedStyle(node).color;
+	return MUTED_ROLES.some(
+		role => colour === roleColour(node, role),
+	);
+};
 
 const contentTextThreshold = (fontSize: string) =>
 	Number.parseFloat(fontSize) >= 32 ? 45 : 60;

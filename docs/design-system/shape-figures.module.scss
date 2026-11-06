@@ -1,56 +1,58 @@
 @use "./drawing";
 
-.softness,
-.concentric {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.softness,
+	.concentric {
+		@include drawing.palette("neutral");
+	}
 
-.softness {
-	--figure-field: var(--drawing-cool-muted);
-}
+	.softness {
+		--figure-field: var(--drawing-cool-muted);
+	}
 
-.concentric {
-	--figure-field: var(--drawing-hot-muted);
-}
+	.concentric {
+		--figure-field: var(--drawing-hot-muted);
+	}
 
-.field {
-	fill: var(--figure-field);
-}
+	.field {
+		fill: var(--figure-field);
+	}
 
-.rule {
-	@include drawing.rule;
+	.rule {
+		@include drawing.rule;
 
-	stroke: var(--drawing-paper);
-}
+		stroke: var(--drawing-paper);
+	}
 
-@for $index from 0 through 5 {
-	.tone#{$index} {
+	@for $index from 0 through 5 {
+		.tone#{$index} {
+			fill: color-mix(
+				in oklab,
+				var(--drawing-cool-vivid) #{25% + $index * 15%},
+				var(--drawing-paper)
+			);
+		}
+	}
+
+	.outer {
+		fill: var(--drawing-paper);
+	}
+
+	.inner {
 		fill: color-mix(
 			in oklab,
-			var(--drawing-cool-vivid) #{25% + $index * 15%},
+			var(--drawing-hot-vivid) 55%,
 			var(--drawing-paper)
 		);
 	}
-}
 
-.outer {
-	fill: var(--drawing-paper);
-}
+	.measure {
+		stroke: var(--drawing-hot-muted);
+		stroke-linecap: round;
+		stroke-width: 10;
+	}
 
-.inner {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 55%,
-		var(--drawing-paper)
-	);
-}
-
-.measure {
-	stroke: var(--drawing-hot-muted);
-	stroke-linecap: round;
-	stroke-width: 10;
-}
-
-.centre {
-	fill: var(--drawing-hot-muted);
+	.centre {
+		fill: var(--drawing-hot-muted);
+	}
 }

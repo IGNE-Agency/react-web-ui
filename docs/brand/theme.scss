@@ -1,0 +1,24 @@
+/// A nested rule in a scoped docs CSS module under the dark theme: pinned by
+/// `data-theme="dark"`, or following the OS while the preference is `auto`.
+/// The kit's `theme.dark` cannot reach an ancestor of an `@scope` root; this one
+/// anchors on `:scope`.
+///
+/// @example
+///   @scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview)) {
+///       .plate {
+///           @include theme.dark {
+///               opacity: 0.8;
+///           }
+///       }
+///   }
+@mixin dark {
+	:global(html[data-theme="dark"]) :scope & {
+		@content;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme="light"])) :scope & {
+			@content;
+		}
+	}
+}

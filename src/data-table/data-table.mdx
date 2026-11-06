@@ -113,7 +113,7 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
 
 ### A cell grows instead of folding
 
-A cell is not folded. This is not an exception to [text that does not fit](?path=/docs/design-system-foundation-type--docs#text-that-does-not-fit-is-folded-never-mangled): the box grows instead, because the table is sized to its content and scrolls inside its card. Folding would let one long description drag its whole row taller than its neighbours, in a grid people read by scanning down a column. A table that needs less than the card still fills it.
+A cell is not folded. This is not an exception to [text that does not fit](?path=/docs/design-system-foundation-type--docs#text-that-has-to-be-read-whole-is-folded-or-given-room-never-elided): the box grows instead, because the table is sized to its content and scrolls inside its card. Folding would let one long description drag its whole row taller than its neighbours, in a grid people read by scanning down a column. A table that needs less than the card still fills it.
 
 <DoDont>
 <Example
@@ -379,7 +379,7 @@ A pinned column can line up exactly with the columns it covers, and then it read
 ```scss
 .frame:has([data-sticky="start"])::before {
 	content: "";
-	inline-size: var(--unit-6);
+	inline-size: var(--sys-unit-6);
 	background: linear-gradient(
 		to right,
 		var(--table-edge-shadow),
@@ -394,7 +394,7 @@ A pinned column can line up exactly with the columns it covers, and then it read
 ```scss
 .frame::after {
 	content: "";
-	inline-size: var(--unit-6);
+	inline-size: var(--sys-unit-6);
 	background: linear-gradient(
 		to left,
 		var(--table-edge-shadow),
@@ -649,8 +649,8 @@ Digits that name something are not [quantities](#quantities-are-end-aligned-in-t
             <tr><th>Reference</th><th>Date</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td>DEC-0412</td><td>02-10-2026</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td>DEC-1187</td><td>03-10-2026</td><td className={styles.end}>7,05</td></tr>
+            <tr><td>INV-0412</td><td>02-10-2026</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td>INV-1187</td><td>03-10-2026</td><td className={styles.end}>7,05</td></tr>
           </tbody>
         </table>
       </div>
@@ -674,8 +674,8 @@ Digits that name something are not [quantities](#quantities-are-end-aligned-in-t
             <tr><th className={styles.end}>Reference</th><th className={styles.end}>Date</th><th className={styles.end}>Amount (€)</th></tr>
           </thead>
           <tbody>
-            <tr><td className={styles.end}>DEC-0412</td><td className={styles.end}>02-10-2026</td><td className={styles.end}>112,50</td></tr>
-            <tr className={styles.stripe}><td className={styles.end}>DEC-1187</td><td className={styles.end}>03-10-2026</td><td className={styles.end}>7,05</td></tr>
+            <tr><td className={styles.end}>INV-0412</td><td className={styles.end}>02-10-2026</td><td className={styles.end}>112,50</td></tr>
+            <tr className={styles.stripe}><td className={styles.end}>INV-1187</td><td className={styles.end}>03-10-2026</td><td className={styles.end}>7,05</td></tr>
           </tbody>
         </table>
       </div>
@@ -761,7 +761,7 @@ Whole-table selection cannot be a checkbox state, because under server paginatio
 
 Rows are zebra-striped, and the three row fills form a ladder mixed from the brand colour into the surface, so each state is unmistakably a step past the one below it: the plain surface, then a fraction of the tonal container mixed into it, then the tonal container plus a little of the solid brand fill.
 
-Mix the stripe from the tonal container, not from the solid brand colour. A teal brand at a few percent into white lands on a cold blue-grey rather than a green, whereas the container step is already a resolved light tint, so a fraction of it stays on hue. Mix it in `oklab`, as [tints mixed into surfaces always are](?path=/docs/design-system-foundation-colour--docs#tints-are-mixed-into-surfaces-in-oklab).
+Mix the stripe from the tonal container, not from the solid brand colour. A saturated brand at a few percent into white lands on a cold grey rather than on its own hue, whereas the container step is already a resolved light tint, so a fraction of it stays on hue. Mix it in `oklab`, as [tints mixed into surfaces always are](?path=/docs/design-system-foundation-colour--docs#tints-are-mixed-into-surfaces-in-oklab).
 
 <DoDont>
 <Example

@@ -15,6 +15,8 @@ import {
 import { Specimen } from "./specimen";
 import { MotionSpecimen } from "./motion-specimen";
 
+export const guide = { accent: "green" };
+
 <Meta title="Design system/Foundation/Motion" />
 
 # Motion
@@ -37,11 +39,11 @@ And some people need less of all of it. Movement across a screen can make people
 
 ## Durations and easings
 
-This product has four durations and five easings, and each has a job. The quickest is for popups, tooltips, hover and press, the next for dialogs, drawers and check marks, and a longer one for large surfaces, like the whole page changing theme. Most moves take the standard curve. A larger move, like a dialog opening, takes the emphasised one. Something arriving slows to a stop, something leaving speeds away, and only a small mark popping in, like a check mark, overshoots.
+The kit has four durations and five easings, and each has a job. The quickest is for popups, tooltips, hover and press, the next for dialogs, drawers and check marks, and a longer one for large surfaces, like the whole page changing theme. Most moves take the standard curve. A larger move, like a dialog opening, takes the emphasised one. Something arriving slows to a stop, something leaving speeds away, and only a small mark popping in, like a check mark, overshoots.
 
 Every one of them is switched off for someone who has asked for less motion.
 
-<Specimen caption="The same popup at every duration, with what twenty such moves cost a task. Below, each easing on the element that uses it, eight times slower than in the product, with the curve it follows.">
+<Specimen caption="The same popup at every duration, with what twenty such moves cost a task. Below, each easing on the element that uses it, eight times slower than in the kit, with the curve it follows.">
 	<MotionSpecimen
 		scenes={{
 			standard: "menu",
@@ -57,7 +59,7 @@ Every one of them is switched off for someone who has asked for less motion.
 
 Motion that follows the layout tells people where they are. When tabs sit in a row, the pages behind them form a row too, and moving one tab to the right should feel like moving right. <Pull>A cross-fade, or a slide that always goes the same way, throws away the only spatial claim the tab strip was making.</Pull>
 
-So here, the page one tab to the right arrives from the right and pushes the old one out to the left, and going back reverses both. A page outside the tab strip doesn't slide at all. Someone who asked for less motion, or whose browser can't animate the change, simply gets the new page.
+So the page one tab to the right arrives from the right and pushes the old one out to the left, and going back reverses both. A page outside the tab strip doesn't slide at all. Someone who asked for less motion, or whose browser can't animate the change, simply gets the new page.
 
 <DoDont>
 	<Example
@@ -253,7 +255,7 @@ Asking for less motion doesn't switch an indicator off, because that person stil
 		caption="The indicator keeps changing for as long as the wait does, as a slow pulse under reduced motion."
 		visual={
 			<span className={styles.mark}>
-				<span className={styles.indicator} />
+				<span className={styles.waitIndicator} />
 			</span>
 		}
 	/>
@@ -262,7 +264,7 @@ Asking for less motion doesn't switch an indicator off, because that person stil
 		caption="A reduced-motion user gets a frozen indicator, and the rest get one turn."
 		visual={
 			<span className={`${styles.mark} ${styles.once}`}>
-				<span className={styles.indicator} />
+				<span className={styles.waitIndicator} />
 			</span>
 		}
 	/>
@@ -355,8 +357,8 @@ Every transition reads its timing from the motion scale, so it matches every oth
 
 ```scss
 .popup {
-	transition: opacity var(--motion-short)
-		var(--motion-standard);
+	transition: opacity var(--sys-motion-short)
+		var(--sys-motion-standard);
 }
 ```
 
@@ -384,8 +386,8 @@ Guard it with the `prefers-reduced-motion` media query. Explained in [Time and p
 ```scss
 .popup {
 	@media not (prefers-reduced-motion) {
-		transition: opacity var(--motion-short)
-			var(--motion-standard);
+		transition: opacity var(--sys-motion-short)
+			var(--sys-motion-standard);
 	}
 }
 ```
@@ -570,10 +572,10 @@ A table, a list of cards or a thread waits as its own layout, drawn empty. Where
 <div role="status">
 	<span class="visually-hidden">{m.thread_loading()}</span>
 	<div aria-hidden="true">
-		{placeholders.map(({ id, width }) => (
-			<Message key={id}>
-				<Skeleton width={width} />
-			</Message>
+		{placeholders.map(({ id, side, width }) => (
+			<Conversation.Message key={id} side={side}>
+				<Skeleton className={width} />
+			</Conversation.Message>
 		))}
 	</div>
 </div>
@@ -591,10 +593,13 @@ A table, a list of cards or a thread waits as its own layout, drawn empty. Where
 
 ```tsx
 <div>
-	{placeholders.map(({ id }) => (
-		<Message key={id} role="status">
+	{placeholders.map(({ id, side }) => (
+		<Conversation.Message
+			key={id}
+			side={side}
+			role="status">
 			<Skeleton />
-		</Message>
+		</Conversation.Message>
 	))}
 </div>
 ```

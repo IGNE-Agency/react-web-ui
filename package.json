@@ -330,7 +330,7 @@
 	},
 	"scripts": {
 		"fix": "bun run tokens && oxfmt . && oxlint --fix .",
-		"check": "bun run tokens && oxfmt --check . && oxlint .",
+		"check": "bun run tokens && oxfmt --check . && oxlint . && bun tools/check-docs-tokens.ts",
 		"tokens": "tz build",
 		"build": "bun run tokens && vite build && tsc -p tsconfig.build.json && tsc -p tsconfig.terrazzo.json",
 		"check:exports": "bun tools/check-exports.ts",

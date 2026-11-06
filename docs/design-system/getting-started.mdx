@@ -3,8 +3,11 @@ import {
 	PageTile,
 	PageTiles,
 } from "../../.storybook/docs-links/page-tile.tsx";
+import { Pointer } from "../brand/pointer.tsx";
 import { GettingStartedDrawing } from "./getting-started-drawing";
 import { Illustration } from "./illustration";
+
+export const guide = { accent: "green", hero: "straight" };
 
 <Meta title="Design system/Getting started" />
 
@@ -18,7 +21,7 @@ Everything you need to find your way around the design system, whether you desig
 
 ## What's in the system?
 
-The design system is the set of rules, values and components every screen in the product is built from. It starts with the foundation, and builds up through the principles, including how we write, to patterns. The sidebar lists them in reading order, so if you're new, start at the top.
+The design system is the set of rules, values and components every screen in a product is built from. It starts with the foundation, and builds up through the principles, including how we write, to patterns. The sidebar lists them in reading order, so if you're new, start at the top. <Pointer />
 
 <PageTiles>
 	<PageTile
@@ -82,7 +85,7 @@ Most of what you need is in the foundations and in the rules for whatever you're
 
 ## For engineers and agents
 
-Read the rules for what you're building before you style it. A component's own rules are on its docs page, under its name in the sidebar, and agents find every rule through `AGENTS.md` in the repository.
+Read the rules for what you're building before you style it. A component's own rules are on its docs page, under its name in the sidebar, and agents find every rule through `CLAUDE.md` in the repository.
 
 <PageTiles>
 	<PageTile
@@ -103,6 +106,10 @@ Think a rule is wrong, or missing? Anyone can propose a change, and a designer's
 	<PageTile
 		page="Working on the system/Contributing"
 		description="How a change is proposed, reviewed and merged."
+	/>
+	<PageTile
+		page="Brand"
+		description="The look these docs wear, for when you draw or style a page."
 	/>
 	<PageTile
 		page="Working on the system/Writing a rule"

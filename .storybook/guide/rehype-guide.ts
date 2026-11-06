@@ -1,12 +1,54 @@
+import { z } from "zod";
+
 type GuideNode = Readonly<{
 	type: string;
 	name?: string | null;
 	tagName?: string;
 	value?: string;
-	attributes?: readonly Readonly<{ name?: string }>[];
+	attributes?: readonly Readonly<{
+		type?: string;
+		name?: string;
+		value?: unknown;
+	}>[];
 	properties?: Readonly<Record<string, unknown>>;
 	children?: readonly GuideNode[];
+	data?: Readonly<{ estree?: unknown }>;
 }>;
+
+const guideOptions = z.strictObject({
+	accent: z
+		.enum(["yellow", "blue", "green"])
+		.default("yellow"),
+	hero: z.enum(["wave", "straight"]).optional(),
+	headingStops: z.boolean().default(false),
+});
+
+type GuideOptions = z.infer<typeof guideOptions>;
+
+const program = z.object({ body: z.array(z.unknown()) });
+
+const guideExport = z.object({
+	type: z.literal("ExportNamedDeclaration"),
+	declaration: z.object({
+		declarations: z.tuple([
+			z.object({
+				id: z.object({ name: z.literal("guide") }),
+				init: z.object({
+					type: z.literal("ObjectExpression"),
+					properties: z.array(
+						z.object({
+							key: z.object({ name: z.string() }),
+							value: z.object({
+								type: z.literal("Literal"),
+								value: z.unknown(),
+							}),
+						}),
+					),
+				}),
+			}),
+		]),
+	}),
+});
 
 type FigureKind =
 	| "pair"
@@ -394,6 +436,116 @@ const beatElement = (beat: Beat) => {
 	);
 };
 
+const jsx = (
+	type: "mdxJsxFlowElement" | "mdxJsxTextElement",
+	name: string,
+	attributes: Readonly<Record<string, string>> = {},
+): GuideNode => ({
+	type,
+	name,
+	attributes: Object.entries(attributes).map(
+		([attribute, value]) => ({
+			type: "mdxJsxAttribute",
+			name: attribute,
+			value,
+		}),
+	),
+	children: [],
+});
+
+const optionsOf = (hoisted: readonly GuideNode[]) =>
+	guideOptions.parse(
+		Object.fromEntries(
+			hoisted
+				.flatMap(node =>
+					node.type === "mdxjsEsm"
+						? (program.safeParse(node.data?.estree).data
+								?.body ?? [])
+						: [],
+				)
+				.flatMap(
+					statement =>
+						guideExport.safeParse(statement).data
+							?.declaration.declarations[0].init
+							.properties ?? [],
+				)
+				.map(property => [
+					property.key.name,
+					property.value.value,
+				]),
+		),
+	);
+
+const eyebrowOf = (
+	hoisted: readonly GuideNode[],
+	title: GuideNode,
+) => {
+	const path = hoisted
+		.find(node => node.name === "Meta")
+		?.attributes?.find(
+			attribute => attribute.name === "title",
+		)?.value;
+	const section =
+		typeof path === "string"
+			? path.split("/").slice(1, -1).at(-1)
+			: undefined;
+	return section === undefined ||
+		textOf(title).trim().startsWith(section)
+		? undefined
+		: section;
+};
+
+const withStop = (
+	heading: GuideNode,
+	after: readonly GuideNode[] = [],
+): GuideNode => ({
+	...heading,
+	children: [
+		element("span", { dataStop: "" }, [
+			...(heading.children ?? []),
+			...after,
+		]),
+	],
+});
+
+const titled = (
+	title: GuideNode,
+	eyebrow: string | undefined,
+	{ hero }: GuideOptions,
+): GuideNode => ({
+	...withStop(
+		title,
+		hero === undefined
+			? []
+			: [
+					jsx("mdxJsxTextElement", "GuideUnderline", {
+						shape: hero,
+					}),
+				],
+	),
+	properties: { ...title.properties, dataEyebrow: eyebrow },
+});
+
+const withTiles = (
+	beats: readonly GuideNode[],
+	{ hero }: GuideOptions,
+) =>
+	hero === undefined
+		? beats
+		: beats.map((beat, index) =>
+				index === 0
+					? {
+							...beat,
+							children: [
+								element("div", { dataTiles: "" }, [
+									jsx("mdxJsxFlowElement", "GuideTiles"),
+								]),
+								...(beat.children ?? []),
+							],
+						}
+					: beat,
+			);
+
 type Composition =
 	| "lead"
 	| "note"
@@ -533,7 +685,11 @@ const sectionElement = (
  * its text or stands over it, and how far it turns from the section before. A
  * sentence wrapped in `<Pull>` stays where it is, and a hidden copy of it goes
  * at least a paragraph or a figure away in the same section, or nowhere when
- * the section has no such place.
+ * the section has no such place. The title carries its section from the
+ * `Meta` title as an eyebrow and ends in a full stop; a page's
+ * `export const guide = { accent, hero, headingStops }` picks the stop's
+ * colour, a tiled opener with an underline under the title, and full stops on
+ * its section headings.
  *
  * @example
  * mdxCompileOptions: { rehypePlugins: [rehypeGuide] }
@@ -547,11 +703,26 @@ export const rehypeGuide = () => (tree: GuideNode) => {
 	const hoisted = nodes.filter(
 		node => roleOf(node) === "hoisted",
 	);
-	const flow = nodes.filter(
-		node =>
-			roleOf(node) !== "hoisted" &&
-			blockOf(node) !== undefined,
-	);
+	const options = optionsOf(hoisted);
+	const flow = nodes
+		.filter(
+			node =>
+				roleOf(node) !== "hoisted" &&
+				blockOf(node) !== undefined,
+		)
+		.map(node => {
+			const role = roleOf(node);
+			if (role === "title") {
+				return titled(
+					node,
+					eyebrowOf(hoisted, node),
+					options,
+				);
+			}
+			return role === "heading" && options.headingStops
+				? withStop(node)
+				: node;
+		});
 	const starts = flow.flatMap((node, position) =>
 		roleOf(node) === "heading" ? [position] : [],
 	);
@@ -577,17 +748,26 @@ export const rehypeGuide = () => (tree: GuideNode) => {
 			...hoisted,
 			element(
 				"article",
-				{ className: ["guide"], dataGuide: "" },
+				{
+					className: ["guide"],
+					dataGuide: "",
+					dataAccent: options.accent,
+					dataHero:
+						options.hero === undefined ? undefined : "",
+				},
 				[
 					element(
 						"header",
 						{ dataPart: "opener" },
-						withPulls(
-							beatsOf(
-								title,
-								opener.filter(node => node !== title),
-							),
-						).map(beatElement),
+						withTiles(
+							withPulls(
+								beatsOf(
+									title,
+									opener.filter(node => node !== title),
+								),
+							).map(beatElement),
+							options,
+						),
 					),
 					...(sections.length === 0
 						? []

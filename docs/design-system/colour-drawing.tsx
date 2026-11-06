@@ -12,10 +12,19 @@ const ARC = {
 	width: 47,
 	brandWidth: 77,
 } as const;
+const BRAND_INDEX = RAMP.indexOf(BRAND);
+
+const share = (part: number, whole: number) =>
+	`${Math.round((part / whole) * 100)}%`;
+
+const strokeAt = (index: number) =>
+	index <= BRAND_INDEX
+		? `color-mix(in oklab, var(--drawing-cool-vivid) ${share(index + 1, BRAND_INDEX + 1)}, var(--drawing-paper))`
+		: `color-mix(in oklab, var(--drawing-cool-muted) ${share(index - BRAND_INDEX, RAMP.length - BRAND_INDEX)}, var(--drawing-cool-vivid))`;
 
 /**
- * The guide's Colour opener: the green ramp as arcs rising from the bottom
- * edge, palest outside and deepest inside, with the brand step drawn widest.
+ * The guide's Colour opener: a blue ramp as arcs rising from the bottom edge,
+ * palest outside and deepest inside, with the brand step drawn widest.
  *
  * @example
  * <Illustration caption={caption}>
@@ -37,7 +46,7 @@ export const ColourDrawing = () => (
 					className={styles.arc}
 					d={`M${ARC.cx - r} ${ARC.cy} A${r} ${r} 0 0 1 ${ARC.cx + r} ${ARC.cy}`}
 					style={{
-						stroke: `var(--ref-green-${step})`,
+						stroke: strokeAt(index),
 						strokeWidth:
 							step === BRAND ? ARC.brandWidth : ARC.width,
 					}}

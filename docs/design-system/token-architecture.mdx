@@ -30,7 +30,7 @@ A colour on its own doesn't say much. Is it the brand? Something that went well?
 	<NameDrawing />
 </Illustration>
 
-Decisions come in kinds, too. Some are about raw material, like which greens exist at all. Some are about meaning, like which green is the brand. And some belong to one component, like what colour a button is. Give each kind its own layer, and every question has exactly one place to be answered: you can rethink what success looks like without opening a single component.
+Decisions come in kinds, too. Some are about raw material, like which greens exist at all. Some are about meaning, like which green says success. And some belong to one component, like what colour a button is. Give each kind its own layer, and every question has exactly one place to be answered: you can rethink what success looks like without opening a single component.
 
 Because names point at other names, the relationships between them are part of the design. A success badge pairs a light and a dark green from the same family, and that pairing still holds when the brand colour changes. Think in relationships rather than swatches, and a whole theme, like dark mode, becomes one change instead of a redesign.
 
@@ -44,13 +44,13 @@ Every product that follows our approach builds its tokens this way. It's not the
 
 1. **Reference.** Raw material: [colour ramps](?path=/docs/design-system-foundation-colour--docs#ramps), and the type scale. Nothing outside layer 2 may read it.
 2. **System.** [Colour roles](?path=/docs/design-system-foundation-colour--docs#roles). A brand fill and its ink, surface tiers, body and muted ink, a border, an outline, a focus ring, status containers. Everything a component reads.
-3. **Component.** A component's own knobs, declared at the top of its root rule and re-pointed by its variants.
+3. **Component.** A component's own tokens, declared at the top of its root rule and re-pointed by its variants.
 
 ## Speaking in roles
 
 A component asks for a role, like the background of a success badge, never for a particular shade. A component that picks its own shade stops following the theme, and breaks without anyone noticing when dark mode re-points the roles. The same goes for type: a component names [a type role instead of a size](?path=/docs/design-system-foundation-type--docs#roles).
 
-<Illustration caption="A chip that reads its roles crosses into dark mode and changes with the page, without anyone touching the chip.">
+<Illustration caption="A tag that reads its roles crosses into dark mode and changes with the page, without anyone touching the tag.">
 	<ThemeDrawing />
 </Illustration>
 
@@ -89,7 +89,7 @@ A component reads system tokens, never reference tokens, so it follows the theme
 <DoDont>
 <Example
   kind="do"
-  caption="The chip names a role, so the dark theme re-points it with everything else."
+  caption="The tag names a role, so the dark theme re-points it with everything else."
   visual={
     <div className={styles.themes}>
       <div className={`${styles.stage} ${styles.stageLight}`}>
@@ -102,7 +102,7 @@ A component reads system tokens, never reference tokens, so it follows the theme
   }>
 
 ```scss
-.chip {
+.tag {
 	background: var(--sys-color-success-bg);
 	color: var(--sys-color-success-fg);
 }
@@ -111,7 +111,7 @@ A component reads system tokens, never reference tokens, so it follows the theme
 </Example>
 <Example
   kind="dont"
-  caption="Pinned to a light step, the chip glares on a dark page."
+  caption="Pinned to a light step, the tag glares on a dark page."
   visual={
     <div className={styles.themes}>
       <div className={`${styles.stage} ${styles.stageLight}`}>
@@ -124,7 +124,7 @@ A component reads system tokens, never reference tokens, so it follows the theme
   }>
 
 ```scss
-.chip {
+.tag {
 	background: var(--ref-green-50);
 	color: var(--ref-green-700);
 }
@@ -206,7 +206,7 @@ A component's own tokens carry no prefix, and the absence is the marker: a bare 
 
 ```scss
 .button {
-	--btn-bg: var(--sys-color-primary);
+	--_btn-bg: var(--sys-color-primary);
 }
 ```
 
@@ -287,16 +287,16 @@ Declaring the knobs first makes the variants below readable as a table of what c
 
 ```scss
 .button {
-	--btn-bg: transparent;
-	--btn-fg: var(--sys-color-text);
+	--_btn-bg: transparent;
+	--_btn-fg: var(--sys-color-text);
 
-	background: var(--btn-bg);
-	color: var(--btn-fg);
+	background: var(--btn-bg, var(--_btn-bg));
+	color: var(--btn-fg, var(--_btn-fg));
 }
 
 .button[data-variant="primary"] {
-	--btn-bg: var(--sys-color-primary);
-	--btn-fg: var(--sys-color-on-primary);
+	--_btn-bg: var(--sys-color-primary);
+	--_btn-fg: var(--sys-color-on-primary);
 }
 ```
 

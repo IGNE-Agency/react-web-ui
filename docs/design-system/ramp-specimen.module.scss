@@ -2,119 +2,121 @@
 
 $narrow: "(width < 40rem)";
 
-.ramps {
-	display: grid;
-	gap: var(--sys-unit-16);
-}
-
-.ramp {
-	--strip-height: var(--sys-unit-16);
-
-	display: grid;
-	grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
-	gap: var(--sys-unit-4) var(--sys-unit-16);
-	align-items: start;
-
-	@media #{$narrow} {
-		grid-template-columns: minmax(0, 1fr);
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.ramps {
+		display: grid;
+		gap: var(--sys-unit-16);
 	}
 
-	&:first-child {
-		--strip-height: var(--sys-unit-56);
+	.ramp {
+		--strip-height: var(--sys-unit-16);
 
-		grid-template-columns: minmax(0, 1fr);
-		gap: var(--sys-unit-8);
-		margin-block-end: var(--sys-unit-16);
+		display: grid;
+		grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+		gap: var(--sys-unit-4) var(--sys-unit-16);
+		align-items: start;
 
-		.about {
-			grid-template-columns: auto auto;
-			justify-content: start;
-			column-gap: var(--sys-unit-12);
-			align-items: baseline;
+		@media #{$narrow} {
+			grid-template-columns: minmax(0, 1fr);
 		}
 
-		.name {
-			grid-column: 1 / -1;
-			font: var(--sys-font-heading-medium);
+		&:first-child {
+			--strip-height: var(--sys-unit-56);
+
+			grid-template-columns: minmax(0, 1fr);
+			gap: var(--sys-unit-8);
+			margin-block-end: var(--sys-unit-16);
+
+			.about {
+				grid-template-columns: auto auto;
+				justify-content: start;
+				column-gap: var(--sys-unit-12);
+				align-items: baseline;
+			}
+
+			.name {
+				grid-column: 1 / -1;
+				font: var(--docs-type-heading-medium);
+			}
 		}
 	}
-}
 
-.about {
-	display: grid;
-	gap: var(--sys-unit-1);
-}
-
-.name {
-	@include specimen.name;
-
-	text-transform: capitalize;
-}
-
-.use {
-	@include specimen.meta;
-}
-
-.strip {
-	display: grid;
-	position: relative;
-	grid-template-columns: repeat(
-		var(--steps),
-		minmax(0, 1fr)
-	);
-	min-inline-size: 0;
-
-	&::after {
-		position: absolute;
-		inset-block-start: 0;
-		inset-inline: 0;
-		border: 1px solid var(--sys-color-border);
-		border-radius: var(--sys-radius-md);
-		block-size: var(--strip-height);
-		content: "";
-		pointer-events: none;
-	}
-}
-
-.step {
-	display: grid;
-	grid-template-rows: var(--strip-height) auto;
-	grid-template-columns: minmax(0, 1fr);
-	justify-items: center;
-	gap: var(--sys-unit-4);
-	min-inline-size: 0;
-
-	> :first-child {
-		border-radius: var(--sys-radius-none);
+	.about {
+		display: grid;
+		gap: var(--sys-unit-1);
 	}
 
-	&:first-child {
-		justify-items: start;
+	.name {
+		@include specimen.name;
+
+		text-transform: capitalize;
+	}
+
+	.use {
+		@include specimen.meta;
+	}
+
+	.strip {
+		display: grid;
+		position: relative;
+		grid-template-columns: repeat(
+			var(--steps),
+			minmax(0, 1fr)
+		);
+		min-inline-size: 0;
+
+		&::after {
+			position: absolute;
+			inset-block-start: 0;
+			inset-inline: 0;
+			border: 1px solid var(--docs-color-border);
+			border-radius: var(--sys-radius-md);
+			block-size: var(--strip-height);
+			content: "";
+			pointer-events: none;
+		}
+	}
+
+	.step {
+		display: grid;
+		grid-template-rows: var(--strip-height) auto;
+		grid-template-columns: minmax(0, 1fr);
+		justify-items: center;
+		gap: var(--sys-unit-4);
+		min-inline-size: 0;
 
 		> :first-child {
-			border-start-start-radius: var(--sys-radius-md);
-			border-end-start-radius: var(--sys-radius-md);
+			border-radius: var(--sys-radius-none);
+		}
+
+		&:first-child {
+			justify-items: start;
+
+			> :first-child {
+				border-start-start-radius: var(--sys-radius-md);
+				border-end-start-radius: var(--sys-radius-md);
+			}
+		}
+
+		&:last-child {
+			justify-items: end;
+
+			> :first-child {
+				border-start-end-radius: var(--sys-radius-md);
+				border-end-end-radius: var(--sys-radius-md);
+			}
+		}
+
+		> :first-child:focus-visible {
+			border-radius: var(--sys-radius-xs);
 		}
 	}
 
-	&:last-child {
-		justify-items: end;
-
-		> :first-child {
-			border-start-end-radius: var(--sys-radius-md);
-			border-end-end-radius: var(--sys-radius-md);
-		}
+	.number {
+		grid-row: 2;
+		color: var(--docs-color-muted);
+		font: var(--docs-type-label-small);
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
 	}
-
-	> :first-child:focus-visible {
-		border-radius: var(--sys-radius-xs);
-	}
-}
-
-.number {
-	grid-row: 2;
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-label-small);
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
 }

@@ -1,57 +1,59 @@
 @use "../../src/style/focus.scss" as focus;
 @use "../../src/style/state-layer.scss" as state;
 
-.footer {
-	margin-block-start: var(--sys-unit-48);
-	margin-inline: calc(50% - 50cqi);
-	padding: var(--sys-unit-32) calc(50cqi - 50%);
-	background: var(--sys-color-surface);
-}
-
-.tiles {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: var(--sys-unit-12);
-
-	@container (width < 40rem) {
-		grid-template-columns: minmax(0, 1fr);
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.footer {
+		margin-block-start: var(--sys-unit-48);
+		margin-inline: calc(50% - 50cqi);
+		padding: var(--sys-unit-32) calc(50cqi - 50%);
+		background: var(--docs-color-surface);
 	}
-}
 
-a.tile.tile {
-	display: grid;
-	row-gap: var(--sys-unit-4);
-	border-radius: var(--sys-radius-lg);
-	padding: var(--sys-unit-16) var(--sys-unit-20);
-	background: var(--sys-color-surface-high);
-	color: var(--sys-color-text);
-	text-decoration: none;
+	.tiles {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--sys-unit-12);
 
-	@include state.layer;
-	@include focus.ring;
-
-	&:hover {
-		color: var(--sys-color-text);
+		@container (width < 40rem) {
+			grid-template-columns: minmax(0, 1fr);
+		}
 	}
-}
 
-a.next.next {
-	justify-items: end;
-	text-align: end;
+	a.tile.tile {
+		display: grid;
+		row-gap: var(--sys-unit-4);
+		border-radius: var(--sys-radius-lg);
+		padding: var(--sys-unit-16) var(--sys-unit-20);
+		background: var(--docs-color-sand);
+		color: var(--docs-color-ink);
+		text-decoration: none;
 
-	.label {
-		flex-direction: row-reverse;
+		@include state.layer;
+		@include focus.ring;
+
+		&:hover {
+			color: var(--docs-color-ink);
+		}
 	}
-}
 
-.label.label {
-	display: flex;
-	align-items: center;
-	gap: var(--sys-unit-4);
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-label-medium);
-}
+	a.next.next {
+		justify-items: end;
+		text-align: end;
 
-.title.title {
-	font: var(--sys-font-heading-medium);
+		.label {
+			flex-direction: row-reverse;
+		}
+	}
+
+	.label.label {
+		display: flex;
+		align-items: center;
+		gap: var(--sys-unit-4);
+		color: var(--docs-color-muted);
+		font: var(--docs-type-label-medium);
+	}
+
+	.title.title {
+		font: var(--docs-type-heading-medium);
+	}
 }

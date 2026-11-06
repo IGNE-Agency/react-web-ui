@@ -73,13 +73,15 @@ export const dateIcons = {
 	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 };
 
+export const guide = { accent: "blue" };
+
 <Meta title="Design system/Patterns" />
 
 # Patterns
 
 A product is built from components, but people meet it in moments, and in families. The moments are waiting for something to load, finding nothing, watching something fail, being told that something happened and being asked whether they are sure. The families are components that share a job: the fields you type in, the labels pinned to things, the navigation around every page and the surfaces that float above it. A pattern answers one moment or one family once, so that every component it touches behaves the same way.
 
-<Illustration caption="A region of data starts loading and ends ready, empty or failed, and a failure can always try again.">
+<Illustration caption="Mixed parts fall into families by what they share.">
 	<PatternsDrawing />
 </Illustration>
 
@@ -687,7 +689,7 @@ A field's height comes from the field, never from its parts. The group has a flo
 						<TextField
 							optionalLabel="optional"
 							label="Reference"
-							value="DEC-0412"
+							value="INV-0412"
 							onValueChange={ignore}
 							clearable
 							clearLabel="Clear"
@@ -717,7 +719,7 @@ A field's height comes from the field, never from its parts. The group has a flo
 						</span>
 						<span className={componentStyles.box}>
 							<span className={componentStyles.grow}>
-								DEC-0412
+								INV-0412
 							</span>
 							<span className={componentStyles.glyph}>
 								<Icon svg={CloseIcon} label="" />
@@ -898,7 +900,7 @@ Invalid reaches the field's ink, not its buttons. The field's ink is set once, a
 
 <Beside>
 
-Nobody likes being corrected mid-sentence. A form says nothing about errors while it is first filled in. When it is submitted, every problem shows at once, the first field with a problem takes focus and scrolls into view, and from then on each field checks itself as it changes. A problem with the form as a whole shows above the submit button. Every field is required unless it says Optional, and [the fields themselves are on Components](#where-you-type).
+Nobody likes being corrected mid-sentence. A form says nothing about errors while it is first filled in. When it is submitted, every problem shows at once, the first field with a problem takes focus and scrolls into view, and from then on each field checks itself as it changes. A problem with the form as a whole shows above the submit button. A field shows the required or optional mark its `requiredness` asks for, and neither when it is left out, and [the fields themselves are in Where you type](#where-you-type).
 
     <Example
     	kind="do"
@@ -922,7 +924,7 @@ A chip, a badge or a tag is a word pinned to something else: a status on a row, 
 
 Here anything that carries a tone and a variant colours itself from one shared table of tones, which sets its fill, its ink and its border. Sharing one table is what stops these drifting: a new tone lands everywhere at once. The solid variant swaps [the role's own pair](?path=/docs/design-system-foundation-token-architecture--docs#a-component-reads-a-role-never-a-step) rather than bringing in a fourth colour, so it follows the theme.
 
-Shape and size come from one shared chip shell, which wraps the table of tones and adds the pill. A chip sits at the small label size. It is usually one of several in a row or a cell, and at body size a row of them is the loudest thing on the page instead of a note on the thing it belongs to.
+Shape and size come from one shared tag shell, which wraps the table of tones and adds the pill. A chip sits at the small label size. It is usually one of several in a row or a cell, and at body size a row of them is the loudest thing on the page instead of a note on the thing it belongs to.
 
 <DoDont>
 	<Example
@@ -1187,7 +1189,7 @@ A question in a dialog stops everything, so it has to be worth stopping for, and
 					Delete comment?
 				</span>
 				<span>
-					This comment will be removed from the queue.
+					This comment will be removed from the thread.
 				</span>
 				<div className={styles.actions}>
 					<Button variant="tertiary">Cancel</Button>
@@ -1214,16 +1216,6 @@ A question in a dialog stops everything, so it has to be worth stopping for, and
 </DoDont>
 
 A session about to run out is the other question that can't wait. Two minutes before it ends, a dialog asks whether the reader is still there, counts down, and offers to stay signed in or to sign out now. It can only be [closed by answering it](#a-dismissable-surface-says-so-on-its-titles-line). Any request the app makes in the meantime resets the clock and closes the dialog. When the session does end, the sign-in page says so in a toast that stays until it is dismissed.
-
-## Exceptions
-
-- Popovers that load details show a failure [without a retry](#trying-again-is-offered-only-when-it-can-help).
-
-## Known issues
-
-- There is no offline state. A lost connection reads as a failed request and is tried again in the background.
-- There is no permission state. A page the user may not open shows the general failure, with no way forward.
-- A record that no longer exists shows the general failure too, not "not found".
 
 ## Technical rules
 
@@ -1257,7 +1249,7 @@ The message replaces the rows and keeps the headers and filters. Explained in [T
 ```tsx
 {
 	rows.length === 0 ? (
-		<MessagePage title={m.data_table_empty()} />
+		<EmptyMessage title={m.data_table_empty()} />
 	) : (
 		<DataTable table={table} />
 	);
@@ -1320,7 +1312,7 @@ Any other toast leaves after a few seconds. Explained in [Telling people what ha
 <Example kind="do" caption="The fix stays until it is used or dismissed.">
 
 ```ts
-error(m.toast_comment_send_failed(), {
+toast.error(m.toast_comment_send_failed(), {
 	actions: [
 		{
 			label: m.toast_retry(),
@@ -1335,7 +1327,7 @@ error(m.toast_comment_send_failed(), {
 <Example kind="dont" caption="The fix leaves before it can be pressed.">
 
 ```ts
-error(m.toast_comment_send_failed(), {
+toast.error(m.toast_comment_send_failed(), {
 	actions: [
 		{
 			label: m.toast_retry(),
@@ -1356,8 +1348,8 @@ error(m.toast_comment_send_failed(), {
 A toast about one thing carries that thing's key, so a second failure replaces it rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
 
 ```ts
-error(m.toast_comment_send_failed(), {
-	key: `outbox-${item.id}`,
+toast.error(m.toast_comment_send_failed(), {
+	key: `comment-${item.id}`,
 });
 ```
 
@@ -1384,8 +1376,8 @@ error(m.toast_comment_send_failed(), {
 ```scss
 .input {
 	border: 1px solid var(--sys-color-border);
-	border-radius: var(--radius-sm);
-	padding: var(--unit-6);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-6);
 }
 ```
 
@@ -1600,7 +1592,7 @@ Every control that can be read-only wears it: a text field, a select, a combobox
 ```scss
 .box[data-readonly] {
 	outline: 1px dashed var(--sys-color-outline);
-	outline-offset: var(--unit-2);
+	outline-offset: var(--sys-unit-2);
 }
 ```
 
@@ -1664,11 +1656,11 @@ The group carries a floor at the height of a bare control, and an inlay occupies
 
 ```scss
 .group {
-	min-block-size: calc(1lh + 2 * var(--unit-6) + 2px);
+	min-block-size: calc(1lh + 2 * var(--sys-unit-6) + 2px);
 }
 
 .action {
-	margin-block: calc(-1 * var(--unit-6));
+	margin-block: calc(-1 * var(--sys-unit-6));
 }
 ```
 
@@ -1677,7 +1669,7 @@ The group carries a floor at the height of a bare control, and an inlay occupies
 
 ```scss
 .action {
-	min-block-size: var(--unit-22);
+	min-block-size: var(--sys-unit-22);
 }
 ```
 
@@ -1912,16 +1904,16 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 </Details>
 
-<Details title="A chip takes its shape from the shared chip shell, at the small label size">
+<Details title="A chip takes its shape from the shared tag shell, at the small label size">
 
-`chip.shell` wraps the tone table and adds the pill. Shown in [Labels pinned to things](#labels-pinned-to-things).
+`tag.shell` wraps the tone table and adds the pill. Shown in [Labels pinned to things](#labels-pinned-to-things).
 
 <DoDont>
 <Example kind="do" caption="The statuses annotate the rows instead of competing with them.">
 
 ```scss
 .chip {
-	@include chip.shell("chip");
+	@include tag.shell("chip");
 }
 ```
 
@@ -1930,9 +1922,9 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 ```scss
 .chip {
-	@include chip.shell("chip");
+	@include tag.shell("chip");
 
-	padding: var(--unit-4) var(--unit-10);
+	padding: var(--sys-unit-4) var(--sys-unit-10);
 	font: var(--sys-font-body-large);
 }
 ```
@@ -1951,8 +1943,8 @@ The remove control pulls its extra height back with a negative block margin. Exp
 
 ```scss
 .remove {
-	block-size: var(--unit-10);
-	margin-block: calc(-1 * var(--unit-1));
+	block-size: var(--sys-unit-10);
+	margin-block: calc(-1 * var(--sys-unit-1));
 }
 ```
 
@@ -1961,7 +1953,7 @@ The remove control pulls its extra height back with a negative block margin. Exp
 
 ```scss
 .remove {
-	block-size: var(--unit-10);
+	block-size: var(--sys-unit-10);
 }
 ```
 
@@ -1985,36 +1977,6 @@ A bottom bar in document flow is not floating either. Explained in [Finding your
 <Details title="The frame's top bar owns the page title and the tab strip">
 
 Both are derived from the route tree: a route declares its tab in `staticData`, and the shell draws the strip and the title. Explained in [Finding your way](#finding-your-way).
-
-<DoDont>
-<Example kind="do" caption="The route declares its tab, and the shell draws the strip and the title.">
-
-```tsx
-export const Route = createFileRoute(
-	"/_app/invoices/incomplete",
-)({
-	staticData: {
-		tab: { label: m.tab_incomplete, order: 10 },
-	},
-	component: Page,
-});
-```
-
-</Example>
-<Example kind="dont" caption="A second title and a strip the route tree knows nothing about.">
-
-```tsx
-const Page = () => (
-	<>
-		<h1>{m.invoices_title()}</h1>
-		<Tabs items={invoiceTabs} />
-		<InvoicesTable />
-	</>
-);
-```
-
-</Example>
-</DoDont>
 
 </Details>
 
@@ -2046,8 +2008,8 @@ Menus, select lists and typeahead menus take the card from `popup.surface` and t
 
 ```scss
 .item {
-	border-radius: var(--radius-sm);
-	padding: var(--unit-4) var(--unit-6);
+	border-radius: var(--sys-radius-sm);
+	padding: var(--sys-unit-4) var(--sys-unit-6);
 
 	&:hover {
 		background: var(--sys-color-surface-high);
@@ -2084,7 +2046,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 }
 
 .popup {
-	box-shadow: var(--elevation-2);
+	box-shadow: var(--sys-elevation-2);
 }
 ```
 
@@ -2181,7 +2143,7 @@ The title is a question that names the action, and the body says what will happe
 	description={m.comment_delete_description()}
 	confirmLabel={m.comment_delete_confirm()}
 	cancelLabel={m.comment_delete_cancel()}
-	onConfirm={() => void deleteOutboxItem(id)}
+	onConfirm={() => void deleteComment(id)}
 	tone="danger"
 />
 ```
@@ -2196,7 +2158,7 @@ The title is a question that names the action, and the body says what will happe
 	title="Are you sure?"
 	confirmLabel="Yes"
 	cancelLabel="No"
-	onConfirm={() => void deleteOutboxItem(id)}
+	onConfirm={() => void deleteComment(id)}
 />
 ```
 

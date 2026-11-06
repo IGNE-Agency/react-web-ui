@@ -1,26 +1,28 @@
 @use "./caption";
 
-.specimen {
-	display: grid;
-	grid-template-columns: subgrid;
-	grid-column: 1 / -1;
-	align-items: start;
-	row-gap: var(--sys-unit-6);
-	margin: 0;
-	min-inline-size: 0;
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.specimen {
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-column: 1 / -1;
+		align-items: start;
+		row-gap: var(--sys-unit-6);
+		margin: 0;
+		min-inline-size: 0;
+	}
 
-.body {
-	display: grid;
-	grid-row: 1;
-	grid-column: var(--specimen-body, 1 / -1);
-	min-inline-size: 0;
-}
+	.body {
+		display: grid;
+		grid-row: 1;
+		grid-column: var(--specimen-body, 1 / -1);
+		min-inline-size: 0;
+	}
 
-.caption {
-	@include caption.register;
+	.caption {
+		@include caption.register;
 
-	grid-row: var(--specimen-caption-row, 2);
-	grid-column: var(--specimen-caption, 1 / -1);
-	max-inline-size: 30rem;
+		grid-row: var(--specimen-caption-row, 2);
+		grid-column: var(--specimen-caption, 1 / -1);
+		max-inline-size: 30rem;
+	}
 }

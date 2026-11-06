@@ -6,7 +6,7 @@
 ///       @include caption.register;
 ///   }
 @mixin register {
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-body-small);
+	color: var(--docs-color-muted);
+	font: var(--docs-type-body-small);
 	text-wrap: pretty;
 }

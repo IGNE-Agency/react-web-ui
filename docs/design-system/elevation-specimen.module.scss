@@ -1,64 +1,68 @@
 @use "./specimen";
 
-.stages {
-	display: grid;
-	gap: var(--sys-unit-12);
-}
-
-.stage {
-	display: grid;
-	gap: var(--sys-unit-12);
-	border-radius: var(--sys-radius-lg);
-	background: var(--canvas);
-	padding: var(--sys-unit-12) var(--sys-unit-16)
-		var(--sys-unit-20);
-}
-
-.theme {
-	color: var(--muted);
-	font: var(--sys-font-label-small-strong);
-}
-
-.levels {
-	display: grid;
-	grid-template-columns: repeat(
-		var(--levels),
-		minmax(0, 1fr)
-	);
-	gap: var(--sys-unit-8);
-	align-items: end;
-
-	@media (width < 40rem) {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.stages {
+		display: grid;
+		gap: var(--sys-unit-12);
 	}
-	padding-block-end: var(--sys-unit-4);
-	border-block-end: 1.5px dashed
-		color-mix(in oklab, var(--muted) 45%, transparent);
-}
 
-.level {
-	display: grid;
-	gap: var(--sys-unit-2);
-	align-content: start;
-	margin-block-end: calc(var(--sys-unit-4) * var(--level));
-	outline: 1px solid var(--edge);
-	outline-offset: -1px;
-	border-radius: var(--sys-radius-md);
-	background: var(--surface);
-	padding: var(--sys-unit-6);
-	block-size: var(--sys-unit-56);
-
-	@media (width < 40rem) {
-		block-size: var(--sys-unit-64);
+	.stage {
+		display: grid;
+		gap: var(--sys-unit-12);
+		border-radius: var(--sys-radius-lg);
+		background: var(--canvas);
+		padding: var(--sys-unit-12) var(--sys-unit-16)
+			var(--sys-unit-20);
 	}
-}
 
-.number {
-	color: var(--text);
-	font: var(--sys-font-heading-medium);
-}
+	.theme {
+		color: var(--muted);
+		font: var(--docs-type-label-small-strong);
+	}
 
-.use {
-	color: var(--muted);
-	font: var(--sys-font-body-small);
+	.levels {
+		display: grid;
+		grid-template-columns: repeat(
+			var(--levels),
+			minmax(0, 1fr)
+		);
+		gap: var(--sys-unit-8);
+		align-items: end;
+
+		@media (width < 40rem) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+		padding-block-end: var(--sys-unit-4);
+		border-block-end: 1.5px dashed
+			color-mix(in oklab, var(--muted) 45%, transparent);
+	}
+
+	.level {
+		display: grid;
+		gap: var(--sys-unit-2);
+		align-content: start;
+		margin-block-end: calc(
+			var(--sys-unit-4) * var(--level)
+		);
+		outline: 1px solid var(--edge);
+		outline-offset: -1px;
+		border-radius: var(--sys-radius-md);
+		background: var(--surface);
+		padding: var(--sys-unit-6);
+		block-size: var(--sys-unit-56);
+
+		@media (width < 40rem) {
+			block-size: var(--sys-unit-64);
+		}
+	}
+
+	.number {
+		color: var(--text);
+		font: var(--docs-type-heading-medium);
+	}
+
+	.use {
+		color: var(--muted);
+		font: var(--docs-type-body-small);
+	}
 }

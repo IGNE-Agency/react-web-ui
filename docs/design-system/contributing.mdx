@@ -2,6 +2,8 @@ import { Meta } from "@storybook/addon-docs/blocks";
 import { Illustration } from "./illustration";
 import { ContributingDrawing } from "./contributing-drawing";
 
+export const guide = { accent: "green" };
+
 <Meta title="Design system/Working on the system/Contributing" />
 
 # Contributing
@@ -15,7 +17,7 @@ How a change to these rules gets made and reviewed. It is written for two reader
 ## Who edits what
 
 - **Designers' agents edit rule prose only.** A rule is the text of a page in `docs/design-system/`: what to do, why, and the example that shows it.
-- **Engineers own everything else.** That covers the example cards on these pages and the pictures inside them, the components, and the tokens in `src/style/`.
+- **Engineers own everything else.** That covers the example cards on these pages and the pictures inside them, the components, and the tokens in `tokens/`.
 - **Tokens are not edited from Figma.** [The colour ramps are tuned in the token files](?path=/docs/design-system-foundation-colour--docs#ramps), and their steps don't map onto Figma's fixed values. A rule may say which role a colour plays; picking the ramp step behind that role is an engineer's change.
 
 A rule change that needs a new example, a token or a component change goes in as prose. An engineer then adds the rest in the same pull request or a follow-up.
@@ -33,10 +35,10 @@ Rewording an existing rule follows the same bar. Say in the pull request what th
 
 ## Proposing a change
 
-1. Create a branch from `develop`.
+1. Create a branch from `main`.
 2. Edit the page or pages in `docs/design-system/`.
-3. Open a pull request to `develop`. Put the link to the Figma frame or comment that prompted the change in the description.
-4. `.github/CODEOWNERS` requests review from the owners of `docs/design-system/` and `src/style/`. The pull request's checks must pass, and they build these pages.
+3. Open a pull request to `main`. Put the link to the Figma frame or comment that prompted the change in the description.
+4. The pull request's checks must pass, and they build these pages.
 
 ## Setting up a designer's Figma agent
 

@@ -1,15 +1,17 @@
 @use "../../src/style/focus.scss" as focus;
 
-.swatch {
-	display: block;
-	background: var(--swatch);
-	block-size: 100%;
-	inline-size: 100%;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.swatch {
+		display: block;
+		background: var(--swatch);
+		block-size: 100%;
+		inline-size: 100%;
 
-	@include focus.ring;
+		@include focus.ring;
 
-	&:focus-visible {
-		position: relative;
-		z-index: 1;
+		&:focus-visible {
+			position: relative;
+			z-index: 1;
+		}
 	}
 }

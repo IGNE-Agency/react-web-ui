@@ -1,67 +1,69 @@
 @use "../src/style/focus.scss" as focus;
 
-.frame {
-	min-inline-size: 0;
-	margin-block: var(--sys-unit-12);
-}
-
-.scroller {
-	overflow-x: auto;
-	border-radius: var(--sys-radius-md);
-	background: var(--sys-color-surface);
-	scrollbar-width: thin;
-	scrollbar-color: var(--sys-color-outline) transparent;
-
-	@include focus.ring;
-}
-
-.table {
-	inline-size: max-content;
-	min-inline-size: 100%;
-	border-collapse: separate;
-	border-spacing: 0;
-	color: var(--sys-color-text);
-	font: var(--sys-font-body-medium);
-	font-variant-numeric: tabular-nums;
-}
-
-.head {
-	background: var(--sys-color-surface-highest);
-	padding: var(--sys-unit-8);
-	vertical-align: middle;
-	color: var(--sys-color-text);
-	text-align: start;
-	font: var(--sys-font-label-small);
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
-}
-
-.cell {
-	padding: var(--sys-unit-6) var(--sys-unit-8);
-	vertical-align: middle;
-	text-align: start;
-	white-space: nowrap;
-}
-
-.table a[href] {
-	color: var(--sys-color-primary);
-
-	&:hover {
-		color: var(--sys-color-on-primary-container);
-	}
-}
-
-.table tbody > tr:nth-child(even) > .cell {
-	background: var(--sys-color-surface-high);
-}
-
-.head,
-.cell {
-	&[data-align="center"] {
-		text-align: center;
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.frame {
+		min-inline-size: 0;
+		margin-block: var(--sys-unit-12);
 	}
 
-	&[data-align="end"] {
-		text-align: end;
+	.scroller {
+		overflow-x: auto;
+		border-radius: var(--sys-radius-md);
+		background: var(--docs-color-surface);
+		scrollbar-width: thin;
+		scrollbar-color: var(--docs-color-border) transparent;
+
+		@include focus.ring;
+	}
+
+	.table {
+		inline-size: max-content;
+		min-inline-size: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		color: var(--docs-color-body);
+		font: var(--docs-type-body-medium);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.head {
+		background: var(--docs-color-sand);
+		padding: var(--sys-unit-8);
+		vertical-align: middle;
+		color: var(--docs-color-ink);
+		text-align: start;
+		font: var(--docs-type-label-small);
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+
+	.cell {
+		padding: var(--sys-unit-6) var(--sys-unit-8);
+		vertical-align: middle;
+		text-align: start;
+		white-space: nowrap;
+	}
+
+	.table a[href] {
+		color: var(--docs-color-ink);
+
+		&:hover {
+			color: var(--docs-color-ink);
+		}
+	}
+
+	.table tbody > tr:nth-child(even) > .cell {
+		background: var(--docs-color-sand);
+	}
+
+	.head,
+	.cell {
+		&[data-align="center"] {
+			text-align: center;
+		}
+
+		&[data-align="end"] {
+			text-align: end;
+		}
 	}
 }

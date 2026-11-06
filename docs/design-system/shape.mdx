@@ -13,6 +13,8 @@ import {
 import { Specimen } from "./specimen";
 import { RadiusSpecimen } from "./radius-specimen";
 
+export const guide = { accent: "blue" };
+
 <Meta title="Design system/Foundation/Shape" />
 
 # Shape
@@ -27,7 +29,7 @@ Shape is where a thing's edges meet. It says more than you'd expect: square corn
 
 The rounder a corner, the softer the thing feels. A sharp corner reads as precise and dense, a generous one as calm and approachable, and a shape rounded all the way into a pill or a circle reads as something you can press.
 
-Radius also has to grow with size. The same small curve that looks just right on a chip looks pinched on a dialog, and a curve big enough for the dialog swallows the chip. So a system doesn't pick one radius: it picks a short scale, from small for dense details to large for big surfaces, and every element takes the step that suits its size.
+Radius also has to grow with size. The same small curve that looks just right on a tag looks pinched on a dialog, and a curve big enough for the dialog swallows the tag. So a system doesn't pick one radius: it picks a short scale, from small for dense details to large for big surfaces, and every element takes the step that suits its size.
 
 <Illustration caption="One shape, rounded a little more each time: from exact and technical on the left to a pill and a circle on the right.">
 	<SoftnessDrawing />
@@ -45,7 +47,7 @@ That's for surfaces. A control keeps its own shape wherever it sits: [a button i
 
 ## The radii
 
-This product has a small set of named radii, from dense chrome, like menu rows and chips inside a table cell, through inputs, cards and dialogs to bottom sheets, plus a pill and a circle.
+The kit has a small set of named radii, from dense chrome, like menu rows and tags inside a table cell, through inputs, cards and dialogs to bottom sheets, plus a pill and a circle.
 
 <Specimen caption="Each radius drawn as the corner it rounds, at three times its true size: the dashed lines are the square corner it replaces, the dashed circle the one that rounds it.">
 	<RadiusSpecimen />
@@ -84,7 +86,7 @@ Radius is a shape decision and never a spacing one. Rounding a corner by a spaci
 
 ## No sharp edges
 
-The soft palette is half of the app's character; rounding is the other half, and the two only read as deliberate together. A square corner anywhere is a defect, not a neutral default — on anything painted, not just the obvious cards: a hover or selection fill, a focus ring, a skeleton, a scroll thumb, a drag handle, a divider that is really a bar, a full-bleed row inside a rounded container.
+A square corner anywhere is a defect, not a neutral default — on anything painted, not just the obvious cards: a hover or selection fill, a focus ring, a skeleton, a scroll thumb, a drag handle, a divider that is really a bar, a full-bleed row inside a rounded container.
 
 The scale runs from the smallest radius to the largest precisely so that dense chrome has somewhere to go. <Pull>Nothing is too small to round: a fill four pixels tall takes the smallest radius.</Pull> No radius at all is for the one case that is not a corner — an edge that continues past the element, like a header band spanning a card whose own corners are already rounded, or a stacked group's inner joins.
 
@@ -183,7 +185,7 @@ Every rule on this page, one sentence each, for looking up rather than reading. 
 
 <Details title="A corner's radius grows with the size of what it rounds">
 
-Dense details take the small radii and big surfaces the large ones, so a chip and a dialog each look rounded in proportion. Explained in [The character of a corner](#the-character-of-a-corner).
+Dense details take the small radii and big surfaces the large ones, so a tag and a dialog each look rounded in proportion. Explained in [The character of a corner](#the-character-of-a-corner).
 
 </Details>
 
@@ -214,7 +216,7 @@ Radius is a shape decision, not a spacing one; a spacing value ties the corner t
 
 ```scss
 .card {
-	border-radius: var(--radius-md);
+	border-radius: var(--sys-radius-md);
 }
 ```
 
@@ -223,7 +225,7 @@ Radius is a shape decision, not a spacing one; a spacing value ties the corner t
 
 ```scss
 .card {
-	border-radius: var(--unit-2);
+	border-radius: var(--sys-unit-2);
 }
 ```
 
@@ -247,16 +249,16 @@ Everything painted is rounded: a hover or selection fill, a focus ring, a skelet
 
 ```scss
 .row {
-	border-radius: var(--radius-none);
+	border-radius: var(--sys-radius-none);
 
 	&:first-child {
-		border-start-start-radius: var(--radius-md);
-		border-start-end-radius: var(--radius-md);
+		border-start-start-radius: var(--sys-radius-md);
+		border-start-end-radius: var(--sys-radius-md);
 	}
 
 	&:last-child {
-		border-end-start-radius: var(--radius-md);
-		border-end-end-radius: var(--radius-md);
+		border-end-start-radius: var(--sys-radius-md);
+		border-end-end-radius: var(--sys-radius-md);
 	}
 }
 ```
@@ -266,7 +268,7 @@ Everything painted is rounded: a hover or selection fill, a focus ring, a skelet
 
 ```scss
 .row {
-	border-radius: var(--radius-md);
+	border-radius: var(--sys-radius-md);
 }
 ```
 
@@ -284,7 +286,7 @@ The state layer inherits its host's radius, so a host without one gets a square 
 
 ```scss
 .row {
-	border-radius: var(--radius-sm);
+	border-radius: var(--sys-radius-sm);
 
 	@include state.layer;
 }

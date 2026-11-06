@@ -1,22 +1,117 @@
 import styles from "./components-drawing.module.scss";
 
-const TRAY = {
-	x: 70,
-	y: 60,
-	width: 1060,
-	height: 480,
-} as const;
-const SLOTS = [
-	{ x: 110, y: 100, width: 410, height: 200 },
-	{ x: 560, y: 100, width: 530, height: 200 },
-	{ x: 110, y: 340, width: 180, height: 160 },
-	{ x: 330, y: 340, width: 320, height: 160 },
-	{ x: 690, y: 340, width: 400, height: 160 },
-] as const;
+type Point = Readonly<{ x: number; y: number }>;
+type Part = Readonly<{
+	grow: (margin: number) => string;
+}>;
+
+const round = (value: number) =>
+	Math.round(value * 100) / 100;
+
+const polygon = (points: readonly Point[]) =>
+	`M${points.map(point => `${round(point.x)} ${round(point.y)}`).join(" L")} Z`;
+
+const circle = (center: Point, radius: number) =>
+	`M${round(center.x - radius)} ${round(center.y)} a${radius} ${radius} 0 1 0 ${radius * 2} 0 a${radius} ${radius} 0 1 0 ${-radius * 2} 0 Z`;
+
+const rect = (
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius = 0,
+) => {
+	const r = Math.min(radius, width / 2, height / 2);
+	return r === 0
+		? `M${x} ${y} h${width} v${height} h${-width} Z`
+		: `M${x + r} ${y} h${width - 2 * r} a${r} ${r} 0 0 1 ${r} ${r} v${height - 2 * r} a${r} ${r} 0 0 1 ${-r} ${r} h${-(width - 2 * r)} a${r} ${r} 0 0 1 ${-r} ${-r} v${-(height - 2 * r)} a${r} ${r} 0 0 1 ${r} ${-r} Z`;
+};
+
+const grownRect =
+	(
+		x: number,
+		y: number,
+		width: number,
+		height: number,
+		radius = 0,
+	) =>
+	(margin: number) =>
+		rect(
+			x - margin,
+			y - margin,
+			width + 2 * margin,
+			height + 2 * margin,
+			radius + margin,
+		);
+
+const disc = (
+	x: number,
+	top: number,
+	size: number,
+): Part => ({
+	grow: margin =>
+		circle({ x, y: top + size / 2 }, size / 2 + margin),
+});
+
+const square = (
+	x: number,
+	top: number,
+	size: number,
+): Part => ({
+	grow: grownRect(x - size / 2, top, size, size),
+});
+
+const pill = (
+	x: number,
+	top: number,
+	width: number,
+	height: number,
+): Part => ({
+	grow: grownRect(
+		x - width / 2,
+		top,
+		width,
+		height,
+		width / 2,
+	),
+});
+
+const triangle = (
+	x: number,
+	top: number,
+	size: number,
+): Part => {
+	const height = (size * Math.sqrt(3)) / 2;
+	const center = { x, y: top + (height * 2) / 3 };
+	return {
+		grow: margin => {
+			const reach = 2 * (height / 3 + margin);
+			return polygon(
+				[-90, 30, 150].map(degrees => ({
+					x:
+						center.x +
+						reach * Math.cos((degrees * Math.PI) / 180),
+					y:
+						center.y +
+						reach * Math.sin((degrees * Math.PI) / 180),
+				})),
+			);
+		},
+	};
+};
+
+const PARTS: readonly Part[] = [
+	disc(180, 190, 220),
+	square(480, 200, 200),
+	triangle(790, 185, 250),
+	pill(1070, 120, 130, 360),
+];
+const RIM = 30;
+const OUT = 1;
 
 /**
- * The guide's Components opener: a tray with one fitted slot per part, each
- * holding the only button, field, checkbox, switch and chip there is.
+ * The guide's Components opener: four parts, each on a place painted in its
+ * shape, and the painted place of the one that is out.
  *
  * @example
  * <Illustration caption={caption}>
@@ -30,132 +125,15 @@ export const ComponentsDrawing = () => (
 			width="1200"
 			height="600"
 		/>
-		{[TRAY.y, TRAY.y + TRAY.height].map(y => (
-			<line
-				key={y}
-				className={styles.rule}
-				x1="0"
-				x2="1200"
-				y1={y}
-				y2={y}
-			/>
-		))}
-		{[TRAY.x, TRAY.x + TRAY.width].map(x => (
-			<line
-				key={x}
-				className={styles.rule}
-				x1={x}
-				x2={x}
-				y1="0"
-				y2="600"
-			/>
-		))}
-		<rect
-			className={styles.tray}
-			x={TRAY.x}
-			y={TRAY.y}
-			width={TRAY.width}
-			height={TRAY.height}
-			rx="48"
-		/>
-		{SLOTS.map(slot => (
-			<rect
-				key={`${slot.x}-${slot.y}`}
-				className={styles.slot}
-				x={slot.x}
-				y={slot.y}
-				width={slot.width}
-				height={slot.height}
-				rx="28"
-			/>
-		))}
-		<rect
-			className={styles.deep}
-			x="160"
-			y="160"
-			width="310"
-			height="80"
-			rx="40"
-		/>
-		<rect
-			className={styles.paper}
-			x="240"
-			y="190"
-			width="150"
-			height="20"
-			rx="10"
-		/>
-		<rect
-			className={styles.input}
-			x="610"
-			y="150"
-			width="430"
-			height="100"
-			rx="20"
-		/>
-		<rect
-			className={styles.deep}
-			x="646"
-			y="176"
-			width="8"
-			height="48"
-			rx="4"
-		/>
-		<rect
-			className={styles.tint}
-			x="672"
-			y="190"
-			width="200"
-			height="20"
-			rx="10"
-		/>
-		<rect
-			className={styles.deep}
-			x="150"
-			y="370"
-			width="100"
-			height="100"
-			rx="24"
+		<path
+			className={styles.paint}
+			d={PARTS.map(part => part.grow(RIM)).join(" ")}
 		/>
 		<path
-			className={styles.check}
-			d="M174 422 L192 440 L226 400"
-		/>
-		<rect
-			className={styles.deep}
-			x="390"
-			y="380"
-			width="200"
-			height="80"
-			rx="40"
-		/>
-		<circle
-			className={styles.paper}
-			cx="550"
-			cy="420"
-			r="28"
-		/>
-		<rect
-			className={styles.tint}
-			x="740"
-			y="390"
-			width="300"
-			height="60"
-			rx="30"
-		/>
-		<circle
-			className={styles.deep}
-			cx="776"
-			cy="420"
-			r="12"
-		/>
-		<rect
-			className={styles.deep}
-			x="806"
-			y="410"
-			width="190"
-			height="20"
-			rx="10"
+			className={styles.part}
+			d={PARTS.filter((_, index) => index !== OUT)
+				.map(part => part.grow(0))
+				.join(" ")}
 		/>
 	</svg>
 );

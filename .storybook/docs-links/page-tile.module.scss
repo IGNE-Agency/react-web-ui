@@ -1,57 +1,59 @@
 @use "../../src/style/focus.scss" as focus;
 @use "../../src/style/state-layer.scss" as state;
 
-.tiles {
-	display: grid;
-	gap: var(--sys-unit-8);
-	min-inline-size: 0;
-}
-
-a.tile.tile {
-	display: grid;
-	grid-template-columns: 8rem minmax(0, 1fr);
-	align-items: center;
-	column-gap: var(--sys-unit-16);
-	border-radius: var(--sys-radius-lg);
-	background: var(--sys-color-surface-high);
-	padding: var(--sys-unit-8) var(--sys-unit-16)
-		var(--sys-unit-8) var(--sys-unit-8);
-	color: var(--sys-color-text);
-	text-decoration: none;
-
-	@include state.layer;
-	@include focus.ring;
-
-	&:hover {
-		color: var(--sys-color-text);
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.tiles {
+		display: grid;
+		gap: var(--sys-unit-8);
+		min-inline-size: 0;
 	}
-}
 
-.art {
-	display: block;
-	aspect-ratio: 2;
-	overflow: hidden;
-	border-radius: var(--sys-radius-md);
-	background: var(--sys-color-surface-highest);
+	a.tile.tile {
+		display: grid;
+		grid-template-columns: 8rem minmax(0, 1fr);
+		align-items: center;
+		column-gap: var(--sys-unit-16);
+		border-radius: var(--sys-radius-lg);
+		background: var(--docs-color-sand);
+		padding: var(--sys-unit-8) var(--sys-unit-16)
+			var(--sys-unit-8) var(--sys-unit-8);
+		color: var(--docs-color-ink);
+		text-decoration: none;
 
-	> svg {
+		@include state.layer;
+		@include focus.ring;
+
+		&:hover {
+			color: var(--docs-color-ink);
+		}
+	}
+
+	.art {
 		display: block;
-		inline-size: 100%;
-		block-size: auto;
+		aspect-ratio: 2;
+		overflow: hidden;
+		border-radius: var(--sys-radius-md);
+		background: var(--docs-color-sand);
+
+		> svg {
+			display: block;
+			inline-size: 100%;
+			block-size: auto;
+		}
 	}
-}
 
-.text {
-	display: grid;
-	row-gap: var(--sys-unit-2);
-	min-inline-size: 0;
-}
+	.text {
+		display: grid;
+		row-gap: var(--sys-unit-2);
+		min-inline-size: 0;
+	}
 
-.title.title {
-	font: var(--sys-font-heading-small);
-}
+	.title.title {
+		font: var(--docs-type-heading-small);
+	}
 
-.description.description {
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-body-medium);
+	.description.description {
+		color: var(--docs-color-muted);
+		font: var(--docs-type-body-medium);
+	}
 }

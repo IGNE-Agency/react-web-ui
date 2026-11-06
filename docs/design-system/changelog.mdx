@@ -1,6 +1,9 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Pill } from "../brand/pill.tsx";
 import { ChangelogDrawing } from "./changelog-drawing";
 import { Illustration } from "./illustration";
+
+export const guide = { accent: "blue" };
 
 <Meta title="Design system/Working on the system/Changelog" />
 
@@ -12,10 +15,16 @@ Two kinds of change, newest first: a design decision, and a change to the system
 	<ChangelogDrawing />
 </Illustration>
 
+## November 2026
+
+- <Pill>New</Pill> **5 November.** [The docs wear IGNE's
+  brand, and the kit wears none of
+  it](?path=/docs/design-system-brand--docs#the-brand-dresses-the-docs-and-never-the-kit).
+
 ## October 2026
 
 - **12 October.** The guide groups its pages into the [foundation](?path=/docs/design-system-foundation-token-architecture--docs), which holds the values, and [the principles](?path=/docs/design-system-principles-overview--docs), which hold the decisions that put those values to use. The state layer and the focus ring become a foundation of their own, [States](?path=/docs/design-system-foundation-states--docs).
-- **9 October.** [The layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares), declared as a token.
+- **9 October.** [The layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares), which the app declares.
 - **9 October.** [A component answers to its own width](?path=/docs/design-system-principles-responsiveness--docs#a-component-answers-to-its-own-width-not-the-viewports), not the viewport's.
 - **9 October.** [Content and popups keep one gutter](?path=/docs/design-system-principles-responsiveness--docs#content-and-popups-keep-one-gutter-from-the-screens-edge) from the screen's edge, narrower below the breakpoint.
 - **9 October.** [A drawer carries no Cancel beside its actions](?path=/docs/design-system-patterns--docs#a-dismissable-surface-says-so-on-its-titles-line); a dialog that asks a question keeps Cancel as the answer no.

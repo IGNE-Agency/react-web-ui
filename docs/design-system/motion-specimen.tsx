@@ -355,7 +355,7 @@ const DurationRow = () => {
 								scene="menu"
 								stage={stage}
 								style={{
-									"--sys-motion-instant": `${milliseconds}ms`,
+									"--specimen-duration": `${milliseconds}ms`,
 								}}
 							/>
 							<span className={styles.name}>{name}</span>
@@ -439,7 +439,7 @@ const EasingLane = ({
 };
 
 /**
- * The motion tokens, moving the way the product moves them: one popup surface
+ * The motion tokens, moving the way the kit moves them: one popup surface
  * opening at every duration, with what twenty such moves cost a task, then each
  * easing on the element that uses it, slowed down so its curve can be seen.
  * Durations and easings come from the token set; `scenes` names the element

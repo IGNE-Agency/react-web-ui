@@ -1,38 +1,40 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("neutral");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("neutral");
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-field);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.rule {
+		@include drawing.rule;
+	}
 
-.sheet {
-	@include drawing.outline;
+	.sheet {
+		@include drawing.outline;
 
-	fill: var(--drawing-paper);
-}
+		fill: var(--drawing-paper);
+	}
 
-.ribbon,
-.deep {
-	fill: var(--drawing-deep);
-}
+	.ribbon,
+	.deep {
+		fill: var(--drawing-deep);
+	}
 
-.mid {
-	fill: var(--drawing-mid);
-}
+	.mid {
+		fill: var(--drawing-mid);
+	}
 
-.pale {
-	fill: var(--drawing-pale);
-}
+	.pale {
+		fill: var(--drawing-pale);
+	}
 
-.ring {
-	fill: none;
-	stroke: var(--drawing-deep);
-	stroke-width: 8;
+	.ring {
+		fill: none;
+		stroke: var(--drawing-deep);
+		stroke-width: 8;
+	}
 }

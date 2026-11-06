@@ -1,44 +1,19 @@
 @use "./drawing";
 
-.drawing {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.drawing {
+		@include drawing.palette("saturated");
+	}
 
-.field {
-	fill: var(--drawing-field);
-}
+	.field {
+		fill: var(--drawing-field);
+	}
 
-.rule {
-	@include drawing.rule;
-}
+	.part {
+		fill: var(--drawing-paper);
+	}
 
-.tray,
-.paper {
-	fill: var(--drawing-paper);
-}
-
-.slot {
-	fill: var(--ref-green-50);
-}
-
-.deep {
-	fill: var(--drawing-deep);
-}
-
-.tint {
-	fill: var(--drawing-pale);
-}
-
-.input {
-	@include drawing.outline;
-
-	fill: var(--drawing-paper);
-}
-
-.check {
-	fill: none;
-	stroke: var(--drawing-paper);
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	stroke-width: 14;
+	.paint {
+		fill: var(--drawing-deep);
+	}
 }

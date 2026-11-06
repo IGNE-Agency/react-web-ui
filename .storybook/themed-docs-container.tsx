@@ -3,7 +3,7 @@ import {
 	type ComponentProps,
 	useSyncExternalStore,
 } from "react";
-import { themes } from "storybook/theming";
+import { brandThemes } from "./brand-theme.ts";
 import { DocsFooter } from "./docs-links/docs-footer.tsx";
 import { useSectionScroll } from "./section-scroll.ts";
 
@@ -38,7 +38,7 @@ export const ThemedDocsContainer = (
 	);
 	useSectionScroll(window.parent.location.href);
 	return (
-		<DocsContainer {...props} theme={themes[theme]}>
+		<DocsContainer {...props} theme={brandThemes[theme]}>
 			{props.children}
 			<DocsFooter />
 		</DocsContainer>

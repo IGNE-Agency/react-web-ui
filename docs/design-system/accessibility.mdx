@@ -12,6 +12,8 @@ import { DoDont } from "./do-dont";
 import { Example } from "./example";
 import { Illustration } from "./illustration";
 
+export const guide = { accent: "blue" };
+
 <Meta title="Design system/Principles/Accessibility" />
 
 # Accessibility
@@ -128,7 +130,7 @@ The second is content that's only waiting. Rows being refreshed, or a stand-in r
 
 Text has to stand out from what's behind it, and how much is a measurement, not a feeling. The long-standing way to measure it is WCAG 2's contrast ratio, which compares the brightness of the two colours and nothing else. It scores light text on dark the same as dark text on light, though the eye doesn't, and it is least reliable around mid-tones and near black. A newer, perceptual method, APCA, weighs what the eye actually sees: the size and weight of the text, and which of the two colours is the lighter.
 
-This product judges contrast by APCA. <Pull>A brand that sits in the middle of its ramp and a dark theme are exactly where the ratio goes wrong.</Pull> On a mid-tone the ratio prefers black text that reads worse than white; near black it passes greys that are hard to read. Body text meets APCA's bronze level, which sets its minimum by size and weight. Muted text meets Lc 60, APCA's minimum for content text that isn't body text, or Lc 45 from 32px up. Each colour role points at the nearest step of its ramp that passes, in each theme.
+The kit judges contrast by APCA. <Pull>A brand that sits in the middle of its ramp and a dark theme are exactly where the ratio goes wrong.</Pull> On a mid-tone the ratio prefers black text that reads worse than white; near black it passes greys that are hard to read. Body text meets APCA's bronze level, which sets its minimum by size and weight. Muted text meets Lc 60, APCA's minimum for content text that isn't body text, or Lc 45 from 32px up. Each colour role points at the nearest step of its ramp that passes, in each theme.
 
 <DoDont>
 	<Example
@@ -176,7 +178,7 @@ Where a library wires its own label to its own control, let it. Where the contro
 <Field.Label id={labelId} nativeLabel={false} render={<span />}>
 	{label}
 </Field.Label>
-<DateControl.Root aria-labelledby={labelId} />
+<DateInput.Root aria-labelledby={labelId} />
 ```
 
 </Example>
@@ -184,7 +186,7 @@ Where a library wires its own label to its own control, let it. Where the contro
 
 ```tsx
 <Field.Label id={labelId}>{label}</Field.Label>
-<DateControl.Root aria-label={label} />
+<DateInput.Root aria-label={label} />
 ```
 
 </Example>
@@ -213,7 +215,7 @@ const describedBy =
 <Example kind="dont" caption="The error is on screen and absent from the announcement.">
 
 ```tsx
-<DateControl.Root aria-describedby={descriptionId} />
+<DateInput.Root aria-describedby={descriptionId} />
 ```
 
 </Example>

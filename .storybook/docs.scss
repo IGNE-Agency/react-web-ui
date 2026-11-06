@@ -1,3 +1,4 @@
+@use "../docs/brand/palette";
 @use "./guide/guide";
 @use "./toc";
 
@@ -5,89 +6,99 @@
 	container-type: inline-size;
 }
 
-.sbdocs.sbdocs-wrapper {
-	padding-block-end: 0;
-	background: var(--sys-color-bg);
+:where(.kit-preview, .sb-story, .docs-story) {
+	font: var(--sys-font-body-medium);
+	color: var(--sys-color-text);
 }
 
-$inside-example: ":where(.docs-story, .sb-unstyled) *";
-
-.sbdocs.sbdocs-content {
-	--docs-measure: 32rem;
-
-	color: var(--sys-color-text);
-	font: var(--sys-font-body-medium);
-
-	:where(p, li, td, th, blockquote):not(
-		#{$inside-example}
-	) {
-		color: var(--sys-color-text);
-		font: var(--sys-font-body-medium);
+@scope (.sbdocs, .docs-preview) to (.kit-preview, .sb-story, .docs-story) {
+	:scope.sbdocs-wrapper {
+		padding-block-end: 0;
+		background: var(--docs-color-paper);
 	}
 
-	:where(p, ul, ol, blockquote):not(#{$inside-example}) {
-		max-inline-size: var(--docs-measure);
-	}
+	:scope.sbdocs-content {
+		--docs-measure: 32rem;
 
-	ol:not(#{$inside-example}) {
-		list-style: decimal;
-	}
+		color: var(--docs-color-body);
+		font: var(--docs-type-body-medium);
 
-	:where(a[href]):not(#{$inside-example}) {
-		color: var(--sys-color-primary);
-		text-decoration: underline;
+		:where(p, li, td, th, blockquote) {
+			color: var(--docs-color-body);
+			font: var(--docs-type-body-medium);
+		}
 
-		&:hover {
-			color: var(--sys-color-on-primary-container);
+		:where(p, ul, ol, blockquote) {
+			max-inline-size: var(--docs-measure);
+		}
+
+		ol {
+			list-style: decimal;
+		}
+
+		:where(a[href]) {
+			color: var(--docs-color-link);
+			text-decoration: underline;
+			text-decoration-color: var(
+				--docs-color-link-underline
+			);
+			text-decoration-thickness: 3px;
+			text-underline-offset: 0.2em;
+
+			&:hover {
+				text-decoration-color: var(
+					--docs-color-link-underline-hover
+				);
+			}
+		}
+
+		:where(h1, h2, h3, h4) {
+			color: var(--docs-color-ink);
+		}
+
+		h1 {
+			margin-block: 0 var(--sys-unit-24);
+			font: var(--docs-type-heading-large);
+		}
+
+		h2 {
+			margin-block: var(--sys-unit-48) var(--sys-unit-16);
+			border-block-end: none;
+			padding-block-end: 0;
+			font: var(--docs-type-heading-medium);
+		}
+
+		h3 {
+			margin-block: var(--sys-unit-32) var(--sys-unit-12);
+			font: var(--docs-type-heading-small);
 		}
 	}
 
-	:where(h1, h2, h3, h4):not(#{$inside-example}) {
-		color: var(--sys-color-text);
-	}
+	.story-grid {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(100%, 22rem), 1fr)
+		);
+		gap: var(--sys-unit-16) var(--sys-unit-24);
+		align-items: start;
 
-	h1:not(#{$inside-example}) {
-		margin-block: 0 var(--sys-unit-24);
-		font: var(--sys-font-heading-large);
-	}
+		> * {
+			min-inline-size: 0;
+			margin-block: 0;
+		}
 
-	h2:not(#{$inside-example}) {
-		margin-block: var(--sys-unit-48) var(--sys-unit-16);
-		border-block-end: none;
-		padding-block-end: 0;
-		font: var(--sys-font-heading-medium);
-	}
+		> :not(.sb-anchor),
+		> .sb-anchor:has([data-overlay-frame]) {
+			grid-column: 1 / -1;
+		}
 
-	h3:not(#{$inside-example}) {
-		margin-block: var(--sys-unit-32) var(--sys-unit-12);
-		font: var(--sys-font-heading-small);
-	}
-}
-
-.story-grid {
-	display: grid;
-	grid-template-columns: repeat(
-		auto-fill,
-		minmax(min(100%, 22rem), 1fr)
-	);
-	gap: var(--sys-unit-16) var(--sys-unit-24);
-	align-items: start;
-
-	> * {
-		min-inline-size: 0;
-		margin-block: 0;
-	}
-
-	> :not(.sb-anchor),
-	> .sb-anchor:has([data-overlay-frame]) {
-		grid-column: 1 / -1;
-	}
-
-	> h2 {
-		margin-block: var(--sys-unit-48) 0;
-		color: var(--sys-color-text);
-		font: var(--sys-font-heading-medium);
-		letter-spacing: normal;
-		text-transform: none;
+		> h2 {
+			margin-block: var(--sys-unit-48) 0;
+			color: var(--docs-color-ink);
+			font: var(--docs-type-heading-medium);
+			letter-spacing: normal;
+			text-transform: none;
+		}
 	}
 }

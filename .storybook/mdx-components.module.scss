@@ -1,59 +1,61 @@
-@use "../src/style/theme.scss" as theme;
+@use "../docs/brand/theme.scss" as theme;
 
-pre.block.block {
-	display: block;
-	margin-block: var(--sys-unit-12);
-	border-radius: var(--sys-radius-md);
-	padding: 0;
-	overflow: hidden;
-	font:
-		0.8125rem / 1.6 ui-monospace,
-		"Cascadia Code",
-		Menlo,
-		Consolas,
-		monospace;
-	tab-size: 2;
-	background: var(--sys-color-surface-high);
-	color: var(--shiki-light);
-
-	code,
-	span {
-		font: inherit;
-	}
-
-	> code {
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	pre.block.block {
 		display: block;
-		padding: var(--sys-unit-8) var(--sys-unit-12);
-		overflow-x: auto;
-		scrollbar-width: thin;
-		scrollbar-color: var(--sys-color-outline) transparent;
-	}
-
-	span {
+		margin-block: var(--sys-unit-12);
+		border-radius: var(--sys-radius-md);
+		padding: 0;
+		overflow: hidden;
+		font:
+			0.8125rem / 1.6 ui-monospace,
+			"Cascadia Code",
+			Menlo,
+			Consolas,
+			monospace;
+		tab-size: 2;
+		background: var(--docs-color-sand);
 		color: var(--shiki-light);
-	}
 
-	@include theme.dark {
-		color: var(--shiki-dark);
+		code,
+		span {
+			font: inherit;
+		}
+
+		> code {
+			display: block;
+			padding: var(--sys-unit-8) var(--sys-unit-12);
+			overflow-x: auto;
+			scrollbar-width: thin;
+			scrollbar-color: var(--docs-color-border) transparent;
+		}
 
 		span {
-			color: var(--shiki-dark);
+			color: var(--shiki-light);
 		}
+
+		@include theme.dark {
+			color: var(--shiki-dark);
+
+			span {
+				color: var(--shiki-dark);
+			}
+		}
+	}
+
+	pre.block code.inline.inline {
+		background: none;
+		padding: 0;
+		font-size: inherit;
 	}
 }
 
 code.inline.inline {
 	border-radius: var(--sys-radius-xs);
-	background: var(--sys-color-surface-high);
+	background: var(--docs-color-sand);
 	padding: 0.1em 0.3em;
 	font-family:
 		ui-monospace, "Cascadia Code", Menlo, Consolas,
 		monospace;
 	font-size: 0.875em;
-}
-
-pre.block code.inline.inline {
-	background: none;
-	padding: 0;
-	font-size: inherit;
 }

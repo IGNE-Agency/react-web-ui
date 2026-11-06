@@ -45,7 +45,9 @@ export const Example = ({
 						{children}
 					</div>
 				) : (
-					<div className={styles.frame}>{visual}</div>
+					<div className={`${styles.frame} kit-preview`}>
+						{visual}
+					</div>
 				)}
 				<div className={styles.bar} data-kind={kind}>
 					<KindIcon aria-hidden />

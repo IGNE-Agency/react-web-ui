@@ -1,31 +1,33 @@
 @use "./drawing";
 
-.answers {
-	@include drawing.palette("inverted");
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.answers {
+		@include drawing.palette("inverted");
+	}
 
-.field {
-	fill: var(--drawing-hot-muted);
-}
+	.field {
+		fill: var(--drawing-hot-muted);
+	}
 
-.control {
-	fill: var(--drawing-paper);
-}
+	.control {
+		fill: var(--drawing-paper);
+	}
 
-.step {
-	fill: var(--drawing-hot-muted);
-	fill-opacity: 0.14;
-}
+	.step {
+		fill: var(--drawing-hot-muted);
+		fill-opacity: 0.14;
+	}
 
-.finger {
-	fill: color-mix(
-		in oklab,
-		var(--drawing-hot-vivid) 55%,
-		var(--drawing-paper)
-	);
-}
+	.finger {
+		fill: color-mix(
+			in oklab,
+			var(--drawing-hot-vivid) 55%,
+			var(--drawing-paper)
+		);
+	}
 
-.nail {
-	fill: var(--drawing-paper);
-	fill-opacity: 0.45;
+	.nail {
+		fill: var(--drawing-paper);
+		fill-opacity: 0.45;
+	}
 }

@@ -1,3 +1,5 @@
+@use "../../src/style/popup.scss" as popup;
+
 .nav {
 	display: flex;
 	gap: var(--sys-unit-2);
@@ -87,4 +89,156 @@
 
 .tileShrunk {
 	font-size: var(--sys-unit-6);
+}
+
+.tileSized {
+	inline-size: max-content;
+}
+
+.files {
+	display: grid;
+	gap: var(--sys-unit-2);
+	margin: 0;
+	border: 1px solid var(--sys-color-outline);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-6);
+	inline-size: 13rem;
+	list-style: none;
+}
+
+.file {
+	display: flex;
+	min-inline-size: 0;
+	padding: var(--sys-unit-2) var(--sys-unit-4);
+	color: var(--sys-color-text);
+	font: var(--sys-font-body-small);
+	white-space: nowrap;
+}
+
+.fileHead {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.fileTail {
+	flex: none;
+}
+
+.fileClipped {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.scroller {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid var(--sys-color-outline);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	inline-size: 14rem;
+	timeline-scope: --strip;
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		inline-size: var(--sys-unit-16);
+		pointer-events: none;
+	}
+
+	&::before {
+		inset-inline-start: 0;
+		background: linear-gradient(
+			to right,
+			var(--sys-shadow-umbra),
+			transparent
+		);
+		opacity: 0;
+	}
+
+	&::after {
+		inset-inline-end: 0;
+		background: linear-gradient(
+			to left,
+			var(--sys-shadow-umbra),
+			transparent
+		);
+	}
+
+	.strip {
+		border: none;
+		border-radius: 0;
+		overflow-x: auto;
+		scroll-timeline: --strip inline;
+
+		@include popup.thin-scrollbar;
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	.scroller::before {
+		animation: shade-in linear both;
+		animation-timeline: --strip;
+		animation-range: 0% 10%;
+	}
+
+	.scroller::after {
+		animation: shade-out linear both;
+		animation-timeline: --strip;
+		animation-range: 90% 100%;
+	}
+}
+
+@keyframes shade-in {
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes shade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+.strips {
+	display: grid;
+	gap: var(--sys-unit-8);
+}
+
+.strip {
+	display: flex;
+	gap: var(--sys-unit-4);
+	border: 1px solid var(--sys-color-outline);
+	border-radius: var(--sys-radius-sm);
+	background: var(--sys-color-surface);
+	padding: var(--sys-unit-6);
+	inline-size: 14rem;
+}
+
+.stripCut {
+	overflow: hidden;
+}
+
+.stripFaded {
+	overflow-x: auto;
+	scrollbar-width: none;
+	mask-image: linear-gradient(
+		to right,
+		black 80%,
+		transparent
+	);
+}
+
+.chip {
+	flex: none;
+	border: 1px solid var(--sys-color-outline);
+	border-radius: var(--sys-radius-full);
+	padding: var(--sys-unit-1) var(--sys-unit-5);
+	color: var(--sys-color-text);
+	font: var(--sys-font-label-small);
+	white-space: nowrap;
 }

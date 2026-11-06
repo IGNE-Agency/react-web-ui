@@ -1,9 +1,11 @@
-.umbra {
-	flood-color: var(--drawing-shade);
-	flood-opacity: 0.3;
-}
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.umbra {
+		flood-color: var(--drawing-shade);
+		flood-opacity: 0.3;
+	}
 
-.penumbra {
-	flood-color: var(--drawing-shade);
-	flood-opacity: 0.25;
+	.penumbra {
+		flood-color: var(--drawing-shade);
+		flood-opacity: 0.25;
+	}
 }

@@ -1,0 +1,20 @@
+@use "./theme";
+
+@scope (:global(.sbdocs), :global(.docs-preview)) to (:global(.kit-preview), :global(.sb-s\74 ory), :global(.docs-s\74 ory)) {
+	.tiles {
+		--tiles-fill: var(--docs-color-sand-strong);
+
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+
+		@include theme.dark {
+			--tiles-fill: var(--docs-color-ink);
+		}
+	}
+
+	.tile {
+		fill: var(--tiles-fill);
+		opacity: var(--docs-tile-opacity);
+	}
+}

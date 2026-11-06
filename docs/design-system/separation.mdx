@@ -8,6 +8,8 @@ import { SeparationDrawing } from "./separation-drawing";
 import { LinesDrawing } from "./separation-figures";
 import styles from "./separation.module.scss";
 
+export const guide = { accent: "green" };
+
 <Meta title="Design system/Principles/Separation" />
 
 # Separation
@@ -28,7 +30,7 @@ There are two familiar ways to get this wrong. The first wraps every panel, tool
 
 ## Quietest first
 
-This product works down the list in order: space, then a step along [the surface tiers](?path=/docs/design-system-foundation-colour--docs#surfaces), then elevation, and a line only when none of those will do. Elevation is only ever for something that genuinely floats, and only when its surface alone didn't carry it: [anything in the page's flow carries no shadow](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow).
+The kit works down the list in order: space, then a step along [the surface tiers](?path=/docs/design-system-foundation-colour--docs#surfaces), then elevation, and a line only when none of those will do. Elevation is only ever for something that genuinely floats, and only when its surface alone didn't carry it: [anything in the page's flow carries no shadow](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow).
 
 <DoDont>
 	<Example
@@ -318,7 +320,7 @@ Shown in [Quietest first](#quietest-first).
 
 ```scss
 .form {
-	gap: var(--unit-24);
+	gap: var(--sys-unit-24);
 }
 ```
 
@@ -374,7 +376,7 @@ A menu, a popover or a toast floats, so it takes the overlay tier and a shadow, 
 ```scss
 .popup {
 	background: var(--sys-color-surface-overlay);
-	box-shadow: var(--elevation-1);
+	box-shadow: var(--sys-elevation-1);
 }
 ```
 
