@@ -124,40 +124,25 @@
 	white-space: nowrap;
 }
 
-.darkSurface {
+.chipStage {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--sys-unit-8);
 	justify-content: center;
 	border-radius: var(--sys-radius-md);
-	background: var(--ref-neutral-700);
+	background: var(--sys-color-surface);
 	padding: var(--sys-unit-16);
 }
 
-.darkChip {
+.chip {
 	border-radius: var(--sys-radius-full);
 	padding: var(--sys-unit-2) var(--sys-unit-8);
 	font: var(--sys-font-label-small);
 }
 
-.darkSuccess {
-	background: var(--ref-green-750);
-	color: var(--ref-green-150);
-}
-
-.darkInfo {
-	background: var(--ref-blue-700);
-	color: var(--ref-blue-100);
-}
-
 .darkInfoTidied {
 	background: var(--ref-blue-750);
 	color: var(--ref-blue-100);
-}
-
-.darkWarning {
-	background: var(--ref-orange-750);
-	color: var(--ref-orange-150);
 }
 
 .wells {
@@ -205,7 +190,7 @@
 
 	overflow: hidden;
 	border-radius: var(--sys-radius-sm);
-	background: var(--neutral);
+	background: var(--sys-color-surface);
 	inline-size: 8rem;
 
 	> * {
@@ -217,19 +202,11 @@
 	}
 }
 
-.stripeOnWhite {
-	--neutral: white;
-}
-
-.stripeOnCharcoal {
-	--neutral: var(--ref-neutral-700);
-}
-
 .stripeOklab > :nth-child(odd):not(:first-child) {
 	background: color-mix(
 		in oklab,
 		var(--tint) 45%,
-		var(--neutral)
+		var(--sys-color-surface)
 	);
 }
 
@@ -237,7 +214,7 @@
 	background: color-mix(
 		in oklch,
 		var(--tint) 45%,
-		var(--neutral)
+		var(--sys-color-surface)
 	);
 }
 
@@ -425,22 +402,8 @@
 .stage {
 	display: grid;
 	border-radius: var(--sys-radius-md);
-	background: var(--stage-bg);
+	background: var(--sys-color-bg);
 	padding: var(--sys-unit-12);
-}
-
-.stageLight {
-	--stage-bg: var(--ref-neutral-25);
-	--stage-overlay: var(--ref-neutral-0);
-	--stage-card: var(--ref-neutral-0);
-	--stage-ink: var(--ref-neutral-500);
-}
-
-.stageDark {
-	--stage-bg: var(--ref-neutral-800);
-	--stage-overlay: var(--ref-neutral-550);
-	--stage-card: var(--ref-neutral-700);
-	--stage-ink: var(--ref-neutral-50);
 }
 
 .tip {
@@ -451,9 +414,9 @@
 
 .tipBody {
 	border-radius: var(--sys-radius-sm);
-	background: var(--stage-overlay);
+	background: var(--sys-color-surface-overlay);
 	padding: var(--sys-unit-6) var(--sys-unit-12);
-	color: var(--stage-ink);
+	color: var(--sys-color-text);
 	font: var(--sys-font-body-small);
 	white-space: nowrap;
 }
@@ -466,18 +429,18 @@
 }
 
 .arrowOverlay {
-	--tip-arrow: var(--stage-overlay);
+	--tip-arrow: var(--sys-color-surface-overlay);
 }
 
 .arrowCard {
-	--tip-arrow: var(--stage-card);
+	--tip-arrow: var(--sys-color-surface);
 }
 
 .tipAnchor {
 	justify-self: center;
 	margin-block-start: var(--sys-unit-4);
 	border-radius: var(--sys-radius-xs);
-	background: var(--stage-ink);
+	background: var(--sys-color-text);
 	inline-size: var(--sys-unit-24);
 	block-size: var(--sys-unit-6);
 	opacity: 0.4;
@@ -509,10 +472,10 @@
 	--canvas: var(--sys-color-surface-lowest);
 }
 
-.darkLadder {
+.ladder {
 	display: grid;
 	border-radius: var(--sys-radius-sm);
-	background: var(--ladder-0);
+	background: var(--ladder-0, var(--sys-color-bg));
 	padding: var(--sys-unit-12);
 	inline-size: 14rem;
 }
@@ -521,31 +484,28 @@
 	display: grid;
 	gap: var(--sys-unit-8);
 	border-radius: var(--sys-radius-md);
-	background: var(--ladder-1);
+	background: var(--ladder-1, var(--sys-color-surface));
 	padding: var(--sys-unit-12);
-	color: var(--ref-neutral-50);
+	color: var(--sys-color-text);
 	font: var(--sys-font-body-small);
 }
 
 .ladderNested {
 	border-radius: var(--sys-radius-sm);
-	background: var(--ladder-2);
+	background: var(
+		--ladder-2,
+		var(--sys-color-surface-high)
+	);
 	padding: var(--sys-unit-6) var(--sys-unit-8);
 }
 
 .ladderAccent {
 	justify-self: start;
 	border-radius: var(--sys-radius-full);
-	background: var(--ref-neutral-50);
+	background: var(--sys-color-primary);
 	padding: var(--sys-unit-4) var(--sys-unit-12);
-	color: var(--ref-neutral-900);
+	color: var(--sys-color-on-primary);
 	font: var(--sys-font-label-medium);
-}
-
-.ladderBand {
-	--ladder-0: var(--ref-neutral-800);
-	--ladder-1: var(--ref-neutral-700);
-	--ladder-2: var(--ref-neutral-650);
 }
 
 .ladderBottom {
@@ -554,28 +514,23 @@
 	--ladder-2: var(--ref-neutral-900);
 }
 
-.darkText {
+.inkStage {
 	display: grid;
 	gap: var(--sys-unit-4);
 	border-radius: var(--sys-radius-md);
-	background: var(--ref-neutral-700);
+	background: var(--sys-color-surface);
 	padding: var(--sys-unit-12) var(--sys-unit-16);
 	inline-size: 14rem;
 	font: var(--sys-font-body-medium);
 }
 
-.darkBody {
-	color: var(--body);
+.inkBody {
+	color: var(--body, var(--sys-color-text));
 	font: var(--sys-font-label-large);
 }
 
-.darkMuted {
-	color: var(--muted);
-}
-
-.inkGrey {
-	--body: var(--ref-neutral-50);
-	--muted: var(--ref-neutral-200);
+.inkMuted {
+	color: var(--muted, var(--sys-color-text-muted));
 }
 
 .inkWhite {
@@ -583,46 +538,39 @@
 	--muted: var(--ref-neutral-10);
 }
 
-.darkFieldStage {
+.fieldStage {
 	border-radius: var(--sys-radius-md);
-	background: var(--ref-neutral-700);
+	background: var(--sys-color-surface);
 	padding: var(--sys-unit-16);
 }
 
-.darkField {
-	border: 1px solid var(--dark-border);
+.fieldSample {
+	border: 1px solid
+		var(--field-border, var(--sys-color-border));
 	border-radius: var(--sys-radius-sm);
 	padding: var(--sys-unit-6) var(--sys-unit-8);
 	inline-size: 10rem;
-	color: var(--ref-neutral-50);
+	color: var(--sys-color-text);
 	font: var(--sys-font-body-medium);
 }
 
-.borderSeparated {
-	--dark-border: var(--ref-neutral-500);
-}
-
 .borderHairline {
-	--dark-border: var(--ref-neutral-650);
+	--field-border: var(--ref-neutral-650);
 }
 
 .scroller {
 	overflow-y: scroll;
 	border-radius: var(--sys-radius-md);
-	background: var(--ref-neutral-700);
+	background: var(--sys-color-surface);
 	padding: var(--sys-unit-8) var(--sys-unit-12);
 	inline-size: 13rem;
 	block-size: 6rem;
-	color: var(--ref-neutral-50);
+	color: var(--sys-color-text);
 	font: var(--sys-font-body-small);
 
 	p {
 		margin-block: 0 var(--sys-unit-6);
 	}
-}
-
-.schemeDark {
-	color-scheme: dark;
 }
 
 .schemeLight {

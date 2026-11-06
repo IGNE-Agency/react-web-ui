@@ -185,8 +185,11 @@ const dropShadows: Transform = (
 		.join(" ");
 };
 
+const ramps = (contents: string): string =>
+	`:root {\n${families}${contents}\n}`;
+
 const light = (contents: string): string =>
-	`:root {\n\tcolor-scheme: light;\n${families}${contents}\n}`;
+	`:root,\n[data-theme="light"] {\n\tcolor-scheme: light;\n${contents}\n}`;
 
 const LAYER_ORDER =
 	"@layer kit.reset, kit.base, kit.components;";
@@ -195,13 +198,14 @@ const layered = (contents: string): string =>
 	`${LAYER_ORDER}\n\n@layer kit.base {\n${contents.trimEnd()}\n}\n`;
 
 const dark = (contents: string): string =>
-	`html[data-theme="dark"] {\n\tcolor-scheme: dark;\n${contents}\n}\n\n@media (prefers-color-scheme: dark) {\n\thtml:not([data-theme="light"]) {\n\t\tcolor-scheme: dark;\n${contents}\n\t}\n}`;
+	`[data-theme="dark"] {\n\tcolor-scheme: dark;\n${contents}\n}\n\n@media (prefers-color-scheme: dark) {\n\thtml:not([data-theme="light"]) {\n\t\tcolor-scheme: dark;\n${contents}\n\t}\n}`;
 
 /**
  * A Terrazzo plugin that builds a resolver's tokens into the custom properties
- * the kit's components read: `--ref-*` and `--sys-*`, the `light` theme on
- * `:root` and the `dark` theme's `sys` roles on `html[data-theme="dark"]`, and
- * under `prefers-color-scheme: dark` unless `data-theme="light"`, all in the
+ * the kit's components read: the `ref` ramps on `:root`, the `light` theme's
+ * `sys` roles on `:root` and any `[data-theme="light"]` element, and the `dark`
+ * theme's on any `[data-theme="dark"]` element and on `<html>` under
+ * `prefers-color-scheme: dark` unless `data-theme="light"`, all in the
  * `kit.base` cascade layer after the kit's layer order. A shadow
  * tagged `$extensions["nl.igne.css"].property: "filter"` is written as
  * `drop-shadow()` filters.
@@ -234,7 +238,16 @@ const kitTokens = (
 			typography(token, transformOptions) ??
 			dropShadows(token, transformOptions),
 		permutations: [
-			{ input: { theme: "light" }, prepare: light },
+			{
+				input: { theme: "light" },
+				include: ["ref.**"],
+				prepare: ramps,
+			},
+			{
+				input: { theme: "light" },
+				include: ["sys.**"],
+				prepare: light,
+			},
 			{
 				input: { theme: "dark" },
 				include: ["sys.**"],

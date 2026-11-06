@@ -1,7 +1,6 @@
 import styles from "./role-specimen.module.scss";
 import { Token } from "./token";
 import {
-	colourIn,
 	descriptionOf,
 	referenceOf,
 	sourceOf,
@@ -9,12 +8,10 @@ import {
 	THEMES,
 	type TokenId,
 } from "./tokens";
+import { variableNameOf } from "../../src/terrazzo/index";
 
 const SURFACE = "sys.color.surface";
 const TEXT = "sys.color.text";
-const MUTED = "sys.color.text-muted";
-const BORDER = "sys.color.border";
-const RAISED = "sys.color.surface-high";
 
 type Role = Readonly<{
 	/** The role as people say it. */
@@ -57,20 +54,14 @@ const Sample = ({
 }>) => (
 	<div
 		className={styles.sample}
+		data-theme={theme}
 		style={{
-			"--surface": colourIn(role.fill ?? SURFACE, theme),
-			"--ink": colourIn(role.ink ?? TEXT, theme),
-			"--text": colourIn(TEXT, theme),
-			"--muted": colourIn(MUTED, theme),
-			"--edge": colourIn(BORDER, theme),
-			"--card": colourIn(SURFACE, theme),
-			"--token-bg": colourIn(RAISED, theme),
-			"--token-ink": colourIn(TEXT, theme),
-			"--token-edge": colourIn(BORDER, theme),
+			"--surface": `var(${variableNameOf(role.fill ?? SURFACE)})`,
+			"--ink": `var(${variableNameOf(role.ink ?? TEXT)})`,
 			"--line":
 				role.line === undefined
 					? undefined
-					: colourIn(role.line, theme),
+					: `var(${variableNameOf(role.line)})`,
 		}}>
 		<span className={styles.tile} aria-hidden>
 			{role.ink === undefined ? null : "Aa"}
@@ -110,12 +101,8 @@ const Band = ({
 }>) => (
 	<div
 		className={styles.band}
-		data-theme-band={theme}
-		style={{
-			"--card": colourIn(SURFACE, theme),
-			"--muted": colourIn(MUTED, theme),
-			"--rows": rows,
-		}}
+		data-theme={theme}
+		style={{ "--rows": rows }}
 		aria-hidden>
 		{theme === "light" ? "Light" : "Dark"}
 	</div>

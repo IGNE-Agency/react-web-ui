@@ -9,15 +9,8 @@
 	display: grid;
 	place-items: center;
 	border-radius: var(--sys-radius-md);
+	background: var(--sys-color-surface);
 	padding: var(--sys-unit-20);
-}
-
-.stageLight {
-	background: var(--ref-neutral-0);
-}
-
-.stageDark {
-	background: var(--ref-neutral-700);
 }
 
 .chip {
@@ -26,12 +19,12 @@
 	font: var(--sys-font-label-medium);
 }
 
+.chipSuccess {
+	background: var(--sys-color-success-bg);
+	color: var(--sys-color-success-fg);
+}
+
 .chipLight {
 	background: var(--ref-green-50);
 	color: var(--ref-green-700);
-}
-
-.chipDark {
-	background: var(--ref-green-750);
-	color: var(--ref-green-150);
 }

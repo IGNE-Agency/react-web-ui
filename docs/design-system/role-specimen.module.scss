@@ -29,17 +29,17 @@ $wide: "(width >= 40rem)";
 			display: block;
 			grid-row: 1 / span var(--rows);
 			border-radius: var(--sys-radius-lg);
-			background: var(--card);
+			background: var(--sys-color-surface);
 			padding: var(--sys-unit-8) var(--sys-unit-10);
-			color: var(--muted);
+			color: var(--sys-color-text-muted);
 			font: var(--docs-type-label-small-strong);
 		}
 
-		&[data-theme-band="light"] {
+		&[data-theme="light"] {
 			grid-column: 2;
 		}
 
-		&[data-theme-band="dark"] {
+		&[data-theme="dark"] {
 			grid-column: 3;
 		}
 	}
@@ -84,6 +84,10 @@ $wide: "(width >= 40rem)";
 	}
 
 	.sample {
+		--token-bg: var(--sys-color-surface-high);
+		--token-ink: var(--sys-color-text);
+		--token-edge: var(--sys-color-border);
+
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
 		gap: var(--sys-unit-6);
@@ -97,7 +101,7 @@ $wide: "(width >= 40rem)";
 				);
 			align-items: center;
 			border-radius: var(--sys-radius-md);
-			background: var(--card);
+			background: var(--sys-color-surface);
 		}
 	}
 
@@ -106,7 +110,7 @@ $wide: "(width >= 40rem)";
 		place-items: center;
 		border-radius: var(--sys-radius-md);
 		background: var(--surface);
-		box-shadow: inset 0 0 0 1px var(--edge);
+		box-shadow: inset 0 0 0 1px var(--sys-color-border);
 		block-size: var(--sys-unit-20);
 		inline-size: var(--sys-unit-20);
 		color: var(--ink);
@@ -123,7 +127,7 @@ $wide: "(width >= 40rem)";
 	.theme {
 		grid-row: 1;
 		grid-column: 1 / -1;
-		color: var(--muted);
+		color: var(--sys-color-text-muted);
 		font: var(--docs-type-label-small-strong);
 
 		@media #{$wide} {
@@ -136,7 +140,7 @@ $wide: "(width >= 40rem)";
 		grid-template-columns: max-content minmax(0, 1fr);
 		gap: var(--sys-unit-3) var(--sys-unit-6);
 		min-inline-size: 0;
-		color: var(--muted);
+		color: var(--sys-color-text-muted);
 		font: var(--docs-type-body-small);
 		font-variant-numeric: tabular-nums;
 	}
@@ -149,7 +153,7 @@ $wide: "(width >= 40rem)";
 
 		> dt {
 			grid-row: span 2;
-			color: var(--text);
+			color: var(--sys-color-text);
 			font: var(--docs-type-label-small);
 		}
 

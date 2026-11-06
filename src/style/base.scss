@@ -26,6 +26,10 @@
 		}
 	}
 
+	[data-theme] {
+		color: var(--sys-color-text);
+	}
+
 	button,
 	select,
 	summary,

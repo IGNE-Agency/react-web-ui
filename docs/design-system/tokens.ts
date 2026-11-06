@@ -199,17 +199,6 @@ export const cssColourOf = ({
 		: `color(${colorSpace} ${channels})`;
 };
 
-/**
- * A dimension or duration value as a CSS length or time.
- *
- * @example
- * cssDimensionOf({ value: 0.75, unit: "rem" }); // "0.75rem"
- */
-export const cssDimensionOf = ({
-	value,
-	unit,
-}: DimensionValue | DurationValue) => `${value}${unit}`;
-
 const rootPixels = () =>
 	Number.parseFloat(
 		getComputedStyle(document.documentElement).fontSize,
@@ -305,32 +294,6 @@ export const colourIn = (id: TokenId, theme: Theme) => {
 	}
 	return token.$type === "color"
 		? cssColourOf(token.$value)
-		: undefined;
-};
-
-/**
- * A shadow token as a CSS `box-shadow` in one theme.
- *
- * @example
- * shadowIn("sys.elevation.1", "light"); // "0px 1px 2px 0px color(srgb 0 0 0 / 0.1), …"
- */
-export const shadowIn = (id: TokenId, theme: Theme) => {
-	const token = tokenOf(id, theme);
-	return token.$type === "shadow"
-		? token.$value
-				.map(layer =>
-					[
-						layer.inset ? "inset" : undefined,
-						cssDimensionOf(layer.offsetX),
-						cssDimensionOf(layer.offsetY),
-						cssDimensionOf(layer.blur),
-						cssDimensionOf(layer.spread),
-						cssColourOf(layer.color),
-					]
-						.filter(part => part !== undefined)
-						.join(" "),
-				)
-				.join(", ")
 		: undefined;
 };
 

@@ -1,11 +1,10 @@
+import { variableNameOf } from "../../src/terrazzo/index";
 import styles from "./elevation-specimen.module.scss";
 import {
-	colourIn,
 	descriptionOf,
 	groupOf,
 	isFilter,
 	nameOf,
-	shadowIn,
 	THEMES,
 	type TokenId,
 } from "./tokens";
@@ -36,16 +35,8 @@ export const ElevationSpecimen = ({
 			{THEMES.map(theme => (
 				<div
 					key={theme}
-					className={styles.stage}
-					style={{
-						"--canvas": colourIn("sys.color.bg", theme),
-						"--text": colourIn("sys.color.text", theme),
-						"--edge": colourIn("sys.color.border", theme),
-						"--muted": colourIn(
-							"sys.color.text-muted",
-							theme,
-						),
-					}}>
+					data-theme={theme}
+					className={styles.stage}>
 					<span className={styles.theme}>
 						{theme === "light" ? "Light" : "Dark"}
 					</span>
@@ -58,11 +49,8 @@ export const ElevationSpecimen = ({
 								className={styles.level}
 								style={{
 									"--level": nameOf(id),
-									"--surface": colourIn(
-										surfaces[id] ?? OVERLAY,
-										theme,
-									),
-									boxShadow: shadowIn(id, theme),
+									"--surface": `var(${variableNameOf(surfaces[id] ?? OVERLAY)})`,
+									"--elevation": `var(${variableNameOf(id)})`,
 								}}>
 								<span className={styles.number}>
 									{nameOf(id)}
