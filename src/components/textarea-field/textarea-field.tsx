@@ -9,6 +9,7 @@ import {
 	type TextareaProps,
 } from "./textarea.tsx";
 import style from "./textarea-field.module.scss";
+import { Spinner } from "../spinner/index.ts";
 
 export type TextareaFieldProps = Omit<
 	TextFieldBaseProps,
@@ -81,7 +82,9 @@ export const TextareaField = ({
 			/>
 			<TextInput.Bar>
 				<TextInput.Counter />
-				<TextInput.Pending />
+				<TextInput.Pending>
+					<Spinner size={1} />
+				</TextInput.Pending>
 			</TextInput.Bar>
 		</TextInput.Group>
 		<TextInput.Description>

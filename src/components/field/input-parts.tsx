@@ -9,6 +9,7 @@ import {
 	Field,
 	type FieldErrorProps,
 	type FieldLabelProps,
+	type FieldPendingProps,
 } from "./field.tsx";
 import type { FieldState } from "./field-state.ts";
 
@@ -51,24 +52,23 @@ export const InputLabel = (
 	props: InputLabelProps,
 ): ReactNode => <Field.Label {...props} />;
 
-export type InputPendingProps = Readonly<{
-	className?: string;
-}>;
+export type InputPendingProps = FieldPendingProps;
 
 /**
- * The spinner a raw input shows once its `Root`'s wait is worth showing.
+ * The box a raw input's wait shows in, holding what it is given, such as a
+ * spinner. It renders once its `Root`'s wait is worth showing.
  *
  * @example
- * <TextInput.Pending />
+ * <TextInput.Pending><Spinner size={1} /></TextInput.Pending>
  */
-export const InputPending = ({
-	className,
-}: InputPendingProps): ReactNode => {
+export const InputPending = (
+	props: InputPendingProps,
+): ReactNode => {
 	const { phase } = useInputPartsContext();
 	if (phase === "fresh") {
 		return null;
 	}
-	return <Field.Pending className={className} />;
+	return <Field.Pending {...props} />;
 };
 
 export type InputErrorProps = Omit<

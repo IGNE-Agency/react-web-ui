@@ -21,13 +21,13 @@
 				);
 			}
 
-			> .label {
+			> :is(.label, .labelRow) {
 				grid-row: label;
 				margin-block: 0 var(--field-gap, var(--sys-unit-4));
 			}
 
-			> :first-child:not(.label),
-			> .label + * {
+			> :first-child:not(.label, .labelRow),
+			> :is(.label, .labelRow) + * {
 				grid-row: control;
 				margin-block-start: 0;
 			}
@@ -44,6 +44,14 @@
 
 	.label {
 		@include form.label;
+	}
+
+	.labelRow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: var(--field-label-row-align, baseline);
+		justify-content: space-between;
+		gap: var(--field-label-row-gap, var(--sys-unit-4));
 	}
 
 	.optional {

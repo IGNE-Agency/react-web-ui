@@ -73,7 +73,31 @@ A label beside its control, such as a lone checkbox's, keeps the required mark w
 
 ### A wait inside a field is a spinner inlay, and the field says it is busy
 
-A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. The spinner itself is hidden from assistive tech.
+A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A raw tier's `Pending` mounts itself once its root's wait is worth showing.
+
+```tsx
+<TextInput.Pending>
+	<Spinner size={1} />
+</TextInput.Pending>
+```
+
+### What sits beside a label shares its row
+
+A link or a counter that belongs beside a label, such as "Forgot password?" or `TextInput.Counter`, goes in `Field.LabelRow` with the label, in place of the bare label. The row keeps the label at the start and the rest at the end, and wraps on a narrow field. Every raw tier takes it, and in a field group it takes the label's row. It reads `--field-label-row-gap` and `--field-label-row-align`.
+
+```tsx
+<TextInput.Root
+	value={password}
+	onValueChange={setPassword}>
+	<Field.LabelRow>
+		<TextInput.Label>Password</TextInput.Label>
+		<Link href="/reset">Forgot password?</Link>
+	</Field.LabelRow>
+	<TextInput.Group>
+		<TextInput.Input type="password" />
+	</TextInput.Group>
+</TextInput.Root>
+```
 
 ### Every control reads its states through `useFieldState`
 

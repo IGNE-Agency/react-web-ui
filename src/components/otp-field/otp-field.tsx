@@ -5,6 +5,7 @@ import {
 	type OtpInputRootProps,
 	type OtpSlotLabel,
 } from "./otp-input.tsx";
+import { Spinner } from "../spinner/index.ts";
 
 export type OtpFieldProps = FieldProps &
 	Omit<OtpInputRootProps, keyof FieldProps | "children"> &
@@ -41,7 +42,9 @@ export const OtpField = ({
 		</OtpInput.Label>
 		<OtpInput.Group>
 			<OtpInput.Slots slotLabel={slotLabel} />
-			<OtpInput.Pending />
+			<OtpInput.Pending>
+				<Spinner size={1} />
+			</OtpInput.Pending>
 		</OtpInput.Group>
 		<OtpInput.Description>
 			{description}

@@ -1,16 +1,17 @@
 import { Field as BaseField } from "@base-ui/react/field";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
 	type Context,
 	createContext,
+	type ReactElement,
 	type ReactNode,
 	useContext,
 	useId,
 } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { ErrorText } from "../error-text/index.ts";
-import { Spinner } from "../spinner/index.ts";
 import {
 	FieldRowContext,
 	useFieldGroupLineIds,
@@ -316,26 +317,61 @@ const FieldError = ({
 	);
 };
 
-export type FieldPendingProps = Readonly<{
-	className?: string;
-}>;
+export type FieldPendingProps =
+	useRender.ComponentProps<"span">;
 
 /**
- * The spinner a field shows while background work is in flight, sized to sit
- * in the box beside the control. The control decides when it is mounted, once
- * the wait is worth showing. It is decoration: the wait reaches assistive tech
- * as the `aria-busy` that `fieldStateAttributes` projects.
+ * The box beside the control that a field's wait shows in, holding what it is
+ * given, such as a spinner. The control decides when it is mounted, once the
+ * wait is worth showing. It is decoration: the wait reaches assistive tech as
+ * the `aria-busy` that `fieldStateAttributes` projects.
  *
  * @example
- * {phase !== "fresh" && <Field.Pending />}
+ * {phase !== "fresh" && <Field.Pending><Spinner size={1} /></Field.Pending>}
  */
 const FieldPending = ({
 	className,
-}: FieldPendingProps): ReactNode => (
-	<span className={clsx(style.pending, className)}>
-		<Spinner size={1} />
-	</span>
-);
+	render,
+	ref,
+	...props
+}: FieldPendingProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.pending, className),
+		},
+	});
+
+export type FieldLabelRowProps =
+	useRender.ComponentProps<"div">;
+
+/**
+ * A row holding a field's label and what sits beside it, such as a link or a
+ * counter, in place of the bare label.
+ *
+ * @example
+ * <Field.LabelRow>
+ * 	<TextInput.Label>Password</TextInput.Label>
+ * 	<Link href="/reset">Forgot password?</Link>
+ * </Field.LabelRow>
+ */
+const FieldLabelRow = ({
+	className,
+	render,
+	ref,
+	...props
+}: FieldLabelRowProps): ReactElement =>
+	useRender({
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.labelRow, className),
+		},
+	});
 
 /** Stable ids for the parts of one field. */
 export type FieldIds = Readonly<{
@@ -382,6 +418,7 @@ const useFieldIds = (): FieldIds => {
 export type FieldParts = Readonly<{
 	Root: typeof FieldRoot;
 	Label: typeof FieldLabel;
+	LabelRow: typeof FieldLabelRow;
 	Caption: typeof FieldCaption;
 	Control: typeof BaseField.Control;
 	Description: typeof FieldDescription;
@@ -412,6 +449,7 @@ export type FieldParts = Readonly<{
 export const Field: FieldParts = {
 	Root: FieldRoot,
 	Label: FieldLabel,
+	LabelRow: FieldLabelRow,
 	Caption: FieldCaption,
 	Control: BaseField.Control,
 	Description: FieldDescription,

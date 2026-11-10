@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { expect } from "storybook/test";
+import { Link } from "../link/index.ts";
+import { Spinner } from "../spinner/index.ts";
 import {
 	Field,
 	type FieldRootProps,
@@ -19,6 +21,8 @@ const ERRORS = [
 const CHECKBOX_LABEL = "Email me when it is paid";
 const CAPTION = "Theme";
 const CAPTION_VALUE = "Follows the system";
+const PASSWORD_LABEL = "Password";
+const FORGOT_LABEL = "Forgot password?";
 
 type ExampleParts = Partial<RequirednessProps> &
 	Readonly<{
@@ -65,8 +69,23 @@ const PendingField = (args: FieldRootProps) => (
 			className={style.group}
 			{...fieldStateAttributes({ pending: true })}>
 			<Field.Control className={style.bare} />
-			<Field.Pending />
+			<Field.Pending>
+				<Spinner size={1} />
+			</Field.Pending>
 		</div>
+	</Field.Root>
+);
+
+const LabelRowField = (args: FieldRootProps) => (
+	<Field.Root {...args} className={style.field}>
+		<Field.LabelRow>
+			<Field.Label>{PASSWORD_LABEL}</Field.Label>
+			<Link href="#reset">{FORGOT_LABEL}</Link>
+		</Field.LabelRow>
+		<Field.Control
+			type="password"
+			className={style.input}
+		/>
 	</Field.Root>
 );
 
@@ -208,6 +227,18 @@ export const Disabled: Story = {
 
 export const Pending: Story = {
 	render: PendingField,
+};
+
+export const LabelRow: Story = {
+	render: LabelRowField,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByLabelText(PASSWORD_LABEL),
+		).toBeVisible();
+		await expect(
+			canvas.getByRole("link", { name: FORGOT_LABEL }),
+		).toBeVisible();
+	},
 };
 
 export const Caption: Story = {
