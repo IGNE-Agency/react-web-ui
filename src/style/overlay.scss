@@ -3,9 +3,10 @@
 // See `docs/design-system/components.mdx`.
 
 /// The dimmed, blurred sheet every modal overlay sits on — dialog, alert dialog,
-/// drawer — fading with the popup it belongs to. Re-point `--overlay-dim` for a
+/// drawer — fading with the popup it belongs to. Re-point `--_overlay-dim` for a
 /// lighter tier, and `--overlay-opacity` where something other than presence
-/// drives what paints, such as a swipe.
+/// drives what paints, such as a swipe. An app sets `--overlay-dim`, or the
+/// whole sheet through `--overlay-bg` and `--overlay-backdrop-filter`.
 ///
 /// @example
 ///   @use "../../style/overlay.scss" as overlay;
@@ -14,13 +15,19 @@
 ///       @include overlay.backdrop;
 ///   }
 @mixin backdrop {
-	--overlay-dim: 0.4;
+	--_overlay-dim: 0.4;
 	--overlay-opacity: 1;
 
 	position: fixed;
 	inset: 0;
-	background-color: rgb(0 0 0 / var(--overlay-dim));
-	backdrop-filter: blur(1px);
+	background-color: var(
+		--overlay-bg,
+		rgb(0 0 0 / var(--overlay-dim, var(--_overlay-dim)))
+	);
+	backdrop-filter: var(
+		--overlay-backdrop-filter,
+		blur(1px)
+	);
 	opacity: var(--overlay-opacity);
 
 	@media not (prefers-reduced-motion) {
@@ -29,7 +36,7 @@
 	}
 
 	@include theme.dark {
-		--overlay-dim: 0.6;
+		--_overlay-dim: 0.6;
 	}
 
 	&[data-starting-style],

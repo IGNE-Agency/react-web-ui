@@ -15,7 +15,8 @@
 			--tooltip-shadow,
 			var(--sys-elevation-1)
 		);
-		padding: var(--sys-unit-4) var(--sys-unit-6);
+		padding: var(--tooltip-pad-y, var(--sys-unit-4))
+			var(--tooltip-pad-x, var(--sys-unit-6));
 		color: var(--tooltip-fg, var(--sys-color-text));
 		font: var(--tooltip-font, var(--sys-font-body-small));
 		transform-origin: var(--transform-origin);
