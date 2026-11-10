@@ -3,9 +3,23 @@
 
 // See `docs/design-system/components.mdx`.
 
+@function -colour($prefix, $property) {
+	@if $prefix == "tag" {
+		@return var(
+			--tag-#{$property},
+			var(--_tag-#{$property})
+		);
+	}
+
+	@return var(
+		--#{$prefix}-#{$property},
+		var(--tag-#{$property}, var(--_#{$prefix}-#{$property}))
+	);
+}
+
 /// The tag shell: the tone tokens plus the pill shape and size every tag,
-/// removable or not, shares. Emits `--<$prefix>-{bg,fg,border}` through
-/// `tone.variants`.
+/// removable or not, shares. Reads the `--tag-*` knobs, and for a `$prefix`
+/// other than `tag` its own `--<$prefix>-{bg,fg,border}` first.
 ///
 /// @example
 ///   @use "../../style/tag.scss" as tag;
@@ -14,19 +28,24 @@
 ///       @include tag.shell("tag");
 ///   }
 @mixin shell($prefix) {
-	@include tone.variants($prefix);
+	@include tone.variants("_#{$prefix}");
 
 	display: inline-flex;
 	align-items: center;
-	gap: var(--sys-unit-3);
+	gap: var(--tag-gap, var(--sys-unit-3));
 	box-sizing: border-box;
-	min-block-size: var(--sys-unit-14);
-	border: 1px solid var(--#{$prefix}-border);
-	border-radius: var(--sys-radius-full);
-	background: var(--#{$prefix}-bg);
-	padding: var(--sys-unit-2) var(--sys-unit-6);
-	color: var(--#{$prefix}-fg);
-	font: var(--sys-font-label-small);
+	min-block-size: var(
+		--tag-min-block-size,
+		var(--sys-unit-14)
+	);
+	border: var(--tag-border-width, 1px) solid
+		-colour($prefix, "border");
+	border-radius: var(--tag-radius, var(--sys-radius-full));
+	background: -colour($prefix, "bg");
+	padding: var(--tag-pad-y, var(--sys-unit-2))
+		var(--tag-pad-x, var(--sys-unit-6));
+	color: -colour($prefix, "fg");
+	font: var(--tag-font, var(--sys-font-label-small));
 
 	@include focus.ring;
 
@@ -49,14 +68,20 @@
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
-	inline-size: var(--sys-unit-10);
-	block-size: var(--sys-unit-10);
+	inline-size: var(--tag-remove-size, var(--sys-unit-10));
+	block-size: var(--tag-remove-size, var(--sys-unit-10));
 	margin-block: calc(-1 * var(--sys-unit-1));
-	margin-inline-start: var(--sys-unit-1);
+	margin-inline-start: var(
+		--tag-remove-gap,
+		var(--sys-unit-1)
+	);
 	margin-inline-end: calc(-1 * var(--sys-unit-2));
 	border: 0;
-	border-radius: var(--sys-radius-circle);
-	background: none;
+	border-radius: var(
+		--tag-remove-radius,
+		var(--sys-radius-circle)
+	);
+	background: var(--tag-remove-bg, none);
 	padding: 0;
 	color: inherit;
 
@@ -68,18 +93,24 @@
 	}
 
 	&:hover {
-		background: color-mix(
-			in oklch,
-			currentcolor calc(var(--sys-state-hover) * 100%),
-			transparent
+		background: var(
+			--tag-remove-hover-bg,
+			color-mix(
+				in oklch,
+				currentcolor calc(var(--sys-state-hover) * 100%),
+				transparent
+			)
 		);
 	}
 
 	&:active {
-		background: color-mix(
-			in oklch,
-			currentcolor calc(var(--sys-state-pressed) * 100%),
-			transparent
+		background: var(
+			--tag-remove-pressed-bg,
+			color-mix(
+				in oklch,
+				currentcolor calc(var(--sys-state-pressed) * 100%),
+				transparent
+			)
 		);
 	}
 }

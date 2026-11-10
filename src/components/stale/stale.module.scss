@@ -31,8 +31,11 @@
 			var(--stale-scrim, var(--sys-color-surface)),
 			transparent 25%
 		);
-		backdrop-filter: blur(8px);
-		color: var(--sys-color-text);
+		backdrop-filter: var(
+			--stale-backdrop-filter,
+			blur(8px)
+		);
+		color: var(--stale-fg, var(--sys-color-text));
 		text-align: center;
 
 		@media not (prefers-reduced-motion) {
@@ -54,9 +57,15 @@
 		display: grid;
 		justify-items: center;
 		gap: var(--stale-gap, var(--sys-unit-8));
-		max-inline-size: 40ch;
-		color: var(--sys-color-text-muted);
-		font: var(--sys-font-body-medium);
+		max-inline-size: var(--stale-measure, 40ch);
+		color: var(
+			--stale-message-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--stale-message-font,
+			var(--sys-font-body-medium)
+		);
 	}
 
 	.illustration {

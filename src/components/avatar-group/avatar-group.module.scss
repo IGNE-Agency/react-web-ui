@@ -11,8 +11,11 @@
 	.member {
 		display: inline-flex;
 		flex-shrink: 0;
-		border-radius: var(--sys-radius-circle);
-		box-shadow: 0 0 0 2px
+		border-radius: var(
+			--avatar-group-radius,
+			var(--sys-radius-circle)
+		);
+		box-shadow: 0 0 0 var(--avatar-group-ring-width, 2px)
 			var(--avatar-group-ring, var(--sys-color-surface));
 
 		&:not(:first-child) {
@@ -40,7 +43,10 @@
 			var(--sys-color-text)
 		);
 		font: inherit;
-		font-weight: 600;
+		font-weight: var(
+			--avatar-group-overflow-font-weight,
+			600
+		);
 		line-height: 1;
 		cursor: default;
 
@@ -52,26 +58,38 @@
 	}
 
 	.popup {
-		--popover-radius: var(--sys-radius-md);
-		--popover-padding: var(--sys-unit-4);
+		--popover-radius: var(
+			--avatar-group-popup-radius,
+			var(--sys-radius-md)
+		);
+		--popover-padding: var(
+			--avatar-group-popup-padding,
+			var(--sys-unit-4)
+		);
 		--popover-min-inline-size: 0;
 	}
 
 	.list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-4);
+		gap: var(--avatar-group-list-gap, var(--sys-unit-4));
 		list-style: none;
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
-		gap: var(--sys-unit-4);
-		font: var(--sys-font-body-medium);
+		gap: var(--avatar-group-item-gap, var(--sys-unit-4));
+		font: var(
+			--avatar-group-item-font,
+			var(--sys-font-body-medium)
+		);
 	}
 
 	.suffix {
-		color: var(--sys-color-text-muted);
+		color: var(
+			--avatar-group-suffix-fg,
+			var(--sys-color-text-muted)
+		);
 	}
 }
