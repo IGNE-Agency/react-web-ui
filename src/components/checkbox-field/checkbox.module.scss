@@ -48,8 +48,9 @@
 		@include checkbox.indicator;
 		@include checkbox.indicator-hidden;
 
-		font-size: calc(
-			var(--checkbox-size, #{checkbox.$size}) * 0.7
+		font-size: var(
+			--checkbox-indicator-size,
+			calc(var(--checkbox-size, #{checkbox.$size}) * 0.7)
 		);
 
 		&[data-checked],

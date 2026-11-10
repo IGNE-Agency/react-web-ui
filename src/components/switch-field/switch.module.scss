@@ -14,7 +14,10 @@
 	.label {
 		@include checkbox.inline-label(".control");
 
-		min-block-size: var(--sys-unit-20);
+		min-block-size: var(
+			--switch-label-min-block-size,
+			var(--sys-unit-20)
+		);
 	}
 
 	.control {
@@ -26,14 +29,24 @@
 			--switch-track-block-size,
 			var(--sys-unit-16)
 		);
-		--_switch-track-inset: calc(1px + var(--sys-unit-2));
-		--_switch-thumb-size: calc(
-			var(--_switch-track-block-size) - 2 *
-				var(--_switch-track-inset)
+		--_switch-track-inset-x: calc(
+			var(--switch-border-width, 1px) +
+				var(--switch-pad-x, var(--sys-unit-2))
+		);
+		--_switch-track-inset-y: calc(
+			var(--switch-border-width, 1px) +
+				var(--switch-pad-y, var(--sys-unit-2))
+		);
+		--_switch-thumb-size: var(
+			--switch-thumb-size,
+			calc(
+				var(--_switch-track-block-size) - 2 *
+					var(--_switch-track-inset-y)
+			)
 		);
 		--_switch-travel: calc(
 			var(--_switch-track-inline-size) - 2 *
-				var(--_switch-track-inset) -
+				var(--_switch-track-inset-x) -
 				var(--_switch-thumb-size)
 		);
 		--_switch-thumb-bg: var(
@@ -55,16 +68,20 @@
 		box-sizing: border-box;
 		inline-size: var(--_switch-track-inline-size);
 		block-size: var(--_switch-track-block-size);
-		border: 1px solid
+		border: var(--switch-border-width, 1px) solid
 			var(--switch-border, var(--sys-color-border));
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--switch-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--switch-track-bg,
 			var(--sys-color-surface)
 		);
-		padding: var(--sys-unit-2);
+		padding: var(--switch-pad-y, var(--sys-unit-2))
+			var(--switch-pad-x, var(--sys-unit-2));
 		color: var(
-			--switch-on-thumb-bg,
+			--switch-thumb-on-bg,
 			var(--sys-color-on-primary)
 		);
 
@@ -79,7 +96,10 @@
 		}
 
 		&[data-focused] {
-			border-color: var(--_switch-on-bg);
+			border-color: var(
+				--switch-focus-border,
+				var(--_switch-on-bg)
+			);
 		}
 
 		&[data-checked] {
@@ -90,11 +110,20 @@
 		&[data-invalid] {
 			@include form.invalid;
 
-			--_switch-thumb-bg: var(--sys-color-error-outline);
+			--_switch-thumb-bg: var(
+				--switch-thumb-invalid-bg,
+				var(--sys-color-error-outline)
+			);
 
 			&[data-checked] {
-				background: var(--sys-color-error-fg);
-				color: var(--sys-color-error-bg);
+				background: var(
+					--switch-invalid-on-bg,
+					var(--sys-color-error-fg)
+				);
+				color: var(
+					--switch-thumb-invalid-on-bg,
+					var(--sys-color-error-bg)
+				);
 			}
 		}
 
@@ -102,7 +131,10 @@
 			@include form.readonly;
 
 			&[data-checked] {
-				background: var(--sys-color-primary-container);
+				background: var(
+					--switch-readonly-on-bg,
+					var(--sys-color-primary-container)
+				);
 			}
 		}
 
@@ -110,17 +142,29 @@
 		&[data-disabled][data-checked] {
 			@include form.disabled;
 
-			--_switch-on-bg: var(--sys-color-disabled-bg);
-			--_switch-thumb-bg: var(--sys-color-disabled-fg);
+			--_switch-on-bg: var(
+				--switch-disabled-on-border,
+				var(--sys-color-disabled-bg)
+			);
+			--_switch-thumb-bg: var(
+				--switch-thumb-disabled-bg,
+				var(--sys-color-disabled-fg)
+			);
 
-			background: var(--sys-color-disabled-bg);
+			background: var(
+				--switch-disabled-bg,
+				var(--sys-color-disabled-bg)
+			);
 		}
 	}
 
 	.thumb {
 		inline-size: var(--_switch-thumb-size);
 		block-size: var(--_switch-thumb-size);
-		border-radius: var(--sys-radius-circle);
+		border-radius: var(
+			--switch-thumb-radius,
+			var(--sys-radius-circle)
+		);
 		background: var(--_switch-thumb-bg);
 		translate: 0;
 

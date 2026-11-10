@@ -13,12 +13,12 @@
 			--segmented-control-fg,
 			var(--sys-color-on-primary-container)
 		);
-		--_segmented-control-fill: var(
-			--segmented-control-fill,
+		--_segmented-control-indicator-bg: var(
+			--segmented-control-indicator-bg,
 			var(--sys-color-primary)
 		);
-		--_segmented-control-on-fill: var(
-			--segmented-control-on-fill,
+		--_segmented-control-indicator-fg: var(
+			--segmented-control-indicator-fg,
 			var(--sys-color-on-primary)
 		);
 
@@ -28,8 +28,16 @@
 		box-sizing: border-box;
 		max-inline-size: 100%;
 		gap: 0;
-		border: #{form.$field-border} solid transparent;
-		border-radius: var(--sys-radius-full);
+		border: var(
+				--segmented-control-track-border-width,
+				#{form.$field-border}
+			)
+			solid
+			var(--segmented-control-track-border, transparent);
+		border-radius: var(
+			--segmented-control-track-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--segmented-control-track-bg,
 			var(--sys-color-primary-container)
@@ -42,11 +50,13 @@
 		&[data-readonly] {
 			@include form.readonly;
 
-			--_segmented-control-fill: var(
-				--sys-color-primary-container
+			--_segmented-control-indicator-bg: var(
+				--segmented-control-indicator-readonly-bg,
+				var(--sys-color-primary-container)
 			);
-			--_segmented-control-on-fill: var(
-				--sys-color-on-primary-container
+			--_segmented-control-indicator-fg: var(
+				--segmented-control-indicator-readonly-fg,
+				var(--sys-color-on-primary-container)
 			);
 
 			pointer-events: none;
@@ -55,23 +65,32 @@
 		&[data-invalid] {
 			@include form.invalid;
 
-			--_segmented-control-fill: var(--sys-color-error-fg);
-			--_segmented-control-on-fill: var(
-				--sys-color-error-bg
+			--_segmented-control-indicator-bg: var(
+				--segmented-control-indicator-invalid-bg,
+				var(--sys-color-error-fg)
+			);
+			--_segmented-control-indicator-fg: var(
+				--segmented-control-indicator-invalid-fg,
+				var(--sys-color-error-bg)
 			);
 		}
 
 		&[data-disabled] {
 			@include form.disabled;
 
-			--_segmented-control-fill: var(
-				--sys-color-disabled-fg
+			--_segmented-control-indicator-bg: var(
+				--segmented-control-indicator-disabled-bg,
+				var(--sys-color-disabled-fg)
 			);
-			--_segmented-control-on-fill: var(
-				--sys-color-disabled-bg
+			--_segmented-control-indicator-fg: var(
+				--segmented-control-indicator-disabled-fg,
+				var(--sys-color-disabled-bg)
 			);
 
-			background: var(--sys-color-disabled-bg);
+			background: var(
+				--segmented-control-track-disabled-bg,
+				var(--sys-color-disabled-bg)
+			);
 		}
 	}
 
@@ -80,17 +99,23 @@
 		flex: 0 0 auto;
 		align-items: center;
 		justify-content: center;
-		gap: var(--sys-unit-3);
+		gap: var(
+			--segmented-control-option-gap,
+			var(--sys-unit-3)
+		);
 		box-sizing: border-box;
 		min-block-size: var(
 			--segmented-control-option-block-size,
 			var(--sys-unit-20)
 		);
 		border: 0;
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--segmented-control-option-radius,
+			var(--sys-radius-full)
+		);
 		background: none;
 		padding-inline: var(
-			--segmented-control-option-padding-inline,
+			--segmented-control-option-pad-x,
 			var(--sys-unit-10)
 		);
 		color: var(--_field-fg);
@@ -119,8 +144,11 @@
 		@include indicator.pill;
 		@include focus.ring-idle;
 
-		border-radius: var(--sys-radius-full);
-		background: var(--_segmented-control-fill);
+		border-radius: var(
+			--segmented-control-indicator-radius,
+			var(--sys-radius-full)
+		);
+		background: var(--_segmented-control-indicator-bg);
 	}
 
 	.option[data-pressed][data-focus-visible] ~ .indicator {
@@ -136,7 +164,7 @@
 		}
 
 		.option {
-			color: var(--_segmented-control-on-fill);
+			color: var(--_segmented-control-indicator-fg);
 			cursor: default;
 
 			&::after {
