@@ -80,12 +80,6 @@
 	.item {
 		@include nav.shell;
 
-		&[data-labelled="false"] {
-			> .label {
-				opacity: 0;
-			}
-		}
-
 		&[data-layout="stack"] {
 			@include nav.compact;
 
@@ -104,11 +98,6 @@
 
 	.label {
 		@include nav.label;
-
-		@media not (prefers-reduced-motion) {
-			transition: opacity var(--sys-motion-short)
-				var(--sys-motion-standard);
-		}
 	}
 
 	.hintPositioner {
