@@ -19,8 +19,16 @@ import {
 	focusReturnsTo,
 } from "../../lib/storybook/calendar.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { useRef } from "react";
 import { Temporal } from "temporal-polyfill";
-import { TimeZoneProvider } from "../time-zone-provider/index.ts";
+import { isoToDayRange } from "../../lib/calendar/temporal-value.ts";
+import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
+import {
+	TimeZoneProvider,
+	useTimeZone,
+} from "../time-zone-provider/index.ts";
+import { DateRangeInput } from "./date-range-input.tsx";
 import {
 	DateRangeField,
 	type DateRangeFieldProps,
@@ -63,6 +71,116 @@ const ControlledDateRangeField = (
 				updateArgs({ value });
 			}}
 		/>
+	);
+};
+
+const COMPOSED_MONTHS = [0, 1] as const;
+
+const ComposedDateRangeInput = () => {
+	const triggerRef = useRef<HTMLButtonElement>(null);
+	const ids = DateRangeInput.useIds();
+	const timeZone = useTimeZone();
+
+	return (
+		<Field.Root>
+			<DateRangeInput.Label id={ids.labelId}>
+				{LABEL}
+			</DateRangeInput.Label>
+			<DateRangeInput.Root
+				aria-labelledby={ids.labelId}
+				defaultValue={isoToDayRange(RANGE, timeZone)}>
+				{({ isFocusWithin }) => (
+					<>
+						<DateRangeInput.Group
+							state={{ focused: isFocusWithin }}>
+							<DateRangeInput.Input slot="start">
+								{segment => (
+									<DateRangeInput.Segment
+										segment={segment}
+									/>
+								)}
+							</DateRangeInput.Input>
+							<DateRangeInput.Separator>
+								to
+							</DateRangeInput.Separator>
+							<DateRangeInput.Input slot="end">
+								{segment => (
+									<DateRangeInput.Segment
+										segment={segment}
+									/>
+								)}
+							</DateRangeInput.Input>
+							<DateRangeInput.Spacer />
+							<DateRangeInput.Trigger
+								ref={triggerRef}
+								render={
+									<IconButton
+										label={OPEN_CALENDAR}
+										variant="tertiary"
+										size="sm">
+										<Icon svg={DateRangeIcon} label="" />
+									</IconButton>
+								}
+							/>
+						</DateRangeInput.Group>
+						<DateRangeInput.Popup triggerRef={triggerRef}>
+							<DateRangeInput.Calendar
+								visibleMonths={COMPOSED_MONTHS.length}>
+								<DateRangeInput.CalendarHeader>
+									<DateRangeInput.Previous
+										render={
+											<IconButton
+												label={PREVIOUS_MONTH}
+												variant="tertiary">
+												<Icon
+													svg={ChevronLeftIcon}
+													label=""
+												/>
+											</IconButton>
+										}
+									/>
+									<DateRangeInput.Heading />
+									<DateRangeInput.Next
+										render={
+											<IconButton
+												label={NEXT_MONTH}
+												variant="tertiary">
+												<Icon
+													svg={ChevronRightIcon}
+													label=""
+												/>
+											</IconButton>
+										}
+									/>
+								</DateRangeInput.CalendarHeader>
+								<DateRangeInput.Months>
+									{COMPOSED_MONTHS.map(month => (
+										<DateRangeInput.Grid
+											key={month}
+											offset={{ months: month }}>
+											<DateRangeInput.GridHeader>
+												{day => (
+													<DateRangeInput.HeaderCell>
+														{day}
+													</DateRangeInput.HeaderCell>
+												)}
+											</DateRangeInput.GridHeader>
+											<DateRangeInput.GridBody>
+												{date => (
+													<DateRangeInput.Cell
+														date={date}
+													/>
+												)}
+											</DateRangeInput.GridBody>
+										</DateRangeInput.Grid>
+									))}
+								</DateRangeInput.Months>
+							</DateRangeInput.Calendar>
+						</DateRangeInput.Popup>
+					</>
+				)}
+			</DateRangeInput.Root>
+		</Field.Root>
 	);
 };
 
@@ -167,6 +285,38 @@ export const WithDescription: Story = {
 	args: {
 		description:
 			"From the first through the last day of work.",
+	},
+};
+
+export const Composed: Story = {
+	render: ComposedDateRangeInput,
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"The raw parts, composed by hand: a word between the ends, and a heading between the month steppers over two months.",
+			},
+		},
+	},
+};
+
+export const ComposedCalendar: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedDateRangeInput,
+	play: async ({ canvas }) => {
+		await userEvent.click(
+			canvas.getByRole("button", { name: TRIGGER_NAME }),
+		);
+		const popup = await calendar();
+
+		await expect(
+			within(popup).getByRole("heading"),
+		).toHaveTextContent(String(MONTH_START.year));
+		await expect(
+			within(popup).getAllByRole("grid"),
+		).toHaveLength(COMPOSED_MONTHS.length);
+		await userEvent.keyboard("{Escape}");
+		await roleGone("dialog");
 	},
 };
 

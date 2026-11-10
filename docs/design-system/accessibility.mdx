@@ -175,9 +175,7 @@ Where a library wires its own label to its own control, let it. Where the contro
 <Example kind="do" caption="The visible label is the name, and the control points at it.">
 
 ```tsx
-<Field.Label id={labelId} nativeLabel={false} render={<span />}>
-	{label}
-</Field.Label>
+<DateInput.Label id={labelId}>{label}</DateInput.Label>
 <DateInput.Root aria-labelledby={labelId} />
 ```
 
