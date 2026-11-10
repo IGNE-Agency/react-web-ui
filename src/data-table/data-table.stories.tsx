@@ -35,12 +35,19 @@ import {
 import { z } from "zod";
 import { describeValue } from "../components/active-filters/active-filter-describers.ts";
 import { ActiveFilters } from "../components/active-filters/active-filters.tsx";
-import { Button } from "../components/button/button.tsx";
+import {
+	Button,
+	IconButton,
+} from "../components/button/button.tsx";
 import { Drawer } from "../components/drawer/drawer.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
 import { Icon } from "../components/icon/icon.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
-import type { PaginationPage } from "../components/pagination/pagination.tsx";
+import {
+	Pagination,
+	type PaginationPage,
+} from "../components/pagination/pagination.tsx";
+import { Select } from "../components/select-field/select.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
 import { Stale } from "../components/stale/stale.tsx";
 import {
@@ -248,15 +255,18 @@ const TableParts = () => {
 										key={header.id}
 										header={header}>
 										{header.column.getCanSort() ? (
-											<DataTable.SortButton
-												header={header}
-												sortAscendingIcon={
-													sortAscendingIcon
-												}
-												sortDescendingIcon={
-													sortDescendingIcon
-												}
-											/>
+											<DataTable.SortButton header={header}>
+												<table.FlexRender header={header} />
+												<DataTable.SortIcon header={header}>
+													{sort =>
+														sort === "asc"
+															? sortAscendingIcon
+															: sort === "desc"
+																? sortDescendingIcon
+																: null
+													}
+												</DataTable.SortIcon>
+											</DataTable.SortButton>
 										) : undefined}
 									</DataTable.HeaderCell>
 								))}
@@ -304,20 +314,62 @@ const TableParts = () => {
 };
 
 const TablePagination = () => (
-	<DataTable.Pagination
-		pageSizeLabel={PAGE_SIZE_LABEL}
-		indexLabel={indexLabel}
-		firstLabel={FIRST_LABEL}
-		previousLabel={PREVIOUS_LABEL}
-		nextLabel={NEXT_LABEL}
-		lastLabel={LAST_LABEL}
-		firstIcon={<Icon svg={FirstPageIcon} label="" />}
-		previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
-		nextIcon={<Icon svg={ChevronRightIcon} label="" />}
-		lastIcon={<Icon svg={LastPageIcon} label="" />}
-		checkIcon={<Icon svg={CheckIcon} label="" />}
-		expandIcon={<Icon svg={ExpandMoreIcon} label="" />}
-	/>
+	<DataTable.Pagination>
+		<Pagination.PageSize>
+			<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
+			<Select.Trigger
+				icon={<Icon svg={ExpandMoreIcon} label="" />}
+			/>
+			<Select.Portal>
+				<Select.Positioner>
+					<Select.Popup>
+						<Select.List>
+							<Select.Items
+								checkIcon={
+									<Icon svg={CheckIcon} label="" />
+								}
+							/>
+						</Select.List>
+					</Select.Popup>
+				</Select.Positioner>
+			</Select.Portal>
+		</Pagination.PageSize>
+		<Pagination.Index label={indexLabel} />
+		<Pagination.Controls>
+			<Pagination.First
+				render={
+					<IconButton
+						label={FIRST_LABEL}
+						variant="tertiary">
+						<Icon svg={FirstPageIcon} label="" />
+					</IconButton>
+				}
+			/>
+			<Pagination.Previous
+				render={
+					<IconButton
+						label={PREVIOUS_LABEL}
+						variant="tertiary">
+						<Icon svg={ChevronLeftIcon} label="" />
+					</IconButton>
+				}
+			/>
+			<Pagination.Next
+				render={
+					<IconButton label={NEXT_LABEL} variant="tertiary">
+						<Icon svg={ChevronRightIcon} label="" />
+					</IconButton>
+				}
+			/>
+			<Pagination.Last
+				render={
+					<IconButton label={LAST_LABEL} variant="tertiary">
+						<Icon svg={LastPageIcon} label="" />
+					</IconButton>
+				}
+			/>
+		</Pagination.Controls>
+	</DataTable.Pagination>
 );
 
 type SelectionBarProps = Readonly<{ totalRows: number }>;
@@ -540,9 +592,14 @@ const DataViewTable = ({
 					<FilterBar.Content>
 						<Drawer.Header>
 							<Drawer.Title>{FILTERS_TITLE}</Drawer.Title>
-							<Drawer.CloseButton
-								closeLabel="Close"
-								icon={<Icon svg={CloseIcon} label="" />}
+							<Drawer.Close
+								render={
+									<IconButton
+										label="Close"
+										variant="tertiary">
+										<Icon svg={CloseIcon} label="" />
+									</IconButton>
+								}
 							/>
 						</Drawer.Header>
 						<FilterBar.Fields>

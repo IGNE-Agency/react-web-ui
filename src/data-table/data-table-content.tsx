@@ -17,6 +17,7 @@ import {
 	Row,
 	Scroller,
 	SortButton,
+	SortIcon,
 	StaleOverlay,
 	StateRow,
 	SubRow,
@@ -103,16 +104,20 @@ export const DataTableContent = <
 											key={header.id}
 											header={header}>
 											{header.isPlaceholder ? null : header.column.getCanSort() ? (
-												<SortButton
-													header={header}
-													sortAscendingIcon={
-														sortAscendingIcon
-													}
-													sortDescendingIcon={
-														sortDescendingIcon
-													}
-													unsortedIcon={unsortedIcon}
-												/>
+												<SortButton header={header}>
+													<table.FlexRender
+														header={header}
+													/>
+													<SortIcon header={header}>
+														{sort =>
+															sort === "asc"
+																? sortAscendingIcon
+																: sort === "desc"
+																	? sortDescendingIcon
+																	: unsortedIcon
+														}
+													</SortIcon>
+												</SortButton>
 											) : (
 												<table.FlexRender header={header} />
 											)}

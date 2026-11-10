@@ -3,7 +3,6 @@ import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import {
 	Pagination,
-	type PaginationContentProps,
 	type PaginationRootProps,
 } from "../components/pagination/pagination.tsx";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
@@ -22,6 +21,7 @@ import {
 	Row,
 	Scroller,
 	SortButton,
+	SortIcon,
 	StaleOverlay,
 	StateRow,
 	SubRow,
@@ -112,28 +112,20 @@ type TableBoundPagination =
 
 export type DataTablePaginationProps = Omit<
 	PaginationRootProps,
-	TableBoundPagination | "children"
-> &
-	(
-		| (PaginationContentProps &
-				Readonly<{ children?: undefined }>)
-		| (Readonly<{
-				/** The `Pagination` parts, such as `Pagination.PageSize`, `Pagination.Index` and `Pagination.Controls`, in place of the ready-made pager. */
-				children: ReactNode;
-		  }> &
-				Readonly<
-					Partial<
-						Record<keyof PaginationContentProps, undefined>
-					>
-				>)
-	);
+	TableBoundPagination
+>;
 
 /**
- * The pager driven by the instance's pagination API (built with
- * `manualPagination` + server `rowCount`): the ready-made `Pagination` from its
- * labels and icons, or a `Pagination.Root` holding the parts it is given. The
- * page sizes come from the table's `meta.pageSizeOptions`, and picking one
- * returns to the first page.
+ * The `Pagination.Root` driven by the instance's pagination API (built with
+ * `manualPagination` + server `rowCount`), holding the `Pagination` parts it is
+ * given. The page sizes come from the table's `meta.pageSizeOptions`, and
+ * picking one returns to the first page.
+ *
+ * @example
+ * <DataTable.Pagination>
+ * 	<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
+ * 	<Pagination.Controls>…</Pagination.Controls>
+ * </DataTable.Pagination>
  */
 const DataTablePagination = (
 	props: DataTablePaginationProps,
@@ -159,11 +151,7 @@ const DataTablePagination = (
 		},
 	};
 
-	return props.indexLabel === undefined ? (
-		<Pagination.Root {...props} {...bound} />
-	) : (
-		<Pagination {...props} {...bound} />
-	);
+	return <Pagination.Root {...props} {...bound} />;
 };
 
 type DataTableParts = Readonly<{
@@ -182,6 +170,7 @@ type DataTableParts = Readonly<{
 	HeaderRow: typeof HeaderRow;
 	HeaderCell: typeof HeaderCell;
 	SortButton: typeof SortButton;
+	SortIcon: typeof SortIcon;
 	Body: typeof Body;
 	Row: typeof Row;
 	Cell: typeof Cell;
@@ -215,19 +204,13 @@ type DataTableParts = Readonly<{
  * 		sortAscendingIcon={<ArrowUpwardIcon />}
  * 		sortDescendingIcon={<ArrowDownwardIcon />}
  * 	/>
- * 	<DataTable.Pagination
- * 		pageSizeLabel="Rows per page"
- * 		indexLabel={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`}
- * 		firstLabel="First page"
- * 		previousLabel="Previous page"
- * 		nextLabel="Next page"
- * 		lastLabel="Last page"
- * 		firstIcon={<FirstPageIcon />}
- * 		previousIcon={<ChevronLeftIcon />}
- * 		nextIcon={<ChevronRightIcon />}
- * 		lastIcon={<LastPageIcon />}
- * 		checkIcon={<CheckIcon />}
- * 	/>
+ * 	<DataTable.Pagination>
+ * 		<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
+ * 		<Pagination.Controls>
+ * 			<Pagination.Previous render={<IconButton label="Previous page" variant="tertiary"><ChevronLeftIcon /></IconButton>} />
+ * 			<Pagination.Next render={<IconButton label="Next page" variant="tertiary"><ChevronRightIcon /></IconButton>} />
+ * 		</Pagination.Controls>
+ * 	</DataTable.Pagination>
  * </DataTable.Root>
  */
 export const DataTable: DataTableParts = {
@@ -246,6 +229,7 @@ export const DataTable: DataTableParts = {
 	HeaderRow,
 	HeaderCell,
 	SortButton,
+	SortIcon,
 	Body,
 	Row,
 	Cell,

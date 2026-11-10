@@ -16,6 +16,7 @@ import {
 	type within,
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import {
 	Pagination,
@@ -43,17 +44,37 @@ const pageSizeChange = fn<
 	(pageSize: number) => void
 >().mockName("onPageSizeChange");
 
+const PREVIOUS_BUTTON = (
+	<IconButton label={PREVIOUS_LABEL} variant="tertiary">
+		<Icon svg={ChevronLeftIcon} label="" />
+	</IconButton>
+);
+
+const NEXT_BUTTON = (
+	<IconButton label={NEXT_LABEL} variant="tertiary">
+		<Icon svg={ChevronRightIcon} label="" />
+	</IconButton>
+);
+
 const Controls = (): ReactElement => (
-	<Pagination.Controls
-		firstLabel={FIRST_LABEL}
-		previousLabel={PREVIOUS_LABEL}
-		nextLabel={NEXT_LABEL}
-		lastLabel={LAST_LABEL}
-		firstIcon={<Icon svg={FirstPageIcon} label="" />}
-		previousIcon={<Icon svg={ChevronLeftIcon} label="" />}
-		nextIcon={<Icon svg={ChevronRightIcon} label="" />}
-		lastIcon={<Icon svg={LastPageIcon} label="" />}
-	/>
+	<Pagination.Controls>
+		<Pagination.First
+			render={
+				<IconButton label={FIRST_LABEL} variant="tertiary">
+					<Icon svg={FirstPageIcon} label="" />
+				</IconButton>
+			}
+		/>
+		<Pagination.Previous render={PREVIOUS_BUTTON} />
+		<Pagination.Next render={NEXT_BUTTON} />
+		<Pagination.Last
+			render={
+				<IconButton label={LAST_LABEL} variant="tertiary">
+					<Icon svg={LastPageIcon} label="" />
+				</IconButton>
+			}
+		/>
+	</Pagination.Controls>
 );
 
 const ControlledPagination = (
@@ -109,13 +130,9 @@ const PreviousAndNext = (
 	args: PaginationProps,
 ): ReactElement => (
 	<Pagination.Root {...rootOf(args)}>
-		<Pagination.Previous label={PREVIOUS_LABEL}>
-			<Icon svg={ChevronLeftIcon} label="" />
-		</Pagination.Previous>
+		<Pagination.Previous render={PREVIOUS_BUTTON} />
 		<Pagination.Index label={pageLabel} />
-		<Pagination.Next label={NEXT_LABEL}>
-			<Icon svg={ChevronRightIcon} label="" />
-		</Pagination.Next>
+		<Pagination.Next render={NEXT_BUTTON} />
 	</Pagination.Root>
 );
 

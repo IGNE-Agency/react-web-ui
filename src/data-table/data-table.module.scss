@@ -98,13 +98,6 @@
 		timeline-scope: --table-scroll;
 	}
 
-	.stale {
-		display: flex;
-		flex: 1 1 0;
-		min-inline-size: 0;
-		min-block-size: 0;
-	}
-
 	.staleOverlay {
 		border-radius: var(--_table-radius);
 	}
