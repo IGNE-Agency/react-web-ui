@@ -45,7 +45,10 @@
 	@include state.layer;
 
 	&[data-disabled] {
-		color: var(--sys-color-disabled-fg);
+		color: var(
+			--#{$prefix}-trigger-disabled-fg,
+			var(--sys-color-disabled-fg)
+		);
 		cursor: not-allowed;
 	}
 }

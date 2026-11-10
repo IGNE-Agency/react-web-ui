@@ -24,7 +24,10 @@
 	.crumb {
 		min-inline-size: 0;
 		overflow: hidden;
-		border-radius: var(--sys-radius-xs);
+		border-radius: var(
+			--breadcrumbs-radius,
+			var(--sys-radius-xs)
+		);
 		font: var(
 			--breadcrumbs-font,
 			var(--sys-font-label-medium)
@@ -38,7 +41,10 @@
 	.separator {
 		display: flex;
 		align-items: center;
-		padding-inline: var(--sys-unit-4);
+		padding-inline: var(
+			--breadcrumbs-separator-pad-x,
+			var(--sys-unit-4)
+		);
 	}
 
 	.gauge {
