@@ -134,9 +134,15 @@ const RailEntries = ({
 								labelled={labelled}
 							/>
 							{labelled ? (
-								<Nav.GroupToggle label={SUBPAGES}>
-									<Icon svg={ExpandMoreIcon} label="" />
-								</Nav.GroupToggle>
+								<Nav.GroupToggle
+									render={
+										<IconButton
+											label={SUBPAGES}
+											variant="tertiary">
+											<Icon svg={ExpandMoreIcon} label="" />
+										</IconButton>
+									}
+								/>
 							) : null}
 						</Nav.GroupHeader>
 						<Nav.GroupPanel>

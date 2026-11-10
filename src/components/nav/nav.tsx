@@ -11,7 +11,6 @@ import {
 } from "react";
 import { useSlidingIndicator } from "../../lib/sliding-indicator/index.ts";
 import { useRequiredContext } from "../../lib/use-required-context.ts";
-import { IconButton } from "../button/button.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import {
 	NavContext,
@@ -302,31 +301,29 @@ const GroupHeader = ({
 );
 
 export type NavGroupToggleProps = Omit<
-	ComponentPropsWithRef<"button">,
-	"children" | "aria-label"
+	BaseCollapsible.Trigger.Props,
+	"render"
 > &
 	Readonly<{
-		/** Accessible name, such as "Show subpages", surfaced as the tooltip hint and the `aria-label`. */
-		label: string;
-		/** The expand chevron, pointing down while closed; it turns over while open. */
-		children: ReactNode;
+		/** The button to render, such as `<IconButton label="Show subpages" variant="tertiary"><ExpandIcon /></IconButton>`. */
+		render: ReactElement;
 	}>;
 
-/** The icon-only button that folds the group's subpages open and shut; its children are the chevron. */
+/**
+ * The trigger that folds the group's subpages open and shut, rendered as the
+ * button it is given.
+ *
+ * @example
+ * <Nav.GroupToggle render={<IconButton label="Show subpages" variant="tertiary"><ExpandIcon /></IconButton>} />
+ */
 const GroupToggle = ({
-	label,
-	children,
 	className,
 	...props
 }: NavGroupToggleProps): ReactNode => (
-	<IconButton
-		{...props}
-		variant="tertiary"
+	<BaseCollapsible.Trigger
 		className={clsx(style.groupToggle, className)}
-		label={label}
-		render={<BaseCollapsible.Trigger />}>
-		{children}
-	</IconButton>
+		{...props}
+	/>
 );
 
 export type NavGroupPanelProps = Omit<
