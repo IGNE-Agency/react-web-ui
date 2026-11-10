@@ -1,6 +1,8 @@
 import { Field as BaseField } from "@base-ui/react/field";
 import { Select as BaseSelect } from "@base-ui/react/select";
+import { useRender } from "@base-ui/react/use-render";
 import { startOfYear } from "@internationalized/date";
+import { clsx } from "clsx";
 import { type ReactNode, useRef } from "react";
 import { Intl as TemporalIntl } from "temporal-polyfill";
 import { useLocale } from "../../components/locale-provider/index.ts";
@@ -32,23 +34,17 @@ export type CalendarNavigationIcons = Readonly<{
 	expandIcon?: ReactNode;
 }>;
 
-const OwnField = ({
-	children,
-}: Readonly<{ children: ReactNode }>): ReactNode => (
-	<BaseField.Root className={style.navField}>
-		{children}
-	</BaseField.Root>
-);
-
 const CalendarMonthSelect = ({
 	state,
 	label,
 	checkIcon,
 	expandIcon,
+	className,
 }: CalendarNavigationIcons &
 	Readonly<{
 		state: CalendarNavigationState;
 		label: string;
+		className?: string;
 	}>): ReactNode => {
 	const locale = useLocale();
 	const timeZone = useTimeZone();
@@ -85,7 +81,7 @@ const CalendarMonthSelect = ({
 			}}>
 			<BaseSelect.Trigger
 				aria-label={label}
-				className={style.navTrigger}>
+				className={clsx(style.navTrigger, className)}>
 				<span className={style.navLabel}>
 					<BaseSelect.Value className={style.navValue} />
 					<span
@@ -135,49 +131,116 @@ const CalendarMonthSelect = ({
 	);
 };
 
+export type CalendarPickersProps =
+	useRender.ComponentProps<"div">;
+
 /**
- * The month and year controls in a calendar header, driven by whichever
- * calendar state is above them. The month list holds the months the focused
- * year actually has; the year list is every year in its era.
+ * The space between the month steppers that holds the month and year pickers,
+ * and the year list while it is open.
  *
  * @example
- * <CalendarNavigation monthLabel="Month" yearLabel="Year" noMatchingYearLabel="No matching year." checkIcon={<CheckIcon />} />
+ * <DateInput.Pickers>
+ * 	<DateInput.MonthPicker label="Month" checkIcon={<CheckIcon />} />
+ * 	<DateInput.YearPicker label="Year" noMatchingYearLabel="No matching year." checkIcon={<CheckIcon />} />
+ * </DateInput.Pickers>
  */
-export const CalendarNavigation = ({
-	monthLabel,
-	yearLabel,
-	noMatchingYearLabel,
+export const CalendarPickers = ({
+	render,
+	className,
+	ref,
+	...props
+}: CalendarPickersProps): ReactNode =>
+	useRender({
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.navigation, className),
+		},
+	});
+
+export type CalendarMonthPickerProps =
+	CalendarNavigationIcons &
+		Readonly<{
+			/** Accessible name of the month list, such as "Month". */
+			label: string;
+			/** Applied to the month control. */
+			className?: string;
+		}>;
+
+/**
+ * The month control in a calendar header: a list of the months the focused
+ * year has, driven by whichever calendar state is above it.
+ *
+ * @example
+ * <DateInput.MonthPicker label="Month" checkIcon={<CheckIcon />} expandIcon={<ExpandMoreIcon />} />
+ */
+export const CalendarMonthPicker = ({
+	label,
 	checkIcon,
 	expandIcon,
-}: CalendarNavigationLabels &
-	CalendarNavigationIcons): ReactNode => {
-	const containerRef = useRef<HTMLDivElement>(null);
+	className,
+}: CalendarMonthPickerProps): ReactNode => {
 	const state = useCalendarNavigationState();
-
 	if (state === null) {
 		return null;
 	}
-
 	return (
-		<div ref={containerRef} className={style.navigation}>
-			<OwnField>
-				<CalendarMonthSelect
-					state={state}
-					label={monthLabel}
-					checkIcon={checkIcon}
-					expandIcon={expandIcon}
-				/>
-			</OwnField>
-			<OwnField>
-				<CalendarYear
-					state={state}
-					container={containerRef}
-					label={yearLabel}
-					noMatchLabel={noMatchingYearLabel}
-					checkIcon={checkIcon}
-					expandIcon={expandIcon}
-				/>
-			</OwnField>
-		</div>
+		<BaseField.Root className={style.navField}>
+			<CalendarMonthSelect
+				state={state}
+				label={label}
+				checkIcon={checkIcon}
+				expandIcon={expandIcon}
+				className={className}
+			/>
+		</BaseField.Root>
+	);
+};
+
+export type CalendarYearPickerProps =
+	CalendarNavigationIcons &
+		Readonly<{
+			/** Accessible name of the year input, such as "Year". */
+			label: string;
+			/** What the year list says when no year matches the typed text. */
+			noMatchingYearLabel: string;
+			/** Applied to the year control. */
+			className?: string;
+		}>;
+
+/**
+ * The year control in a calendar header: every year in the focused date's era,
+ * filtered by typing, driven by whichever calendar state is above it.
+ *
+ * @example
+ * <DateInput.YearPicker label="Year" noMatchingYearLabel="No matching year." checkIcon={<CheckIcon />} expandIcon={<ExpandMoreIcon />} />
+ */
+export const CalendarYearPicker = ({
+	label,
+	noMatchingYearLabel,
+	checkIcon,
+	expandIcon,
+	className,
+}: CalendarYearPickerProps): ReactNode => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const state = useCalendarNavigationState();
+	if (state === null) {
+		return null;
+	}
+	return (
+		<BaseField.Root
+			ref={containerRef}
+			className={style.navField}>
+			<CalendarYear
+				state={state}
+				container={containerRef}
+				label={label}
+				noMatchLabel={noMatchingYearLabel}
+				checkIcon={checkIcon}
+				expandIcon={expandIcon}
+				className={className}
+			/>
+		</BaseField.Root>
 	);
 };

@@ -15,27 +15,14 @@
 	}
 
 	.control {
-		flex: 1;
-		min-inline-size: 0;
-		border: none;
-		background: none;
-		padding: 0;
-		color: inherit;
-		font: inherit;
-
-		@include form.bare-native-entry;
-		@include form.field-text-metrics;
-
-		&::placeholder {
-			color: var(--field-placeholder-fg);
-		}
+		@include form.bare-control;
 	}
 
 	.bar {
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		gap: var(--sys-unit-4);
+		gap: var(--text-field-bar-gap, var(--sys-unit-4));
 		pointer-events: none;
 
 		&:empty {
@@ -56,14 +43,14 @@
 	}
 
 	.counter {
-		--counter-fg: var(
+		--_counter-fg: var(
 			--text-field-counter-fg,
 			var(--sys-color-text-muted)
 		);
 
 		align-self: flex-end;
 		justify-self: end;
-		color: var(--counter-fg);
+		color: var(--_counter-fg);
 		font: var(
 			--text-field-counter-font,
 			var(--sys-font-body-small)
@@ -72,14 +59,14 @@
 		cursor: default;
 
 		&[data-tone="warning"] {
-			--counter-fg: var(
+			--_counter-fg: var(
 				--text-field-counter-warning-fg,
 				var(--sys-color-warning-fg)
 			);
 		}
 
 		&[data-tone="error"] {
-			--counter-fg: var(
+			--_counter-fg: var(
 				--text-field-counter-error-fg,
 				var(--sys-color-error-fg)
 			);

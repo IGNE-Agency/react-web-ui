@@ -12,35 +12,51 @@
 	.group {
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-4);
+		gap: var(--conversation-group-gap, var(--sys-unit-4));
 	}
 
 	.groupSeparator {
 		position: sticky;
 		top: 0;
 		align-self: center;
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--conversation-separator-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--conversation-separator-bg,
 			var(--sys-color-surface-high)
 		);
-		padding: var(--sys-unit-2) var(--sys-unit-6);
+		padding: var(
+				--conversation-separator-pad-y,
+				var(--sys-unit-2)
+			)
+			var(--conversation-separator-pad-x, var(--sys-unit-6));
 		color: var(
 			--conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
-		font: var(--sys-font-label-small);
+		font: var(
+			--conversation-separator-font,
+			var(--sys-font-label-small)
+		);
 	}
 
 	.message {
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-2);
-		max-inline-size: min(72ch, 80%);
+		gap: var(--conversation-message-gap, var(--sys-unit-2));
+		max-inline-size: var(
+			--conversation-message-max-inline-size,
+			min(72ch, 80%)
+		);
 	}
 
 	.message + .message {
-		margin-block-start: var(--sys-unit-6);
+		margin-block-start: var(
+			--conversation-message-space,
+			var(--sys-unit-6)
+		);
 	}
 
 	.message,
@@ -60,7 +76,7 @@
 	.messageBubble {
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-2);
+		gap: var(--conversation-bubble-gap, var(--sys-unit-2));
 		border-radius: var(
 			--conversation-bubble-radius,
 			var(--sys-radius-lg)
@@ -69,7 +85,11 @@
 			--conversation-bubble-bg,
 			var(--sys-color-surface-high)
 		);
-		padding: var(--sys-unit-6) var(--sys-unit-8);
+		padding: var(
+				--conversation-bubble-pad-y,
+				var(--sys-unit-6)
+			)
+			var(--conversation-bubble-pad-x, var(--sys-unit-8));
 		color: var(
 			--conversation-bubble-fg,
 			var(--sys-color-text)
@@ -106,13 +126,22 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--sys-unit-4);
-		padding-inline: var(--sys-unit-8);
-		font: var(--sys-font-label-small);
+		gap: var(--conversation-author-gap, var(--sys-unit-4));
+		padding-inline: var(
+			--conversation-author-pad-x,
+			var(--sys-unit-8)
+		);
+		font: var(
+			--conversation-author-font,
+			var(--sys-font-label-small)
+		);
 	}
 
 	.message + .messageAuthor {
-		margin-block-start: var(--sys-unit-12);
+		margin-block-start: var(
+			--conversation-author-space,
+			var(--sys-unit-12)
+		);
 	}
 
 	.messageAvatar {
@@ -124,27 +153,51 @@
 			--conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
-		font: var(--sys-font-body-medium);
-		font-size: 0.75em;
+		font: var(
+			--conversation-timestamp-font,
+			var(--sys-font-body-medium)
+		);
+		font-size: var(
+			--conversation-timestamp-font-size,
+			0.75em
+		);
 	}
 
 	.messageReadIndicator {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--sys-unit-2);
+		gap: var(
+			--conversation-read-indicator-gap,
+			var(--sys-unit-2)
+		);
 		color: var(
 			--conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
-		font-size: 0.75em;
+		font-size: var(
+			--conversation-read-indicator-font-size,
+			0.75em
+		);
 	}
 
 	.statusDot {
-		inline-size: var(--sys-unit-4);
-		block-size: var(--sys-unit-4);
-		border-radius: var(--sys-radius-circle);
-		background: transparent;
+		inline-size: var(
+			--conversation-status-dot-size,
+			var(--sys-unit-4)
+		);
+		block-size: var(
+			--conversation-status-dot-size,
+			var(--sys-unit-4)
+		);
+		border-radius: var(
+			--conversation-status-dot-radius,
+			var(--sys-radius-circle)
+		);
+		background: var(
+			--conversation-status-dot-bg,
+			transparent
+		);
 	}
 
 	.messageReadIndicator[data-status="unread"] .statusDot {
@@ -172,7 +225,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--sys-unit-4);
+		gap: var(--conversation-files-gap, var(--sys-unit-4));
 	}
 
 	.message[data-side="own"] .messageFiles {
@@ -191,7 +244,7 @@
 		flex-grow: 1;
 		align-items: center;
 		justify-content: center;
-		gap: var(--sys-unit-6);
+		gap: var(--conversation-empty-gap, var(--sys-unit-6));
 		color: var(
 			--conversation-muted-fg,
 			var(--sys-color-text-muted)

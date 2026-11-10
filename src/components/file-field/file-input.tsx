@@ -1,6 +1,7 @@
 import { Fieldset as BaseFieldset } from "@base-ui/react/fieldset";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode, Ref } from "react";
+import type { useRender } from "@base-ui/react/use-render";
 import {
 	Button as AriaButton,
 	DropZone as AriaDropZone,
@@ -8,11 +9,15 @@ import {
 	FileTrigger as AriaFileTrigger,
 	type FileTriggerProps as AriaFileTriggerProps,
 	type Key,
+	Tag as AriaTag,
 	TagGroup as AriaTagGroup,
 	TagList as AriaTagList,
 } from "react-aria-components";
-import { AttachmentTile } from "../attachment-tile/index.ts";
-import { Button } from "../button/index.ts";
+import { renderAs } from "../../lib/render-as.tsx";
+import {
+	AttachmentTile,
+	type AttachmentTileRootProps,
+} from "../attachment-tile/index.ts";
 import {
 	Field,
 	type FieldLabelProps,
@@ -22,7 +27,10 @@ import {
 } from "../field/index.ts";
 import style from "./file-field.module.scss";
 
-export type FileInputRootProps = FieldRootProps &
+export type FileInputRootProps = Omit<
+	FieldRootProps,
+	"requiredness"
+> &
 	Readonly<{
 		/** The states projected onto the field as `data-*` attributes. */
 		state?: FieldState;
@@ -37,6 +45,7 @@ const FileInputRoot = ({
 	<Field.Root
 		render={<BaseFieldset.Root disabled={disabled} />}
 		disabled={disabled}
+		requiredness={state?.requiredness}
 		{...fieldStateAttributes(state ?? {})}
 		{...props}
 	/>
@@ -80,36 +89,53 @@ const FileInputDropTarget = ({
 	/>
 );
 
-export type FileInputHintProps = ComponentProps<"p"> &
-	Readonly<{
-		/** Drawn above the prompt, such as an upload icon. */
-		icon?: ReactNode;
-	}>;
-
-/** The prompt inside the drop target, with an optional `icon` above it. */
+/**
+ * The prompt inside the drop target, holding its text and an optional
+ * `HintIcon` above it.
+ *
+ * @example
+ * <FileInput.Hint>
+ * 	<FileInput.HintIcon><UploadFileIcon /></FileInput.HintIcon>
+ * 	Drag files here
+ * </FileInput.Hint>
+ */
 const FileInputHint = ({
 	className,
-	icon,
+	...props
+}: ComponentProps<"p">): ReactNode => (
+	<p className={clsx(style.hint, className)} {...props} />
+);
+
+/**
+ * The glyph above the prompt, such as an upload icon. Renders nothing without
+ * children.
+ *
+ * @example
+ * <FileInput.HintIcon><UploadFileIcon /></FileInput.HintIcon>
+ */
+const FileInputHintIcon = ({
+	className,
 	children,
 	...props
-}: FileInputHintProps): ReactNode => (
-	<p className={clsx(style.hint, className)} {...props}>
-		{icon === undefined ? null : (
-			<span aria-hidden="true" className={style.hintIcon}>
-				{icon}
-			</span>
-		)}
-		{children}
-	</p>
-);
+}: ComponentProps<"span">): ReactNode =>
+	children === undefined ||
+	children === null ||
+	children === false ? null : (
+		<span
+			aria-hidden="true"
+			className={clsx(style.hintIcon, className)}
+			{...props}>
+			{children}
+		</span>
+	);
 
 export type FileInputTriggerProps = Omit<
 	AriaFileTriggerProps,
 	"children"
 > &
 	Readonly<{
-		/** Visible label on the picker button. */
-		label: string;
+		/** The button to render, such as `<Button variant="secondary" size="sm">Choose files</Button>`. */
+		render: useRender.RenderProp;
 		disabled?: boolean;
 		/** Ids of the description and error text, chained onto the button. */
 		describedBy?: string;
@@ -117,33 +143,38 @@ export type FileInputTriggerProps = Omit<
 		buttonRef?: Ref<HTMLButtonElement>;
 		/** Marks the picker button as the field's invalid control. */
 		invalid?: boolean;
-		/** Drawn before the button's label, such as an attach icon. */
-		icon?: ReactNode;
 	}>;
 
-/** The button that opens the file dialog. */
+/**
+ * The button that opens the file dialog. It renders whichever button it is
+ * given.
+ *
+ * @example
+ * <FileInput.Trigger
+ * 	onSelect={onSelect}
+ * 	render={<Button variant="secondary" size="sm" icon={<AttachFileIcon />}>Choose files</Button>}
+ * />
+ */
 const FileInputTrigger = ({
-	label,
+	render,
 	disabled,
 	describedBy,
 	buttonRef,
 	invalid,
-	icon,
 	...props
 }: FileInputTriggerProps): ReactNode => (
 	<AriaFileTrigger {...props}>
-		<Button
-			variant="secondary"
-			size="sm"
-			icon={icon}
+		<AriaButton
 			ref={buttonRef}
+			isDisabled={disabled}
 			aria-describedby={describedBy}
-			{...fieldStateAttributes({
-				validity: invalid === true ? "invalid" : undefined,
+			render={renderAs(render, {
+				...fieldStateAttributes({
+					validity:
+						invalid === true ? "invalid" : undefined,
+				}),
 			})}
-			render={<AriaButton isDisabled={disabled} />}>
-			{label}
-		</Button>
+		/>
 	</AriaFileTrigger>
 );
 
@@ -173,47 +204,40 @@ const FileInputList = ({
 	</AriaTagGroup>
 );
 
-/** A tile's remove button: its name and icon together, or neither for a fixed tile. */
-export type FileInputItemRemoval =
-	| Readonly<{
-			/** Accessible name for the remove button. */
-			removeLabel: string;
-			/** The remove button's icon, such as a cross. */
-			removeIcon: ReactNode;
-	  }>
-	| Readonly<{
-			removeLabel?: undefined;
-			removeIcon?: undefined;
-	  }>;
+export type FileInputItemProps = Omit<
+	AttachmentTileRootProps,
+	"render" | "id"
+> &
+	Readonly<{
+		/** Key the surrounding list removes this file by. */
+		id: string;
+		/** The file's name, which the tile is read and typed to as. */
+		textValue: string;
+		disabled?: boolean;
+	}>;
 
-export type FileInputItemProps = Readonly<{
-	/** Key the surrounding list removes this file by. */
-	id: string;
-
-	file: File;
-
-	/** Tooltip text for the tile, such as "invoice.pdf (12 kB)". */
-	hint: string;
-
-	/** Marks the tile as rejected, such as over the size limit. */
-	invalid?: boolean;
-
-	disabled?: boolean;
-
-	/** Drawn on a tile that has no image preview, such as a file icon. */
-	icon?: ReactNode;
-}> &
-	FileInputItemRemoval;
-
-/** One staged file as an `AttachmentTile`. */
+/**
+ * One staged file's tile in the `List`, holding `AttachmentTile`'s parts.
+ *
+ * @example
+ * <FileInput.Item id={id} textValue={file.name}>
+ * 	<AttachmentTile.Preview name={file.name} src={src}>…</AttachmentTile.Preview>
+ * </FileInput.Item>
+ */
 const FileInputItem = ({
-	invalid = false,
+	id,
+	textValue,
 	disabled = false,
 	...props
 }: FileInputItemProps): ReactNode => (
-	<AttachmentTile
-		invalid={invalid}
-		disabled={disabled}
+	<AttachmentTile.Root
+		render={
+			<AriaTag
+				id={id}
+				textValue={textValue}
+				isDisabled={disabled}
+			/>
+		}
 		{...props}
 	/>
 );
@@ -224,6 +248,7 @@ export type FileInputParts = Readonly<{
 	Legend: typeof FileInputLegend;
 	DropTarget: typeof FileInputDropTarget;
 	Hint: typeof FileInputHint;
+	HintIcon: typeof FileInputHintIcon;
 	Trigger: typeof FileInputTrigger;
 	Pending: typeof Field.Pending;
 	List: typeof FileInputList;
@@ -234,18 +259,29 @@ export type FileInputParts = Readonly<{
 
 /**
  * The styled parts of a file input: the field frame around react-aria's
- * `DropZone` and `FileTrigger`, plus the staged files as removable
- * `AttachmentTile`s. The `Root` is a fieldset named by its `Legend`. For the
+ * `DropZone` and `FileTrigger`, plus the staged files as removable tiles built
+ * from `AttachmentTile`'s parts. The `Root` is a fieldset named by its `Legend`. For the
  * ordinary case, use `FileField`.
  *
  * @example
  * <FileInput.Root state={{ requiredness: "optional" }}>
- * 	<FileInput.Legend optionalLabel="optional">Attachments</FileInput.Legend>
+ * 	<FileInput.Legend>Attachments <Field.Requiredness optionalLabel="optional" /></FileInput.Legend>
  * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
- * 		<FileInput.Hint icon={<UploadFileIcon />}>Drag files here</FileInput.Hint>
- * 		<FileInput.Trigger label="Choose files" icon={<AttachFileIcon />} onSelect={onSelect} />
+ * 		<FileInput.Hint>
+ * 			<FileInput.HintIcon><UploadFileIcon /></FileInput.HintIcon>
+ * 			Drag files here
+ * 		</FileInput.Hint>
+ * 		<FileInput.Trigger
+ * 			onSelect={onSelect}
+ * 			render={<Button variant="secondary" size="sm" icon={<AttachFileIcon />}>Choose files</Button>}
+ * 		/>
  * 		<FileInput.List label="Files for attachments" onRemove={onRemove}>
- * 			<FileInput.Item id={id} file={file} hint="invoice.pdf (12 kB)" removeLabel="Remove" removeIcon={<CloseIcon />} />
+ * 			<FileInput.Item id={id} textValue={file.name}>
+ * 				<AttachmentTile.Preview name={file.name} src={undefined}>
+ * 					<AttachmentTile.Extension />
+ * 					<AttachmentTile.Name />
+ * 				</AttachmentTile.Preview>
+ * 			</FileInput.Item>
  * 		</FileInput.List>
  * 	</FileInput.DropTarget>
  * </FileInput.Root>
@@ -255,6 +291,7 @@ export const FileInput: FileInputParts = {
 	Legend: FileInputLegend,
 	DropTarget: FileInputDropTarget,
 	Hint: FileInputHint,
+	HintIcon: FileInputHintIcon,
 	Trigger: FileInputTrigger,
 	Pending: Field.Pending,
 	List: FileInputList,

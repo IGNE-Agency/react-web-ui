@@ -38,6 +38,12 @@ const RadioGroupItem = ({
 	/>
 );
 
+/**
+ * One radio, which takes a `RadioGroup.Indicator` as its child.
+ *
+ * @example
+ * <RadioGroup.Radio value="direct"><RadioGroup.Indicator /></RadioGroup.Radio>
+ */
 const RadioGroupRadio = ({
 	className,
 	...props
@@ -49,14 +55,28 @@ const RadioGroupRadio = ({
 			aria-readonly={undefined}
 			{...fieldStateAttributes(focus)}
 			{...props}
-			{...focus.props}>
-			<BaseRadio.Indicator
-				keepMounted
-				className={style.indicator}
-			/>
-		</BaseRadio.Root>
+			{...focus.props}
+		/>
 	);
 };
+
+/**
+ * The dot inside a radio, which pops in while it is chosen.
+ *
+ * @example
+ * <RadioGroup.Indicator />
+ */
+const RadioGroupIndicator = ({
+	className,
+	keepMounted = true,
+	...props
+}: BaseRadio.Indicator.Props): ReactNode => (
+	<BaseRadio.Indicator
+		keepMounted={keepMounted}
+		className={clsx(style.indicator, className)}
+		{...props}
+	/>
+);
 
 /** The parts of a radio group. */
 export type RadioGroupParts = Readonly<{
@@ -65,6 +85,7 @@ export type RadioGroupParts = Readonly<{
 	Group: typeof RadioGroupGroup;
 	Item: typeof RadioGroupItem;
 	Radio: typeof RadioGroupRadio;
+	Indicator: typeof RadioGroupIndicator;
 	Description: typeof Field.Description;
 	Error: typeof Field.Error;
 	useIds: typeof Field.useIds;
@@ -75,11 +96,13 @@ export type RadioGroupParts = Readonly<{
  * its `Legend`. For the ordinary case, use `RadioGroupField`.
  *
  * @example
- * <RadioGroup.Root filled={kind !== null}>
- * 	<RadioGroup.Legend optionalLabel="optional">Kind</RadioGroup.Legend>
+ * <RadioGroup.Root filled={kind !== null} requiredness="optional">
+ * 	<RadioGroup.Legend>Kind <Field.Requiredness optionalLabel="optional" /></RadioGroup.Legend>
  * 	<RadioGroup.Group value={kind} onValueChange={setKind}>
  * 		<RadioGroup.Item>
- * 			<RadioGroup.Radio value="direct" />
+ * 			<RadioGroup.Radio value="direct">
+ * 				<RadioGroup.Indicator />
+ * 			</RadioGroup.Radio>
  * 			Direct
  * 		</RadioGroup.Item>
  * 	</RadioGroup.Group>
@@ -91,6 +114,7 @@ export const RadioGroup: RadioGroupParts = {
 	Group: RadioGroupGroup,
 	Item: RadioGroupItem,
 	Radio: RadioGroupRadio,
+	Indicator: RadioGroupIndicator,
 	Description: Field.Description,
 	Error: Field.Error,
 	useIds: Field.useIds,

@@ -7,7 +7,10 @@
 		@include popup.edge-padding;
 
 		outline: none;
-		filter: var(--sys-elevation-1-filter);
+		filter: var(
+			--popover-filter,
+			var(--sys-elevation-1-filter)
+		);
 	}
 
 	.visuallyHidden {
@@ -20,7 +23,10 @@
 			var(--popover-min-inline-size, 22rem),
 			var(--available-width)
 		);
-		max-inline-size: min(28rem, var(--available-width));
+		max-inline-size: min(
+			var(--popover-max-inline-size, 28rem),
+			var(--available-width)
+		);
 		border: none;
 		border-radius: var(
 			--popover-radius,
@@ -31,8 +37,8 @@
 			var(--sys-color-surface-overlay)
 		);
 		padding: var(--popover-padding, var(--sys-unit-16));
-		color: var(--sys-color-text);
-		font: var(--sys-font-body-medium);
+		color: var(--popover-fg, var(--sys-color-text));
+		font: var(--popover-font, var(--sys-font-body-medium));
 		transform-origin: var(--transform-origin);
 
 		@media not (prefers-reduced-motion) {
@@ -81,9 +87,18 @@
 	}
 
 	.title {
-		margin-block-end: var(--sys-unit-8);
-		color: var(--sys-color-text);
-		font: var(--sys-font-label-large);
+		margin-block-end: var(
+			--popover-title-space,
+			var(--sys-unit-8)
+		);
+		color: var(
+			--popover-title-fg,
+			var(--popover-fg, var(--sys-color-text))
+		);
+		font: var(
+			--popover-title-font,
+			var(--sys-font-label-large)
+		);
 	}
 
 	.rows,
@@ -91,11 +106,14 @@
 		display: grid;
 		grid-template-columns: max-content minmax(0, 1fr);
 		align-items: baseline;
-		gap: var(--sys-unit-3);
+		gap: var(--popover-rows-gap, var(--sys-unit-3));
 	}
 
 	.row {
-		padding-block: var(--sys-unit-2);
+		padding-block: var(
+			--popover-row-pad-y,
+			var(--sys-unit-2)
+		);
 	}
 
 	.rows .row {
@@ -104,17 +122,32 @@
 
 	.rows .rowLabel,
 	.rows .rowValue {
-		padding-block: var(--sys-unit-2);
+		padding-block: var(
+			--popover-row-pad-y,
+			var(--sys-unit-2)
+		);
 	}
 
 	.rowLabel {
-		color: var(--sys-color-text-muted);
-		font: var(--sys-font-body-medium);
+		color: var(
+			--popover-row-label-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--popover-row-label-font,
+			var(--popover-font, var(--sys-font-body-medium))
+		);
 	}
 
 	.rowValue {
-		color: var(--sys-color-text);
-		font: var(--sys-font-body-medium);
+		color: var(
+			--popover-row-value-fg,
+			var(--popover-fg, var(--sys-color-text))
+		);
+		font: var(
+			--popover-row-value-font,
+			var(--popover-font, var(--sys-font-body-medium))
+		);
 	}
 
 	.rowValue[data-numeric] {
@@ -137,11 +170,11 @@
 		transform: translateY(-50%);
 	}
 
-	.titleSkeleton {
+	.title .skeletonText {
 		min-inline-size: 12ch;
 	}
 
-	.valueSkeleton {
+	.rowValue .skeletonText {
 		min-inline-size: 8ch;
 	}
 }

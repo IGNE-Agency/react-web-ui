@@ -1,9 +1,11 @@
+import { Spinner } from "../spinner/index.ts";
 import type { ReactNode } from "react";
 import {
 	isoToTimeOfDay,
 	timeOfDayToIso,
 } from "../../lib/calendar/temporal-value.ts";
 import {
+	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	useFieldState,
@@ -71,42 +73,61 @@ export const TimeField = ({
 	const { phase } = field;
 	const fieldState = field.state;
 
+	const ids = TimeInput.useIds();
+
 	return (
-		<TimeInput.Frame
-			label={label}
-			description={description}
-			errors={errors}
+		<Field.Root
+			className={className}
+			invalid={field.invalid}
+			disabled={field.disabled}
 			requiredness={requiredness}
-			optionalLabel={optionalLabel}
 			dirty={dirty}
-			touched={touched}
-			className={className}>
-			{({ labelId, describedBy, controlId }) => (
-				<TimeInput.Root
-					state={fieldState}
-					aria-labelledby={labelId}
-					aria-describedby={describedBy}
-					value={value === undefined ? undefined : time}
-					defaultValue={
-						isoToTimeOfDay(defaultValue) ?? undefined
-					}
-					onChange={next =>
-						onValueChange?.(timeOfDayToIso(next))
-					}
-					onBlur={onBlur}
-					name={name ?? controlId}
-					isDisabled={field.disabled}
-					isReadOnly={readOnly}
-					isRequired={requiredness === "required"}
-					isInvalid={field.invalid}>
-					<TimeInput.Group
-						role="presentation"
-						state={fieldState}>
-						<TimeInput.Input />
-						{phase !== "fresh" && <TimeInput.Pending />}
-					</TimeInput.Group>
-				</TimeInput.Root>
-			)}
-		</TimeInput.Frame>
+			touched={touched}>
+			<TimeInput.Label id={ids.labelId}>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
+			</TimeInput.Label>
+			<TimeInput.Root
+				state={fieldState}
+				aria-labelledby={ids.labelId}
+				aria-describedby={ids.describedBy(
+					description !== undefined,
+					field.invalid,
+				)}
+				value={value === undefined ? undefined : time}
+				defaultValue={
+					isoToTimeOfDay(defaultValue) ?? undefined
+				}
+				onChange={next =>
+					onValueChange?.(timeOfDayToIso(next))
+				}
+				onBlur={onBlur}
+				name={name ?? ids.controlId}
+				isDisabled={field.disabled}
+				isReadOnly={readOnly}
+				isRequired={requiredness === "required"}
+				isInvalid={field.invalid}>
+				<TimeInput.Group
+					role="presentation"
+					state={fieldState}>
+					<TimeInput.Input>
+						{segment => (
+							<TimeInput.Segment segment={segment} />
+						)}
+					</TimeInput.Input>
+					{phase !== "fresh" && (
+						<TimeInput.Pending>
+							<Spinner size={1} />
+						</TimeInput.Pending>
+					)}
+				</TimeInput.Group>
+			</TimeInput.Root>
+			<TimeInput.Description id={ids.descriptionId}>
+				{description}
+			</TimeInput.Description>
+			<TimeInput.Error id={ids.errorId}>
+				{errors}
+			</TimeInput.Error>
+		</Field.Root>
 	);
 };

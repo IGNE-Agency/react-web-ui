@@ -9,23 +9,33 @@
 		--_btn-pad-y: var(--sys-unit-6);
 		--_btn-pad-x: var(--sys-unit-16);
 		--_btn-font: var(--sys-font-label-medium);
+		--_btn-disabled-bg: var(--sys-color-disabled-bg);
 
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		gap: var(--btn-gap, var(--sys-unit-4));
 		box-sizing: border-box;
-		border: none;
+		border: var(--btn-border-width, 0)
+			var(--btn-border-style, none)
+			var(--btn-border, currentcolor);
 		border-radius: var(
 			--btn-radius,
 			var(--sys-radius-full)
 		);
 		background: var(--btn-bg, var(--_btn-bg));
-		padding: var(--btn-pad-y, var(--_btn-pad-y))
-			var(--btn-pad-x, var(--_btn-pad-x));
+		padding-block: var(--btn-pad-y, var(--_btn-pad-y));
+		padding-inline: var(
+				--btn-pad-start,
+				var(--btn-pad-x, var(--_btn-pad-x))
+			)
+			var(
+				--btn-pad-end,
+				var(--btn-pad-x, var(--_btn-pad-x))
+			);
 		color: var(--btn-fg, var(--_btn-fg));
 		font: var(--btn-font, var(--_btn-font));
-		letter-spacing: 0.0125em;
+		letter-spacing: var(--btn-letter-spacing, 0.0125em);
 		text-align: center;
 		white-space: nowrap;
 
@@ -53,6 +63,7 @@
 		--_btn-bg: transparent;
 		--_btn-fg: var(--sys-color-on-primary-container);
 		--_btn-pad-x: var(--sys-unit-6);
+		--_btn-disabled-bg: transparent;
 	}
 
 	.button[data-tone="danger"] {
@@ -97,15 +108,11 @@
 	.button[aria-disabled="true"] {
 		background: var(
 			--btn-disabled-bg,
-			var(--sys-color-disabled-bg)
+			var(--_btn-disabled-bg)
 		);
 		color: var(
 			--btn-disabled-fg,
 			var(--sys-color-disabled-fg)
 		);
-
-		&[data-variant="tertiary"] {
-			background: transparent;
-		}
 	}
 }

@@ -10,7 +10,7 @@
 ///   .popup {
 ///       @include dialog.surface;
 ///
-///       padding: var(--sys-unit-20);
+///       padding: var(--confirm-dialog-pad, var(--sys-unit-20));
 ///   }
 @mixin surface {
 	position: fixed;
@@ -18,13 +18,19 @@
 	left: 50%;
 	box-sizing: border-box;
 	inline-size: min(
-		32rem,
-		calc(100dvw - var(--sys-unit-16))
+		var(--dialog-inline-size, 32rem),
+		var(
+			--dialog-max-inline-size,
+			calc(100dvw - var(--sys-unit-16))
+		)
 	);
 	border: none;
-	border-radius: var(--sys-radius-xl);
-	background: var(--sys-color-surface-overlay);
-	color: var(--sys-color-text);
+	border-radius: var(--dialog-radius, var(--sys-radius-xl));
+	background: var(
+		--dialog-bg,
+		var(--sys-color-surface-overlay)
+	);
+	color: var(--dialog-fg, var(--sys-color-text));
 	transform: translate(-50%, -50%);
 
 	@media not (prefers-reduced-motion) {
@@ -52,11 +58,20 @@
 ///       @include dialog.title;
 ///   }
 @mixin title($spaced: true) {
-	color: var(--sys-color-text);
-	font: var(--sys-font-heading-small);
+	color: var(
+		--dialog-title-fg,
+		var(--dialog-fg, var(--sys-color-text))
+	);
+	font: var(
+		--dialog-title-font,
+		var(--sys-font-heading-small)
+	);
 
 	@if $spaced {
-		margin-block-end: var(--sys-unit-8);
+		margin-block-end: var(
+			--dialog-title-space,
+			var(--sys-unit-8)
+		);
 	}
 }
 
@@ -69,8 +84,14 @@
 ///       @include dialog.description;
 ///   }
 @mixin description {
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-body-medium);
+	color: var(
+		--dialog-description-fg,
+		var(--sys-color-text-muted)
+	);
+	font: var(
+		--dialog-description-font,
+		var(--sys-font-body-medium)
+	);
 }
 
 /// The trailing row of buttons that closes a dialog out, wrapping where there is
@@ -86,6 +107,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: end;
-	gap: var(--sys-unit-8);
-	margin-block-start: var(--sys-unit-20);
+	gap: var(--dialog-actions-gap, var(--sys-unit-8));
+	margin-block-start: var(
+		--dialog-actions-space,
+		var(--sys-unit-20)
+	);
 }

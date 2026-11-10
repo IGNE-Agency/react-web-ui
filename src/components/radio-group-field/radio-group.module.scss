@@ -15,9 +15,17 @@
 		flex: 0 0 auto;
 		align-items: center;
 		gap: var(--radio-group-item-gap, var(--sys-unit-6));
-		min-block-size: var(--sys-unit-20);
+		min-block-size: var(
+			--radio-group-item-min-block-size,
+			var(--sys-unit-20)
+		);
+		font: var(--radio-group-item-font, inherit);
 
 		@include checkbox.box-affordance(".radio");
+
+		&[data-disabled]:not([data-disabled] &) {
+			opacity: var(--radio-group-item-disabled-opacity, 1);
+		}
 	}
 
 	.radio {
@@ -26,7 +34,10 @@
 		@include focus.ring-projected;
 
 		position: relative;
-		border-radius: var(--sys-radius-circle);
+		border-radius: var(
+			--radio-group-radio-radius,
+			var(--sys-radius-circle)
+		);
 
 		&[data-invalid] {
 			@include checkbox.box-invalid;
@@ -49,14 +60,22 @@
 		@include checkbox.indicator;
 		@include checkbox.indicator-hidden;
 
-		inline-size: calc(
-			var(--checkbox-size, #{checkbox.$size}) * 0.4
+		inline-size: var(
+			--radio-group-indicator-size,
+			calc(var(--checkbox-size, #{checkbox.$size}) * 0.4)
 		);
-		block-size: calc(
-			var(--checkbox-size, #{checkbox.$size}) * 0.4
+		block-size: var(
+			--radio-group-indicator-size,
+			calc(var(--checkbox-size, #{checkbox.$size}) * 0.4)
 		);
-		border-radius: var(--sys-radius-circle);
-		background: currentcolor;
+		border-radius: var(
+			--radio-group-indicator-radius,
+			var(--sys-radius-circle)
+		);
+		background: var(
+			--radio-group-indicator-bg,
+			currentcolor
+		);
 
 		&[data-checked] {
 			@include checkbox.indicator-shown;

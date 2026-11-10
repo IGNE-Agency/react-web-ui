@@ -5,13 +5,15 @@ import { Avatar as KitAvatar } from "../avatar/avatar.tsx";
 import { useLocale } from "../locale-provider/locale-provider.tsx";
 import {
 	Popover,
-	type PopoverTriggerProps,
+	type PopoverPopupProps,
 } from "../popover/popover.tsx";
 import {
 	AvatarGroupContext,
 	useAvatarGroup,
 } from "./avatar-group-context.ts";
 import style from "./avatar-group.module.scss";
+
+const DEFAULT_SIZE = 1.5;
 
 const LIST_AVATAR_SIZE = 1.5;
 
@@ -29,7 +31,7 @@ export type AvatarGroupRootProps = Omit<
 /** The stack: a named group of avatars, overlapping, with no control of its own. */
 const Root = ({
 	label,
-	size = 1.5,
+	size = DEFAULT_SIZE,
 	render,
 	className,
 	style: inlineStyle,
@@ -53,7 +55,7 @@ const Root = ({
 	});
 
 	return (
-		<AvatarGroupContext value={{ label, size }}>
+		<AvatarGroupContext value={{ label }}>
 			{element}
 		</AvatarGroupContext>
 	);
@@ -61,27 +63,32 @@ const Root = ({
 
 export type AvatarGroupAvatarProps = Omit<
 	useRender.ComponentProps<"span">,
-	"children" | "aria-label"
+	"aria-label"
 > &
 	Readonly<{
-		/** Display name, drawn as initials and announced as the avatar's name. */
+		/** The person's display name, announced as the avatar's name. */
 		name: string;
-		/** Portrait to show in place of the initials, where there is one. */
-		src?: string;
+		/** The person's `Avatar`, at the group's `size`. */
+		children: ReactNode;
 	}>;
 
-/** One member of the stack, overlapping the one before it: an image named for its person. */
+/**
+ * One member of the stack, overlapping the one before it: an image named for
+ * its person, holding their `Avatar`.
+ *
+ * @example
+ * <AvatarGroup.Avatar name="Ada Lovelace">
+ * 	<Avatar name="Ada Lovelace" size={1.5} />
+ * </AvatarGroup.Avatar>
+ */
 const Avatar = ({
 	name,
-	src,
 	render,
 	className,
 	ref,
 	...props
-}: AvatarGroupAvatarProps): ReactElement => {
-	const { size } = useAvatarGroup();
-
-	return useRender({
+}: AvatarGroupAvatarProps): ReactElement =>
+	useRender({
 		defaultTagName: "span",
 		render,
 		ref,
@@ -90,68 +97,115 @@ const Avatar = ({
 			...props,
 			"aria-label": name,
 			className: clsx(style.member, className),
-			children: (
-				<KitAvatar name={name} src={src} size={size} />
+		},
+	});
+
+export type AvatarGroupOverflowProps = Omit<
+	useRender.ComponentProps<"button">,
+	"aria-label"
+> &
+	Readonly<{
+		/** The button's name, saying what it opens, such as "+3, show all invitees". */
+		label: string;
+	}>;
+
+/**
+ * The last member of the stack: the button that stands for everyone it leaves
+ * out, holding a `Count`. Render it as the trigger of a `Popover`.
+ *
+ * @example
+ * <AvatarGroup.Overflow
+ * 	label="+3, show all invitees"
+ * 	render={<Popover.Trigger openOnHover />}>
+ * 	<AvatarGroup.Count count={3} />
+ * </AvatarGroup.Overflow>
+ */
+const Overflow = ({
+	label,
+	render,
+	className,
+	ref,
+	...props
+}: AvatarGroupOverflowProps): ReactElement =>
+	useRender({
+		defaultTagName: "button",
+		render,
+		ref,
+		props: {
+			type: "button",
+			...props,
+			"aria-label": label,
+			className: clsx(
+				style.member,
+				style.overflow,
+				className,
 			),
+		},
+	});
+
+export type AvatarGroupCountProps = Omit<
+	useRender.ComponentProps<"span">,
+	"children"
+> &
+	Readonly<{
+		/** How many people the stack leaves out, shown as a signed count such as "+3". */
+		count: number;
+	}>;
+
+/**
+ * How many people the stack leaves out, as a signed number in the reader's
+ * own format.
+ *
+ * @example
+ * <AvatarGroup.Count count={3} />
+ */
+const Count = ({
+	count,
+	render,
+	className,
+	ref,
+	...props
+}: AvatarGroupCountProps): ReactElement => {
+	const locale = useLocale();
+
+	return useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.count, className),
+			children: new Intl.NumberFormat(locale, {
+				signDisplay: "always",
+			}).format(count),
 		},
 	});
 };
 
-export type AvatarGroupOverflowProps = Omit<
-	PopoverTriggerProps,
-	"children" | "aria-label" | "className"
-> &
-	Readonly<{
-		className?: string;
-		/** How many people the stack leaves out, shown as a signed count such as "+3". */
-		count: number;
-		/** The button's name, saying what it opens, such as "+3, show all invitees". */
-		label: string;
-		/** What the popover lists, usually an `AvatarGroup.List`. */
-		children: ReactNode;
-	}>;
+export type AvatarGroupPopupProps = PopoverPopupProps;
 
 /**
- * The count of everyone the stack leaves out: a button that opens a popover
- * holding its children, on hover, on a tap or from the keyboard.
+ * The overflow's popover surface, named after the group.
+ *
+ * @example
+ * <Popover.Portal>
+ * 	<Popover.Positioner side="top" sideOffset={8}>
+ * 		<AvatarGroup.Popup><AvatarGroup.List>…</AvatarGroup.List></AvatarGroup.Popup>
+ * 	</Popover.Positioner>
+ * </Popover.Portal>
  */
-const Overflow = ({
-	count,
-	label,
-	children,
+const Popup = ({
 	className,
 	...props
-}: AvatarGroupOverflowProps): ReactNode => {
-	const { label: groupLabel } = useAvatarGroup();
-	const locale = useLocale();
+}: AvatarGroupPopupProps): ReactNode => {
+	const { label } = useAvatarGroup();
 
 	return (
-		<Popover.Root>
-			<Popover.Trigger
-				openOnHover
-				{...props}
-				aria-label={label}
-				className={clsx(
-					style.member,
-					style.overflow,
-					className,
-				)}>
-				<span className={style.count}>
-					{new Intl.NumberFormat(locale, {
-						signDisplay: "always",
-					}).format(count)}
-				</span>
-			</Popover.Trigger>
-			<Popover.Portal>
-				<Popover.Positioner side="top" sideOffset={8}>
-					<Popover.Popup
-						aria-label={groupLabel}
-						className={style.popup}>
-						{children}
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
-		</Popover.Root>
+		<Popover.Popup
+			aria-label={label}
+			{...props}
+			className={clsx(style.popup, className)}
+		/>
 	);
 };
 
@@ -175,24 +229,19 @@ const List = ({
 		},
 	});
 
-export type AvatarGroupListItemProps = Omit<
-	useRender.ComponentProps<"li">,
-	"children"
-> &
-	Readonly<{
-		/** Display name, shown beside the avatar. */
-		name: string;
-		/** Portrait to show in place of the initials, where there is one. */
-		src?: string;
-		/** Muted words after the name, such as "(you)". */
-		suffix?: string;
-	}>;
+export type AvatarGroupListItemProps =
+	useRender.ComponentProps<"li">;
 
-/** One person in the list: their avatar, their name and any suffix. */
+/**
+ * One person in the list: their `Avatar`, then their `Name`.
+ *
+ * @example
+ * <AvatarGroup.ListItem>
+ * 	<Avatar name="Ada Lovelace" size={1.5} />
+ * 	<AvatarGroup.Name>Ada Lovelace</AvatarGroup.Name>
+ * </AvatarGroup.ListItem>
+ */
 const ListItem = ({
-	name,
-	src,
-	suffix,
 	render,
 	className,
 	ref,
@@ -205,26 +254,54 @@ const ListItem = ({
 		props: {
 			...props,
 			className: clsx(style.item, className),
-			children: (
-				<>
-					<KitAvatar
-						name={name}
-						src={src}
-						size={LIST_AVATAR_SIZE}
-					/>
-					<span>
-						{name}
-						{suffix === undefined ? null : (
-							<>
-								{" "}
-								<span className={style.suffix}>
-									{suffix}
-								</span>
-							</>
-						)}
-					</span>
-				</>
-			),
+		},
+	});
+
+export type AvatarGroupNameProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * A person's name in the list, with any `Suffix` after it.
+ *
+ * @example
+ * <AvatarGroup.Name>
+ * 	Ada Lovelace <AvatarGroup.Suffix>(you)</AvatarGroup.Suffix>
+ * </AvatarGroup.Name>
+ */
+const Name = ({
+	render,
+	ref,
+	...props
+}: AvatarGroupNameProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props,
+	});
+
+export type AvatarGroupSuffixProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * Muted words after a name, such as "(you)".
+ *
+ * @example
+ * <AvatarGroup.Suffix>(you)</AvatarGroup.Suffix>
+ */
+const Suffix = ({
+	render,
+	className,
+	ref,
+	...props
+}: AvatarGroupSuffixProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.suffix, className),
 		},
 	});
 
@@ -259,7 +336,7 @@ const Prefab = ({
 	overflowLabel,
 	currentUser,
 	max = 4,
-	size,
+	size = DEFAULT_SIZE,
 	className,
 }: AvatarGroupProps): ReactNode => {
 	const shown = people.slice(0, max);
@@ -268,31 +345,50 @@ const Prefab = ({
 	return (
 		<Root label={label} size={size} className={className}>
 			{shown.map(person => (
-				<Avatar
-					key={person.id}
-					name={person.name}
-					src={person.src}
-				/>
+				<Avatar key={person.id} name={person.name}>
+					<KitAvatar
+						name={person.name}
+						src={person.src}
+						size={size}
+					/>
+				</Avatar>
 			))}
 			{overflow > 0 ? (
-				<Overflow
-					count={overflow}
-					label={overflowLabel(overflow)}>
-					<List>
-						{people.map(person => (
-							<ListItem
-								key={person.id}
-								name={person.name}
-								src={person.src}
-								suffix={
-									currentUser?.id === person.id
-										? currentUser.label
-										: undefined
-								}
-							/>
-						))}
-					</List>
-				</Overflow>
+				<Popover.Root>
+					<Overflow
+						label={overflowLabel(overflow)}
+						render={<Popover.Trigger openOnHover />}>
+						<Count count={overflow} />
+					</Overflow>
+					<Popover.Portal>
+						<Popover.Positioner side="top" sideOffset={8}>
+							<Popup>
+								<List>
+									{people.map(person => (
+										<ListItem key={person.id}>
+											<KitAvatar
+												name={person.name}
+												src={person.src}
+												size={LIST_AVATAR_SIZE}
+											/>
+											<Name>
+												{person.name}
+												{currentUser?.id === person.id ? (
+													<>
+														{" "}
+														<Suffix>
+															{currentUser.label}
+														</Suffix>
+													</>
+												) : null}
+											</Name>
+										</ListItem>
+									))}
+								</List>
+							</Popup>
+						</Popover.Positioner>
+					</Popover.Portal>
+				</Popover.Root>
 			) : null}
 		</Root>
 	);
@@ -304,14 +400,19 @@ export type AvatarGroupParts = typeof Prefab &
 		Root: typeof Root;
 		Avatar: typeof Avatar;
 		Overflow: typeof Overflow;
+		Count: typeof Count;
+		Popup: typeof Popup;
 		List: typeof List;
 		ListItem: typeof ListItem;
+		Name: typeof Name;
+		Suffix: typeof Suffix;
 	}>;
 
 /**
  * A compact stack of avatars that folds everyone past `max` into a count. The
  * count is a button that lists everyone by name; the stack itself is content.
- * The parts hanging off it compose a group by hand.
+ * The parts hanging off it compose a group by hand, with the overflow's
+ * `Popover` composed around them.
  *
  * @example
  * <AvatarGroup
@@ -327,7 +428,11 @@ export const AvatarGroup: AvatarGroupParts = Object.assign(
 		Root,
 		Avatar,
 		Overflow,
+		Count,
+		Popup,
 		List,
 		ListItem,
+		Name,
+		Suffix,
 	},
 );

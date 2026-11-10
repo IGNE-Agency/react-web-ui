@@ -8,6 +8,10 @@
 		gap: var(--field-gap, var(--sys-unit-4));
 		inline-size: 100%;
 
+		&[data-disabled] {
+			opacity: var(--field-disabled-opacity, 1);
+		}
+
 		&[data-field-group-member] {
 			> * {
 				grid-row: extra;
@@ -17,13 +21,13 @@
 				);
 			}
 
-			> .label {
+			> :is(.label, .labelRow) {
 				grid-row: label;
 				margin-block: 0 var(--field-gap, var(--sys-unit-4));
 			}
 
-			> :first-child:not(.label),
-			> .label + * {
+			> :first-child:not(.label, .labelRow),
+			> :is(.label, .labelRow) + * {
 				grid-row: control;
 				margin-block-start: 0;
 			}
@@ -42,6 +46,14 @@
 		@include form.label;
 	}
 
+	.labelRow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: var(--field-label-row-align, baseline);
+		justify-content: space-between;
+		gap: var(--field-label-row-gap, var(--sys-unit-4));
+	}
+
 	.optional {
 		@include form.optional-suffix;
 	}
@@ -58,8 +70,8 @@
 		display: inline-block;
 		vertical-align: middle;
 		translate: 0 -1px;
-		inline-size: 0.625rem;
-		block-size: 0.625rem;
+		inline-size: var(--field-required-size, 0.625rem);
+		block-size: var(--field-required-size, 0.625rem);
 		background-color: var(
 			--field-required-fg,
 			var(--sys-color-primary)

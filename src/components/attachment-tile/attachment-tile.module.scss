@@ -5,7 +5,10 @@
 @layer kit.components {
 	.tile {
 		--_tile-size: var(--attachment-tile-size, 5rem);
-		--_tile-border-width: 1px;
+		--_tile-border-width: var(
+			--attachment-tile-border-width,
+			1px
+		);
 		--_tile-radius: var(
 			--attachment-tile-radius,
 			var(--sys-radius-sm)
@@ -18,7 +21,8 @@
 		box-sizing: border-box;
 		inline-size: var(--_tile-size);
 		block-size: var(--_tile-size);
-		border: var(--_tile-border-width) solid transparent;
+		border: var(--_tile-border-width) solid
+			var(--attachment-tile-border, transparent);
 		border-radius: var(--_tile-radius);
 		background: var(
 			--attachment-tile-bg,
@@ -37,9 +41,18 @@
 		}
 
 		&[data-invalid] {
-			border-color: var(--sys-color-error-border);
-			background: var(--sys-color-error-bg);
-			color: var(--sys-color-error-fg);
+			border-color: var(
+				--attachment-tile-invalid-border,
+				var(--sys-color-error-border)
+			);
+			background: var(
+				--attachment-tile-invalid-bg,
+				var(--sys-color-error-bg)
+			);
+			color: var(
+				--attachment-tile-invalid-fg,
+				var(--sys-color-error-fg)
+			);
 		}
 	}
 
@@ -69,7 +82,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: var(--sys-unit-2);
+		gap: var(--attachment-tile-gap, var(--sys-unit-2));
 		position: absolute;
 		inset: 0;
 		overflow: hidden;
@@ -83,7 +96,10 @@
 	}
 
 	.imageSkeleton {
-		--skeleton-bg: var(--sys-color-outline);
+		--skeleton-bg: var(
+			--attachment-tile-skeleton-bg,
+			var(--sys-color-outline)
+		);
 
 		position: absolute;
 		inset: 0;
@@ -103,7 +119,10 @@
 	}
 
 	.extension {
-		font: var(--sys-font-label-small);
+		font: var(
+			--attachment-tile-extension-font,
+			var(--sys-font-label-small)
+		);
 		text-transform: uppercase;
 	}
 
@@ -117,7 +136,13 @@
 		position: absolute;
 		inset-block-start: calc(-1 * var(--sys-unit-2));
 		inset-inline-end: calc(-1 * var(--sys-unit-2));
-		border-radius: var(--sys-radius-circle);
-		background: var(--sys-color-surface);
+		border-radius: var(
+			--attachment-tile-remove-radius,
+			var(--sys-radius-circle)
+		);
+		background: var(
+			--attachment-tile-remove-bg,
+			var(--sys-color-surface)
+		);
 	}
 }

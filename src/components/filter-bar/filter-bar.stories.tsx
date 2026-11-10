@@ -25,6 +25,7 @@ import {
 } from "../../lib/table-storage.ts";
 import { describeValue } from "../active-filters/active-filter-describers.ts";
 import { ActiveFilters } from "../active-filters/active-filters.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Drawer } from "../drawer/drawer.tsx";
 import { Icon } from "../icon/icon.tsx";
 import { SelectField } from "../select-field/select-field.tsx";
@@ -131,9 +132,14 @@ const ClientFilterBar = ({
 				<FilterBar.Content>
 					<Drawer.Header>
 						<Drawer.Title>{FILTERS_TITLE}</Drawer.Title>
-						<Drawer.CloseButton
-							closeLabel={CLOSE_LABEL}
-							icon={<Icon svg={CloseIcon} label="" />}
+						<Drawer.Close
+							render={
+								<IconButton
+									label={CLOSE_LABEL}
+									variant="tertiary">
+									<Icon svg={CloseIcon} label="" />
+								</IconButton>
+							}
 						/>
 					</Drawer.Header>
 					<FilterBar.Fields>

@@ -7,10 +7,14 @@ export type { ComposerHandle } from "./composer.handle.ts";
 export * from "./composer.tsx";
 export type {
 	ComposerAttachButtonProps,
+	ComposerAttachmentState,
 	ComposerAttachmentsErrorProps,
 	ComposerAttachmentsProps,
 } from "./composer-attachments.tsx";
-export type { ComposerEditorProps } from "./composer-editor.tsx";
+export type {
+	ComposerEditorProps,
+	ComposerPlaceholderProps,
+} from "./composer-editor.tsx";
 export type { ComposerMentionsProps } from "./composer-mentions.tsx";
 export type {
 	MentionCandidate,

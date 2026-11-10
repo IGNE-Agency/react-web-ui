@@ -54,9 +54,9 @@ A component never decides which glyph an app uses, so it leaves a slot. Most slo
 	<ExpandMoreIcon />
 </Select.Icon>
 
-<Pagination.Next aria-label="Next page">
+<Breadcrumbs.Separator>
 	<ChevronRightIcon />
-</Pagination.Next>
+</Breadcrumbs.Separator>
 ```
 
 A slot is optional when the control still works without the glyph: a chevron beside a label, a sort indicator, a magnifier in a search field. Left out, nothing is drawn. A slot is required when the glyph is all the control shows: the cross on a close button, the arrows of a stepper, the tick in a checkbox, the mark beside the chosen option. Without it the control would render blank, so the type check asks for it, next to the label that names the control.

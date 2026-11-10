@@ -27,14 +27,20 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--filter-bar-fields-gap, var(--sys-unit-12));
-		margin-block-start: var(--sys-unit-12);
+		margin-block-start: var(
+			--filter-bar-fields-space,
+			var(--sys-unit-12)
+		);
 	}
 
 	.footer {
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		gap: var(--sys-unit-8);
-		margin-block-start: var(--sys-unit-16);
+		gap: var(--filter-bar-footer-gap, var(--sys-unit-8));
+		margin-block-start: var(
+			--filter-bar-footer-space,
+			var(--sys-unit-16)
+		);
 	}
 }

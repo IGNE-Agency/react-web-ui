@@ -1,5 +1,7 @@
 import { type ReactNode, useState } from "react";
 import type { ZxcvbnLanguages } from "../../lib/password-strength/password-strength.ts";
+import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
@@ -8,6 +10,7 @@ import {
 	PasswordStrength,
 	type PasswordScoreLabels,
 } from "./password-strength.tsx";
+import { Spinner } from "../spinner/index.ts";
 
 /** The strength meter: off, or on with the copy it shows. */
 export type PasswordFieldStrengthProps =
@@ -104,28 +107,42 @@ export const PasswordField = ({
 			disabled={disabled}
 			readOnly={readOnly}
 			requiredness={requiredness}
-			optionalLabel={optionalLabel}
 			errors={errors}
 			dirty={dirty}
 			touched={touched}
 			pending={pending}
 			state={state}
 			className={className}>
-			<TextInput.Label>{label}</TextInput.Label>
+			<TextInput.Label>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
+			</TextInput.Label>
 			<TextInput.Group>
 				<TextInput.Input
 					{...inputProps}
 					type={revealed ? "text" : "password"}
 				/>
-				<TextInput.Pending />
+				<TextInput.Pending>
+					<Spinner size={1} />
+				</TextInput.Pending>
 				<TextInput.Reveal
 					revealed={revealed}
 					onRevealedChange={setRevealed}
-					label={
-						revealed ? hidePasswordLabel : showPasswordLabel
-					}>
-					{revealed ? hidePasswordIcon : showPasswordIcon}
-				</TextInput.Reveal>
+					render={
+						<IconButton
+							label={
+								revealed
+									? hidePasswordLabel
+									: showPasswordLabel
+							}
+							variant="tertiary"
+							size="sm">
+							{revealed
+								? hidePasswordIcon
+								: showPasswordIcon}
+						</IconButton>
+					}
+				/>
 			</TextInput.Group>
 			{strength === true && (
 				<PasswordStrength

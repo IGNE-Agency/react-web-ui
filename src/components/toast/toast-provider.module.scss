@@ -10,7 +10,7 @@
 			var(--toast-viewport-inset, var(--sys-unit-16));
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-8);
+		gap: var(--toast-viewport-gap, var(--sys-unit-8));
 		inline-size: var(
 			--toast-width,
 			min(24rem, calc(100vw - 2rem))
@@ -26,17 +26,17 @@
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) auto;
 		align-items: center;
-		row-gap: var(--sys-unit-6);
+		row-gap: var(--toast-gap, var(--sys-unit-6));
 		box-sizing: border-box;
 		border-radius: var(
 			--toast-radius,
 			var(--sys-radius-md)
 		);
 		background: var(--toast-bg, var(--_toast-bg));
-		box-shadow: var(--sys-elevation-2);
-		padding: var(--sys-unit-8);
+		box-shadow: var(--toast-shadow, var(--sys-elevation-2));
+		padding: var(--toast-pad, var(--sys-unit-8));
 		color: var(--toast-fg, var(--_toast-fg));
-		font: var(--sys-font-body-medium);
+		font: var(--toast-font, var(--sys-font-body-medium));
 
 		@media not (prefers-reduced-motion) {
 			transition:
@@ -64,7 +64,10 @@
 		display: inline-flex;
 		flex-shrink: 0;
 		grid-area: 1 / 1;
-		margin-inline-end: var(--sys-unit-4);
+		margin-inline-end: var(
+			--toast-icon-space,
+			var(--sys-unit-4)
+		);
 		font-size: var(--toast-icon-size, 1.2em);
 
 		> svg {
@@ -77,27 +80,39 @@
 	.title {
 		grid-area: 1 / 2;
 		min-inline-size: 0;
-		font: var(--sys-font-label-medium);
+		font: var(
+			--toast-title-font,
+			var(--sys-font-label-medium)
+		);
 	}
 
 	.close {
 		--btn-fg: var(--toast-fg, var(--_toast-fg));
 
 		grid-area: 1 / 3;
-		margin-inline-start: var(--sys-unit-6);
+		margin-inline-start: var(
+			--toast-close-space,
+			var(--sys-unit-6)
+		);
 	}
 
 	.description {
 		grid-column: 1 / -1;
-		font: var(--sys-font-body-medium);
+		font: var(
+			--toast-description-font,
+			var(--toast-font, var(--sys-font-body-medium))
+		);
 		text-wrap: pretty;
 	}
 
 	.actions {
 		display: flex;
 		grid-column: 1 / -1;
-		gap: var(--sys-unit-4);
-		margin-block-start: var(--sys-unit-2);
+		gap: var(--toast-actions-gap, var(--sys-unit-4));
+		margin-block-start: var(
+			--toast-actions-space,
+			var(--sys-unit-2)
+		);
 
 		> [data-variant="primary"] {
 			--btn-bg: var(--toast-fg, var(--_toast-fg));
@@ -105,7 +120,10 @@
 		}
 
 		> [data-variant="secondary"] {
-			--btn-bg: var(--sys-color-surface-overlay-high);
+			--btn-bg: var(
+				--toast-action-secondary-bg,
+				var(--sys-color-surface-overlay-high)
+			);
 			--btn-fg: var(--toast-fg, var(--_toast-fg));
 		}
 

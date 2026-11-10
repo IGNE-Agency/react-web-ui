@@ -1533,7 +1533,7 @@ The page's theme is two conditions, not one. A stored mode pins it, and auto fol
 ```scss
 .backdrop {
 	@include theme.dark {
-		--overlay-dim: 0.6;
+		--_overlay-dim: 0.6;
 	}
 }
 ```
@@ -1543,7 +1543,7 @@ The page's theme is two conditions, not one. A stored mode pins it, and auto fol
 
 ```scss
 html[data-theme="dark"] .backdrop {
-	--overlay-dim: 0.6;
+	--_overlay-dim: 0.6;
 }
 ```
 
@@ -1680,12 +1680,14 @@ The one legitimate use of a theme selector inside a component file is a value th
 
 ```scss
 .backdrop {
-	--overlay-dim: 0.4;
+	--_overlay-dim: 0.4;
 
-	background-color: rgb(0 0 0 / var(--overlay-dim));
+	background-color: rgb(
+		0 0 0 / var(--overlay-dim, var(--_overlay-dim))
+	);
 
 	@include theme.dark {
-		--overlay-dim: 0.6;
+		--_overlay-dim: 0.6;
 	}
 }
 ```

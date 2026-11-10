@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
-import type { FieldProps } from "../field/index.ts";
+import { Field, type FieldProps } from "../field/index.ts";
 import {
 	OtpInput,
 	type OtpInputRootProps,
 	type OtpSlotLabel,
 } from "./otp-input.tsx";
+import { Spinner } from "../spinner/index.ts";
 
 export type OtpFieldProps = FieldProps &
 	Omit<OtpInputRootProps, keyof FieldProps | "children"> &
@@ -31,13 +32,19 @@ export const OtpField = ({
 	label,
 	description,
 	slotLabel,
+	optionalLabel,
 	...rootProps
 }: OtpFieldProps): ReactNode => (
 	<OtpInput.Root {...rootProps}>
-		<OtpInput.Label>{label}</OtpInput.Label>
+		<OtpInput.Label>
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
+		</OtpInput.Label>
 		<OtpInput.Group>
 			<OtpInput.Slots slotLabel={slotLabel} />
-			<OtpInput.Pending />
+			<OtpInput.Pending>
+				<Spinner size={1} />
+			</OtpInput.Pending>
 		</OtpInput.Group>
 		<OtpInput.Description>
 			{description}

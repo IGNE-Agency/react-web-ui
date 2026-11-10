@@ -1,9 +1,10 @@
 import type { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
 import type { ReactNode } from "react";
-import type {
-	FieldBlurHandler,
-	ChoiceOption,
-	FieldProps,
+import {
+	Field,
+	type FieldBlurHandler,
+	type ChoiceOption,
+	type FieldProps,
 } from "../field/index.ts";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { ToggleGroup } from "./toggle-group.tsx";
@@ -73,10 +74,9 @@ export const ToggleGroupField = ({
 			touched={touched}
 			pending={pending}
 			filled={value.length > 0}>
-			<ToggleGroup.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<ToggleGroup.Legend>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</ToggleGroup.Legend>
 
 			<ToggleGroup.Group

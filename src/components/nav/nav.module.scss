@@ -5,6 +5,14 @@
 	indicator;
 
 @layer kit.components {
+	.root {
+		border: 0 solid
+			var(--nav-border, var(--sys-color-border));
+		border-width: var(--nav-border-width, 0);
+		background: var(--nav-bg, transparent);
+		backdrop-filter: var(--nav-backdrop-filter, none);
+	}
+
 	.scroller {
 		overflow-x: auto;
 		overscroll-behavior-x: contain;
@@ -27,7 +35,10 @@
 	.indicator {
 		@include indicator.pill("--active-tab", 0px);
 
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--tab-indicator-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--tab-indicator,
 			var(--sys-color-primary)
@@ -50,7 +61,7 @@
 		&[aria-current="page"],
 		&[data-active="true"] {
 			color: var(
-				--tab-fg-active,
+				--tab-active-fg,
 				var(--sys-color-on-primary)
 			);
 
@@ -68,12 +79,6 @@
 
 	.item {
 		@include nav.shell;
-
-		&[data-labelled="false"] {
-			> .label {
-				opacity: 0;
-			}
-		}
 
 		&[data-layout="stack"] {
 			@include nav.compact;
@@ -93,11 +98,6 @@
 
 	.label {
 		@include nav.label;
-
-		@media not (prefers-reduced-motion) {
-			transition: opacity var(--sys-motion-short)
-				var(--sys-motion-standard);
-		}
 	}
 
 	.hintPositioner {
@@ -140,8 +140,11 @@
 		grid-auto-flow: column;
 		grid-template-columns: minmax(0, 1fr);
 		align-items: center;
-		gap: var(--sys-unit-2);
-		border-radius: var(--sys-radius-full);
+		gap: var(--nav-group-header-gap, var(--sys-unit-2));
+		border-radius: var(
+			--nav-item-radius,
+			var(--sys-radius-full)
+		);
 
 		@media not (prefers-reduced-motion) {
 			transition: background-color var(--sys-motion-short)
@@ -150,12 +153,18 @@
 
 		&:has(> [data-active="true"]),
 		&:has(> [aria-current="page"]) {
-			background-color: var(--sys-color-primary-container);
+			background-color: var(
+				--nav-item-active-bg,
+				var(--sys-color-primary-container)
+			);
 		}
 	}
 
 	.groupToggle {
-		--btn-pad-y: var(--sys-unit-8);
+		--btn-pad-y: var(
+			--nav-group-toggle-pad,
+			var(--sys-unit-8)
+		);
 
 		svg {
 			@media not (prefers-reduced-motion) {
@@ -189,46 +198,83 @@
 	}
 
 	.groupList {
-		--branch-reach: var(--sys-unit-8);
-		--branch-line: color-mix(
-			in oklab,
-			var(--sys-color-border) 66.66%,
-			var(--sys-color-surface)
+		--nav-item-min-size: var(
+			--nav-group-item-min-size,
+			var(--sys-unit-20)
 		);
-		--nav-item-min-size: var(--sys-unit-20);
-		--nav-item-fg: var(--sys-color-text-muted);
+		--nav-item-fg: var(
+			--nav-group-item-fg,
+			var(--sys-color-text-muted)
+		);
 
 		display: flex;
 		flex-direction: column;
-		gap: var(--sys-unit-2);
-		padding-block: var(--sys-unit-2);
-		padding-inline-start: var(--sys-unit-20);
+		gap: var(--nav-group-list-gap, var(--sys-unit-2));
+		padding-block: var(
+			--nav-group-list-pad-y,
+			var(--sys-unit-2)
+		);
+		padding-inline-start: var(
+			--nav-group-list-indent,
+			var(--sys-unit-20)
+		);
 		list-style: none;
 
 		> li {
+			--_nav-branch-gap: var(
+				--nav-group-list-gap,
+				var(--sys-unit-2)
+			);
+			--_nav-branch-reach: var(
+				--nav-branch-reach,
+				var(--sys-unit-8)
+			);
+			--_nav-branch-line: var(
+					--nav-branch-border-width,
+					1px
+				)
+				solid
+				var(
+					--nav-branch-border,
+					color-mix(
+						in oklab,
+						var(--sys-color-border) 66.66%,
+						var(--sys-color-surface)
+					)
+				);
+
 			position: relative;
 
 			&::before {
 				content: "";
 				position: absolute;
-				inset-block-start: calc(-1 * var(--sys-unit-2));
-				inset-inline-start: calc(-1 * var(--branch-reach));
-				inline-size: var(--branch-reach);
-				block-size: calc(50% + var(--sys-unit-2));
-				border-inline-start: 1px solid var(--branch-line);
-				border-block-end: 1px solid var(--branch-line);
+				inset-block-start: calc(
+					-1 * var(--_nav-branch-gap)
+				);
+				inset-inline-start: calc(
+					-1 * var(--_nav-branch-reach)
+				);
+				inline-size: var(--_nav-branch-reach);
+				block-size: calc(50% + var(--_nav-branch-gap));
+				border-inline-start: var(--_nav-branch-line);
+				border-block-end: var(--_nav-branch-line);
 			}
 
 			&:last-child::before {
-				border-end-start-radius: var(--sys-radius-sm);
+				border-end-start-radius: var(
+					--nav-branch-radius,
+					var(--sys-radius-sm)
+				);
 			}
 
 			&:not(:last-child)::after {
 				content: "";
 				position: absolute;
 				inset-block: 50% 0;
-				inset-inline-start: calc(-1 * var(--branch-reach));
-				border-inline-start: 1px solid var(--branch-line);
+				inset-inline-start: calc(
+					-1 * var(--_nav-branch-reach)
+				);
+				border-inline-start: var(--_nav-branch-line);
 			}
 		}
 	}

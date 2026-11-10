@@ -8,10 +8,12 @@ import {
 	TagList as AriaTagList,
 } from "react-aria-components";
 import { formatBytes } from "../../lib/format-bytes.ts";
-import { AttachmentTile } from "../attachment-tile/index.ts";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
-import { useComposerContext } from "./composer.context.ts";
+import {
+	type ComposerAttachment,
+	useComposerContext,
+} from "./composer.context.ts";
 import style from "./composer.module.scss";
 
 const isOversized = (
@@ -48,44 +50,62 @@ export const ComposerAttachButton = ({
 					addFiles(Array.from(files));
 				}
 			}}>
-			<Button
+			<IconButton
 				className={className}
 				variant="tertiary"
 				size="md"
-				iconOnly
-				icon={children}
 				disabled={disabled}
 				label={label}
-				render={<AriaButton isDisabled={disabled} />}
-			/>
+				render={<AriaButton isDisabled={disabled} />}>
+				{children}
+			</IconButton>
 		</AriaFileTrigger>
 	);
 };
 
+/** What a staged file's tile renders from, besides the file. */
+export type ComposerAttachmentState = Readonly<{
+	/** Whether the file is over `maxFileSize`, and blocks sending. */
+	oversized: boolean;
+	/** The file's size, formatted for the locale, such as "12 kB". */
+	size: string;
+	/** Whether the composer is disabled. */
+	disabled: boolean;
+}>;
+
 export type ComposerAttachmentsProps = Readonly<{
 	/** The tile list's accessible name, such as "Attachments". */
 	label: string;
-	/** Each tile's remove button's accessible name, such as "Remove". */
-	removeLabel: string;
-	/** Each tile's remove glyph. */
-	removeIcon: ReactNode;
-	/** A tile's file-type glyph. Left out, a tile that is not an image shows only the file's extension. */
-	fileIcon?: ReactNode;
-	/** A tile's tooltip, from the file's name and formatted size. */
-	fileHint: (name: string, size: string) => string;
+	/** The tile for one staged file, such as an `AttachmentTile` with the attachment's `id`. */
+	children: (
+		attachment: ComposerAttachment,
+		state: ComposerAttachmentState,
+	) => ReactNode;
 	className?: string;
 }>;
 
 /**
- * The staged files as removable tiles. Removing the last one returns focus to
- * the editor. Renders nothing while no file is staged.
+ * The staged files, each as the tile `children` returns. Removing the last one
+ * returns focus to the editor. Renders nothing while no file is staged.
+ *
+ * @example
+ * <Composer.Attachments label="Attachments">
+ * 	{(attachment, { oversized, size, disabled }) => (
+ * 		<AttachmentTile
+ * 			id={attachment.id}
+ * 			file={attachment.file}
+ * 			hint={`${attachment.file.name} (${size})`}
+ * 			removeLabel="Remove"
+ * 			removeIcon={<CloseIcon />}
+ * 			invalid={oversized}
+ * 			disabled={disabled}
+ * 		/>
+ * 	)}
+ * </Composer.Attachments>
  */
 export const ComposerAttachments = ({
 	label,
-	removeLabel,
-	removeIcon,
-	fileIcon,
-	fileHint,
+	children,
 	className,
 }: ComposerAttachmentsProps): ReactNode => {
 	const locale = useLocale();
@@ -118,24 +138,16 @@ export const ComposerAttachments = ({
 			<AriaTagList
 				items={attachments}
 				className={clsx(style.attachments, className)}>
-				{attachment => (
-					<AttachmentTile
-						id={attachment.id}
-						file={attachment.file}
-						hint={fileHint(
-							attachment.file.name,
-							formatBytes(attachment.file.size, locale),
-						)}
-						removeLabel={removeLabel}
-						removeIcon={removeIcon}
-						icon={fileIcon}
-						invalid={isOversized(
+				{attachment =>
+					children(attachment, {
+						oversized: isOversized(
 							attachment.file,
 							maxFileSize,
-						)}
-						disabled={disabled}
-					/>
-				)}
+						),
+						size: formatBytes(attachment.file.size, locale),
+						disabled,
+					})
+				}
 			</AriaTagList>
 		</AriaTagGroup>
 	);

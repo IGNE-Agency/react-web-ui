@@ -46,9 +46,18 @@
 		@include popup.surface;
 
 		inline-size: max-content;
-		min-inline-size: 16rem;
-		max-inline-size: 24rem;
-		max-block-size: 20rem;
+		min-inline-size: var(
+			--composer-menu-min-inline-size,
+			16rem
+		);
+		max-inline-size: var(
+			--composer-menu-max-inline-size,
+			24rem
+		);
+		max-block-size: var(
+			--composer-menu-max-block-size,
+			20rem
+		);
 		margin: 0;
 		overflow: hidden auto;
 	}

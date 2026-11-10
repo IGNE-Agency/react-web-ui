@@ -80,8 +80,8 @@ export type FieldsetParts = Readonly<{
  * `errors`. For the ordinary case, use `FieldGroup`.
  *
  * @example
- * <Fieldset.Root members={members} aria-describedby={descriptionId}>
- * 	<Fieldset.Legend optionalLabel="optional">Address</Fieldset.Legend>
+ * <Fieldset.Root members={members} requiredness="optional" aria-describedby={descriptionId}>
+ * 	<Fieldset.Legend>Address <Field.Requiredness optionalLabel="optional" /></Fieldset.Legend>
  * 	<Fieldset.Description id={descriptionId}>We send the invoice here.</Fieldset.Description>
  * 	<Fieldset.Fields>…</Fieldset.Fields>
  * 	<Fieldset.Error />

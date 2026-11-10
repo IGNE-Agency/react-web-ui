@@ -59,8 +59,8 @@ export type CheckboxGroupParts = Readonly<{
  * `CheckboxGroupField`.
  *
  * @example
- * <CheckboxGroup.Root filled={values.length > 0}>
- * 	<CheckboxGroup.Legend optionalLabel="optional">Statuses</CheckboxGroup.Legend>
+ * <CheckboxGroup.Root filled={values.length > 0} requiredness="optional">
+ * 	<CheckboxGroup.Legend>Statuses <Field.Requiredness optionalLabel="optional" /></CheckboxGroup.Legend>
  * 	<CheckboxGroup.Group value={values} onValueChange={setValues}>
  * 		<CheckboxGroup.Item>
  * 			<CheckboxGroup.Control value="open">

@@ -17,6 +17,27 @@ Two kinds of change, newest first: a design decision, and a change to the system
 
 ## November 2026
 
+- <Pill>New</Pill> **10 November.** Every component styles
+  itself through its own knobs, read with a fallback and
+  never declared, so an app restyles any part by setting
+  one. A knob names its state before its property, and a
+  border knob names its colour.
+- <Pill>New</Pill> **10 November.** Parts render one element
+  and compose additively: indicators, thumbs, scrollers,
+  hints, skeletons, spinners and the buttons inside a part
+  are parts of their own, and the shorthands build the
+  common case from them.
+- <Pill>New</Pill> **10 November.** A label renders only its
+  text; the required mark and the optional word are parts
+  placed inside it.
+- <Pill>New</Pill> **10 November.** A button whose only
+  content is an icon is an `IconButton`, which always
+  carries its tooltip and accessible name.
+- <Pill>New</Pill> **10 November.** A field the browser has
+  filled in takes the autofill role across its whole box.
+- <Pill>New</Pill> **10 November.** The focus ring's colour,
+  width and offset are the theme's `focus-ring` tokens; the
+  kit's own theme paints it in the brand colour.
 - <Pill>New</Pill> **6 November.** [A section picks a theme
   with
   `data-theme`](?path=/docs/design-system-foundation-colour--docs#a-section-picks-a-theme-with-data-theme-and-the-mode-stays-the-users),

@@ -1,14 +1,17 @@
 import { Field as BaseField } from "@base-ui/react/field";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
+	type Context,
+	createContext,
+	type ReactElement,
 	type ReactNode,
 	useContext,
 	useId,
 } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { ErrorText } from "../error-text/index.ts";
-import { Spinner } from "../spinner/index.ts";
 import {
 	FieldRowContext,
 	useFieldGroupLineIds,
@@ -51,94 +54,114 @@ const isEmpty = (children: ReactNode): boolean =>
 	children === false ||
 	children === "";
 
-/** The copy and assertion a label carries about requiredness. */
-export type RequirednessProps = Readonly<{
+const RequirednessContext: Context<
+	Requiredness | undefined
+> = createContext<Requiredness | undefined>(undefined);
+
+/** What a requiredness part asserts: its own `requiredness`, or the field's it sits in. */
+export type RequiredMarkProps = Readonly<{
+	/** What the label asserts. Left out, it reads the `requiredness` of the field it sits in. */
 	requiredness?: Requiredness;
-	/** The word an optional field's label trails, such as "optional". */
-	optionalLabel: string;
 }>;
+
+/** The copy and assertion a label carries about requiredness. */
+export type RequirednessProps = RequiredMarkProps &
+	Readonly<{
+		/** The word an optional field's label trails, such as "optional". */
+		optionalLabel: string;
+	}>;
 
 /**
  * The mark a label carries when its field is required. Decoration only: the
  * control's own `required` tells assistive tech.
  *
  * @example
- * <Field.RequiredMark requiredness="required" />
+ * <Field.Label>Email <Field.RequiredMark /></Field.Label>
  */
 const RequiredMark = ({
 	requiredness,
-}: Readonly<{ requiredness?: Requiredness }>): ReactNode =>
-	requiredness === "required" ? (
+}: RequiredMarkProps): ReactNode => {
+	const fieldRequiredness = useContext(RequirednessContext);
+	return (requiredness ?? fieldRequiredness) ===
+		"required" ? (
 		<span className={style.required} aria-hidden="true" />
 	) : null;
+};
 
 /**
  * The suffix a label trails: the required mark, or the optional word.
  *
  * @example
- * <Field.Requiredness requiredness="optional" optionalLabel="optional" />
+ * <Field.Label>Notes <Field.Requiredness optionalLabel="optional" /></Field.Label>
  */
 const FieldRequiredness = ({
 	requiredness,
 	optionalLabel,
-}: RequirednessProps): ReactNode =>
-	requiredness === "optional" ? (
+}: RequirednessProps): ReactNode => {
+	const fieldRequiredness = useContext(RequirednessContext);
+	const asserted = requiredness ?? fieldRequiredness;
+	return asserted === "optional" ? (
 		<span className={style.optional}>{optionalLabel}</span>
 	) : (
-		<RequiredMark requiredness={requiredness} />
+		<RequiredMark requiredness={asserted} />
 	);
-
-export type InlineLabelTextProps = RequirednessProps &
-	Readonly<{
-		label: string;
-		/** The label of the field the row sits in, which carries the suffix instead. */
-		fieldLabel?: string;
-	}>;
+};
 
 /**
- * The text beside a control that shares its label, carrying the suffix a
- * `fieldLabel` above the row would otherwise carry.
+ * The optional word of a label beside its control, on a row of its own under
+ * the label's text. Renders nothing unless the field is optional.
+ *
+ * @example
+ * <Checkbox.Label>
+ * 	<Checkbox.Control>…</Checkbox.Control>
+ * 	<Field.InlineLabelText>Send me a copy <Field.RequiredMark /></Field.InlineLabelText>
+ * 	<Field.InlineOptional optionalLabel="optional" />
+ * </Checkbox.Label>
+ */
+const InlineOptional = ({
+	requiredness,
+	optionalLabel,
+}: RequirednessProps): ReactNode => {
+	const fieldRequiredness = useContext(RequirednessContext);
+	return (requiredness ?? fieldRequiredness) ===
+		"optional" ? (
+		<span
+			data-optional-suffix=""
+			className={clsx(
+				style.optional,
+				style.inlineOptional,
+			)}>
+			{optionalLabel}
+		</span>
+	) : null;
+};
+
+export type InlineLabelTextProps = ComponentProps<"span">;
+
+/**
+ * The text of a label beside its control, such as a lone checkbox's.
  *
  * @example
  * <Checkbox.Label>
  * 	<Checkbox.Control><Checkbox.Indicator><CheckIcon /></Checkbox.Indicator></Checkbox.Control>
- * 	<Field.InlineLabelText label={label} requiredness="optional" optionalLabel="optional" />
+ * 	<Field.InlineLabelText>I agree to the terms <Field.RequiredMark /></Field.InlineLabelText>
  * </Checkbox.Label>
  */
 const InlineLabelText = ({
-	label,
-	fieldLabel,
-	requiredness,
-	optionalLabel,
+	className,
+	...props
 }: InlineLabelTextProps): ReactNode => (
-	<>
-		<span className={style.inlineText}>
-			{label}
-			{fieldLabel === undefined &&
-				requiredness === "required" && (
-					<>
-						{" "}
-						<RequiredMark requiredness={requiredness} />
-					</>
-				)}
-		</span>
-		{requiredness === "optional" &&
-			fieldLabel === undefined && (
-				<span
-					data-optional-suffix=""
-					className={clsx(
-						style.optional,
-						style.inlineOptional,
-					)}>
-					{optionalLabel}
-				</span>
-			)}
-	</>
+	<span
+		className={clsx(style.inlineText, className)}
+		{...props}
+	/>
 );
 
 export type FieldRootProps = BaseField.Root.Props &
 	Readonly<{
 		className?: string;
+		/** What the field asserts about being required, which the requiredness parts inside it read. */
+		requiredness?: Requiredness;
 	}>;
 
 /**
@@ -150,6 +173,7 @@ export type FieldRootProps = BaseField.Root.Props &
  */
 const FieldRoot = ({
 	className,
+	requiredness,
 	children,
 	...props
 }: FieldRootProps): ReactNode => {
@@ -160,7 +184,9 @@ const FieldRoot = ({
 			data-field-group-member={inRow ? "" : undefined}
 			{...props}>
 			<FieldRowContext value={false}>
-				{children}
+				<RequirednessContext value={requiredness}>
+					{children}
+				</RequirednessContext>
 			</FieldRowContext>
 		</BaseField.Root>
 	);
@@ -170,22 +196,18 @@ export type FieldLabelProps = Omit<
 	BaseField.Label.Props,
 	"className"
 > &
-	RequirednessProps &
 	Readonly<{
 		className?: string;
 	}>;
 
 /**
- * The label above a control, trailing its requiredness. Renders nothing without
- * children.
+ * The label above a control. Renders nothing without children.
  *
  * @example
- * <Field.Label requiredness="optional" optionalLabel="optional">Notes</Field.Label>
+ * <Field.Label>Notes <Field.Requiredness optionalLabel="optional" /></Field.Label>
  */
 const FieldLabel = ({
 	children,
-	requiredness,
-	optionalLabel,
 	className,
 	...props
 }: FieldLabelProps): ReactNode =>
@@ -193,16 +215,11 @@ const FieldLabel = ({
 		<BaseField.Label
 			className={clsx(style.label, className)}
 			{...props}>
-			{children}{" "}
-			<FieldRequiredness
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}
-			/>
+			{children}
 		</BaseField.Label>
 	);
 
-export type FieldCaptionProps = ComponentProps<"p"> &
-	RequirednessProps;
+export type FieldCaptionProps = ComponentProps<"p">;
 
 /**
  * A caption styled like a field label, which names nothing: a paragraph, with
@@ -210,22 +227,16 @@ export type FieldCaptionProps = ComponentProps<"p"> &
  * a control that already carries its own name. To name something, use `Label`.
  *
  * @example
- * <Field.Caption optionalLabel="optional">Theme</Field.Caption>
+ * <Field.Caption>Theme <Field.Requiredness requiredness="optional" optionalLabel="optional" /></Field.Caption>
  */
 const FieldCaption = ({
 	children,
-	requiredness,
-	optionalLabel,
 	className,
 	...props
 }: FieldCaptionProps): ReactNode =>
 	isEmpty(children) ? null : (
 		<p className={clsx(style.label, className)} {...props}>
-			{children}{" "}
-			<FieldRequiredness
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}
-			/>
+			{children}
 		</p>
 	);
 
@@ -306,26 +317,61 @@ const FieldError = ({
 	);
 };
 
-export type FieldPendingProps = Readonly<{
-	className?: string;
-}>;
+export type FieldPendingProps =
+	useRender.ComponentProps<"span">;
 
 /**
- * The spinner a field shows while background work is in flight, sized to sit
- * in the box beside the control. The control decides when it is mounted, once
- * the wait is worth showing. It is decoration: the wait reaches assistive tech
- * as the `aria-busy` that `fieldStateAttributes` projects.
+ * The box beside the control that a field's wait shows in, holding what it is
+ * given, such as a spinner. The control decides when it is mounted, once the
+ * wait is worth showing. It is decoration: the wait reaches assistive tech as
+ * the `aria-busy` that `fieldStateAttributes` projects.
  *
  * @example
- * {phase !== "fresh" && <Field.Pending />}
+ * {phase !== "fresh" && <Field.Pending><Spinner size={1} /></Field.Pending>}
  */
 const FieldPending = ({
 	className,
-}: FieldPendingProps): ReactNode => (
-	<span className={clsx(style.pending, className)}>
-		<Spinner size={1} />
-	</span>
-);
+	render,
+	ref,
+	...props
+}: FieldPendingProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.pending, className),
+		},
+	});
+
+export type FieldLabelRowProps =
+	useRender.ComponentProps<"div">;
+
+/**
+ * A row holding a field's label and what sits beside it, such as a link or a
+ * counter, in place of the bare label.
+ *
+ * @example
+ * <Field.LabelRow>
+ * 	<TextInput.Label>Password</TextInput.Label>
+ * 	<Link href="/reset">Forgot password?</Link>
+ * </Field.LabelRow>
+ */
+const FieldLabelRow = ({
+	className,
+	render,
+	ref,
+	...props
+}: FieldLabelRowProps): ReactElement =>
+	useRender({
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.labelRow, className),
+		},
+	});
 
 /** Stable ids for the parts of one field. */
 export type FieldIds = Readonly<{
@@ -372,6 +418,7 @@ const useFieldIds = (): FieldIds => {
 export type FieldParts = Readonly<{
 	Root: typeof FieldRoot;
 	Label: typeof FieldLabel;
+	LabelRow: typeof FieldLabelRow;
 	Caption: typeof FieldCaption;
 	Control: typeof BaseField.Control;
 	Description: typeof FieldDescription;
@@ -382,6 +429,7 @@ export type FieldParts = Readonly<{
 	Requiredness: typeof FieldRequiredness;
 	RequiredMark: typeof RequiredMark;
 	InlineLabelText: typeof InlineLabelText;
+	InlineOptional: typeof InlineOptional;
 	useIds: typeof useFieldIds;
 }>;
 
@@ -391,8 +439,8 @@ export type FieldParts = Readonly<{
  * before `Error`, the field's only live region.
  *
  * @example
- * <Field.Root name="email" invalid={invalid}>
- * 	<Field.Label requiredness="required" optionalLabel="optional">Email</Field.Label>
+ * <Field.Root name="email" invalid={invalid} requiredness="required">
+ * 	<Field.Label>Email <Field.Requiredness optionalLabel="optional" /></Field.Label>
  * 	<Field.Control />
  * 	<Field.Description>We send the receipt here.</Field.Description>
  * 	<Field.Error>{errors}</Field.Error>
@@ -401,6 +449,7 @@ export type FieldParts = Readonly<{
 export const Field: FieldParts = {
 	Root: FieldRoot,
 	Label: FieldLabel,
+	LabelRow: FieldLabelRow,
 	Caption: FieldCaption,
 	Control: BaseField.Control,
 	Description: FieldDescription,
@@ -411,5 +460,6 @@ export const Field: FieldParts = {
 	Requiredness: FieldRequiredness,
 	RequiredMark,
 	InlineLabelText,
+	InlineOptional,
 	useIds: useFieldIds,
 };

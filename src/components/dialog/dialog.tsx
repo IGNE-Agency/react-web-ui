@@ -1,10 +1,6 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import {
-	type CloseButtonProps,
-	CloseButton as KitCloseButton,
-} from "../button/close-button.tsx";
 import styles from "./dialog.module.scss";
 
 export type DialogRootProps<Payload = unknown> = Omit<
@@ -70,7 +66,7 @@ const Title = ({
 
 export type DialogHeaderProps = ComponentProps<"div">;
 
-/** The title's line. Put a `Dialog.CloseButton` in it to trail a way out. */
+/** The title's line. Put a `Dialog.Close` in it to trail a way out. */
 const Header = ({
 	className,
 	...props
@@ -78,23 +74,6 @@ const Header = ({
 	<div
 		className={clsx(styles.header, className)}
 		{...props}
-	/>
-);
-
-export type DialogCloseButtonProps = Pick<
-	CloseButtonProps,
-	"closeLabel" | "icon"
->;
-
-/** The icon-only way out, for a header or a footer, drawn with the app's `icon`. */
-const CloseButton = ({
-	closeLabel,
-	icon,
-}: DialogCloseButtonProps): ReactNode => (
-	<KitCloseButton
-		closeLabel={closeLabel}
-		icon={icon}
-		render={<BaseDialog.Close />}
 	/>
 );
 
@@ -149,7 +128,6 @@ type DialogParts = Readonly<{
 	Title: typeof Title;
 	Description: typeof BaseDialog.Description;
 	Close: typeof BaseDialog.Close;
-	CloseButton: typeof CloseButton;
 	Header: typeof Header;
 	Body: typeof Body;
 	Footer: typeof Footer;
@@ -166,7 +144,13 @@ type DialogParts = Readonly<{
  *   <Dialog.Content>
  *     <Dialog.Header>
  *       <Dialog.Title>Discard changes?</Dialog.Title>
- *       <Dialog.CloseButton closeLabel="Close" icon={<CloseIcon />} />
+ *       <Dialog.Close
+ *         render={
+ *           <IconButton label="Close" variant="tertiary">
+ *             <CloseIcon />
+ *           </IconButton>
+ *         }
+ *       />
  *     </Dialog.Header>
  *     <Dialog.Body>
  *       <Dialog.Description>Your edits will be lost.</Dialog.Description>
@@ -188,7 +172,6 @@ export const Dialog: DialogParts = {
 	Title,
 	Description: BaseDialog.Description,
 	Close: BaseDialog.Close,
-	CloseButton,
 	Header,
 	Body,
 	Footer,

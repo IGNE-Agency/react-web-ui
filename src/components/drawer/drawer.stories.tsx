@@ -10,7 +10,7 @@ import {
 	within,
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
-import { Button } from "../button/button.tsx";
+import { Button, IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import {
 	useOpenArg,
@@ -41,9 +41,14 @@ const DrawerExample = (props: DrawerExampleProps) => {
 			<Drawer.Sheet container={container}>
 				<Drawer.Header>
 					<Drawer.Title>{TITLE}</Drawer.Title>
-					<Drawer.CloseButton
-						closeLabel={CLOSE_LABEL}
-						icon={<Icon svg={CloseIcon} label="" />}
+					<Drawer.Close
+						render={
+							<IconButton
+								label={CLOSE_LABEL}
+								variant="tertiary">
+								<Icon svg={CloseIcon} label="" />
+							</IconButton>
+						}
 					/>
 				</Drawer.Header>
 				<Drawer.Close

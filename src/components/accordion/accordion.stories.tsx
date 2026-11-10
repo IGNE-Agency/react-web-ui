@@ -92,7 +92,11 @@ const meta = {
 						</Accordion.Indicator>
 					</Accordion.Trigger>
 				</Accordion.Header>
-				<Accordion.Panel>{section.content}</Accordion.Panel>
+				<Accordion.Panel>
+					<Accordion.Content>
+						{section.content}
+					</Accordion.Content>
+				</Accordion.Panel>
 			</Accordion.Item>
 		)),
 	},

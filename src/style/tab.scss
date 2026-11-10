@@ -18,8 +18,7 @@
 }
 
 /// One tab, a pill. The real row and the copy inside the indicator share it, so
-/// both keep the same box metrics and type. Reads `--tab-fg` and
-/// `--tab-bg-hover`.
+/// both keep the same box metrics and type. Reads the `--tab-*` knobs.
 ///
 /// @example
 ///   .tab {
@@ -28,11 +27,12 @@
 @mixin tab {
 	display: inline-flex;
 	align-items: center;
-	gap: var(--sys-unit-4);
-	padding: var(--sys-unit-6) var(--sys-unit-10);
-	border-radius: var(--sys-radius-full);
+	gap: var(--tab-icon-gap, var(--sys-unit-4));
+	padding: var(--tab-pad-y, var(--sys-unit-6))
+		var(--tab-pad-x, var(--sys-unit-10));
+	border-radius: var(--tab-radius, var(--sys-radius-full));
 	color: var(--tab-fg, var(--sys-color-text-muted));
-	font: var(--sys-font-label-medium);
+	font: var(--tab-font, var(--sys-font-label-medium));
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
@@ -48,7 +48,7 @@
 
 	&:hover {
 		background: var(
-			--tab-bg-hover,
+			--tab-hover-bg,
 			var(--sys-color-primary-container)
 		);
 	}

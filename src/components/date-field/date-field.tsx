@@ -1,13 +1,17 @@
 import { type ReactNode, useRef } from "react";
-import type {
-	CalendarIcons,
-	CalendarLabels,
-} from "../../lib/calendar/temporal.tsx";
+import {
+	type CalendarIcons,
+	type CalendarLabels,
+	TemporalCalendar,
+} from "../../lib/calendar/calendar-prefab.tsx";
 import {
 	dayToIso,
 	isoToDay,
 } from "../../lib/calendar/temporal-value.ts";
+import { Spinner } from "../spinner/index.ts";
+import { IconButton } from "../button/index.ts";
 import {
+	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	useFieldState,
@@ -122,70 +126,91 @@ export const DateField = ({
 	const { phase } = field;
 	const fieldState = field.state;
 
+	const ids = DateInput.useIds();
+
 	return (
-		<DateInput.Frame
-			label={label}
-			description={description}
-			errors={errors}
+		<Field.Root
+			className={className}
+			invalid={field.invalid}
+			disabled={field.disabled}
 			requiredness={requiredness}
-			optionalLabel={optionalLabel}
 			dirty={dirty}
-			touched={touched}
-			className={className}>
-			{({ labelId, describedBy, controlId }) => (
-				<DateInput.Root
-					state={fieldState}
-					aria-labelledby={labelId}
-					aria-describedby={describedBy}
-					value={value === undefined ? undefined : day}
-					defaultValue={
-						isoToDay(defaultValue, timeZone) ?? undefined
-					}
-					onChange={next => onValueChange?.(dayToIso(next))}
-					onBlur={onBlur}
-					minValue={
-						isoToDay(minValue, timeZone) ?? undefined
-					}
-					maxValue={
-						isoToDay(maxValue, timeZone) ?? undefined
-					}
-					name={name ?? controlId}
-					isDisabled={field.disabled}
-					isReadOnly={readOnly}
-					isRequired={requiredness === "required"}
-					isInvalid={field.invalid}>
-					{({ isFocusWithin }) => (
-						<>
-							<DateInput.Group
-								state={{
-									...fieldState,
-									focused: isFocusWithin,
-								}}>
-								<DateInput.Input />
-								{phase !== "fresh" && <DateInput.Pending />}
-								<DateInput.Trigger
-									label={openCalendarLabel}
-									ref={triggerRef}>
-									{openCalendarIcon}
-								</DateInput.Trigger>
-							</DateInput.Group>
-							<DateInput.Popup triggerRef={triggerRef}>
-								<DateInput.Calendar
-									previousMonthLabel={previousMonthLabel}
-									nextMonthLabel={nextMonthLabel}
-									monthLabel={monthLabel}
-									yearLabel={yearLabel}
-									noMatchingYearLabel={noMatchingYearLabel}
-									previousIcon={previousIcon}
-									nextIcon={nextIcon}
-									checkIcon={checkIcon}
-									expandIcon={expandIcon}
-								/>
-							</DateInput.Popup>
-						</>
-					)}
-				</DateInput.Root>
-			)}
-		</DateInput.Frame>
+			touched={touched}>
+			<DateInput.Label id={ids.labelId}>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
+			</DateInput.Label>
+			<DateInput.Root
+				state={fieldState}
+				aria-labelledby={ids.labelId}
+				aria-describedby={ids.describedBy(
+					description !== undefined,
+					field.invalid,
+				)}
+				value={value === undefined ? undefined : day}
+				defaultValue={
+					isoToDay(defaultValue, timeZone) ?? undefined
+				}
+				onChange={next => onValueChange?.(dayToIso(next))}
+				onBlur={onBlur}
+				minValue={isoToDay(minValue, timeZone) ?? undefined}
+				maxValue={isoToDay(maxValue, timeZone) ?? undefined}
+				name={name ?? ids.controlId}
+				isDisabled={field.disabled}
+				isReadOnly={readOnly}
+				isRequired={requiredness === "required"}
+				isInvalid={field.invalid}>
+				{({ isFocusWithin }) => (
+					<>
+						<DateInput.Group
+							state={{
+								...fieldState,
+								focused: isFocusWithin,
+							}}>
+							<DateInput.Input>
+								{segment => (
+									<DateInput.Segment segment={segment} />
+								)}
+							</DateInput.Input>
+							{phase !== "fresh" && (
+								<DateInput.Pending>
+									<Spinner size={1} />
+								</DateInput.Pending>
+							)}
+							<DateInput.Trigger
+								ref={triggerRef}
+								render={
+									<IconButton
+										label={openCalendarLabel}
+										variant="tertiary"
+										size="sm">
+										{openCalendarIcon}
+									</IconButton>
+								}
+							/>
+						</DateInput.Group>
+						<DateInput.Popup triggerRef={triggerRef}>
+							<TemporalCalendar
+								previousMonthLabel={previousMonthLabel}
+								nextMonthLabel={nextMonthLabel}
+								monthLabel={monthLabel}
+								yearLabel={yearLabel}
+								noMatchingYearLabel={noMatchingYearLabel}
+								previousIcon={previousIcon}
+								nextIcon={nextIcon}
+								checkIcon={checkIcon}
+								expandIcon={expandIcon}
+							/>
+						</DateInput.Popup>
+					</>
+				)}
+			</DateInput.Root>
+			<DateInput.Description id={ids.descriptionId}>
+				{description}
+			</DateInput.Description>
+			<DateInput.Error id={ids.errorId}>
+				{errors}
+			</DateInput.Error>
+		</Field.Root>
 	);
 };

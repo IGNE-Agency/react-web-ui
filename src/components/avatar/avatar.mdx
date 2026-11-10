@@ -20,4 +20,15 @@ Without a portrait, an avatar shows the initials over a colour worked out from t
 
 While a portrait loads, and when it fails, the initials show in its place, so an avatar never shows a broken image or an empty circle.
 
+### The prefab is the parts, composed
+
+`Avatar` takes a `name` and a `src` and composes the parts hanging off it: `Root` is the circle in the name's colour, `Image` the portrait, and `Fallback` what shows in its place, the initials. Compose the parts by hand where the fallback needs other content.
+
+```tsx
+<Avatar.Root name="Ada Lovelace">
+	<Avatar.Image src={colleague.portraitUrl} />
+	<Avatar.Fallback>AL</Avatar.Fallback>
+</Avatar.Root>
+```
+
 </DocsPage>

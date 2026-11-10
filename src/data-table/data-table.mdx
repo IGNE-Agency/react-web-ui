@@ -12,7 +12,10 @@ import { Beside } from "../../docs/design-system/beside";
 import { DoDont } from "../../docs/design-system/do-dont";
 import { Example } from "../../docs/design-system/example";
 import { StoryProviders } from "../lib/storybook/story-providers.tsx";
-import { Button } from "../components/button/button.tsx";
+import {
+	Button,
+	IconButton,
+} from "../components/button/button.tsx";
 import { Tag } from "../components/tag/tag.tsx";
 import { Checkbox } from "../components/checkbox-field/checkbox.tsx";
 import { Icon } from "../components/icon/icon.tsx";
@@ -64,8 +67,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for A. de Vries"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for J. Bakker"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
             </tbody>
           </table>
         </div>
@@ -93,8 +96,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for A. de Vries"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for J. Bakker"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
             </tbody>
           </table>
         </div>
@@ -261,9 +264,11 @@ A table-level action menu is a labelled button beside the filters button, not an
   }>
 
 ```tsx
-<Button icon={<MoreVertIcon />} render={<Menu.Trigger />}>
-	Table actions
-</Button>
+<Menu.Trigger
+	render={
+		<Button icon={<MoreVertIcon />}>Table actions</Button>
+	}
+/>
 ```
 
 </Example>
@@ -976,30 +981,39 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ### The pager is the kit's pagination
 
-`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. With labels and icons it is the ready-made `Pagination`; with children it holds the `Pagination` parts it is given instead. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
+`DataTable.Pagination` is [the kit's `Pagination`](?path=/docs/components-pagination--docs#the-pager-knows-where-the-list-stands-not-where-it-came-from), driven by the table. It reads the page, the page count and the page size from the instance, offers the sizes in the table's `meta.pageSizeOptions`, and returns to the first page when the size changes. It is a `Pagination.Root` that holds the `Pagination` parts it is given: the page size, the index and the steps the table has room for. Everything else is `Pagination`'s: first and last beside previous and next, [buttons at the ends that keep their focus](?path=/docs/components-pagination--docs#a-button-at-the-end-of-the-list-keeps-its-focus), [an index announced when the page changes](?path=/docs/components-pagination--docs#the-index-is-announced-when-the-page-changes), and [the page size in effect always on offer](?path=/docs/components-pagination--docs#the-page-size-in-effect-is-always-on-offer).
 
 ```tsx
-<DataTable.Pagination
-	pageSizeLabel="Rows per page"
-	indexLabel={({ pageIndex, pageCount }) =>
-		`Page ${pageIndex + 1} of ${pageCount}`
-	}
-	firstLabel="First page"
-	previousLabel="Previous page"
-	nextLabel="Next page"
-	lastLabel="Last page"
-	firstIcon={<FirstPageIcon />}
-	previousIcon={<ChevronLeftIcon />}
-	nextIcon={<ChevronRightIcon />}
-	lastIcon={<LastPageIcon />}
-	checkIcon={<CheckIcon />}
-	expandIcon={<ExpandMoreIcon />}
-/>
+<DataTable.Pagination>
+	<Pagination.Index
+		label={({ pageIndex, pageCount }) =>
+			`Page ${pageIndex + 1} of ${pageCount}`
+		}
+	/>
+	<Pagination.Controls>
+		<Pagination.Previous
+			render={
+				<IconButton
+					label="Previous page"
+					variant="tertiary">
+					<ChevronLeftIcon />
+				</IconButton>
+			}
+		/>
+		<Pagination.Next
+			render={
+				<IconButton label="Next page" variant="tertiary">
+					<ChevronRightIcon />
+				</IconButton>
+			}
+		/>
+	</Pagination.Controls>
+</DataTable.Pagination>
 ```
 
 ### Content is the whole table; its parts are the same table in your markup
 
-`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, through `sortAscendingIcon`, `sortDescendingIcon` and `unsortedIcon`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`:
+`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, through `sortAscendingIcon`, `sortDescendingIcon` and `unsortedIcon`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`. A `SortButton` draws its column's header; given children, it draws those, such as the header and a `SortIcon` that picks a glyph for the column's sort:
 
 ```tsx
 const { view } = useDataTableView();
@@ -1018,7 +1032,18 @@ const { view } = useDataTableView();
 								key={header.id}
 								header={header}>
 								{header.column.getCanSort() ? (
-									<DataTable.SortButton header={header} />
+									<DataTable.SortButton header={header}>
+										<table.FlexRender header={header} />
+										<DataTable.SortIcon header={header}>
+											{sort =>
+												sort === "asc" ? (
+													<ArrowUpwardIcon />
+												) : sort === "desc" ? (
+													<ArrowDownwardIcon />
+												) : null
+											}
+										</DataTable.SortIcon>
+									</DataTable.SortButton>
 								) : undefined}
 							</DataTable.HeaderCell>
 						))}

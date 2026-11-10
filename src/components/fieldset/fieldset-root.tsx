@@ -205,6 +205,7 @@ export const FieldsetRoot = ({
 					render={<BaseFieldset.Root />}
 					disabled={field.disabled}
 					invalid={field.invalid}
+					requiredness={requiredness}
 					dirty={dirty}
 					touched={touched}
 					{...fieldStateAttributes(field.state)}
@@ -220,7 +221,7 @@ export const FieldsetRoot = ({
  * The legend that names a {@link FieldsetRoot}.
  *
  * @example
- * <FieldsetLegend optionalLabel="optional">Kind</FieldsetLegend>
+ * <FieldsetLegend>Kind <Field.Requiredness optionalLabel="optional" /></FieldsetLegend>
  */
 export const FieldsetLegend = (
 	props: FieldLabelProps,

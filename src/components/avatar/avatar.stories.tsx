@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactElement } from "react";
 import { expect, waitFor } from "storybook/test";
 import { Avatar } from "./avatar.tsx";
 
@@ -88,4 +89,20 @@ export const Small: Story = {
 
 export const Large: Story = {
 	args: { size: 4 },
+};
+
+const ComposedAvatar = (): ReactElement => (
+	<Avatar.Root name="Ada Lovelace" size={4}>
+		<Avatar.Image src={PORTRAIT} />
+		<Avatar.Fallback>AL</Avatar.Fallback>
+	</Avatar.Root>
+);
+
+export const Composed: Story = {
+	render: ComposedAvatar,
+	play: async ({ canvasElement }) => {
+		await waitFor(() =>
+			expect(image(canvasElement)).toBeVisible(),
+		);
+	},
 };

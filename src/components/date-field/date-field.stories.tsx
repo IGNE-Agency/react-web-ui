@@ -19,12 +19,20 @@ import {
 	focusReturnsTo,
 } from "../../lib/storybook/calendar.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { useRef } from "react";
 import { Temporal } from "temporal-polyfill";
-import { TimeZoneProvider } from "../time-zone-provider/index.ts";
+import { isoToDay } from "../../lib/calendar/temporal-value.ts";
+import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
+import {
+	TimeZoneProvider,
+	useTimeZone,
+} from "../time-zone-provider/index.ts";
 import {
 	DateField,
 	type DateFieldProps,
 } from "./date-field.tsx";
+import { DateInput } from "./date-input.tsx";
 
 const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
@@ -56,6 +64,101 @@ const ControlledDateField = (args: DateFieldProps) => {
 				updateArgs({ value });
 			}}
 		/>
+	);
+};
+
+const ComposedDateInput = () => {
+	const triggerRef = useRef<HTMLButtonElement>(null);
+	const ids = DateInput.useIds();
+	const timeZone = useTimeZone();
+
+	return (
+		<Field.Root>
+			<DateInput.Label id={ids.labelId}>
+				{LABEL}
+			</DateInput.Label>
+			<DateInput.Root
+				aria-labelledby={ids.labelId}
+				aria-describedby={ids.describedBy(true, false)}
+				defaultValue={isoToDay(DAY.toString(), timeZone)}>
+				{({ isFocusWithin }) => (
+					<>
+						<DateInput.Group
+							state={{ focused: isFocusWithin }}>
+							<DateInput.Input>
+								{segment => (
+									<DateInput.Segment segment={segment} />
+								)}
+							</DateInput.Input>
+							<DateInput.Trigger
+								ref={triggerRef}
+								render={
+									<IconButton
+										label={OPEN_CALENDAR}
+										variant="tertiary"
+										size="sm">
+										<Icon
+											svg={CalendarTodayIcon}
+											label=""
+										/>
+									</IconButton>
+								}
+							/>
+						</DateInput.Group>
+						<DateInput.Popover triggerRef={triggerRef}>
+							<DateInput.Dialog>
+								<DateInput.Calendar>
+									<DateInput.CalendarHeader>
+										<DateInput.Previous
+											render={
+												<IconButton
+													label={PREVIOUS_MONTH}
+													variant="tertiary">
+													<Icon
+														svg={ChevronLeftIcon}
+														label=""
+													/>
+												</IconButton>
+											}
+										/>
+										<DateInput.Heading />
+										<DateInput.Next
+											render={
+												<IconButton
+													label={NEXT_MONTH}
+													variant="tertiary">
+													<Icon
+														svg={ChevronRightIcon}
+														label=""
+													/>
+												</IconButton>
+											}
+										/>
+									</DateInput.CalendarHeader>
+									<DateInput.Grid>
+										<DateInput.GridHeader>
+											{day => (
+												<DateInput.HeaderCell>
+													{day}
+												</DateInput.HeaderCell>
+											)}
+										</DateInput.GridHeader>
+										<DateInput.GridBody>
+											{date => (
+												<DateInput.Cell date={date} />
+											)}
+										</DateInput.GridBody>
+									</DateInput.Grid>
+								</DateInput.Calendar>
+							</DateInput.Dialog>
+						</DateInput.Popover>
+					</>
+				)}
+			</DateInput.Root>
+			<DateInput.Description id={ids.descriptionId}>
+				The day the work was done.
+			</DateInput.Description>
+		</Field.Root>
 	);
 };
 
@@ -165,6 +268,48 @@ export const Pending: Story = {
 export const WithDescription: Story = {
 	args: {
 		description: "The day the work was done.",
+	},
+};
+
+export const Composed: Story = {
+	render: ComposedDateInput,
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"The raw parts, composed by hand with a heading between the month steppers in place of the month and year pickers.",
+			},
+		},
+	},
+};
+
+export const ComposedCalendar: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedDateInput,
+	play: async ({ canvas }) => {
+		await userEvent.click(
+			canvas.getByRole("button", { name: TRIGGER_NAME }),
+		);
+		const popup = await calendar();
+
+		await expect(
+			within(popup).getByRole("heading"),
+		).toHaveTextContent(String(DAY.year));
+		await userEvent.click(
+			within(popup).getByRole("button", {
+				name: NEXT_MONTH,
+			}),
+		);
+		await userEvent.click(
+			dayButton(popup, DAY.add({ months: 1 })),
+		);
+		await roleGone("dialog");
+		await expect(
+			segmentsOf(canvas.getAllByRole("spinbutton")).month,
+		).toHaveAttribute(
+			"aria-valuenow",
+			String(DAY.add({ months: 1 }).month),
+		);
 	},
 };
 

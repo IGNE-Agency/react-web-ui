@@ -8,6 +8,8 @@ import {
 	type within,
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { Avatar } from "../avatar/avatar.tsx";
+import { Popover } from "../popover/popover.tsx";
 import { AvatarGroup } from "./avatar-group.tsx";
 
 const LABEL = "Invitees";
@@ -49,27 +51,48 @@ const listShowsEveryone = async () => {
 	);
 };
 
+const COMPOSED_SIZE = 2;
+
 const ComposedGroup = (): ReactElement => (
-	<AvatarGroup.Root label={LABEL} size={2}>
+	<AvatarGroup.Root label={LABEL} size={COMPOSED_SIZE}>
 		{PEOPLE.slice(0, SHOWN).map(person => (
 			<AvatarGroup.Avatar
 				key={person.id}
-				name={person.name}
-			/>
+				name={person.name}>
+				<Avatar name={person.name} size={COMPOSED_SIZE} />
+			</AvatarGroup.Avatar>
 		))}
-		<AvatarGroup.Overflow
-			count={PEOPLE.length - SHOWN}
-			label={overflowLabel(PEOPLE.length - SHOWN)}>
-			<AvatarGroup.List>
-				{PEOPLE.slice(SHOWN).map((person, index) => (
-					<AvatarGroup.ListItem
-						key={person.id}
-						name={person.name}
-						suffix={index === 0 ? ORGANISER : undefined}
-					/>
-				))}
-			</AvatarGroup.List>
-		</AvatarGroup.Overflow>
+		<Popover.Root>
+			<AvatarGroup.Overflow
+				label={overflowLabel(PEOPLE.length - SHOWN)}
+				render={<Popover.Trigger openOnHover />}>
+				<AvatarGroup.Count count={PEOPLE.length - SHOWN} />
+			</AvatarGroup.Overflow>
+			<Popover.Portal>
+				<Popover.Positioner side="top" sideOffset={8}>
+					<AvatarGroup.Popup>
+						<AvatarGroup.List>
+							{PEOPLE.slice(SHOWN).map((person, index) => (
+								<AvatarGroup.ListItem key={person.id}>
+									<Avatar name={person.name} size={1.5} />
+									<AvatarGroup.Name>
+										{person.name}
+										{index === 0 ? (
+											<>
+												{" "}
+												<AvatarGroup.Suffix>
+													{ORGANISER}
+												</AvatarGroup.Suffix>
+											</>
+										) : null}
+									</AvatarGroup.Name>
+								</AvatarGroup.ListItem>
+							))}
+						</AvatarGroup.List>
+					</AvatarGroup.Popup>
+				</Popover.Positioner>
+			</Popover.Portal>
+		</Popover.Root>
 	</AvatarGroup.Root>
 );
 

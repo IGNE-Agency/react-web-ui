@@ -8,10 +8,13 @@
 
 	.dot {
 		flex-shrink: 0;
-		inline-size: var(--sys-unit-3);
-		block-size: var(--sys-unit-3);
-		border-radius: var(--sys-radius-circle);
-		background: currentcolor;
+		inline-size: var(--tag-dot-size, var(--sys-unit-3));
+		block-size: var(--tag-dot-size, var(--sys-unit-3));
+		border-radius: var(
+			--tag-dot-radius,
+			var(--sys-radius-circle)
+		);
+		background: var(--tag-dot-bg, currentcolor);
 	}
 
 	.icon {

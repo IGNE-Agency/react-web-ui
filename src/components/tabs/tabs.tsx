@@ -1,6 +1,12 @@
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import { createContext, type ReactNode, use } from "react";
+import {
+	createContext,
+	type ReactElement,
+	type ReactNode,
+	use,
+} from "react";
 import { Badge, type BadgeProps } from "../badge/badge.tsx";
 import style from "./tabs.module.scss";
 
@@ -60,6 +66,33 @@ const Root = ({
 	/>
 );
 
+export type TabsScrollerProps =
+	useRender.ComponentProps<"div">;
+
+/**
+ * Lets the `List` scroll sideways once it outgrows its room.
+ *
+ * @example
+ * <Tabs.Scroller>
+ * 	<Tabs.List label="Invoice">…</Tabs.List>
+ * </Tabs.Scroller>
+ */
+const Scroller = ({
+	render,
+	className,
+	ref,
+	...props
+}: TabsScrollerProps): ReactElement =>
+	useRender({
+		defaultTagName: "div",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.scroller, className),
+		},
+	});
+
 export type TabsListProps = Omit<
 	BaseTabs.List.Props,
 	"className" | "aria-label"
@@ -70,23 +103,21 @@ export type TabsListProps = Omit<
 		className?: string;
 	}>;
 
-/** The row of tabs, scrolling sideways when it outgrows its room. */
+/** The row of tabs; put it in a `Scroller` where it may outgrow its room. */
 const List = ({
 	label,
 	className,
 	children,
 	...props
 }: TabsListProps): ReactNode => (
-	<div className={style.scroller}>
-		<BaseTabs.List
-			{...props}
-			aria-label={label}
-			className={clsx(style.list, className)}>
-			<ListChildrenContext value={children}>
-				{children}
-			</ListChildrenContext>
-		</BaseTabs.List>
-	</div>
+	<BaseTabs.List
+		{...props}
+		aria-label={label}
+		className={clsx(style.list, className)}>
+		<ListChildrenContext value={children}>
+			{children}
+		</ListChildrenContext>
+	</BaseTabs.List>
 );
 
 export type TabsTabProps = Omit<
@@ -182,6 +213,7 @@ const Panel = ({
 
 type TabsParts = Readonly<{
 	Root: typeof Root;
+	Scroller: typeof Scroller;
 	List: typeof List;
 	Tab: typeof Tab;
 	Count: typeof Count;
@@ -195,17 +227,20 @@ type TabsParts = Readonly<{
  *
  * @example
  * <Tabs.Root defaultValue="details">
- * 	<Tabs.List label="Invoice">
- * 		<Tabs.Tab value="details">Details</Tabs.Tab>
- * 		<Tabs.Tab value="history">History<Tabs.Count>3</Tabs.Count></Tabs.Tab>
- * 		<Tabs.Indicator />
- * 	</Tabs.List>
+ * 	<Tabs.Scroller>
+ * 		<Tabs.List label="Invoice">
+ * 			<Tabs.Tab value="details">Details</Tabs.Tab>
+ * 			<Tabs.Tab value="history">History<Tabs.Count>3</Tabs.Count></Tabs.Tab>
+ * 			<Tabs.Indicator />
+ * 		</Tabs.List>
+ * 	</Tabs.Scroller>
  * 	<Tabs.Panel value="details">…</Tabs.Panel>
  * 	<Tabs.Panel value="history">…</Tabs.Panel>
  * </Tabs.Root>
  */
 export const Tabs: TabsParts = {
 	Root,
+	Scroller,
 	List,
 	Tab,
 	Count,

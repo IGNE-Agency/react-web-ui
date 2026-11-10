@@ -34,44 +34,50 @@ const TabsPanels = (): ReactElement => (
 
 const TabsExample = (args: TabsRootProps): ReactElement => (
 	<Tabs.Root {...args}>
-		<Tabs.List label={BAR_LABEL}>
-			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
-			<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
-			<Tabs.Tab value="notes">{NOTES}</Tabs.Tab>
-			<Tabs.Indicator />
-		</Tabs.List>
+		<Tabs.Scroller>
+			<Tabs.List label={BAR_LABEL}>
+				<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+				<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
+				<Tabs.Tab value="notes">{NOTES}</Tabs.Tab>
+				<Tabs.Indicator />
+			</Tabs.List>
+		</Tabs.Scroller>
 		<TabsPanels />
 	</Tabs.Root>
 );
 
 const CountedTabs = (args: TabsRootProps): ReactElement => (
 	<Tabs.Root {...args}>
-		<Tabs.List label={BAR_LABEL}>
-			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
-			<Tabs.Tab value="history">
-				{HISTORY}
-				<Tabs.Count>12</Tabs.Count>
-			</Tabs.Tab>
-			<Tabs.Tab value="notes">
-				{NOTES}
-				<Tabs.Count>3</Tabs.Count>
-			</Tabs.Tab>
-			<Tabs.Indicator />
-		</Tabs.List>
+		<Tabs.Scroller>
+			<Tabs.List label={BAR_LABEL}>
+				<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+				<Tabs.Tab value="history">
+					{HISTORY}
+					<Tabs.Count>12</Tabs.Count>
+				</Tabs.Tab>
+				<Tabs.Tab value="notes">
+					{NOTES}
+					<Tabs.Count>3</Tabs.Count>
+				</Tabs.Tab>
+				<Tabs.Indicator />
+			</Tabs.List>
+		</Tabs.Scroller>
 		<TabsPanels />
 	</Tabs.Root>
 );
 
 const DisabledTab = (args: TabsRootProps): ReactElement => (
 	<Tabs.Root {...args}>
-		<Tabs.List label={BAR_LABEL}>
-			<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
-			<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
-			<Tabs.Tab value="notes" disabled>
-				{NOTES}
-			</Tabs.Tab>
-			<Tabs.Indicator />
-		</Tabs.List>
+		<Tabs.Scroller>
+			<Tabs.List label={BAR_LABEL}>
+				<Tabs.Tab value="details">{DETAILS}</Tabs.Tab>
+				<Tabs.Tab value="history">{HISTORY}</Tabs.Tab>
+				<Tabs.Tab value="notes" disabled>
+					{NOTES}
+				</Tabs.Tab>
+				<Tabs.Indicator />
+			</Tabs.List>
+		</Tabs.Scroller>
 		<TabsPanels />
 	</Tabs.Root>
 );

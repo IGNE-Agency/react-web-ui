@@ -18,6 +18,15 @@ The content dims once the refresh has taken a moment, and is marked busy. Once t
 
 ### The indicator may be the app's own mark
 
-The overlay's indicator is a spinner unless the app passes its own, such as its animated logo, through `illustration`.
+The overlay's indicator is a spinner unless the app passes its own, such as its animated logo, through `Message`'s `illustration`. `Message` composes a `Status`, the line announced as it appears, and its `Illustration`; compose them by hand where the status needs other markup.
+
+```tsx
+<Stale.Status>
+	<Stale.Illustration>
+		<Logo animated />
+	</Stale.Illustration>
+	This is taking longer than usual.
+</Stale.Status>
+```
 
 </DocsPage>

@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
-import type {
-	FieldBlurHandler,
-	FieldProps,
+import { IconButton } from "../button/index.ts";
+import {
+	Field,
+	type FieldBlurHandler,
+	type FieldProps,
 } from "../field/index.ts";
 import {
 	TextInput,
@@ -9,6 +11,7 @@ import {
 	type TextInputRootProps,
 } from "./text-input.tsx";
 import style from "./text-field.module.scss";
+import { Spinner } from "../spinner/index.ts";
 
 /** The clear button: off, or on with its accessible name. */
 export type TextFieldClearProps =
@@ -137,7 +140,6 @@ export const TextField = ({
 		disabled={disabled}
 		readOnly={readOnly}
 		requiredness={requiredness}
-		optionalLabel={optionalLabel}
 		errors={errors}
 		dirty={dirty}
 		touched={touched}
@@ -149,7 +151,8 @@ export const TextField = ({
 			className={
 				labelHidden ? style.visuallyHidden : undefined
 			}>
-			{label}
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
 		</TextInput.Label>
 		<TextInput.Group>
 			{icon !== undefined && (
@@ -164,21 +167,50 @@ export const TextField = ({
 			{suffix !== undefined && (
 				<TextInput.Affix>{suffix}</TextInput.Affix>
 			)}
-			<TextInput.Pending />
+			<TextInput.Pending>
+				<Spinner size={1} />
+			</TextInput.Pending>
 			{clearable === true && (
-				<TextInput.Clear label={clearLabel}>
-					{clearIcon}
-				</TextInput.Clear>
+				<TextInput.Clear
+					render={
+						<IconButton
+							label={clearLabel}
+							variant="tertiary"
+							size="sm">
+							{clearIcon}
+						</IconButton>
+					}
+				/>
 			)}
 			{copyable === true && (
 				<TextInput.Copy
-					label={copyLabel}
 					copiedLabel={copiedLabel}
 					failedLabel={copyFailedLabel}
-					copiedIcon={copiedIcon}
-					failedIcon={copyFailedIcon}>
-					{copyIcon}
-				</TextInput.Copy>
+					render={(props, { outcome }) => (
+						<IconButton
+							{...props}
+							label={
+								{
+									idle: copyLabel,
+									copied: copiedLabel,
+									failed: copyFailedLabel,
+								}[outcome]
+							}
+							tone={
+								outcome === "failed" ? "danger" : "brand"
+							}
+							variant="tertiary"
+							size="sm">
+							{
+								{
+									idle: copyIcon,
+									copied: copiedIcon ?? copyIcon,
+									failed: copyFailedIcon ?? copyIcon,
+								}[outcome]
+							}
+						</IconButton>
+					)}
+				/>
 			)}
 		</TextInput.Group>
 		<TextInput.Counter />

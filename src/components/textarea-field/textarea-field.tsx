@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Field } from "../field/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
@@ -8,6 +9,7 @@ import {
 	type TextareaProps,
 } from "./textarea.tsx";
 import style from "./textarea-field.module.scss";
+import { Spinner } from "../spinner/index.ts";
 
 export type TextareaFieldProps = Omit<
 	TextFieldBaseProps,
@@ -61,7 +63,6 @@ export const TextareaField = ({
 		disabled={disabled}
 		readOnly={readOnly}
 		requiredness={requiredness}
-		optionalLabel={optionalLabel}
 		errors={errors}
 		dirty={dirty}
 		touched={touched}
@@ -69,7 +70,10 @@ export const TextareaField = ({
 		maxLength={maxLength}
 		state={state}
 		className={className}>
-		<TextInput.Label>{label}</TextInput.Label>
+		<TextInput.Label>
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
+		</TextInput.Label>
 		<TextInput.Group className={style.group}>
 			<Textarea
 				rows={rows}
@@ -78,7 +82,9 @@ export const TextareaField = ({
 			/>
 			<TextInput.Bar>
 				<TextInput.Counter />
-				<TextInput.Pending />
+				<TextInput.Pending>
+					<Spinner size={1} />
+				</TextInput.Pending>
 			</TextInput.Bar>
 		</TextInput.Group>
 		<TextInput.Description>

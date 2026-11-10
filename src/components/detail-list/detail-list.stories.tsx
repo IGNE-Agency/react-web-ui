@@ -4,7 +4,7 @@ import PhoneIcon from "@material-design-icons/svg/outlined/phone.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import { Button } from "../button/button.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import { DetailList } from "./detail-list.tsx";
 
@@ -69,14 +69,13 @@ const ROWS = {
 					{PHONE_NUMBER}
 				</DetailList.Detail>
 				<DetailList.Action>
-					<Button
+					<IconButton
 						variant="tertiary"
 						size="sm"
-						iconOnly
-						icon={<Icon svg={EditIcon} label="" />}
 						label={CHANGE_PHONE}
-						onClick={changePhone}
-					/>
+						onClick={changePhone}>
+						<Icon svg={EditIcon} label="" />
+					</IconButton>
 				</DetailList.Action>
 			</DetailList.Row>
 		</>

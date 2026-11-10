@@ -13,7 +13,7 @@ import {
 	roleGone,
 	textGone,
 } from "../../lib/storybook/waits.ts";
-import { Button } from "../button/button.tsx";
+import { Button, IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import {
 	useOpenArg,
@@ -47,9 +47,14 @@ const DialogExample = (props: DialogExampleProps) => {
 			<Dialog.Content container={container}>
 				<Dialog.Header>
 					<Dialog.Title>{TITLE}</Dialog.Title>
-					<Dialog.CloseButton
-						closeLabel={CLOSE_LABEL}
-						icon={<Icon svg={CloseIcon} label="" />}
+					<Dialog.Close
+						render={
+							<IconButton
+								label={CLOSE_LABEL}
+								variant="tertiary">
+								<Icon svg={CloseIcon} label="" />
+							</IconButton>
+						}
 					/>
 				</Dialog.Header>
 				<Dialog.Body>

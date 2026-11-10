@@ -39,6 +39,12 @@ After a submit the validators refuse, focus moves to the first invalid control i
 
 `Form.Submit` shows nothing for a submit shorter than 150 ms. Past that it shows a spinner, sets `aria-busy`, and announces `busyLabel`, and once shown it stays at least 200 ms, so a quick answer never flickers. The announcement goes to a live region the root mounts empty, outside the inert fields, before its text ever changes.
 
+The spinner is `Form.Pending`, which keeps the same timing and renders whatever it is given, so anything else in the form can show the wait the same way. It is decoration: the submit button announces the wait.
+
+```tsx
+<Form.Pending render={<Spinner size={1} />} />
+```
+
 ### An edited form holds a leave until its policy lets go
 
 While its `leaveGuard` policy returns true for the form's live state, `Form.Root` reports unsaved changes to the page's leave guards, which hold a reload or a navigation and ask before discarding. It stops once the policy returns false or the form unmounts. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. `never` turns the guard off for a form whose edits need not survive leaving, such as a filter; any other `(state) => boolean` is a policy too.

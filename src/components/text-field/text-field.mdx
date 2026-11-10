@@ -37,9 +37,16 @@ export const ignore = () => undefined;
 ```tsx
 <TextInput.Group>
 	<TextInput.Input />
-	<TextInput.Clear label={clearLabel}>
-		<CloseIcon />
-	</TextInput.Clear>
+	<TextInput.Clear
+		render={
+			<IconButton
+				label={clearLabel}
+				variant="tertiary"
+				size="sm">
+				<CloseIcon />
+			</IconButton>
+		}
+	/>
 </TextInput.Group>
 ```
 
@@ -84,16 +91,32 @@ export const ignore = () => undefined;
 ```tsx
 <TextInput.Group>
 	<TextInput.Input />
-	<Button
-		iconOnly
-		icon={<CloseIcon />}
+	<IconButton
 		label={clearLabel}
-		onClick={() => setValue("")}
-	/>
+		onClick={() => setValue("")}>
+		<CloseIcon />
+	</IconButton>
 </TextInput.Group>
 ```
 
 </Example>
 </DoDont>
+
+### Any other button in the group is an action
+
+A button the field offers besides its own parts, such as a search field's trailing "Search", is `TextInput.Action`. It renders whichever button it is given in the place an inlay that acts takes, in the group's padding, and it is disabled while the field is.
+
+```tsx
+<TextInput.Group>
+	<TextInput.Input type="search" />
+	<TextInput.Action
+		render={
+			<Button variant="tertiary" size="sm" type="submit">
+				Search
+			</Button>
+		}
+	/>
+</TextInput.Group>
+```
 
 </DocsPage>

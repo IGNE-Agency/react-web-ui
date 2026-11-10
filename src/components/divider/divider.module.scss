@@ -8,16 +8,22 @@
 	.divider {
 		inline-size: 100%;
 		border: none;
-		border-block-start: 1px solid
-			var(--divider-color, var(--sys-color-border));
+		border-block-start: var(--divider-border-width, 1px)
+			solid var(--divider-color, var(--sys-color-border));
 	}
 
 	.subtitle {
-		margin-block-start: var(--sys-unit-4);
+		margin-block-start: var(
+			--divider-subtitle-space,
+			var(--sys-unit-4)
+		);
 		color: var(
 			--divider-subtitle-fg,
 			var(--sys-color-text-muted)
 		);
-		font: var(--sys-font-body-small);
+		font: var(
+			--divider-subtitle-font,
+			var(--sys-font-body-small)
+		);
 	}
 }

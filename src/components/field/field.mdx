@@ -18,7 +18,7 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 
 ### Every field takes the same props on every tier
 
-`label`, `description`, `errors`, `requiredness`, `optionalLabel`, `dirty`, `touched` and `pending`, with the same meaning on the raw root, the shorthand and the bridge. A bridge passes them at the top level.
+`label`, `description`, `errors`, `requiredness`, `optionalLabel`, `dirty`, `touched` and `pending`, with the same meaning on the shorthand and the bridge. A bridge passes them at the top level. The raw root takes the states among them, `requiredness` included; the label, the description and the requiredness suffix are parts placed inside it.
 
 ```tsx
 <form.AppField name="email">
@@ -37,13 +37,67 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 
 `requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails `optionalLabel`, which is part of the control's name.
 
+### A label renders its children, and the suffix is a part
+
+The shorthand adds the suffix for you. On the raw tier, a label renders only its children, so the suffix is `Field.Requiredness`, placed inside the label after its text. It reads `requiredness` from the root it sits in, or from its own prop where no root carries it, and takes the `optionalLabel` it shows.
+
+```tsx
+<TextInput.Root
+	value={value}
+	onValueChange={setValue}
+	requiredness="optional">
+	<TextInput.Label>
+		Notes <Field.Requiredness optionalLabel="optional" />
+	</TextInput.Label>
+	…
+</TextInput.Root>
+```
+
+A label beside its control, such as a lone checkbox's, keeps the required mark with its text and puts the optional word on a row of its own: `Field.RequiredMark` goes inside `Field.InlineLabelText`, and `Field.InlineOptional` follows it.
+
+```tsx
+<Checkbox.Root requiredness="optional">
+	<Checkbox.Label>
+		<Checkbox.Control>…</Checkbox.Control>
+		<Field.InlineLabelText>
+			Send me a copy <Field.RequiredMark />
+		</Field.InlineLabelText>
+		<Field.InlineOptional optionalLabel="optional" />
+	</Checkbox.Label>
+</Checkbox.Root>
+```
+
 ### The error is the field's only live region, after the description
 
 `Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time, and any line of error makes the field invalid.
 
 ### A wait inside a field is a spinner inlay, and the field says it is busy
 
-A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. The spinner itself is hidden from assistive tech.
+A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A raw tier's `Pending` mounts itself once its root's wait is worth showing.
+
+```tsx
+<TextInput.Pending>
+	<Spinner size={1} />
+</TextInput.Pending>
+```
+
+### What sits beside a label shares its row
+
+A link or a counter that belongs beside a label, such as "Forgot password?" or `TextInput.Counter`, goes in `Field.LabelRow` with the label, in place of the bare label. The row keeps the label at the start and the rest at the end, and wraps on a narrow field. Every raw tier takes it, and in a field group it takes the label's row. It reads `--field-label-row-gap` and `--field-label-row-align`.
+
+```tsx
+<TextInput.Root
+	value={password}
+	onValueChange={setPassword}>
+	<Field.LabelRow>
+		<TextInput.Label>Password</TextInput.Label>
+		<Link href="/reset">Forgot password?</Link>
+	</Field.LabelRow>
+	<TextInput.Group>
+		<TextInput.Input type="password" />
+	</TextInput.Group>
+</TextInput.Root>
+```
 
 ### Every control reads its states through `useFieldState`
 

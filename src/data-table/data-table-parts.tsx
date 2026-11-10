@@ -191,15 +191,21 @@ export type DataTableFrameProps =
 
 /**
  * The frame that stays put around the scroller: it measures the pinned columns
- * and holds the stale state, so it takes a `Scroller` and a `StaleOverlay`.
+ * and is the `Stale.Root` of the rows, so it takes a `Scroller` and a
+ * `StaleOverlay`.
+ *
+ * @example
+ * <DataTable.Frame>
+ * 	<DataTable.Scroller>…</DataTable.Scroller>
+ * 	<DataTable.StaleOverlay>…</DataTable.StaleOverlay>
+ * </DataTable.Frame>
  */
 export const Frame = ({
 	render,
 	className,
 	ref,
-	children,
 	...props
-}: DataTableFrameProps): ReactElement => {
+}: DataTableFrameProps): ReactNode => {
 	const { table } = useDataTable();
 	const { stale } = useDataTableView();
 	const columns = table.getAllLeafColumns();
@@ -215,48 +221,38 @@ export const Frame = ({
 			)
 			.join(","),
 	);
-	return useRender({
+	const element = useRender({
 		defaultTagName: "div",
 		render,
 		ref: ref === undefined ? frameRef : [frameRef, ref],
 		props: {
 			...props,
 			className: clsx(style.scrollFrame, className),
-			children: (
-				<Stale.Root busy={stale} className={style.stale}>
-					{children}
-				</Stale.Root>
-			),
 		},
 	});
+	return <Stale.Root busy={stale} render={element} />;
 };
 
 export type DataTableScrollerProps =
 	useRender.ComponentProps<"div">;
 
-/** The scrolling card that holds the `Table`, dimmed while its rows are stale. */
+/**
+ * The scrolling card that holds the `Table`: the `Stale.Content` of the rows,
+ * dimmed while they are stale.
+ *
+ * @example
+ * <DataTable.Scroller><DataTable.Table>…</DataTable.Table></DataTable.Scroller>
+ */
 export const Scroller = ({
-	render,
 	className,
-	ref,
 	...props
-}: DataTableScrollerProps): ReactNode => {
-	const element = useRender({
-		defaultTagName: "div",
-		render,
-		ref,
-		props: {
-			...props,
-			"data-scroller": true,
-			className: clsx(style.contentWrap, className),
-		},
-	});
-	return (
-		<Stale.Content className={style.stale}>
-			{element}
-		</Stale.Content>
-	);
-};
+}: DataTableScrollerProps): ReactNode => (
+	<Stale.Content
+		data-scroller
+		{...props}
+		className={clsx(style.contentWrap, className)}
+	/>
+);
 
 /** What covers the table once a refresh is slow: its `Stale.Message` and `Stale.Retry`. */
 export const StaleOverlay = ({
@@ -408,39 +404,26 @@ export type DataTableSortButtonProps<
 	Readonly<{
 		/** The header whose column this sorts. */
 		header: TableHeader<DataTableFeatures, TData>;
-		/** The glyph while the column sorts ascending. */
-		sortAscendingIcon?: ReactNode;
-		/** The glyph while the column sorts descending. */
-		sortDescendingIcon?: ReactNode;
-		/** The glyph while the column is not sorted. */
-		unsortedIcon?: ReactNode;
 	}>;
 
 /**
  * The header's sort toggle, which returns the table to its first page. It
- * draws the column's header unless given children, followed by the glyph for
- * the column's sort, where one is given.
+ * draws the column's header unless given children, such as the header and a
+ * `SortIcon`.
+ *
+ * @example
+ * <DataTable.SortButton header={header} />
  */
 export const SortButton = <
 	TData extends Record<string, unknown>,
 >({
 	header,
-	sortAscendingIcon,
-	sortDescendingIcon,
-	unsortedIcon,
 	className,
 	children,
 	onClick,
 	...props
 }: DataTableSortButtonProps<TData>): ReactNode => {
-	const { table, sorting } = useDataTable<TData>();
-	const sorted = sortOf(sorting, header.column.id);
-	const icon =
-		sorted === "asc"
-			? sortAscendingIcon
-			: sorted === "desc"
-				? sortDescendingIcon
-				: unsortedIcon;
+	const { table } = useDataTable<TData>();
 
 	return (
 		<button
@@ -453,16 +436,59 @@ export const SortButton = <
 				table.setPageIndex(0);
 			}}>
 			{children ?? <table.FlexRender header={header} />}
-			{icon === undefined || icon === null ? null : (
-				<span
-					className={style.sortIcon}
-					data-sort={sorted === false ? "none" : sorted}
-					aria-hidden="true">
-					{icon}
-				</span>
-			)}
 		</button>
 	);
+};
+
+/** Which way a column sorts, or `none`, as a `SortIcon` hands it to its children. */
+export type DataTableSort = "asc" | "desc" | "none";
+
+export type DataTableSortIconProps<
+	TData extends Record<string, unknown>,
+> = Omit<useRender.ComponentProps<"span">, "children"> &
+	Readonly<{
+		/** The header whose column's sort this shows. */
+		header: TableHeader<DataTableFeatures, TData>;
+		/** The glyph for the column's sort. Nothing returned, nothing drawn. */
+		children: (sort: DataTableSort) => ReactNode;
+	}>;
+
+/**
+ * The glyph for a column's sort, beside the header in a `SortButton`, set as
+ * `data-sort`. Renders nothing for a sort without a glyph.
+ *
+ * @example
+ * <DataTable.SortIcon header={header}>
+ * 	{sort => (sort === "asc" ? <ArrowUpwardIcon /> : sort === "desc" ? <ArrowDownwardIcon /> : null)}
+ * </DataTable.SortIcon>
+ */
+export const SortIcon = <
+	TData extends Record<string, unknown>,
+>({
+	header,
+	render,
+	className,
+	ref,
+	children,
+	...props
+}: DataTableSortIconProps<TData>): ReactElement | null => {
+	const { sorting } = useDataTable<TData>();
+	const sorted = sortOf(sorting, header.column.id);
+	const sort = sorted === false ? "none" : sorted;
+	const icon = children(sort);
+	return useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		enabled: icon !== undefined && icon !== null,
+		props: {
+			"aria-hidden": true,
+			...props,
+			"data-sort": sort,
+			className: clsx(style.sortIcon, className),
+			children: icon,
+		},
+	});
 };
 
 export type DataTableBodyProps =

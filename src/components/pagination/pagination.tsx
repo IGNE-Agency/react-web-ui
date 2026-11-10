@@ -1,11 +1,12 @@
 import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type {
-	ComponentProps,
+	ComponentPropsWithRef,
+	MouseEvent,
 	ReactElement,
 	ReactNode,
 } from "react";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { Select } from "../select-field/select.tsx";
 import {
@@ -181,14 +182,12 @@ const stepTo = (
 };
 
 export type PaginationStepProps = Omit<
-	ComponentProps<"button">,
-	"ref" | "children"
+	ComponentPropsWithRef<"button">,
+	"children"
 > &
 	Readonly<{
-		/** The button's name and tooltip, such as "Next page". */
-		label: string;
-		/** The glyph, such as a chevron. */
-		children: ReactNode;
+		/** The button to render, such as `<IconButton label="Next page" variant="tertiary"><ChevronRightIcon /></IconButton>`. */
+		render: useRender.RenderProp;
 	}>;
 
 type PageStepProps = PaginationStepProps &
@@ -196,11 +195,10 @@ type PageStepProps = PaginationStepProps &
 
 const PageStep = ({
 	step,
-	label,
-	children,
+	render,
 	onClick,
 	...props
-}: PageStepProps): ReactNode => {
+}: PageStepProps): ReactElement => {
 	const { pageIndex, pageCount, onPageIndexChange } =
 		usePagination();
 	const { target, unavailable } = stepTo(
@@ -209,41 +207,63 @@ const PageStep = ({
 		pageCount,
 	);
 
-	return (
-		<Button
-			variant="tertiary"
-			{...props}
-			iconOnly
-			icon={children}
-			label={label}
-			aria-disabled={unavailable || undefined}
-			data-disabled={unavailable || undefined}
-			onClick={event => {
+	return useRender({
+		render,
+		props: {
+			type: "button",
+			...props,
+			"aria-disabled": unavailable || undefined,
+			"data-disabled": unavailable || undefined,
+			onClick: (event: MouseEvent<HTMLButtonElement>) => {
 				onClick?.(event);
 				if (!unavailable) {
 					onPageIndexChange(target);
 				}
-			}}
-		/>
-	);
+			},
+		},
+	});
 };
 
-/** Goes to the first page; marked `aria-disabled`, and kept in the tab order, on the first page. */
+/**
+ * Goes to the first page; marked `aria-disabled`, and kept in the tab order, on
+ * the first page. It renders whichever button it is given.
+ *
+ * @example
+ * <Pagination.First render={<IconButton label="First page" variant="tertiary"><FirstPageIcon /></IconButton>} />
+ */
 const PaginationFirst = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="first" {...props} />;
 
-/** Goes back a page; marked `aria-disabled`, and kept in the tab order, on the first page. */
+/**
+ * Goes back a page; marked `aria-disabled`, and kept in the tab order, on the
+ * first page. It renders whichever button it is given.
+ *
+ * @example
+ * <Pagination.Previous render={<IconButton label="Previous page" variant="tertiary"><ChevronLeftIcon /></IconButton>} />
+ */
 const PaginationPrevious = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="previous" {...props} />;
 
-/** Goes on a page; marked `aria-disabled`, and kept in the tab order, on the last page. */
+/**
+ * Goes on a page; marked `aria-disabled`, and kept in the tab order, on the
+ * last page. It renders whichever button it is given.
+ *
+ * @example
+ * <Pagination.Next render={<IconButton label="Next page" variant="tertiary"><ChevronRightIcon /></IconButton>} />
+ */
 const PaginationNext = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="next" {...props} />;
 
-/** Goes to the last page; marked `aria-disabled`, and kept in the tab order, on the last page. */
+/**
+ * Goes to the last page; marked `aria-disabled`, and kept in the tab order, on
+ * the last page. It renders whichever button it is given.
+ *
+ * @example
+ * <Pagination.Last render={<IconButton label="Last page" variant="tertiary"><LastPageIcon /></IconButton>} />
+ */
 const PaginationLast = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="last" {...props} />;
@@ -268,22 +288,19 @@ export type PaginationStepLabels = Readonly<{
 	lastIcon: ReactNode;
 }>;
 
-export type PaginationControlsProps = Omit<
-	useRender.ComponentProps<"div">,
-	"children"
-> &
-	PaginationStepLabels;
+export type PaginationControlsProps =
+	useRender.ComponentProps<"div">;
 
-/** `First`, `Previous`, `Next` and `Last` in a row. */
+/**
+ * The step buttons it is given, `First`, `Previous`, `Next` and `Last`, in a row.
+ *
+ * @example
+ * <Pagination.Controls>
+ * 	<Pagination.Previous render={previousButton} />
+ * 	<Pagination.Next render={nextButton} />
+ * </Pagination.Controls>
+ */
 const PaginationControls = ({
-	firstLabel,
-	previousLabel,
-	nextLabel,
-	lastLabel,
-	firstIcon,
-	previousIcon,
-	nextIcon,
-	lastIcon,
 	render,
 	className,
 	ref,
@@ -296,22 +313,6 @@ const PaginationControls = ({
 		props: {
 			...props,
 			className: clsx(style.controls, className),
-			children: (
-				<>
-					<PaginationFirst label={firstLabel}>
-						{firstIcon}
-					</PaginationFirst>
-					<PaginationPrevious label={previousLabel}>
-						{previousIcon}
-					</PaginationPrevious>
-					<PaginationNext label={nextLabel}>
-						{nextIcon}
-					</PaginationNext>
-					<PaginationLast label={lastLabel}>
-						{lastIcon}
-					</PaginationLast>
-				</>
-			),
 		},
 	});
 
@@ -333,12 +334,22 @@ const PaginationContent = ({
 	indexLabel,
 	checkIcon,
 	expandIcon,
-	...controls
+	firstLabel,
+	previousLabel,
+	nextLabel,
+	lastLabel,
+	firstIcon,
+	previousIcon,
+	nextIcon,
+	lastIcon,
 }: PaginationContentProps): ReactNode => (
 	<>
 		<PaginationPageSize>
 			<Select.Label>{pageSizeLabel}</Select.Label>
-			<Select.Trigger icon={expandIcon} />
+			<Select.Trigger>
+				<Select.Value />
+				<Select.Icon>{expandIcon}</Select.Icon>
+			</Select.Trigger>
 			<Select.Portal>
 				<Select.Positioner>
 					<Select.Popup>
@@ -350,7 +361,38 @@ const PaginationContent = ({
 			</Select.Portal>
 		</PaginationPageSize>
 		<PaginationIndex label={indexLabel} />
-		<PaginationControls {...controls} />
+		<PaginationControls>
+			<PaginationFirst
+				render={
+					<IconButton variant="tertiary" label={firstLabel}>
+						{firstIcon}
+					</IconButton>
+				}
+			/>
+			<PaginationPrevious
+				render={
+					<IconButton
+						variant="tertiary"
+						label={previousLabel}>
+						{previousIcon}
+					</IconButton>
+				}
+			/>
+			<PaginationNext
+				render={
+					<IconButton variant="tertiary" label={nextLabel}>
+						{nextIcon}
+					</IconButton>
+				}
+			/>
+			<PaginationLast
+				render={
+					<IconButton variant="tertiary" label={lastLabel}>
+						{lastIcon}
+					</IconButton>
+				}
+			/>
+		</PaginationControls>
 	</>
 );
 
@@ -411,8 +453,9 @@ export type PaginationParts = typeof Prefab &
  * The pager for a paged list, over any source: the page size, which page is on
  * screen, and buttons to the first, previous, next and last page. Its parts
  * compose another pager: `Root` holds where the list stands, `PageSize` picks
- * rows per page, `Index` says which page is on screen, and `Controls`, or
- * `First`, `Previous`, `Next` and `Last` on their own, step through the pages.
+ * rows per page, `Index` says which page is on screen, and `First`, `Previous`,
+ * `Next` and `Last`, each rendering the button it is given, step through the
+ * pages, in a `Controls` row or on their own.
  *
  * @example
  * <Pagination

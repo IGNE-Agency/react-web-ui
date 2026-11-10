@@ -16,7 +16,7 @@ import { DoDont } from "../../../docs/design-system/do-dont";
 import { Example } from "../../../docs/design-system/example";
 import { Icon } from "../icon/icon.tsx";
 import { Spinner } from "../spinner/spinner.tsx";
-import { Button } from "./button.tsx";
+import { Button, IconButton } from "./button.tsx";
 import * as ButtonStories from "./button.stories.tsx";
 
 <Meta of={ButtonStories} />
@@ -88,15 +88,17 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.row}>
-          <Button iconOnly icon={<Icon svg={FilterListIcon} label="" />} label="Filters" />
-          <Button iconOnly icon={<Icon svg={DownloadIcon} label="" />} label="Export" />
-          <Button iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="More actions" />
+          <IconButton label="Filters"><Icon svg={FilterListIcon} label="" /></IconButton>
+          <IconButton label="Export"><Icon svg={DownloadIcon} label="" /></IconButton>
+          <IconButton label="More actions"><Icon svg={MoreVertIcon} label="" /></IconButton>
         </div>
     </div>
   }>
 
 ```tsx
-<Button iconOnly icon={<DownloadIcon />} label="Export" />
+<IconButton label="Export">
+	<DownloadIcon />
+</IconButton>
 ```
 
 </Example>
@@ -129,7 +131,7 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
         <div className={styles.stack}>
-          <Button variant="tertiary" iconOnly icon={<Icon svg={ChevronLeftIcon} label="" />} label="Previous page" />
+          <IconButton variant="tertiary" label="Previous page"><Icon svg={ChevronLeftIcon} label="" /></IconButton>
           <span className={styles.announce}>
             Screen reader says: <span className={styles.spoken}>“Previous page”</span>
           </span>
@@ -138,12 +140,9 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   }>
 
 ```tsx
-<Button
-	variant="tertiary"
-	iconOnly
-	icon={<ChevronLeft />}
-	label="Previous page"
-/>
+<IconButton variant="tertiary" label="Previous page">
+	<ChevronLeft />
+</IconButton>
 ```
 
 </Example>
@@ -164,11 +163,9 @@ Icon-only collapses to a circle on a square aspect ratio, never a pill, so a sin
   }>
 
 ```tsx
-<Button
-	variant="tertiary"
-	iconOnly
-	icon={<ChevronLeft />}
-/>
+<IconButton variant="tertiary">
+	<ChevronLeft />
+</IconButton>
 ```
 
 </Example>
@@ -187,7 +184,7 @@ A button has two shapes: a pill with text, a circle when icon-only. Both are str
         <div className={styles.actionBar}>
           <span className={styles.actionBarText}>3 selected</span>
           <Button size="sm" icon={<Icon svg={DownloadIcon} label="" />}>Export</Button>
-          <Button size="sm" iconOnly icon={<Icon svg={CloseIcon} label="" />} label="Clear selection" />
+          <IconButton size="sm" label="Clear selection"><Icon svg={CloseIcon} label="" /></IconButton>
         </div>
     </div>
   }>
@@ -208,7 +205,7 @@ A button has two shapes: a pill with text, a circle when icon-only. Both are str
         <div className={styles.actionBar}>
           <span className={styles.actionBarText}>3 selected</span>
           <Button size="sm" icon={<Icon svg={DownloadIcon} label="" />} className={styles.barCornered}>Export</Button>
-          <Button size="sm" iconOnly icon={<Icon svg={CloseIcon} label="" />} label="Clear selection" className={styles.barCornered} />
+          <IconButton size="sm" label="Clear selection" className={styles.barCornered}><Icon svg={CloseIcon} label="" /></IconButton>
         </div>
     </div>
   }>

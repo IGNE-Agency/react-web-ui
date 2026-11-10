@@ -12,16 +12,22 @@
 
 		display: flex;
 		flex-direction: column;
-		max-block-size: calc(100dvh - var(--sys-unit-24));
+		max-block-size: var(
+			--dialog-max-block-size,
+			calc(100dvh - var(--sys-unit-24))
+		);
 	}
 
 	.header {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		gap: var(--sys-unit-10);
-		padding: var(--sys-unit-20) var(--sys-unit-20)
-			var(--sys-unit-8);
+		gap: var(--dialog-header-gap, var(--sys-unit-10));
+		padding: var(
+			--dialog-header-pad,
+			var(--sys-unit-20) var(--sys-unit-20)
+				var(--sys-unit-8)
+		);
 	}
 
 	.title {
@@ -30,17 +36,29 @@
 
 	.body {
 		overflow-y: auto;
-		padding: var(--sys-unit-8) var(--sys-unit-20);
-		color: var(--sys-color-text);
-		font: var(--sys-font-body-medium);
+		padding: var(
+			--dialog-body-pad,
+			var(--sys-unit-8) var(--sys-unit-20)
+		);
+		color: var(
+			--dialog-body-fg,
+			var(--dialog-fg, var(--sys-color-text))
+		);
+		font: var(
+			--dialog-body-font,
+			var(--sys-font-body-medium)
+		);
 	}
 
 	.footer {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: end;
-		gap: var(--sys-unit-8);
-		padding: var(--sys-unit-12) var(--sys-unit-20)
-			var(--sys-unit-20);
+		gap: var(--dialog-footer-gap, var(--sys-unit-8));
+		padding: var(
+			--dialog-footer-pad,
+			var(--sys-unit-12) var(--sys-unit-20)
+				var(--sys-unit-20)
+		);
 	}
 }

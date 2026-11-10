@@ -303,11 +303,9 @@ At every width everything a screen offers is still there. It stacks, wraps or mo
 <Menu.Root>
 	<Menu.Trigger
 		render={
-			<Button
-				iconOnly
-				icon={<MoreVertIcon />}
-				label={m.row_actions()}
-			/>
+			<IconButton label={m.row_actions()}>
+				<MoreVertIcon />
+			</IconButton>
 		}
 	/>
 	…

@@ -8,7 +8,7 @@ import {
 	type ReactNode,
 	useState,
 } from "react";
-import { Button } from "../../src/components/button/index.ts";
+import { IconButton } from "../../src/components/button/index.ts";
 import { Icon } from "../../src/components/icon/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
 import { resolver } from "./tokens.gen.js";
@@ -326,15 +326,14 @@ const Replay = ({
 	label,
 	onClick,
 }: Readonly<{ label: string; onClick: () => void }>) => (
-	<Button
+	<IconButton
 		variant="tertiary"
 		size="sm"
-		iconOnly
-		icon={<Icon svg={ReplayIcon} label="" />}
 		label={label}
 		className={styles.replay}
-		onClick={onClick}
-	/>
+		onClick={onClick}>
+		<Icon svg={ReplayIcon} label="" />
+	</IconButton>
 );
 
 const DurationRow = () => {

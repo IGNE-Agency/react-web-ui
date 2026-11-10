@@ -99,8 +99,8 @@ export type ToggleGroupParts = Readonly<{
  * `Legend`. For the ordinary case, use `ToggleGroupField`.
  *
  * @example
- * <ToggleGroup.Root filled={days.length > 0}>
- * 	<ToggleGroup.Legend optionalLabel="optional">Days</ToggleGroup.Legend>
+ * <ToggleGroup.Root filled={days.length > 0} requiredness="optional">
+ * 	<ToggleGroup.Legend>Days <Field.Requiredness optionalLabel="optional" /></ToggleGroup.Legend>
  * 	<ToggleGroup.Group value={days} onValueChange={setDays}>
  * 		<ToggleGroup.Option value="mon">Monday</ToggleGroup.Option>
  * 		<ToggleGroup.Option value="tue">Tuesday</ToggleGroup.Option>

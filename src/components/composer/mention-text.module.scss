@@ -2,14 +2,18 @@
 
 @layer kit.components {
 	.mention {
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--mention-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--mention-bg,
 			var(--sys-color-neutral-bg)
 		);
-		padding: var(--sys-unit-1) var(--sys-unit-4);
+		padding: var(--mention-pad-y, var(--sys-unit-1))
+			var(--mention-pad-x, var(--sys-unit-4));
 		color: var(--mention-fg, var(--sys-color-neutral-fg));
-		font: var(--sys-font-label-small);
+		font: var(--mention-font, var(--sys-font-label-small));
 
 		&[data-you] {
 			background: var(

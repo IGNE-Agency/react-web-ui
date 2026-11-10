@@ -1,5 +1,6 @@
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { clsx } from "clsx";
 import {
 	type ReactNode,
 	type RefObject,
@@ -49,6 +50,8 @@ export type CalendarYearProps = CalendarNavigationIcons &
 		label: string;
 		/** What the list says when no year matches the typed text. */
 		noMatchLabel: string;
+		/** Applied to the year control. */
+		className?: string;
 	}>;
 
 /**
@@ -66,6 +69,7 @@ export const CalendarYear = ({
 	noMatchLabel,
 	checkIcon,
 	expandIcon,
+	className,
 }: CalendarYearProps): ReactNode => {
 	const locale = useLocale();
 	const { ref, collisionPadding } = usePopupEdgePadding();
@@ -137,7 +141,8 @@ export const CalendarYear = ({
 					setQuery("");
 				}
 			}}>
-			<BaseCombobox.InputGroup className={style.navControl}>
+			<BaseCombobox.InputGroup
+				className={clsx(style.navControl, className)}>
 				<BaseCombobox.Input
 					ref={inputRef}
 					aria-label={label}

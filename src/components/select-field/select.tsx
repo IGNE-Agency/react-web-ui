@@ -1,10 +1,17 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { clsx } from "clsx";
-import { type ReactNode, useRef } from "react";
+import {
+	type Context,
+	createContext,
+	type ReactNode,
+	useContext,
+	useRef,
+} from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { Button } from "../button/index.ts";
 import {
 	Field,
+	type FieldPendingProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
@@ -68,17 +75,53 @@ const SelectLabel = ({
 
 export type SelectTriggerProps = BaseSelect.Trigger.Props &
 	Readonly<{
-		/** Shown while nothing is selected. */
-		placeholder?: string;
 		/** The states projected onto the trigger as `data-*` attributes. */
 		state?: FieldState;
-		/** The chevron after the value, such as an expand icon. */
-		icon?: ReactNode;
 	}>;
 
 const NO_STATE: FieldState = {};
 
-/** The chevron after the trigger's value. Its children are the icon; without them it renders nothing. */
+const TriggerStateContext: Context<FieldState> =
+	createContext<FieldState>(NO_STATE);
+
+/**
+ * The chosen option's label on the trigger, or `placeholder` while nothing is
+ * chosen.
+ *
+ * @example
+ * <Select.Value placeholder="Pick a status" />
+ */
+const SelectValue = ({
+	className,
+	...props
+}: BaseSelect.Value.Props): ReactNode => (
+	<BaseSelect.Value
+		className={clsx(style.value, className)}
+		{...props}
+	/>
+);
+
+/**
+ * What the trigger shows while its `state` is pending, such as a spinner.
+ * Renders nothing otherwise.
+ *
+ * @example
+ * <Select.Pending><Spinner size={1} /></Select.Pending>
+ */
+const SelectPending = (
+	props: FieldPendingProps,
+): ReactNode =>
+	useContext(TriggerStateContext).pending === true ? (
+		<Field.Pending {...props} />
+	) : null;
+
+/**
+ * The chevron after the trigger's value. Its children are the icon; without
+ * them it renders nothing.
+ *
+ * @example
+ * <Select.Icon><ExpandMoreIcon /></Select.Icon>
+ */
 const SelectIcon = ({
 	className,
 	children,
@@ -94,11 +137,19 @@ const SelectIcon = ({
 		</BaseSelect.Icon>
 	);
 
-/** The button that opens the list. Without children it shows the value, the pending mark and `icon`. */
+/**
+ * The button that opens the list, projecting `state` onto itself and holding
+ * what it is given: usually `Value`, `Pending` and `Icon`.
+ *
+ * @example
+ * <Select.Trigger state={state}>
+ * 	<Select.Value placeholder="Pick a status" />
+ * 	<Select.Pending><Spinner size={1} /></Select.Pending>
+ * 	<Select.Icon><ExpandMoreIcon /></Select.Icon>
+ * </Select.Trigger>
+ */
 const SelectTrigger = ({
-	placeholder,
 	state = NO_STATE,
-	icon,
 	className,
 	children,
 	...props
@@ -115,16 +166,9 @@ const SelectTrigger = ({
 			)}
 			{...props}
 			{...focus.props}>
-			{children ?? (
-				<>
-					<BaseSelect.Value
-						className={style.value}
-						placeholder={placeholder}
-					/>
-					{state.pending === true && <Field.Pending />}
-					<SelectIcon>{icon}</SelectIcon>
-				</>
-			)}
+			<TriggerStateContext value={state}>
+				{children}
+			</TriggerStateContext>
 		</BaseSelect.Trigger>
 	);
 };
@@ -267,6 +311,10 @@ export type SelectControlProps = Omit<
 	OptionsLoadLabels &
 	SelectItemsProps &
 	Readonly<{
+		/** Shown while nothing is selected. */
+		placeholder?: string;
+		/** The chevron after the value, such as an expand icon. */
+		icon?: ReactNode;
 		/** How far the options have loaded, when they come from a query. */
 		load?: OptionsLoad;
 	}>;
@@ -276,6 +324,8 @@ export type SelectControlProps = Omit<
  * select takes. Reach for the parts where the list needs anything else.
  */
 const SelectControl = ({
+	placeholder,
+	icon,
 	load = OPTIONS_LOADED,
 	loadingLabel,
 	loadFailedLabel,
@@ -288,7 +338,13 @@ const SelectControl = ({
 	const popupRef = useRef<HTMLDivElement>(null);
 	return (
 		<>
-			<SelectTrigger {...props} />
+			<SelectTrigger {...props}>
+				<SelectValue placeholder={placeholder} />
+				<SelectPending>
+					<Spinner size={1} />
+				</SelectPending>
+				<SelectIcon>{icon}</SelectIcon>
+			</SelectTrigger>
 			<BaseSelect.Portal>
 				<SelectPositioner>
 					<SelectPopup ref={popupRef}>
@@ -319,7 +375,7 @@ export type SelectParts = Readonly<{
 	Root: typeof SelectRoot;
 	Label: typeof SelectLabel;
 	Trigger: typeof SelectTrigger;
-	Value: typeof BaseSelect.Value;
+	Value: typeof SelectValue;
 	Icon: typeof SelectIcon;
 	Portal: typeof BaseSelect.Portal;
 	Positioner: typeof SelectPositioner;
@@ -333,7 +389,7 @@ export type SelectParts = Readonly<{
 	GroupLabel: typeof BaseSelect.GroupLabel;
 	Separator: typeof BaseSelect.Separator;
 	Control: typeof SelectControl;
-	Pending: typeof Field.Pending;
+	Pending: typeof SelectPending;
 	Description: typeof Field.Description;
 	Error: typeof Field.Error;
 	useIds: typeof Field.useIds;
@@ -363,7 +419,7 @@ export const Select: SelectParts = {
 	Root: SelectRoot,
 	Label: SelectLabel,
 	Trigger: SelectTrigger,
-	Value: BaseSelect.Value,
+	Value: SelectValue,
 	Icon: SelectIcon,
 	Portal: BaseSelect.Portal,
 	Positioner: SelectPositioner,
@@ -377,7 +433,7 @@ export const Select: SelectParts = {
 	GroupLabel: BaseSelect.GroupLabel,
 	Separator: BaseSelect.Separator,
 	Control: SelectControl,
-	Pending: Field.Pending,
+	Pending: SelectPending,
 	Description: Field.Description,
 	Error: Field.Error,
 	useIds: Field.useIds,

@@ -2,21 +2,27 @@ import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
+	type Context,
+	createContext,
 	type ReactNode,
 	type Ref,
+	useContext,
 	useRef,
 } from "react";
 import {
+	type ButtonProps as AriaButtonProps,
 	Button as RemoveButton,
 	Tag,
 	TagGroup,
 	TagList,
+	type TagProps,
 } from "react-aria-components";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { useInfiniteScroll } from "../../lib/use-infinite-scroll.ts";
 import { Button } from "../button/index.ts";
 import {
 	Field,
+	type FieldPendingProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
@@ -25,7 +31,6 @@ import {
 } from "../field/index.ts";
 import { withFieldFocus } from "../field/use-field-focus.ts";
 import { Spinner } from "../spinner/index.ts";
-import { Tooltip } from "../tooltip/index.ts";
 import {
 	type PagedQuery,
 	pagedProgress,
@@ -66,16 +71,15 @@ export type ComboboxControlProps =
 			ref?: Ref<HTMLDivElement>;
 			/** The states projected onto the control as `data-*` attributes. */
 			state?: FieldState;
-			/**
-			 * The tags, beside the trigger. They show the selection, so the
-			 * trigger's own value is read but not shown.
-			 */
-			tags?: ReactNode;
-			/** The chevron at the end of the control, such as an expand icon. */
-			icon?: ReactNode;
 		}>;
 
 const NO_STATE: FieldState = {};
+
+const ControlStateContext: Context<FieldState> =
+	createContext<FieldState>(NO_STATE);
+
+const ControlBusyContext: Context<boolean | undefined> =
+	createContext<boolean | undefined>(undefined);
 
 const CONTROL_SELECTOR = "[data-combobox-control]";
 const TAG_SELECTOR = "[data-combobox-tag]";
@@ -110,7 +114,13 @@ const focusTrigger = (
 		?.focus();
 };
 
-/** The chevron at the end of the control. Its children are the icon; without them it renders nothing. */
+/**
+ * The chevron at the end of the trigger. Its children are the icon; without
+ * them it renders nothing.
+ *
+ * @example
+ * <Combobox.Icon><ExpandMoreIcon /></Combobox.Icon>
+ */
 const ComboboxIcon = ({
 	className,
 	children,
@@ -126,12 +136,18 @@ const ComboboxIcon = ({
 		</BaseCombobox.Icon>
 	);
 
-/** The control that opens the popup: the value or the tags, the pending mark and `icon`. */
+/**
+ * The control's box, projecting `state` onto itself and holding the `Chips`
+ * and the `Trigger`. The positioner takes it as its `anchor`.
+ *
+ * @example
+ * <Combobox.Control ref={anchorRef} state={state}>
+ * 	<Combobox.Trigger>…</Combobox.Trigger>
+ * </Combobox.Control>
+ */
 const ComboboxControl = ({
 	className,
 	children,
-	tags,
-	icon,
 	state = NO_STATE,
 	...props
 }: ComboboxControlProps): ReactNode => {
@@ -146,100 +162,183 @@ const ComboboxControl = ({
 			{...attributes}
 			{...props}
 			{...focus.props}>
-			{tags !== undefined && (
-				<div
-					className={style.content}
-					onKeyDownCapture={event => {
-						const edges = tagsOf(event.currentTarget);
-						if (
-							(event.key === "ArrowRight" &&
-								edges.at(-1) === event.target) ||
-							(event.key === "ArrowLeft" &&
-								edges.at(0) === event.target)
-						) {
-							event.preventDefault();
-							event.stopPropagation();
-							focusTrigger(
-								event.currentTarget.parentElement,
-							);
-						}
-					}}>
-					{tags}
-				</div>
-			)}
-			<BaseCombobox.Trigger
-				data-combobox-trigger=""
-				aria-invalid={
-					state.validity === "invalid" || undefined
-				}
-				aria-busy={busy}
-				className={style.trigger}
-				onKeyDown={event => {
-					const control = event.currentTarget.parentElement;
-					if (
-						event.key === "ArrowRight" &&
-						focusTagAt(control, "first")
-					) {
-						event.preventDefault();
-					}
-					if (
-						event.key === "ArrowLeft" &&
-						focusTagAt(control, "last")
-					) {
-						event.preventDefault();
-					}
-				}}>
-				<span
-					className={
-						tags === undefined
-							? style.content
-							: style.spokenValue
-					}>
+			<ControlStateContext value={state}>
+				<ControlBusyContext value={busy}>
 					{children}
-				</span>
-				{state.pending === true && <Field.Pending />}
-				<ComboboxIcon>{icon}</ComboboxIcon>
-			</BaseCombobox.Trigger>
+				</ControlBusyContext>
+			</ControlStateContext>
 		</BaseCombobox.InputGroup>
 	);
 };
 
-export type ComboboxTagsProps<TItem> = Readonly<{
-	/** Names the group of tags, such as "Selected statuses". */
+export type ComboboxTriggerProps =
+	BaseCombobox.Trigger.Props;
+
+/**
+ * The button that opens the popup, holding the value, `Pending` and `Icon`.
+ * The arrow keys move between it and the `Chips` beside it.
+ *
+ * @example
+ * <Combobox.Trigger>
+ * 	<Combobox.TriggerValue>{label}</Combobox.TriggerValue>
+ * 	<Combobox.Icon><ExpandMoreIcon /></Combobox.Icon>
+ * </Combobox.Trigger>
+ */
+const ComboboxTrigger = ({
+	className,
+	onKeyDown,
+	...props
+}: ComboboxTriggerProps): ReactNode => {
+	const state = useContext(ControlStateContext);
+	const busy = useContext(ControlBusyContext);
+	return (
+		<BaseCombobox.Trigger
+			data-combobox-trigger=""
+			aria-invalid={
+				state.validity === "invalid" || undefined
+			}
+			aria-busy={busy}
+			className={clsx(style.trigger, className)}
+			onKeyDown={event => {
+				onKeyDown?.(event);
+				const control = event.currentTarget.parentElement;
+				if (
+					event.key === "ArrowRight" &&
+					focusTagAt(control, "first")
+				) {
+					event.preventDefault();
+				}
+				if (
+					event.key === "ArrowLeft" &&
+					focusTagAt(control, "last")
+				) {
+					event.preventDefault();
+				}
+			}}
+			{...props}
+		/>
+	);
+};
+
+/**
+ * The value the trigger shows, such as the chosen item or the placeholder.
+ *
+ * @example
+ * <Combobox.TriggerValue>{label ?? placeholder}</Combobox.TriggerValue>
+ */
+const ComboboxTriggerValue = ({
+	className,
+	...props
+}: ComponentProps<"span">): ReactNode => (
+	<span
+		className={clsx(style.content, className)}
+		{...props}
+	/>
+);
+
+/**
+ * The value the trigger is read as while `Chips` show the selection, such as
+ * every chosen item joined. Only assistive tech reads it.
+ *
+ * @example
+ * <Combobox.SpokenValue>{names.join(", ")}</Combobox.SpokenValue>
+ */
+const ComboboxSpokenValue = ({
+	className,
+	...props
+}: ComponentProps<"span">): ReactNode => (
+	<span
+		className={clsx(style.spokenValue, className)}
+		{...props}
+	/>
+);
+
+/**
+ * What the trigger shows while the control's `state` is pending, such as a
+ * spinner. Renders nothing otherwise.
+ *
+ * @example
+ * <Combobox.Pending><Spinner size={1} /></Combobox.Pending>
+ */
+const ComboboxPending = (
+	props: FieldPendingProps,
+): ReactNode =>
+	useContext(ControlStateContext).pending === true ? (
+		<Field.Pending {...props} />
+	) : null;
+
+/**
+ * The area beside the trigger that shows the selection of a multiple
+ * combobox: a `ChipList`, or a placeholder while nothing is chosen. The arrow
+ * keys move from its first and last chip back to the trigger.
+ *
+ * @example
+ * <Combobox.Chips>
+ * 	<Combobox.ChipList …>…</Combobox.ChipList>
+ * </Combobox.Chips>
+ */
+const ComboboxChips = ({
+	className,
+	onKeyDownCapture,
+	...props
+}: ComponentProps<"div">): ReactNode => (
+	<div
+		className={clsx(style.content, className)}
+		onKeyDownCapture={event => {
+			onKeyDownCapture?.(event);
+			const edges = tagsOf(event.currentTarget);
+			if (
+				(event.key === "ArrowRight" &&
+					edges.at(-1) === event.target) ||
+				(event.key === "ArrowLeft" &&
+					edges.at(0) === event.target)
+			) {
+				event.preventDefault();
+				event.stopPropagation();
+				focusTrigger(event.currentTarget.parentElement);
+			}
+		}}
+		{...props}
+	/>
+);
+
+const ChipsLockedContext: Context<boolean> =
+	createContext(false);
+
+export type ComboboxChipListProps<TItem> = Readonly<{
+	/** Names the group of chips, such as "Selected statuses". */
 	label: string;
 	items: readonly TItem[];
-	/** A stable identity per item. */
+	/** A stable identity per item, which its `Chip` takes as its `id`. */
 	itemKey: (item: TItem) => string;
-	/** An item as plain text, which its tag is read as. */
-	itemLabel: (item: TItem) => string;
-	/** The remove control's own name, which the tag's name completes, such as "Remove". */
-	removeLabel: string;
-	/** The remove control's tooltip for an item, such as "Remove Jan Jansen". */
-	removeHint: (item: TItem) => string;
-	/** The remove control's icon, such as a cross. */
-	removeIcon: ReactNode;
-	/** Renders one tag's content. */
+	/** Renders one item's `Chip`. */
 	children: (item: TItem) => ReactNode;
 	/** Called with the items left after a removal. */
 	onRemove: (remaining: readonly TItem[]) => void;
 	disabled?: boolean;
 	readOnly?: boolean;
+	className?: string;
 }>;
 
-/** The chosen values of a multiple combobox as removable tags, for `Control`'s `tags`. */
-const ComboboxTags = <TItem,>({
+/**
+ * The chosen values of a multiple combobox as a grid of removable chips, over
+ * react-aria's `TagGroup`. Removing the last one returns focus to the trigger.
+ *
+ * @example
+ * <Combobox.ChipList label="Selected statuses" items={chosen} itemKey={status => status} onRemove={setChosen}>
+ * 	{status => <Combobox.Chip key={status} id={status} textValue={status}>{status}</Combobox.Chip>}
+ * </Combobox.ChipList>
+ */
+const ComboboxChipList = <TItem,>({
 	label,
 	items,
 	itemKey,
-	itemLabel,
-	removeLabel,
-	removeHint,
-	removeIcon,
 	children,
 	onRemove,
 	disabled = false,
 	readOnly = false,
-}: ComboboxTagsProps<TItem>): ReactNode => {
+	className,
+}: ComboboxChipListProps<TItem>): ReactNode => {
 	const ref = useRef<HTMLDivElement>(null);
 	const locked = disabled || readOnly;
 	return (
@@ -263,33 +362,77 @@ const ComboboxTags = <TItem,>({
 							onRemove(remaining);
 						}
 			}>
-			<TagList className={style.tagList}>
-				{items.map(item => (
-					<Tag
-						key={itemKey(item)}
-						id={itemKey(item)}
-						textValue={itemLabel(item)}
-						data-combobox-tag=""
-						data-tone="neutral"
-						data-variant="subtle"
-						className={style.tag}>
-						{children(item)}
-						<Tooltip content={removeHint(item)}>
-							<RemoveButton
-								slot="remove"
-								excludeFromTabOrder
-								isDisabled={locked}
-								aria-label={removeLabel}
-								className={style.tagRemove}>
-								{removeIcon}
-							</RemoveButton>
-						</Tooltip>
-					</Tag>
-				))}
+			<TagList className={clsx(style.tagList, className)}>
+				<ChipsLockedContext value={locked}>
+					{items.map(children)}
+				</ChipsLockedContext>
 			</TagList>
 		</TagGroup>
 	);
 };
+
+export type ComboboxChipProps = Omit<
+	TagProps,
+	"className" | "id" | "textValue"
+> &
+	Readonly<{
+		/** The item's key, as `ChipList`'s `itemKey` gives it. */
+		id: string;
+		/** The item as plain text, which the chip is read as. */
+		textValue: string;
+		className?: string;
+	}>;
+
+/**
+ * One chosen value as a chip, holding its content and a `ChipRemove`.
+ *
+ * @example
+ * <Combobox.Chip id={status} textValue={status}>{status}</Combobox.Chip>
+ */
+const ComboboxChip = ({
+	className,
+	...props
+}: ComboboxChipProps): ReactNode => (
+	<Tag
+		data-combobox-tag=""
+		data-tone="neutral"
+		data-variant="subtle"
+		className={clsx(style.tag, className)}
+		{...props}
+	/>
+);
+
+export type ComboboxChipRemoveProps = Omit<
+	AriaButtonProps,
+	"className" | "slot" | "aria-label"
+> &
+	Readonly<{
+		/** The button's own name, which the chip's name completes, such as "Remove". */
+		"aria-label": string;
+		className?: string;
+	}>;
+
+/**
+ * The pointer-only button that removes its chip; the keyboard removes with
+ * Delete. Its children are the icon, such as a cross.
+ *
+ * @example
+ * <Tooltip content="Remove Open">
+ * 	<Combobox.ChipRemove aria-label="Remove"><CloseIcon /></Combobox.ChipRemove>
+ * </Tooltip>
+ */
+const ComboboxChipRemove = ({
+	className,
+	...props
+}: ComboboxChipRemoveProps): ReactNode => (
+	<RemoveButton
+		slot="remove"
+		excludeFromTabOrder
+		isDisabled={useContext(ChipsLockedContext)}
+		className={clsx(style.tagRemove, className)}
+		{...props}
+	/>
+);
 
 /** Places the popup against the control, given as its `anchor`. */
 const ComboboxPositioner = ({
@@ -394,33 +537,56 @@ const ComboboxOption = ({
 	/>
 );
 
-export type ComboboxOptionIndicatorProps =
-	BaseCombobox.ItemIndicator.Props &
-		Readonly<{
-			/** Draws the mark inside a checkbox, for a multi-value list. */
-			multiple?: boolean;
-		}>;
+const InCheckboxContext: Context<boolean> =
+	createContext(false);
 
-/** The mark beside a chosen option. Its children are the mark, such as a tick. */
+export type ComboboxOptionIndicatorProps =
+	BaseCombobox.ItemIndicator.Props;
+
+/**
+ * The mark beside a chosen option. Its children are the mark, such as a tick.
+ * Inside an `OptionCheckbox` it is the checkbox's tick, kept mounted.
+ *
+ * @example
+ * <Combobox.OptionIndicator><CheckIcon /></Combobox.OptionIndicator>
+ */
 const ComboboxOptionIndicator = ({
 	className,
-	multiple = false,
 	...props
 }: ComboboxOptionIndicatorProps): ReactNode =>
-	multiple ? (
-		<span className={style.checkbox} aria-hidden="true">
-			<BaseCombobox.ItemIndicator
-				keepMounted
-				className={clsx(style.checkboxIndicator, className)}
-				{...props}
-			/>
-		</span>
+	useContext(InCheckboxContext) ? (
+		<BaseCombobox.ItemIndicator
+			keepMounted
+			className={clsx(style.checkboxIndicator, className)}
+			{...props}
+		/>
 	) : (
 		<BaseCombobox.ItemIndicator
 			className={clsx(style.indicator, className)}
 			{...props}
 		/>
 	);
+
+/**
+ * The box an option's `OptionIndicator` sits in, for a multi-value list.
+ *
+ * @example
+ * <Combobox.OptionCheckbox>
+ * 	<Combobox.OptionIndicator><CheckIcon /></Combobox.OptionIndicator>
+ * </Combobox.OptionCheckbox>
+ */
+const ComboboxOptionCheckbox = ({
+	className,
+	children,
+	...props
+}: ComponentProps<"span">): ReactNode => (
+	<span
+		aria-hidden="true"
+		className={clsx(style.checkbox, className)}
+		{...props}>
+		<InCheckboxContext value>{children}</InCheckboxContext>
+	</span>
+);
 
 /** An option's content, beside its indicator. */
 const ComboboxOptionText = ({
@@ -575,7 +741,7 @@ export type ComboboxBodyProps<TItem> = ComboboxPopupLabels &
 		query?: PagedQuery<TItem>;
 		/** There are no items at all, rather than none matching the search. */
 		noOptions: boolean;
-		/** Draws each option's mark inside a checkbox. */
+		/** Draws each option's mark inside an `OptionCheckbox`. */
 		multiple?: boolean;
 		/** A stable identity per item. */
 		itemKey: (item: TItem) => string;
@@ -632,9 +798,17 @@ const ComboboxBody = <TItem,>({
 			<ComboboxList query={query}>
 				{(item: TItem) => (
 					<ComboboxOption key={itemKey(item)} value={item}>
-						<ComboboxOptionIndicator multiple={multiple}>
-							{checkIcon}
-						</ComboboxOptionIndicator>
+						{multiple ? (
+							<ComboboxOptionCheckbox>
+								<ComboboxOptionIndicator>
+									{checkIcon}
+								</ComboboxOptionIndicator>
+							</ComboboxOptionCheckbox>
+						) : (
+							<ComboboxOptionIndicator>
+								{checkIcon}
+							</ComboboxOptionIndicator>
+						)}
 						<ComboboxOptionText>
 							{children(item)}
 						</ComboboxOptionText>
@@ -650,6 +824,10 @@ export type ComboboxParts = Omit<
 	typeof BaseCombobox,
 	| "Root"
 	| "Icon"
+	| "Trigger"
+	| "Chips"
+	| "Chip"
+	| "ChipRemove"
 	| "Positioner"
 	| "Popup"
 	| "Input"
@@ -660,34 +838,47 @@ export type ComboboxParts = Omit<
 	Readonly<{
 		Root: typeof ComboboxRoot;
 		Control: typeof ComboboxControl;
+		Trigger: typeof ComboboxTrigger;
+		TriggerValue: typeof ComboboxTriggerValue;
+		SpokenValue: typeof ComboboxSpokenValue;
 		Icon: typeof ComboboxIcon;
-		Tags: typeof ComboboxTags;
+		Chips: typeof ComboboxChips;
+		ChipList: typeof ComboboxChipList;
+		Chip: typeof ComboboxChip;
+		ChipRemove: typeof ComboboxChipRemove;
 		Positioner: typeof ComboboxPositioner;
 		Popup: typeof ComboboxPopup;
 		Search: typeof ComboboxSearch;
 		List: typeof ComboboxList;
 		Option: typeof ComboboxOption;
 		OptionIndicator: typeof ComboboxOptionIndicator;
+		OptionCheckbox: typeof ComboboxOptionCheckbox;
 		OptionText: typeof ComboboxOptionText;
 		Empty: typeof ComboboxEmpty;
 		Status: typeof ComboboxStatus;
 		StatusArea: typeof ComboboxStatusArea;
 		LoadStatus: typeof ComboboxLoadStatus;
 		Body: typeof ComboboxBody;
-		Pending: typeof Field.Pending;
+		Pending: typeof ComboboxPending;
 	}>;
 
 /**
  * The styled parts of a base-ui Combobox: a filterable select whose control
  * matches `Select`'s trigger and whose popup is the shared popup surface. Every
- * unstyled base-ui part stays reachable. `Body` holds what the popup usually
- * does. For the ordinary case, use `ComboboxField`. The positioner takes the
+ * unstyled base-ui part stays reachable. A multiple combobox shows its
+ * selection as `Chips` beside the `Trigger`. `Body` holds what the popup
+ * usually does. For the ordinary case, use `ComboboxField`. The positioner takes the
  * control as its `anchor`.
  *
  * @example
  * <Combobox.Root items={statuses}>
- * 	<Combobox.Control ref={anchorRef} icon={<ExpandMoreIcon />}>
- * 		<Combobox.Value>{(status: string | null) => status}</Combobox.Value>
+ * 	<Combobox.Control ref={anchorRef}>
+ * 		<Combobox.Trigger>
+ * 			<Combobox.TriggerValue>
+ * 				<Combobox.Value>{(status: string | null) => status}</Combobox.Value>
+ * 			</Combobox.TriggerValue>
+ * 			<Combobox.Icon><ExpandMoreIcon /></Combobox.Icon>
+ * 		</Combobox.Trigger>
  * 	</Combobox.Control>
  * 	<Combobox.Portal>
  * 		<Combobox.Positioner anchor={anchorRef}>
@@ -710,19 +901,26 @@ export const Combobox: ComboboxParts = {
 	...BaseCombobox,
 	Root: ComboboxRoot,
 	Control: ComboboxControl,
+	Trigger: ComboboxTrigger,
+	TriggerValue: ComboboxTriggerValue,
+	SpokenValue: ComboboxSpokenValue,
 	Icon: ComboboxIcon,
-	Tags: ComboboxTags,
+	Chips: ComboboxChips,
+	ChipList: ComboboxChipList,
+	Chip: ComboboxChip,
+	ChipRemove: ComboboxChipRemove,
 	Positioner: ComboboxPositioner,
 	Popup: ComboboxPopup,
 	Search: ComboboxSearch,
 	List: ComboboxList,
 	Option: ComboboxOption,
 	OptionIndicator: ComboboxOptionIndicator,
+	OptionCheckbox: ComboboxOptionCheckbox,
 	OptionText: ComboboxOptionText,
 	Empty: ComboboxEmpty,
 	Status: ComboboxStatus,
 	StatusArea: ComboboxStatusArea,
 	LoadStatus: ComboboxLoadStatus,
 	Body: ComboboxBody,
-	Pending: Field.Pending,
+	Pending: ComboboxPending,
 };

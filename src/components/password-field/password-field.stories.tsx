@@ -15,6 +15,7 @@ import {
 	PasswordField,
 	type PasswordFieldProps,
 	type PasswordFieldStrengthProps,
+	PasswordStrength,
 } from "./index.ts";
 
 const LABEL = "Password";
@@ -70,6 +71,23 @@ const TypedPasswordField = (
 		/>
 	);
 };
+
+const MeterOnly = (
+	args: PasswordFieldProps,
+): ReactElement => (
+	<PasswordStrength.Root password={args.value}>
+		<PasswordStrength.Meter
+			scoreLabels={STRENGTH.scoreLabels}>
+			<PasswordStrength.Label>
+				{STRENGTH_LABEL}
+			</PasswordStrength.Label>
+			<PasswordStrength.Value />
+			<PasswordStrength.Track>
+				<PasswordStrength.Indicator />
+			</PasswordStrength.Track>
+		</PasswordStrength.Meter>
+	</PasswordStrength.Root>
+);
 
 type Canvas = ReturnType<typeof within>;
 
@@ -222,6 +240,17 @@ export const Strong: Story = {
 	},
 };
 
+export const StrengthMeterOnly: Story = {
+	render: MeterOnly,
+	args: { value: WEAK_PASSWORD },
+	play: async ({ canvas }) => {
+		await expect(await strengthMeter(canvas)).toBeVisible();
+		await expect(
+			canvas.queryByRole("list"),
+		).not.toBeInTheDocument();
+	},
+};
+
 export const StrengthWhileTyping: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: STRENGTH,
@@ -272,20 +301,12 @@ export const RevealKeyboard: Story = {
 			"type",
 			"text",
 		);
-		await expect(toggle).toHaveAttribute(
-			"aria-pressed",
-			"true",
-		);
 		await expect(toggle).toHaveAccessibleName(HIDE_LABEL);
 
 		await userEvent.keyboard(" ");
 		await expect(input(canvas)).toHaveAttribute(
 			"type",
 			"password",
-		);
-		await expect(toggle).toHaveAttribute(
-			"aria-pressed",
-			"false",
 		);
 	},
 };

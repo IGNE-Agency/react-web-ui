@@ -24,7 +24,7 @@ import {
 	type within,
 } from "storybook/test";
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
-import { Button } from "../button/button.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Drawer } from "../drawer/drawer.tsx";
 import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Nav, type NavRootProps } from "./nav.tsx";
@@ -102,13 +102,14 @@ const DestinationLink = ({
 	Readonly<{ labelled: boolean }>): ReactElement => (
 	<NavLink
 		to={to}
-		label={label}
-		labelled={labelled}
+		label={labelled ? undefined : label}
 		activeOptions={{ exact: to === "/" }}>
 		<NavItemView.Icon>
 			<Icon svg={icon} label="" />
 		</NavItemView.Icon>
-		<NavItemView.Label>{label}</NavItemView.Label>
+		{labelled ? (
+			<NavItemView.Label>{label}</NavItemView.Label>
+		) : null}
 	</NavLink>
 );
 
@@ -133,18 +134,22 @@ const RailEntries = ({
 								labelled={labelled}
 							/>
 							{labelled ? (
-								<Nav.GroupToggle label={SUBPAGES}>
-									<Icon svg={ExpandMoreIcon} label="" />
-								</Nav.GroupToggle>
+								<Nav.GroupToggle
+									render={
+										<IconButton
+											label={SUBPAGES}
+											variant="tertiary">
+											<Icon svg={ExpandMoreIcon} label="" />
+										</IconButton>
+									}
+								/>
 							) : null}
 						</Nav.GroupHeader>
 						<Nav.GroupPanel>
 							<Nav.GroupList>
 								{SUBPAGE_LINKS.map(link => (
 									<Nav.Item key={link.to}>
-										<NavLink
-											to={link.to}
-											label={link.label}>
+										<NavLink to={link.to}>
 											{link.label}
 										</NavLink>
 									</Nav.Item>
@@ -171,9 +176,7 @@ const Rail = (args: NavRootProps): ReactElement => (
 		<Nav.List>
 			<RailEntries labelled />
 			<Nav.Item>
-				<NavItemView.Root
-					label={SIGN_OUT}
-					onClick={signOut}>
+				<NavItemView.Root onClick={signOut}>
 					<NavItemView.Icon>
 						<Icon svg={LogoutIcon} label="" />
 					</NavItemView.Icon>
@@ -191,20 +194,22 @@ const CollapsedRail = (
 		<Nav.List>
 			<RailEntries labelled={false} />
 		</Nav.List>
+		<Nav.Hint />
 	</Nav.Root>
 );
 
 const TabBar = (args: NavRootProps): ReactElement => (
 	<Nav.Root {...args} orientation="horizontal">
-		<Nav.List>
-			{TAB_LINKS.map(link => (
-				<Nav.Item key={link.to}>
-					<NavLink to={link.to} label={link.label}>
-						{link.label}
-					</NavLink>
-				</Nav.Item>
-			))}
-		</Nav.List>
+		<Nav.Scroller>
+			<Nav.List>
+				<Nav.Indicator />
+				{TAB_LINKS.map(link => (
+					<Nav.Item key={link.to}>
+						<NavLink to={link.to}>{link.label}</NavLink>
+					</Nav.Item>
+				))}
+			</Nav.List>
+		</Nav.Scroller>
 	</Nav.Root>
 );
 
@@ -212,10 +217,7 @@ const RefLink = (args: NavRootProps): ReactElement => (
 	<Nav.Root {...args}>
 		<Nav.List>
 			<Nav.Item>
-				<NavLink
-					to={START}
-					label={INCOMPLETE}
-					ref={linkRef}>
+				<NavLink to={START} ref={linkRef}>
 					{INCOMPLETE}
 				</NavLink>
 			</Nav.Item>
@@ -231,36 +233,35 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			{...args}
 			className={styles.sidebar}
 			data-collapsed={collapsed ? "true" : undefined}>
-			<Button
+			<IconButton
 				variant="tertiary"
-				iconOnly
-				icon={
-					collapsed ? (
-						<Icon svg={MenuIcon} label="" />
-					) : (
-						<Icon svg={MenuOpenIcon} label="" />
-					)
-				}
 				label={TOGGLE_RAIL}
-				onClick={() => setCollapsed(current => !current)}
-			/>
+				onClick={() => setCollapsed(current => !current)}>
+				{collapsed ? (
+					<Icon svg={MenuIcon} label="" />
+				) : (
+					<Icon svg={MenuOpenIcon} label="" />
+				)}
+			</IconButton>
 			<Nav.List className={styles.grow}>
 				<RailEntries labelled={!collapsed} />
 				<li aria-hidden="true" className={styles.spacer} />
 				<Nav.Item>
 					<NavItemView.Root
-						label={SIGN_OUT}
-						labelled={!collapsed}
+						label={collapsed ? SIGN_OUT : undefined}
 						onClick={signOut}>
 						<NavItemView.Icon>
 							<Icon svg={LogoutIcon} label="" />
 						</NavItemView.Icon>
-						<NavItemView.Label>
-							{SIGN_OUT}
-						</NavItemView.Label>
+						{collapsed ? null : (
+							<NavItemView.Label>
+								{SIGN_OUT}
+							</NavItemView.Label>
+						)}
 					</NavItemView.Root>
 				</Nav.Item>
 			</Nav.List>
+			{collapsed ? <Nav.Hint /> : null}
 		</Nav.Root>
 	);
 };
@@ -287,7 +288,6 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 						className={styles.barItem}>
 						<NavLink
 							to={destination.to}
-							label={destination.label}
 							layout="stack"
 							activeOptions={{
 								exact: destination.to === "/",
@@ -305,7 +305,6 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 					<Drawer.Root handle={more} swipeDirection="down">
 						<NavItemView.Root
 							layout="stack"
-							label={MORE}
 							render={<Drawer.Trigger />}
 							data-active={
 								overflowIsCurrent ? "true" : undefined
@@ -322,10 +321,16 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 									<Drawer.Content className={styles.sheet}>
 										<Drawer.Header>
 											<Drawer.Title>{MORE}</Drawer.Title>
-											<Drawer.CloseButton
-												closeLabel={CLOSE_MORE}
-												icon={
-													<Icon svg={CloseIcon} label="" />
+											<Drawer.Close
+												render={
+													<IconButton
+														label={CLOSE_MORE}
+														variant="tertiary">
+														<Icon
+															svg={CloseIcon}
+															label=""
+														/>
+													</IconButton>
 												}
 											/>
 										</Drawer.Header>
@@ -335,7 +340,6 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 													<Nav.Item key={destination.to}>
 														<NavLink
 															to={destination.to}
-															label={destination.label}
 															onClick={() => more.close()}>
 															<NavItemView.Icon>
 																<Icon
@@ -473,10 +477,9 @@ export const Horizontal: Story = {
 export const CollapsedVertical: Story = {
 	render: CollapsedRail,
 	play: async ({ canvas }) => {
-		await expect(link(canvas, SETTINGS)).toHaveAttribute(
-			"data-labelled",
-			"false",
-		);
+		await expect(
+			link(canvas, SETTINGS),
+		).not.toHaveTextContent(SETTINGS);
 		await expect(
 			canvas.queryByRole("button", { name: SUBPAGES }),
 		).not.toBeInTheDocument();
@@ -675,10 +678,9 @@ export const SidebarCollapse: Story = {
 			canvas.getByRole("button", { name: TOGGLE_RAIL }),
 		);
 
-		await expect(link(canvas, SETTINGS)).toHaveAttribute(
-			"data-labelled",
-			"false",
-		);
+		await expect(
+			link(canvas, SETTINGS),
+		).not.toHaveTextContent(SETTINGS);
 	},
 };
 

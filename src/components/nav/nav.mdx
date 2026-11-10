@@ -81,7 +81,27 @@ An expanded rail is wide enough for its labels. [No ellipsis](?path=/docs/design
 
 ### A collapsed rail names its items with a tooltip
 
-A collapsed rail names its items with [a tooltip on the icon](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), carrying the same string as the accessible name. An entry with `labelled={false}` does both: `Nav.Root` mounts the one tooltip its entries share, so the hint travels between them rather than one closing as the next opens.
+A collapsed rail names its items with [a tooltip on the icon](?path=/docs/design-system-principles-interaction--docs#an-icon-only-control-always-has-a-tooltip-and-an-accessible-name), carrying the same string as the accessible name. An entry's `label` does both, in place of its `NavItemView.Label`: it names the entry, and `Nav.Hint`, mounted once inside `Nav.Root` while the rail is collapsed, shows it. The entries share that one tooltip, so the hint travels between them rather than one closing as the next opens.
+
+```tsx
+<Nav.Root aria-label="Main">
+	<Nav.List>
+		<Nav.Item>
+			<NavLink
+				to="/settings"
+				label={collapsed ? "Settings" : undefined}>
+				<NavItemView.Icon>
+					<SettingsIcon />
+				</NavItemView.Icon>
+				{collapsed ? null : (
+					<NavItemView.Label>Settings</NavItemView.Label>
+				)}
+			</NavLink>
+		</Nav.Item>
+	</Nav.List>
+	{collapsed ? <Nav.Hint /> : null}
+</Nav.Root>
+```
 
 ### A bar's entries are sized to their longest word
 
@@ -140,6 +160,19 @@ A bar cannot be widened [the way a rail can](#an-expanded-rail-is-wide-enough-fo
 
 ### The current page in a bar of tabs is a pill that slides there
 
-A horizontal nav marks the current page the way [tabs](?path=/docs/components-tabs--docs#the-active-tab-is-a-pill-that-slides-between-tabs) mark the open tab: a filled pill that slides between entries. Its links are a router's, so no tab primitive publishes the current one's place; the list measures the entry marked `aria-current="page"` and publishes the same `--active-tab-left` and `--active-tab-width`. The current label takes the inverted ink as the pill arrives.
+A horizontal nav marks the current page the way [tabs](?path=/docs/components-tabs--docs#the-active-tab-is-a-pill-that-slides-between-tabs) mark the open tab: a filled pill that slides between entries. Its links are a router's, so no tab primitive publishes the current one's place; the `Nav.Indicator` measures the entry marked `aria-current="page"` and publishes the same `--active-tab-left` and `--active-tab-width` on its list. The current label takes the inverted ink as the pill arrives. A `Nav.Scroller` around the list lets a bar wider than its room scroll sideways.
+
+```tsx
+<Nav.Root aria-label="Invoices" orientation="horizontal">
+	<Nav.Scroller>
+		<Nav.List>
+			<Nav.Indicator />
+			<Nav.Item>
+				<NavLink to="/invoices/sent">Sent</NavLink>
+			</Nav.Item>
+		</Nav.List>
+	</Nav.Scroller>
+</Nav.Root>
+```
 
 </DocsPage>

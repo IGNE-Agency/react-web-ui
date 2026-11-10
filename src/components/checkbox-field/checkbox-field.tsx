@@ -93,9 +93,10 @@ export const CheckboxField = ({
 							: checkIcon}
 					</Checkbox.Indicator>
 				</Checkbox.Control>
-				<Field.InlineLabelText
-					label={label}
-					requiredness={requiredness}
+				<Field.InlineLabelText>
+					{label} <Field.RequiredMark />
+				</Field.InlineLabelText>
+				<Field.InlineOptional
 					optionalLabel={optionalLabel}
 				/>
 			</Checkbox.Label>

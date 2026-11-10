@@ -1233,8 +1233,11 @@ An icon-only control is the button component's icon-only form, which requires a 
 
 ```tsx
 <Menu.Trigger
-	icon={<MoreVertIcon />}
-	label={m.row_actions()}
+	render={
+		<IconButton label={m.row_actions()}>
+			<MoreVertIcon />
+		</IconButton>
+	}
 />
 ```
 

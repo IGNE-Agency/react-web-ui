@@ -9,6 +9,7 @@ import {
 	Field,
 	type FieldErrorProps,
 	type FieldLabelProps,
+	type FieldPendingProps,
 } from "./field.tsx";
 import type { FieldState } from "./field-state.ts";
 
@@ -18,8 +19,6 @@ export type InputPartsContextValue = Readonly<{
 	state: FieldState;
 	/** The errors `Root` was given, which `Error` renders. */
 	errors: unknown;
-	/** The word an optional field's label trails. */
-	optionalLabel: string;
 	phase: BusyPhase;
 }>;
 
@@ -40,50 +39,36 @@ export const useInputPartsContext =
 			"Input parts must be rendered within their input's <Root>.",
 		);
 
-export type InputLabelProps = Omit<
-	FieldLabelProps,
-	"requiredness" | "optionalLabel"
->;
+export type InputLabelProps = FieldLabelProps;
 
 /**
- * The label above a raw input, trailing the requiredness its `Root` was given.
+ * The label above a raw input. Add `Field.Requiredness` to trail the
+ * requiredness its `Root` was given.
  *
  * @example
- * <TextInput.Label>Email</TextInput.Label>
+ * <TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
  */
-export const InputLabel = ({
-	children,
-	...props
-}: InputLabelProps): ReactNode => {
-	const { state, optionalLabel } = useInputPartsContext();
-	return (
-		<Field.Label
-			requiredness={state.requiredness}
-			optionalLabel={optionalLabel}
-			{...props}>
-			{children}
-		</Field.Label>
-	);
-};
+export const InputLabel = (
+	props: InputLabelProps,
+): ReactNode => <Field.Label {...props} />;
 
-export type InputPendingProps = Readonly<{
-	className?: string;
-}>;
+export type InputPendingProps = FieldPendingProps;
 
 /**
- * The spinner a raw input shows once its `Root`'s wait is worth showing.
+ * The box a raw input's wait shows in, holding what it is given, such as a
+ * spinner. It renders once its `Root`'s wait is worth showing.
  *
  * @example
- * <TextInput.Pending />
+ * <TextInput.Pending><Spinner size={1} /></TextInput.Pending>
  */
-export const InputPending = ({
-	className,
-}: InputPendingProps): ReactNode => {
+export const InputPending = (
+	props: InputPendingProps,
+): ReactNode => {
 	const { phase } = useInputPartsContext();
 	if (phase === "fresh") {
 		return null;
 	}
-	return <Field.Pending className={className} />;
+	return <Field.Pending {...props} />;
 };
 
 export type InputErrorProps = Omit<

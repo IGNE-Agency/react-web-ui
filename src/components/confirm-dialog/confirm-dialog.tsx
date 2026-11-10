@@ -13,7 +13,10 @@ import {
 	Button,
 	type ButtonTone,
 } from "../button/button.tsx";
-import { Spinner } from "../spinner/spinner.tsx";
+import {
+	Spinner,
+	type SpinnerProps,
+} from "../spinner/spinner.tsx";
 import styles from "./confirm-dialog.module.scss";
 
 /** What a confirm runs: a promise keeps the dialog open and busy until it settles. */
@@ -84,7 +87,15 @@ export type ConfirmDialogRootProps = Readonly<{
 	children: ReactNode;
 }>;
 
-/** The controlled alert dialog: its portal, backdrop and surface. */
+/**
+ * Holds the controlled alert dialog's open state and its confirm for the parts
+ * inside it. It renders no element of its own.
+ *
+ * @example
+ * <ConfirmDialog.Root open={open} onOpenChange={setOpen}>
+ * 	<ConfirmDialog.Content>…</ConfirmDialog.Content>
+ * </ConfirmDialog.Root>
+ */
 const ConfirmDialogRoot = ({
 	open,
 	onOpenChange,
@@ -107,19 +118,74 @@ const ConfirmDialogRoot = ({
 					attempt.reset();
 				}
 			}}>
-			<AlertDialog.Portal>
-				<AlertDialog.Backdrop className={styles.backdrop} />
-				<AlertDialog.Popup
-					className={styles.popup}
-					aria-busy={attempt.pending || undefined}>
-					<ConfirmContext value={attempt}>
-						{children}
-					</ConfirmContext>
-				</AlertDialog.Popup>
-			</AlertDialog.Portal>
+			<ConfirmContext value={attempt}>
+				{children}
+			</ConfirmContext>
 		</AlertDialog.Root>
 	);
 };
+
+/**
+ * The dimmed layer behind the dialog.
+ *
+ * @example
+ * <ConfirmDialog.Backdrop />
+ */
+const ConfirmDialogBackdrop = ({
+	className,
+	...props
+}: AlertDialog.Backdrop.Props): ReactNode => (
+	<AlertDialog.Backdrop
+		className={clsx(styles.backdrop, className)}
+		{...props}
+	/>
+);
+
+/**
+ * The dialog's surface, marked busy while a confirm is pending.
+ *
+ * @example
+ * <ConfirmDialog.Popup>…</ConfirmDialog.Popup>
+ */
+const ConfirmDialogPopup = ({
+	className,
+	...props
+}: AlertDialog.Popup.Props): ReactNode => {
+	const { pending } = useContext(ConfirmContext);
+
+	return (
+		<AlertDialog.Popup
+			className={clsx(styles.popup, className)}
+			aria-busy={pending || undefined}
+			{...props}
+		/>
+	);
+};
+
+export type ConfirmDialogContentProps =
+	AlertDialog.Popup.Props &
+		Readonly<{
+			/** The element the dialog is portalled into. @default document.body */
+			container?: AlertDialog.Portal.Props["container"];
+		}>;
+
+/**
+ * `Portal`, `Backdrop` and `Popup` in one: the dialog's surface, above the page.
+ *
+ * @example
+ * <ConfirmDialog.Content>
+ * 	<ConfirmDialog.Title>Delete this invoice?</ConfirmDialog.Title>
+ * </ConfirmDialog.Content>
+ */
+const ConfirmDialogContent = ({
+	container,
+	...props
+}: ConfirmDialogContentProps): ReactNode => (
+	<AlertDialog.Portal container={container}>
+		<ConfirmDialogBackdrop />
+		<ConfirmDialogPopup {...props} />
+	</AlertDialog.Portal>
+);
 
 /** The question the dialog asks. */
 const ConfirmDialogTitle = ({
@@ -189,14 +255,13 @@ export type ConfirmDialogConfirmProps = Readonly<{
 	children: ReactNode;
 }>;
 
-/** Acts, then closes once the action has settled. */
+/** Acts, then closes once the action has settled. Put a `Spinner` in it to show the wait. */
 const ConfirmDialogConfirm = ({
 	onConfirm,
 	tone = "brand",
 	children,
 }: ConfirmDialogConfirmProps): ReactNode => {
 	const { pending, confirm } = useContext(ConfirmContext);
-	const phase = useBusyPhase({ busy: pending });
 
 	return (
 		<Button
@@ -205,9 +270,36 @@ const ConfirmDialogConfirm = ({
 			aria-busy={pending || undefined}
 			aria-disabled={pending || undefined}
 			onClick={() => confirm(onConfirm)}>
-			{phase === "fresh" ? null : <Spinner size={1} />}
 			{children}
 		</Button>
+	);
+};
+
+export type ConfirmDialogSpinnerProps = Omit<
+	SpinnerProps,
+	"size"
+> &
+	Readonly<{
+		/** Size relative to the current font size (in `em`). @default 1 */
+		size?: number;
+	}>;
+
+/**
+ * The spinner a pending confirm shows once it has run long enough to notice.
+ * Renders nothing otherwise.
+ *
+ * @example
+ * <ConfirmDialog.Confirm onConfirm={send}><ConfirmDialog.Spinner />Send</ConfirmDialog.Confirm>
+ */
+const ConfirmDialogSpinner = ({
+	size = 1,
+	...props
+}: ConfirmDialogSpinnerProps): ReactNode => {
+	const { pending } = useContext(ConfirmContext);
+	const phase = useBusyPhase({ busy: pending });
+
+	return phase === "fresh" ? null : (
+		<Spinner size={size} {...props} />
 	);
 };
 
@@ -240,37 +332,46 @@ const ConfirmDialogShorthand = ({
 	<ConfirmDialogRoot
 		open={open}
 		onOpenChange={onOpenChange}>
-		<ConfirmDialogTitle>{title}</ConfirmDialogTitle>
-		<ConfirmDialogDescription>
-			{description}
-		</ConfirmDialogDescription>
-		<ConfirmDialogFooter>
-			<ConfirmDialogCancel>
-				{cancelLabel}
-			</ConfirmDialogCancel>
-			<ConfirmDialogConfirm
-				onConfirm={onConfirm}
-				tone={tone}>
-				{confirmLabel}
-			</ConfirmDialogConfirm>
-		</ConfirmDialogFooter>
+		<ConfirmDialogContent>
+			<ConfirmDialogTitle>{title}</ConfirmDialogTitle>
+			<ConfirmDialogDescription>
+				{description}
+			</ConfirmDialogDescription>
+			<ConfirmDialogFooter>
+				<ConfirmDialogCancel>
+					{cancelLabel}
+				</ConfirmDialogCancel>
+				<ConfirmDialogConfirm
+					onConfirm={onConfirm}
+					tone={tone}>
+					<ConfirmDialogSpinner />
+					{confirmLabel}
+				</ConfirmDialogConfirm>
+			</ConfirmDialogFooter>
+		</ConfirmDialogContent>
 	</ConfirmDialogRoot>
 );
 
 type ConfirmDialogParts = typeof ConfirmDialogShorthand &
 	Readonly<{
 		Root: typeof ConfirmDialogRoot;
+		Portal: typeof AlertDialog.Portal;
+		Backdrop: typeof ConfirmDialogBackdrop;
+		Popup: typeof ConfirmDialogPopup;
+		Content: typeof ConfirmDialogContent;
 		Title: typeof ConfirmDialogTitle;
 		Description: typeof ConfirmDialogDescription;
 		Footer: typeof ConfirmDialogFooter;
 		Cancel: typeof ConfirmDialogCancel;
 		Confirm: typeof ConfirmDialogConfirm;
+		Spinner: typeof ConfirmDialogSpinner;
 	}>;
 
 /**
  * A controlled confirmation over base-ui's `AlertDialog`. A promise from
  * `onConfirm` keeps it busy until it settles, closing on resolve and staying open
- * on reject; the parts hanging off it build one by hand.
+ * on reject; the parts hanging off it build one by hand, with `Content`
+ * bundling the portal, backdrop and popup.
  *
  * @example
  * <ConfirmDialog
@@ -287,9 +388,14 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
 export const ConfirmDialog: ConfirmDialogParts =
 	Object.assign(ConfirmDialogShorthand, {
 		Root: ConfirmDialogRoot,
+		Portal: AlertDialog.Portal,
+		Backdrop: ConfirmDialogBackdrop,
+		Popup: ConfirmDialogPopup,
+		Content: ConfirmDialogContent,
 		Title: ConfirmDialogTitle,
 		Description: ConfirmDialogDescription,
 		Footer: ConfirmDialogFooter,
 		Cancel: ConfirmDialogCancel,
 		Confirm: ConfirmDialogConfirm,
+		Spinner: ConfirmDialogSpinner,
 	});

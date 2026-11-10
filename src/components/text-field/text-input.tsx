@@ -2,15 +2,17 @@ import {
 	Input as BaseInput,
 	type InputProps as BaseInputProps,
 } from "@base-ui/react/input";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
+	type ComponentPropsWithRef,
+	type ReactElement,
 	type ReactNode,
 	useRef,
 	useState,
 } from "react";
 import { lengthTone } from "../../lib/text-length.ts";
-import { Button } from "../button/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -41,7 +43,7 @@ const COPIED_FEEDBACK_MS = 2000;
 
 export type TextInputRootProps = Omit<
 	FieldProps,
-	"label" | "description"
+	"label" | "description" | "optionalLabel"
 > &
 	Readonly<{
 		value: string;
@@ -61,7 +63,7 @@ export type TextInputRootProps = Omit<
  * state onto every part.
  *
  * @example
- * <TextInput.Root value={value} onValueChange={setValue} optionalLabel="optional">…</TextInput.Root>
+ * <TextInput.Root value={value} onValueChange={setValue}>…</TextInput.Root>
  */
 const TextInputRoot = ({
 	value,
@@ -69,7 +71,6 @@ const TextInputRoot = ({
 	disabled,
 	readOnly,
 	requiredness,
-	optionalLabel,
 	errors,
 	dirty,
 	touched,
@@ -97,7 +98,6 @@ const TextInputRoot = ({
 			value={{
 				state: field.state,
 				errors,
-				optionalLabel,
 				phase: field.phase,
 			}}>
 			<TextInputContext
@@ -118,6 +118,7 @@ const TextInputRoot = ({
 				<Field.Root
 					disabled={field.disabled}
 					invalid={field.invalid}
+					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
 					className={clsx(style.root, className)}
@@ -241,67 +242,104 @@ const TextInputInput = ({
 	);
 };
 
-export type TextInputClearProps = Readonly<{
-	/** Accessible name and tooltip hint, such as "Clear". */
-	label: string;
-	className?: string;
-	/** The icon the button shows. */
-	children: ReactNode;
-}>;
+/** The props of a button part: the button's own, but the click, which the part owns. */
+type InlayButtonProps = Omit<
+	ComponentPropsWithRef<"button">,
+	"onClick" | "type" | "children"
+>;
+
+export type TextInputClearProps = InlayButtonProps &
+	Readonly<{
+		/** The button to render, such as `<IconButton label="Clear"><CloseIcon /></IconButton>`. */
+		render: useRender.RenderProp;
+	}>;
 
 /**
- * The icon-only button that empties the control, shown once it holds a value.
+ * The button that empties the control, shown once it holds a value. It renders
+ * whichever button it is given.
  *
  * @example
- * <TextInput.Clear label="Clear"><CloseIcon /></TextInput.Clear>
+ * <TextInput.Clear render={<IconButton label="Clear" variant="tertiary" size="sm"><CloseIcon /></IconButton>} />
  */
 const TextInputClear = ({
-	label,
+	render,
 	className,
-	children,
+	...props
 }: TextInputClearProps): ReactNode => {
 	const { value, setValue, state, focusControl } =
 		useTextInputContext();
-	if (
-		value === "" ||
-		state.disabled === true ||
-		state.readonly === true
-	) {
-		return null;
-	}
-	return (
-		<Button
-			iconOnly
-			icon={children}
-			label={label}
-			variant="tertiary"
-			size="sm"
-			className={clsx(style.action, className)}
-			onClick={() => {
+	return useRender({
+		render,
+		enabled:
+			value !== "" &&
+			state.disabled !== true &&
+			state.readonly !== true,
+		props: {
+			...props,
+			type: "button",
+			className: clsx(style.action, className),
+			onClick: () => {
 				setValue("");
 				focusControl();
-			}}
-		/>
-	);
+			},
+		},
+	});
 };
 
-export type TextInputCopyProps = Readonly<{
-	/** Accessible name and tooltip hint, such as "Copy". */
-	label: string;
-	/** Accessible name and announcement while the confirmation shows, such as "Copied". */
-	copiedLabel: string;
-	/** Accessible name and announcement once copying failed and the text is selected instead. */
-	failedLabel: string;
-	/** The icon while the confirmation shows. Left out, the button keeps its own. */
-	copiedIcon?: ReactNode;
-	/** The icon once copying failed. Left out, the button keeps its own. */
-	failedIcon?: ReactNode;
-	className?: string;
-	/** The icon the button shows. */
-	children: ReactNode;
+export type TextInputActionProps = Omit<
+	ComponentPropsWithRef<"button">,
+	"children"
+> &
+	Readonly<{
+		/** The button to render, such as `<Button variant="tertiary" size="sm">Search</Button>`. */
+		render: useRender.RenderProp;
+	}>;
+
+/**
+ * Any button inside the group, in the place an inlay that acts takes, such as
+ * a search field's trailing "Search" button. It renders whichever button it is
+ * given, disabled while the field is.
+ *
+ * @example
+ * <TextInput.Action render={<Button variant="tertiary" size="sm" type="submit">Search</Button>} />
+ */
+const TextInputAction = ({
+	render,
+	className,
+	...props
+}: TextInputActionProps): ReactElement => {
+	const { state } = useTextInputContext();
+	return useRender({
+		render,
+		props: {
+			type: "button",
+			disabled: state.disabled,
+			...props,
+			className: clsx(style.action, className),
+		},
+	});
+};
+
+/** Where a copy stands: not tried, landed, or refused and selected instead. */
+export type TextInputCopyOutcome =
+	| "idle"
+	| "copied"
+	| "failed";
+
+/** The state a `Copy` part renders from, also set as `data-outcome`. */
+export type TextInputCopyState = Readonly<{
+	outcome: TextInputCopyOutcome;
 }>;
 
-type CopyOutcome = "idle" | "copied" | "failed";
+export type TextInputCopyProps = InlayButtonProps &
+	Readonly<{
+		/** Announced once the value is on the clipboard, such as "Copied". */
+		copiedLabel: string;
+		/** Announced once copying failed and the text is selected instead. */
+		failedLabel: string;
+		/** The button to render, or a function of the copy's state that returns one. */
+		render: useRender.RenderProp<TextInputCopyState>;
+	}>;
 
 /**
  * Writes text to the clipboard, rejecting where there is no clipboard as well
@@ -314,111 +352,126 @@ const writeClipboard = async (text: string) =>
 	navigator.clipboard.writeText(text);
 
 /**
- * The icon-only button that copies the value to the clipboard, shown once it
- * holds one, and announces whether the copy landed.
+ * The button that copies the value to the clipboard, shown once it holds one,
+ * and announces whether the copy landed. It renders whichever button it is
+ * given, and a render function can follow the outcome.
  *
  * @example
- * <TextInput.Copy label="Copy" copiedLabel="Copied" failedLabel="Copy failed, text selected"><CopyIcon /></TextInput.Copy>
+ * <TextInput.Copy
+ * 	copiedLabel="Copied"
+ * 	failedLabel="Copy failed, text selected"
+ * 	render={(props, { outcome }) => (
+ * 		<IconButton {...props} label="Copy" variant="tertiary" size="sm">
+ * 			{outcome === "copied" ? <CheckIcon /> : <CopyIcon />}
+ * 		</IconButton>
+ * 	)}
+ * />
  */
 const TextInputCopy = ({
-	label,
 	copiedLabel,
 	failedLabel,
-	copiedIcon,
-	failedIcon,
+	render,
 	className,
-	children,
+	...props
 }: TextInputCopyProps): ReactNode => {
 	const { value, state, selectControl } =
 		useTextInputContext();
 	const [outcome, setOutcome] =
-		useState<CopyOutcome>("idle");
-	if (value === "" || state.disabled === true) {
-		return null;
-	}
-	const settle = (next: CopyOutcome) => {
+		useState<TextInputCopyOutcome>("idle");
+	const shown = value !== "" && state.disabled !== true;
+	const settle = (next: TextInputCopyOutcome) => {
 		setOutcome(next);
 		setTimeout(
 			() => setOutcome("idle"),
 			COPIED_FEEDBACK_MS,
 		);
 	};
-	const labels: Readonly<Record<CopyOutcome, string>> = {
-		idle: label,
+	const button = useRender({
+		render,
+		enabled: shown,
+		state: { outcome },
+		props: {
+			...props,
+			type: "button",
+			className: clsx(style.action, className),
+			onClick: () => {
+				void writeClipboard(value).then(
+					() => settle("copied"),
+					() => {
+						selectControl();
+						settle("failed");
+					},
+				);
+			},
+		},
+	});
+	if (!shown) {
+		return null;
+	}
+	const announcements: Readonly<
+		Record<TextInputCopyOutcome, string>
+	> = {
+		idle: "",
 		copied: copiedLabel,
 		failed: failedLabel,
 	};
-	const icons: Readonly<Record<CopyOutcome, ReactNode>> = {
-		idle: children,
-		copied: copiedIcon ?? children,
-		failed: failedIcon ?? children,
-	};
 	return (
 		<>
-			<Button
-				iconOnly
-				icon={icons[outcome]}
-				label={labels[outcome]}
-				tone={outcome === "failed" ? "danger" : "brand"}
-				variant="tertiary"
-				size="sm"
-				className={clsx(style.action, className)}
-				onClick={() => {
-					void writeClipboard(value).then(
-						() => settle("copied"),
-						() => {
-							selectControl();
-							settle("failed");
-						},
-					);
-				}}
-			/>
+			{button}
 			<span role="status" className={style.copyStatus}>
-				{outcome === "idle" ? "" : labels[outcome]}
+				{announcements[outcome]}
 			</span>
 		</>
 	);
 };
 
-export type TextInputRevealProps = Readonly<{
-	/** Whether the concealed value shows as text. */
+/** The state a `Reveal` part renders from, also set as `data-revealed`. */
+export type TextInputRevealState = Readonly<{
 	revealed: boolean;
-	onRevealedChange: (revealed: boolean) => void;
-	/** Accessible name and tooltip hint, such as "Show password". */
-	label: string;
-	className?: string;
-	/** The icon the button shows. */
-	children: ReactNode;
 }>;
 
+export type TextInputRevealProps = InlayButtonProps &
+	Readonly<{
+		/** Whether the concealed value shows as text. */
+		revealed: boolean;
+		onRevealedChange: (revealed: boolean) => void;
+		/** The button to render, or a function of `revealed` that returns one. */
+		render: useRender.RenderProp<TextInputRevealState>;
+	}>;
+
 /**
- * The icon-only toggle that shows a concealed value, such as a password, as
- * text. The caller switches the `Input`'s `type` with `revealed`.
+ * The toggle that shows a concealed value, such as a password, as text. The
+ * caller switches the `Input`'s `type` with `revealed`, and names the button for
+ * what a press will do.
  *
  * @example
- * <TextInput.Reveal revealed={revealed} onRevealedChange={setRevealed} label="Show password"><VisibilityIcon /></TextInput.Reveal>
+ * <TextInput.Reveal
+ * 	revealed={revealed}
+ * 	onRevealedChange={setRevealed}
+ * 	render={
+ * 		<Button variant="tertiary" size="sm">{revealed ? "Hide" : "Show"}</Button>
+ * 	}
+ * />
  */
 const TextInputReveal = ({
 	revealed,
 	onRevealedChange,
-	label,
+	render,
 	className,
-	children,
+	...props
 }: TextInputRevealProps): ReactNode => {
 	const { state } = useTextInputContext();
-	return (
-		<Button
-			iconOnly
-			icon={children}
-			label={label}
-			variant="tertiary"
-			size="sm"
-			aria-pressed={revealed}
-			disabled={state.disabled}
-			className={clsx(style.action, className)}
-			onClick={() => onRevealedChange(!revealed)}
-		/>
-	);
+	return useRender({
+		render,
+		state: { revealed },
+		props: {
+			...props,
+			type: "button",
+			disabled: state.disabled,
+			className: clsx(style.action, className),
+			onClick: () => onRevealedChange(!revealed),
+		},
+	});
 };
 
 /**
@@ -460,6 +513,7 @@ export type TextInputParts = Readonly<{
 	Inlay: typeof TextInputInlay;
 	Affix: typeof TextInputAffix;
 	Input: typeof TextInputInput;
+	Action: typeof TextInputAction;
 	Clear: typeof TextInputClear;
 	Copy: typeof TextInputCopy;
 	Reveal: typeof TextInputReveal;
@@ -472,19 +526,24 @@ export type TextInputParts = Readonly<{
 /**
  * The parts of a text input: the field frame, a group carrying the border and
  * its inlays, and the bare control inside it. A `Bar` is a strip of inlays along
- * the bottom edge of the group, for a control the inlays cannot sit beside. For
+ * the bottom edge of the group, for a control the inlays cannot sit beside, and
+ * an `Action` is any button placed in the group. For
  * the ordinary case, use the `TextField` shorthand, which is assembled from
  * exactly these parts. An `Affix` is decoration, so its meaning belongs in the
  * label or description too. `Error` renders the errors `Root` was given.
  *
  * @example
- * <TextInput.Root value={value} onValueChange={setValue} errors={errors} optionalLabel="optional">
- * 	<TextInput.Label>Email</TextInput.Label>
+ * <TextInput.Root value={value} onValueChange={setValue} errors={errors} requiredness="optional">
+ * 	<TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
  * 	<TextInput.Group>
  * 		<TextInput.Input type="email" />
- * 		<TextInput.Clear label="Clear">
- * 			<CloseIcon />
- * 		</TextInput.Clear>
+ * 		<TextInput.Clear
+ * 			render={
+ * 				<IconButton label="Clear" variant="tertiary" size="sm">
+ * 					<CloseIcon />
+ * 				</IconButton>
+ * 			}
+ * 		/>
  * 	</TextInput.Group>
  * 	<TextInput.Error />
  * </TextInput.Root>
@@ -497,6 +556,7 @@ export const TextInput: TextInputParts = {
 	Inlay: TextInputInlay,
 	Affix: TextInputAffix,
 	Input: TextInputInput,
+	Action: TextInputAction,
 	Clear: TextInputClear,
 	Copy: TextInputCopy,
 	Reveal: TextInputReveal,
