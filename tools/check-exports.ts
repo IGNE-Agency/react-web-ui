@@ -404,7 +404,7 @@ const fixtureEntries: readonly Readonly<{
 }>[] = [
 	{
 		entry: "button",
-		sheets: ["button/button", "tooltip/tooltip"],
+		sheets: ["button/button"],
 	},
 	{
 		entry: "spinner",
@@ -412,7 +412,7 @@ const fixtureEntries: readonly Readonly<{
 	},
 	{
 		entry: "root",
-		sheets: ["button/button", "tooltip/tooltip"],
+		sheets: ["button/button"],
 	},
 	{
 		entry: "forms",

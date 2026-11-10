@@ -289,13 +289,11 @@
 		"tooltip/tooltip"
 	],
 	"textarea-field": [
-		"button/button",
 		"error-text/error-text",
 		"field/field",
 		"spinner/spinner",
 		"text-field/text-field",
-		"textarea-field/textarea-field",
-		"tooltip/tooltip"
+		"textarea-field/textarea-field"
 	],
 	"time-field": [
 		"button/button",
