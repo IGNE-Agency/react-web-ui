@@ -68,7 +68,9 @@ const PopoverParts = ({
 				loading={loading}
 				loadingLabel={LOADING}>
 				<Popover.Arrow />
-				<Popover.Title>{CLIENT_NAME}</Popover.Title>
+				<Popover.Title>
+					<Popover.Skeleton>{CLIENT_NAME}</Popover.Skeleton>
+				</Popover.Title>
 				<Popover.Rows>
 					{ROWS.map(row => (
 						<Popover.Row key={row.label}>
@@ -76,7 +78,9 @@ const PopoverParts = ({
 								{row.label}
 							</Popover.RowLabel>
 							<Popover.RowValue numeric={row.numeric}>
-								{row.value}
+								<Popover.Skeleton>
+									{row.value}
+								</Popover.Skeleton>
 							</Popover.RowValue>
 						</Popover.Row>
 					))}

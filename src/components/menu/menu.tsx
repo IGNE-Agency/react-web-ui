@@ -2,7 +2,6 @@ import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
-import { Button, IconButton } from "../button/button.tsx";
 import styles from "./menu.module.scss";
 
 export type MenuRootProps<Payload = unknown> = Omit<
@@ -31,58 +30,26 @@ const Root = <Payload,>(
 	props: MenuRootProps<Payload>,
 ): ReactNode => <BaseMenu.Root {...props} />;
 
-type TriggerBaseProps = Omit<
+export type MenuTriggerProps = Omit<
 	ComponentProps<typeof BaseMenu.Trigger>,
-	"children" | "render"
->;
-
-type IconTriggerProps = TriggerBaseProps &
+	"render"
+> &
 	Readonly<{
-		icon: ReactNode;
-		/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
-		label: string;
-		children?: never;
+		/** The button to render, such as `<IconButton label="Row actions" variant="tertiary"><MoreIcon /></IconButton>`. */
+		render: NonNullable<
+			ComponentProps<typeof BaseMenu.Trigger>["render"]
+		>;
 	}>;
-
-type TextTriggerProps = TriggerBaseProps &
-	Readonly<{
-		/** Optional leading icon rendered before the label. */
-		icon?: ReactNode;
-		children: ReactNode;
-		label?: never;
-	}>;
-
-export type MenuTriggerProps =
-	| IconTriggerProps
-	| TextTriggerProps;
 
 /**
- * The button that opens a menu: `icon` + `label` for the icon form, `children`
- * for a labelled one. Always a {@link Button}.
+ * The button that opens a menu. It renders whichever button it is given.
+ *
+ * @example
+ * <Menu.Trigger render={<IconButton label="Row actions" variant="tertiary"><MoreIcon /></IconButton>} />
  */
-const Trigger = (props: MenuTriggerProps): ReactNode => {
-	if (props.label !== undefined) {
-		const { icon, label, ...triggerProps } = props;
-		return (
-			<IconButton
-				variant="tertiary"
-				label={label}
-				render={<BaseMenu.Trigger {...triggerProps} />}>
-				{icon}
-			</IconButton>
-		);
-	}
-
-	const { icon, children, ...triggerProps } = props;
-	return (
-		<Button
-			variant="secondary"
-			icon={icon}
-			render={<BaseMenu.Trigger {...triggerProps} />}>
-			{children}
-		</Button>
-	);
-};
+const Trigger = (props: MenuTriggerProps): ReactNode => (
+	<BaseMenu.Trigger {...props} />
+);
 
 export type MenuPositionerProps = Omit<
 	ComponentProps<typeof BaseMenu.Positioner>,
@@ -145,48 +112,54 @@ const Content = ({
 	</BaseMenu.Portal>
 );
 
-/** The arrow pointing from the popup at its trigger. */
+/**
+ * The arrow pointing from the popup at its trigger: the kit's own shape, or the
+ * children given in its place.
+ *
+ * @example
+ * <Menu.Arrow />
+ */
 const Arrow = ({
 	className,
+	children,
 	...props
 }: ComponentProps<typeof BaseMenu.Arrow>): ReactNode => (
 	<BaseMenu.Arrow
 		className={clsx(styles.arrow, className)}
 		{...props}>
-		<svg
-			width="16"
-			height="8"
-			viewBox="0 0 16 8"
-			overflow="visible">
-			<path
-				className={styles.arrowFill}
-				d="M0 9 V8 L8 0 L16 8 V9 Z"
-			/>
-		</svg>
+		{children ?? (
+			<svg
+				width="16"
+				height="8"
+				viewBox="0 0 16 8"
+				overflow="visible">
+				<path
+					className={styles.arrowFill}
+					d="M0 9 V8 L8 0 L16 8 V9 Z"
+				/>
+			</svg>
+		)}
 	</BaseMenu.Arrow>
 );
 
 export type MenuItemProps = ComponentProps<
 	typeof BaseMenu.Item
-> &
-	Readonly<{
-		/** Optional leading icon, rendered decoratively before the label. */
-		icon?: ReactNode;
-	}>;
+>;
 
-/** An action, with an optional leading icon. */
+/**
+ * An action. A leading icon goes in its children, before the label.
+ *
+ * @example
+ * <Menu.Item onClick={download}><DownloadIcon />Download</Menu.Item>
+ */
 const Item = ({
-	icon,
 	className,
-	children,
 	...props
 }: MenuItemProps): ReactNode => (
 	<BaseMenu.Item
 		className={clsx(styles.item, className)}
-		{...props}>
-		{icon}
-		{children}
-	</BaseMenu.Item>
+		{...props}
+	/>
 );
 
 export type MenuLinkItemProps = ComponentProps<
@@ -259,10 +232,17 @@ type MenuParts = Readonly<{
  *
  * @example
  * <Menu.Root>
- *   <Menu.Trigger icon={<MoreIcon />} label="Row actions" />
+ *   <Menu.Trigger
+ *     render={
+ *       <IconButton label="Row actions" variant="tertiary">
+ *         <MoreIcon />
+ *       </IconButton>
+ *     }
+ *   />
  *   <Menu.Content sideOffset={8}>
  *     <Menu.Arrow />
- *     <Menu.Item icon={<DownloadIcon />} onClick={download}>
+ *     <Menu.Item onClick={download}>
+ *       <DownloadIcon />
  *       Download
  *     </Menu.Item>
  *   </Menu.Content>

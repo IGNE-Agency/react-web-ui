@@ -16,6 +16,7 @@ import {
 } from "storybook/test";
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import { Menu } from "../menu/menu.tsx";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs.tsx";
@@ -89,15 +90,27 @@ const ByHand = (): ReactElement => (
 			</Breadcrumbs.Item>
 			<Breadcrumbs.Separator>/</Breadcrumbs.Separator>
 			<Breadcrumbs.Item>
-				<Breadcrumbs.Overflow label={MORE} icon={MORE_ICON}>
-					<Menu.LinkItem render={<Link to="/region" />}>
-						{REGION}
-					</Menu.LinkItem>
+				<Breadcrumbs.Overflow>
+					<Breadcrumbs.OverflowTrigger
+						render={
+							<IconButton label={MORE} variant="tertiary">
+								{MORE_ICON}
+							</IconButton>
+						}
+					/>
+					<Breadcrumbs.OverflowContent>
+						<Menu.LinkItem render={<Link to="/region" />}>
+							{REGION}
+						</Menu.LinkItem>
+					</Breadcrumbs.OverflowContent>
 				</Breadcrumbs.Overflow>
 			</Breadcrumbs.Item>
 			<Breadcrumbs.Separator>/</Breadcrumbs.Separator>
 			<Breadcrumbs.Item>
-				<Breadcrumbs.Page>{PAGE}</Breadcrumbs.Page>
+				<Breadcrumbs.ClippedHint
+					render={<Breadcrumbs.Page />}>
+					{PAGE}
+				</Breadcrumbs.ClippedHint>
 			</Breadcrumbs.Item>
 		</Breadcrumbs.List>
 	</Breadcrumbs.Root>

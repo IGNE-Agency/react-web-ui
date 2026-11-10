@@ -1,9 +1,11 @@
 import { mergeProps } from "@base-ui/react/merge-props";
 import { Popover as BasePopover } from "@base-ui/react/popover";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
 	createContext,
+	type ReactElement,
 	type ReactNode,
 	useContext,
 } from "react";
@@ -90,48 +92,24 @@ const Positioner = ({
 	/>
 );
 
-type SkeletonTextProps = Readonly<{
-	children: ReactNode;
-	className?: string;
-}>;
-
-const SkeletonText = ({
-	children,
-	className,
-}: SkeletonTextProps) => (
-	<span className={clsx(styles.skeletonText, className)}>
-		<span className={styles.skeletonTextContent}>
-			{children}
-		</span>
-		<Skeleton className={styles.skeletonTextOverlay} />
-	</span>
-);
-
 export type PopoverPopupProps = ComponentProps<
 	typeof BasePopover.Popup
 > &
-	(
-		| Readonly<{
-				/** Whether the content the popup describes is still in flight. */
-				loading: boolean;
-				/** Announced once while loading, in place of the placeholders. */
-				loadingLabel: string;
-		  }>
-		| Readonly<{
-				loading?: undefined;
-				loadingLabel?: undefined;
-		  }>
-	);
+	Readonly<{
+		/** Whether the content the popup describes is still in flight, for its `Status` and `Skeleton`s. */
+		loading?: boolean;
+	}>;
 
 /**
- * The popover's surface. While `loading`, its title and values draw as
- * placeholders and `loadingLabel` is announced once.
+ * The popover's surface. While `loading`, its `Status` speaks and its
+ * `Skeleton`s draw as placeholders.
+ *
+ * @example
+ * <Popover.Popup loading={rate.isPending}>…</Popover.Popup>
  */
 const Popup = ({
 	loading = false,
-	loadingLabel,
 	className,
-	children,
 	...props
 }: PopoverPopupProps): ReactNode => {
 	const busy =
@@ -139,71 +117,133 @@ const Popup = ({
 		"fresh";
 
 	return (
-		<BasePopover.Popup
-			className={clsx(styles.popup, className)}
-			{...props}>
-			{busy ? (
-				<div role="status">
-					<span className={styles.visuallyHidden}>
-						{loadingLabel}
-					</span>
-				</div>
-			) : null}
-			<LoadingContext value={busy}>
-				{children}
-			</LoadingContext>
-		</BasePopover.Popup>
+		<LoadingContext value={busy}>
+			<BasePopover.Popup
+				className={clsx(styles.popup, className)}
+				{...props}
+			/>
+		</LoadingContext>
 	);
 };
 
-/** The arrow pointing from the popup at its trigger. */
+export type PopoverStatusProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * A hidden live region that announces its children once while the popup is
+ * loading, such as "Loading the rate".
+ *
+ * @example
+ * <Popover.Status>Loading the rate</Popover.Status>
+ */
+const Status = ({
+	render,
+	className,
+	ref,
+	children,
+	...props
+}: PopoverStatusProps): ReactElement => {
+	const loading = useContext(LoadingContext);
+
+	return useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			role: "status",
+			...props,
+			className: clsx(styles.visuallyHidden, className),
+			children: loading ? children : null,
+		},
+	});
+};
+
+export type PopoverSkeletonProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * Text inside a `Title` or a `RowValue` that draws as a placeholder of its
+ * width while the popup is loading, and stays readable to assistive tech.
+ * Otherwise it renders its children as they are.
+ *
+ * @example
+ * <Popover.RowValue numeric><Popover.Skeleton>{rate.data?.base}</Popover.Skeleton></Popover.RowValue>
+ */
+const PopoverSkeleton = ({
+	render,
+	className,
+	ref,
+	children,
+	...props
+}: PopoverSkeletonProps): ReactNode => {
+	const loading = useContext(LoadingContext);
+	const element = useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		enabled: loading,
+		props: {
+			...props,
+			className: clsx(styles.skeletonText, className),
+			children: (
+				<>
+					<span className={styles.skeletonTextContent}>
+						{children}
+					</span>
+					<Skeleton
+						className={styles.skeletonTextOverlay}
+					/>
+					<span className={styles.visuallyHidden}>
+						{children}
+					</span>
+				</>
+			),
+		},
+	});
+
+	return loading ? element : children;
+};
+
+/**
+ * The arrow pointing from the popup at its trigger: the kit's own shape, or the
+ * children given in its place.
+ *
+ * @example
+ * <Popover.Arrow />
+ */
 const Arrow = ({
 	className,
+	children,
 	...props
 }: ComponentProps<typeof BasePopover.Arrow>): ReactNode => (
 	<BasePopover.Arrow
 		className={clsx(styles.arrow, className)}
 		{...props}>
-		<svg
-			width="16"
-			height="8"
-			viewBox="0 0 16 8"
-			overflow="visible">
-			<path
-				className={styles.arrowFill}
-				d="M0 9 V8 L8 0 L16 8 V9 Z"
-			/>
-		</svg>
+		{children ?? (
+			<svg
+				width="16"
+				height="8"
+				viewBox="0 0 16 8"
+				overflow="visible">
+				<path
+					className={styles.arrowFill}
+					d="M0 9 V8 L8 0 L16 8 V9 Z"
+				/>
+			</svg>
+		)}
 	</BasePopover.Arrow>
 );
 
 /** The popover's heading, which names it. */
 const Title = ({
 	className,
-	children,
 	...props
-}: ComponentProps<typeof BasePopover.Title>): ReactNode => {
-	const loading = useContext(LoadingContext);
-
-	return (
-		<BasePopover.Title
-			className={clsx(styles.title, className)}
-			{...props}>
-			{loading ? (
-				<>
-					<SkeletonText className={styles.titleSkeleton}>
-						{children}
-					</SkeletonText>
-					<span className={styles.visuallyHidden}>
-						{children}
-					</span>
-				</>
-			) : (
-				children
-			)}
-		</BasePopover.Title>
-	);
-};
+}: ComponentProps<typeof BasePopover.Title>): ReactNode => (
+	<BasePopover.Title
+		className={clsx(styles.title, className)}
+		{...props}
+	/>
+);
 
 /** A table of `Row`s whose labels and values line up in two columns. */
 const Rows = ({
@@ -245,32 +285,23 @@ export type PopoverRowValueProps = ComponentProps<"span"> &
 		numeric?: boolean;
 	}>;
 
-/** The row's value, beside its label; a placeholder while the popup is loading. */
+/** The row's value, beside its label. */
 const RowValue = ({
 	numeric,
 	className,
-	children,
 	...props
-}: PopoverRowValueProps): ReactNode => {
-	const loading = useContext(LoadingContext);
+}: PopoverRowValueProps): ReactNode => (
+	<span
+		className={clsx(styles.rowValue, className)}
+		data-numeric={numeric || undefined}
+		{...props}
+	/>
+);
 
-	return (
-		<span
-			className={clsx(styles.rowValue, className)}
-			data-numeric={numeric || undefined}
-			{...props}>
-			{loading ? (
-				<SkeletonText className={styles.valueSkeleton}>
-					{children}
-				</SkeletonText>
-			) : (
-				children
-			)}
-		</span>
-	);
-};
-
-export type PopoverContentProps = PopoverPopupProps &
+export type PopoverContentProps = Omit<
+	PopoverPopupProps,
+	"loading"
+> &
 	Readonly<
 		Pick<
 			PopoverPositionerProps,
@@ -279,15 +310,33 @@ export type PopoverContentProps = PopoverPopupProps &
 			/** The element the popover is portalled into. @default document.body */
 			container?: BasePopover.Portal.Props["container"];
 		}
-	>;
+	> &
+	(
+		| Readonly<{
+				/** Whether the content the popup describes is still in flight, for its `Skeleton`s. */
+				loading: boolean;
+				/** Announced once while loading, through a `Status`. */
+				loadingLabel: string;
+		  }>
+		| Readonly<{
+				loading?: undefined;
+				loadingLabel?: undefined;
+		  }>
+	);
 
-/** `Portal`, `Positioner` and `Popup` in one: the popover's surface, placed against its trigger. */
+/**
+ * `Portal`, `Positioner` and `Popup` in one: the popover's surface, placed
+ * against its trigger. With a `loadingLabel` it holds the `Status` that
+ * announces it.
+ */
 const Content = ({
 	container,
 	side,
 	sideOffset,
 	align,
 	alignOffset,
+	loadingLabel,
+	children,
 	...props
 }: PopoverContentProps): ReactNode => (
 	<BasePopover.Portal container={container}>
@@ -296,7 +345,12 @@ const Content = ({
 			sideOffset={sideOffset}
 			align={align}
 			alignOffset={alignOffset}>
-			<Popup {...props} />
+			<Popup {...props}>
+				{loadingLabel === undefined ? null : (
+					<Status>{loadingLabel}</Status>
+				)}
+				{children}
+			</Popup>
 		</Positioner>
 	</BasePopover.Portal>
 );
@@ -308,6 +362,8 @@ type PopoverParts = Readonly<{
 	Positioner: typeof Positioner;
 	Popup: typeof Popup;
 	Content: typeof Content;
+	Status: typeof Status;
+	Skeleton: typeof PopoverSkeleton;
 	Arrow: typeof Arrow;
 	Title: typeof Title;
 	Rows: typeof Rows;
@@ -321,8 +377,9 @@ type PopoverParts = Readonly<{
 
 /**
  * A rich popover over base-ui's `Popover`, with a `Title` and rows of labelled
- * values. `Content` bundles the portal, positioner and popup; the unbundled
- * parts stay.
+ * values. `Content` bundles the portal, positioner and popup, and the `Status`
+ * for a `loadingLabel`; the unbundled parts stay. While loading, text wrapped in
+ * a `Skeleton` draws as a placeholder.
  *
  * @example
  * <Popover.Root>
@@ -335,7 +392,9 @@ type PopoverParts = Readonly<{
  *     <Popover.Rows>
  *       <Popover.Row>
  *         <Popover.RowLabel>Base</Popover.RowLabel>
- *         <Popover.RowValue numeric>{rate.data?.base}</Popover.RowValue>
+ *         <Popover.RowValue numeric>
+ *           <Popover.Skeleton>{rate.data?.base}</Popover.Skeleton>
+ *         </Popover.RowValue>
  *       </Popover.Row>
  *     </Popover.Rows>
  *   </Popover.Content>
@@ -348,6 +407,8 @@ export const Popover: PopoverParts = {
 	Positioner,
 	Popup,
 	Content,
+	Status,
+	Skeleton: PopoverSkeleton,
 	Arrow,
 	Title,
 	Rows,

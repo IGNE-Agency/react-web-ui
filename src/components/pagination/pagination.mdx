@@ -39,16 +39,24 @@ import * as PaginationStories from "./pagination.stories.tsx";
 
 ### Compose only the parts the list has room for
 
-`Pagination` is the page size, the index and the controls in a row. Where a list needs less, compose the parts in a `Pagination.Root`: `PageSize` (which holds the `Select` parts), `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes. `Controls` is `First`, `Previous`, `Next` and `Last` in a row; compose those four directly where the list needs only some of them, or another order. Each takes its glyph as its children.
+`Pagination` is the page size, the index and the controls in a row. Where a list needs less, compose the parts in a `Pagination.Root`: `PageSize` (which holds the `Select` parts), `Index` and `Controls` are independent. A narrow list drops the page size and keeps the controls; nothing about the other parts changes. `Controls` is a row for the steps it is given, `First`, `Previous`, `Next` and `Last`; compose only some of them, or another order, in it or directly in the root. Each step renders the button it is given, an `IconButton` with its name and glyph.
 
 ```tsx
-<Pagination.Previous label="Previous page">
-	<ChevronLeftIcon />
-</Pagination.Previous>
+<Pagination.Previous
+	render={
+		<IconButton label="Previous page" variant="tertiary">
+			<ChevronLeftIcon />
+		</IconButton>
+	}
+/>
 <Pagination.Index label={indexLabel} />
-<Pagination.Next label="Next page">
-	<ChevronRightIcon />
-</Pagination.Next>
+<Pagination.Next
+	render={
+		<IconButton label="Next page" variant="tertiary">
+			<ChevronRightIcon />
+		</IconButton>
+	}
+/>
 ```
 
 ### The page size in effect is always on offer
