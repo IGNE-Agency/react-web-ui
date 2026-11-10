@@ -73,6 +73,12 @@ const SwitchLabel = ({
 	/>
 );
 
+/**
+ * The track, which takes a `Switch.Thumb` as its child.
+ *
+ * @example
+ * <Switch.Control checked={enabled} onCheckedChange={setEnabled}><Switch.Thumb /></Switch.Control>
+ */
 const SwitchControl = ({
 	className,
 	...props
@@ -83,17 +89,33 @@ const SwitchControl = ({
 			className={clsx(style.control, className)}
 			{...fieldStateAttributes(focus)}
 			{...props}
-			{...focus.props}>
-			<BaseSwitch.Thumb className={style.thumb} />
-		</BaseSwitch.Root>
+			{...focus.props}
+		/>
 	);
 };
+
+/**
+ * The thumb that slides along the track.
+ *
+ * @example
+ * <Switch.Thumb />
+ */
+const SwitchThumb = ({
+	className,
+	...props
+}: BaseSwitch.Thumb.Props): ReactNode => (
+	<BaseSwitch.Thumb
+		className={clsx(style.thumb, className)}
+		{...props}
+	/>
+);
 
 /** The parts of a switch. */
 export type SwitchParts = Readonly<{
 	Root: typeof SwitchRoot;
 	Label: typeof SwitchLabel;
 	Control: typeof SwitchControl;
+	Thumb: typeof SwitchThumb;
 	Description: typeof Field.Description;
 	Error: typeof Field.Error;
 }>;
@@ -106,7 +128,9 @@ export type SwitchParts = Readonly<{
  * @example
  * <Switch.Root filled={enabled} requiredness="optional">
  * 	<Switch.Label>
- * 		<Switch.Control checked={enabled} onCheckedChange={setEnabled} />
+ * 		<Switch.Control checked={enabled} onCheckedChange={setEnabled}>
+ * 			<Switch.Thumb />
+ * 		</Switch.Control>
  * 		<Field.InlineLabelText>Email me about new messages <Field.RequiredMark /></Field.InlineLabelText>
  * 		<Field.InlineOptional optionalLabel="optional" />
  * 	</Switch.Label>
@@ -116,6 +140,7 @@ export const Switch: SwitchParts = {
 	Root: SwitchRoot,
 	Label: SwitchLabel,
 	Control: SwitchControl,
+	Thumb: SwitchThumb,
 	Description: Field.Description,
 	Error: Field.Error,
 };

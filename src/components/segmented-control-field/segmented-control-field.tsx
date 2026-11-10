@@ -101,7 +101,16 @@ export const SegmentedControlField = ({
 						{option.label}
 					</SegmentedControl.Option>
 				))}
-				<SegmentedControl.Indicator options={options} />
+				<SegmentedControl.Indicator>
+					<SegmentedControl.IndicatorLabels>
+						{options.map(option => (
+							<SegmentedControl.IndicatorLabel
+								key={option.value}>
+								{option.label}
+							</SegmentedControl.IndicatorLabel>
+						))}
+					</SegmentedControl.IndicatorLabels>
+				</SegmentedControl.Indicator>
 			</SegmentedControl.Group>
 
 			<SegmentedControl.Description id={descriptionId}>

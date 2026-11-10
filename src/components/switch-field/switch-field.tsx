@@ -71,8 +71,9 @@ export const SwitchField = ({
 					name={ids.controlId}
 					inputRef={detachHiddenInput}
 					required={requiredness === "required"}
-					{...props}
-				/>
+					{...props}>
+					<Switch.Thumb />
+				</Switch.Control>
 				<Field.InlineLabelText>
 					{label} <Field.RequiredMark />
 				</Field.InlineLabelText>
