@@ -2,7 +2,10 @@ import ArchiveIcon from "@material-design-icons/svg/outlined/archive.svg?react";
 import DownloadIcon from "@material-design-icons/svg/outlined/download.svg?react";
 import PrintIcon from "@material-design-icons/svg/outlined/print.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Button } from "../../src/components/button/index.ts";
+import {
+	Button,
+	IconButton,
+} from "../../src/components/button/index.ts";
 import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
 import { Beside } from "./beside";
 import { Details, DetailsList } from "./details";
@@ -224,21 +227,15 @@ When the box really can't grow, the words go and something else names the contro
 		visual={
 			<Live>
 				<div className={styles.toolbar}>
-					<Button
-						iconOnly
-						icon={<Icon svg={DownloadIcon} label="" />}
-						label="Download"
-					/>
-					<Button
-						iconOnly
-						icon={<Icon svg={PrintIcon} label="" />}
-						label="Print"
-					/>
-					<Button
-						iconOnly
-						icon={<Icon svg={ArchiveIcon} label="" />}
-						label="Archive"
-					/>
+					<IconButton label="Download">
+						<Icon svg={DownloadIcon} label="" />
+					</IconButton>
+					<IconButton label="Print">
+						<Icon svg={PrintIcon} label="" />
+					</IconButton>
+					<IconButton label="Archive">
+						<Icon svg={ArchiveIcon} label="" />
+					</IconButton>
 				</div>
 			</Live>
 		}
@@ -604,11 +601,9 @@ An icon-only control gets a tooltip and an accessible label, and any longer text
 <Example kind="do" caption="The row cannot grow, so each icon is named by its tooltip and accessible label.">
 
 ```tsx
-<Button
-	iconOnly
-	icon={<DownloadIcon />}
-	label={m.invoice_download()}
-/>
+<IconButton label={m.invoice_download()}>
+	<DownloadIcon />
+</IconButton>
 ```
 
 </Example>

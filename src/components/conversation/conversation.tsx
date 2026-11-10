@@ -15,7 +15,7 @@ import {
 	Avatar,
 	type AvatarProps,
 } from "../avatar/index.ts";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import type {
@@ -363,13 +363,12 @@ const MessageFilesDownloadAll = ({
 	useRender({
 		defaultTagName: "button",
 		render: render ?? (
-			<Button
+			<IconButton
 				variant="tertiary"
 				size="sm"
-				iconOnly
-				icon={children}
-				label={label}
-			/>
+				label={label}>
+				{children}
+			</IconButton>
 		),
 		props: mergeProps<"button">(
 			{
@@ -400,12 +399,9 @@ const ScrollToBottom = ({
 	useRender({
 		defaultTagName: "button",
 		render: render ?? (
-			<Button
-				variant="tertiary"
-				iconOnly
-				icon={children}
-				label={label}
-			/>
+			<IconButton variant="tertiary" label={label}>
+				{children}
+			</IconButton>
 		),
 		props: mergeProps<"button">(
 			{

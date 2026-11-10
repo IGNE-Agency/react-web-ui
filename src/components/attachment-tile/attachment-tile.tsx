@@ -9,7 +9,7 @@ import {
 	Button as AriaButton,
 	Tag as AriaTag,
 } from "react-aria-components";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import {
 	AttachmentPreview,
 	useAttachmentPreview,
@@ -67,11 +67,9 @@ const Remove = ({
 
 	return (
 		<span className={clsx(style.remove, className)}>
-			<Button
+			<IconButton
 				variant="tertiary"
 				size="sm"
-				iconOnly
-				icon={children}
 				label={label}
 				render={
 					<AriaButton
@@ -80,8 +78,9 @@ const Remove = ({
 						aria-labelledby={removeId}
 						excludeFromTabOrder
 					/>
-				}
-			/>
+				}>
+				{children}
+			</IconButton>
 		</span>
 	);
 };

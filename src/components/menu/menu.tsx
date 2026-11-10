@@ -2,7 +2,7 @@ import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
-import { Button } from "../button/button.tsx";
+import { Button, IconButton } from "../button/button.tsx";
 import styles from "./menu.module.scss";
 
 export type MenuRootProps<Payload = unknown> = Omit<
@@ -64,13 +64,12 @@ const Trigger = (props: MenuTriggerProps): ReactNode => {
 	if (props.label !== undefined) {
 		const { icon, label, ...triggerProps } = props;
 		return (
-			<Button
+			<IconButton
 				variant="tertiary"
-				iconOnly
-				icon={icon}
 				label={label}
-				render={<BaseMenu.Trigger {...triggerProps} />}
-			/>
+				render={<BaseMenu.Trigger {...triggerProps} />}>
+				{icon}
+			</IconButton>
 		);
 	}
 

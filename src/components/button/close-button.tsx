@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from "react";
-import { Button } from "./button.tsx";
+import { IconButton } from "./button.tsx";
 
 export type CloseButtonProps = Readonly<{
 	/** Accessible name, surfaced as the tooltip hint and the `aria-label`. */
@@ -21,11 +21,10 @@ export const CloseButton = ({
 	icon,
 	render,
 }: CloseButtonProps): ReactNode => (
-	<Button
+	<IconButton
 		variant="tertiary"
-		iconOnly
-		icon={icon}
 		label={closeLabel}
-		render={render}
-	/>
+		render={render}>
+		{icon}
+	</IconButton>
 );

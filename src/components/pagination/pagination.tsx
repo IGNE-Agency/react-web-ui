@@ -5,7 +5,7 @@ import type {
 	ReactElement,
 	ReactNode,
 } from "react";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { Select } from "../select-field/select.tsx";
 import {
@@ -210,11 +210,9 @@ const PageStep = ({
 	);
 
 	return (
-		<Button
+		<IconButton
 			variant="tertiary"
 			{...props}
-			iconOnly
-			icon={children}
 			label={label}
 			aria-disabled={unavailable || undefined}
 			data-disabled={unavailable || undefined}
@@ -223,8 +221,9 @@ const PageStep = ({
 				if (!unavailable) {
 					onPageIndexChange(target);
 				}
-			}}
-		/>
+			}}>
+			{children}
+		</IconButton>
 	);
 };
 

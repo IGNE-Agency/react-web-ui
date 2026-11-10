@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from "react";
 import type { ZxcvbnLanguages } from "../../lib/password-strength/password-strength.ts";
+import { IconButton } from "../button/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
@@ -121,11 +122,21 @@ export const PasswordField = ({
 				<TextInput.Reveal
 					revealed={revealed}
 					onRevealedChange={setRevealed}
-					label={
-						revealed ? hidePasswordLabel : showPasswordLabel
-					}>
-					{revealed ? hidePasswordIcon : showPasswordIcon}
-				</TextInput.Reveal>
+					render={
+						<IconButton
+							label={
+								revealed
+									? hidePasswordLabel
+									: showPasswordLabel
+							}
+							variant="tertiary"
+							size="sm">
+							{revealed
+								? hidePasswordIcon
+								: showPasswordIcon}
+						</IconButton>
+					}
+				/>
 			</TextInput.Group>
 			{strength === true && (
 				<PasswordStrength

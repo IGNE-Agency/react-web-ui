@@ -17,22 +17,11 @@
 	}
 
 	.input {
-		flex: 1;
-		min-inline-size: 0;
-		border: none;
-		background: none;
-		padding: 0;
-		color: inherit;
-		font: inherit;
+		@include form.bare-control;
+
 		font-variant-numeric: tabular-nums;
 		text-align: var(--number-field-text-align, end);
 		cursor: text;
-
-		@include form.field-text-metrics;
-
-		&::placeholder {
-			color: var(--field-placeholder-fg);
-		}
 	}
 
 	.inlay {

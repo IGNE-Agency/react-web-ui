@@ -1,7 +1,7 @@
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -236,15 +236,14 @@ const NumberInputDecrement = ({
 	className,
 	children,
 }: NumberInputStepProps): ReactNode => (
-	<Button
-		iconOnly
-		icon={children}
+	<IconButton
 		label={label}
 		variant="tertiary"
 		size="sm"
 		className={clsx(style.action, className)}
-		render={<BaseNumberField.Decrement />}
-	/>
+		render={<BaseNumberField.Decrement />}>
+		{children}
+	</IconButton>
 );
 
 /**
@@ -258,15 +257,14 @@ const NumberInputIncrement = ({
 	className,
 	children,
 }: NumberInputStepProps): ReactNode => (
-	<Button
-		iconOnly
-		icon={children}
+	<IconButton
 		label={label}
 		variant="tertiary"
 		size="sm"
 		className={clsx(style.action, className)}
-		render={<BaseNumberField.Increment />}
-	/>
+		render={<BaseNumberField.Increment />}>
+		{children}
+	</IconButton>
 );
 
 export type NumberInputPendingProps = InputPendingProps;

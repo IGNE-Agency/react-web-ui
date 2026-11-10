@@ -43,7 +43,7 @@
 
 	.rangeSeparator {
 		flex: none;
-		color: var(--field-muted-fg);
+		color: var(--_field-muted-fg);
 	}
 
 	.rangeSpacer {
@@ -60,12 +60,12 @@
 		font-variant-numeric: tabular-nums;
 
 		&[data-placeholder] {
-			color: var(--field-placeholder-fg);
+			color: var(--_field-placeholder-fg);
 		}
 
 		&[data-type="literal"] {
 			padding-inline: 0;
-			color: var(--field-muted-fg);
+			color: var(--_field-muted-fg);
 		}
 
 		&[data-focused] {

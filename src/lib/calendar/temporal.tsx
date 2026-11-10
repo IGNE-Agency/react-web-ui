@@ -29,7 +29,7 @@ import {
 	RangeCalendar as AriaRangeCalendar,
 	type RangeCalendarProps as AriaRangeCalendarProps,
 } from "react-aria-components";
-import { Button } from "../../components/button/index.ts";
+import { IconButton } from "../../components/button/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -205,15 +205,14 @@ export const TemporalTrigger = ({
 	ref,
 	children,
 }: TemporalTriggerProps): ReactNode => (
-	<Button
-		iconOnly
-		icon={children}
+	<IconButton
 		label={label}
 		variant="tertiary"
 		size="sm"
 		className={style.trigger}
-		render={<AriaButton ref={ref} />}
-	/>
+		render={<AriaButton ref={ref} />}>
+		{children}
+	</IconButton>
 );
 
 export type TemporalPopupProps = Omit<
@@ -260,14 +259,13 @@ const CalendarChrome = ({
 	Readonly<{ children: ReactNode }>): ReactNode => (
 	<>
 		<header className={style.header}>
-			<Button
-				iconOnly
-				icon={previousIcon}
+			<IconButton
 				label={previousMonthLabel}
 				variant="tertiary"
 				size="md"
-				render={<AriaButton slot="previous" />}
-			/>
+				render={<AriaButton slot="previous" />}>
+				{previousIcon}
+			</IconButton>
 			<CalendarNavigation
 				monthLabel={monthLabel}
 				yearLabel={yearLabel}
@@ -275,14 +273,13 @@ const CalendarChrome = ({
 				checkIcon={checkIcon}
 				expandIcon={expandIcon}
 			/>
-			<Button
-				iconOnly
-				icon={nextIcon}
+			<IconButton
 				label={nextMonthLabel}
 				variant="tertiary"
 				size="md"
-				render={<AriaButton slot="next" />}
-			/>
+				render={<AriaButton slot="next" />}>
+				{nextIcon}
+			</IconButton>
 		</header>
 		{children}
 	</>

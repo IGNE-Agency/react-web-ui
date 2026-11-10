@@ -8,6 +8,10 @@
 		gap: var(--field-gap, var(--sys-unit-4));
 		inline-size: 100%;
 
+		&[data-disabled] {
+			opacity: var(--field-disabled-opacity, 1);
+		}
+
 		&[data-field-group-member] {
 			> * {
 				grid-row: extra;
@@ -58,8 +62,8 @@
 		display: inline-block;
 		vertical-align: middle;
 		translate: 0 -1px;
-		inline-size: 0.625rem;
-		block-size: 0.625rem;
+		inline-size: var(--field-required-size, 0.625rem);
+		block-size: var(--field-required-size, 0.625rem);
 		background-color: var(
 			--field-required-fg,
 			var(--sys-color-primary)

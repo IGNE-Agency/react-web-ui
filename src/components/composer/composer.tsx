@@ -8,7 +8,7 @@ import {
 	useState,
 } from "react";
 import { lengthTone } from "../../lib/text-length.ts";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import {
 	fieldStateAttributes,
 	useFieldFocus,
@@ -299,18 +299,17 @@ const SendButton = ({
 	const { submit, canSend } = useComposerContext();
 
 	return (
-		<Button
+		<IconButton
 			variant={variant}
 			size="md"
-			iconOnly
-			icon={children}
 			label={label}
 			disabled={!canSend}
 			onClick={() => {
 				void submit();
 			}}
-			{...props}
-		/>
+			{...props}>
+			{children}
+		</IconButton>
 	);
 };
 

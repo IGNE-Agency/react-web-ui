@@ -35,7 +35,7 @@
 		@include form.field-text-metrics;
 
 		.control[data-placeholder] & {
-			color: var(--field-placeholder-fg);
+			color: var(--_field-placeholder-fg);
 		}
 	}
 
@@ -58,7 +58,7 @@
 
 	.icon {
 		display: inline-flex;
-		color: var(--field-muted-fg);
+		color: var(--_field-muted-fg);
 	}
 
 	.tags {

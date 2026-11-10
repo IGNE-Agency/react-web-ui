@@ -11,7 +11,7 @@ import {
 	useEffect,
 } from "react";
 import { useRequiredContext } from "../../lib/use-required-context.ts";
-import { Button } from "../button/button.tsx";
+import { Button, IconButton } from "../button/button.tsx";
 import {
 	flushBufferedToasts,
 	type ToastData,
@@ -138,17 +138,16 @@ const Close = ({
 	const { close } = BaseToast.useToastManager();
 
 	return (
-		<Button
+		<IconButton
 			className={clsx(styles.close, className)}
 			variant="tertiary"
 			size="sm"
-			iconOnly
-			icon={children}
 			label={label}
 			onClick={() => {
 				close(id);
-			}}
-		/>
+			}}>
+			{children}
+		</IconButton>
 	);
 };
 

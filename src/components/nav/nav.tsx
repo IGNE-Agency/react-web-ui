@@ -9,7 +9,7 @@ import {
 	useState,
 } from "react";
 import { useSlidingIndicator } from "../../lib/sliding-indicator/index.ts";
-import { Button } from "../button/button.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import {
 	NavContext,
@@ -253,15 +253,14 @@ const GroupToggle = ({
 	className,
 	...props
 }: NavGroupToggleProps): ReactNode => (
-	<Button
+	<IconButton
 		{...props}
 		variant="tertiary"
-		iconOnly
 		className={clsx(style.groupToggle, className)}
-		icon={children}
 		label={label}
-		render={<BaseCollapsible.Trigger />}
-	/>
+		render={<BaseCollapsible.Trigger />}>
+		{children}
+	</IconButton>
 );
 
 export type NavGroupPanelProps = Omit<

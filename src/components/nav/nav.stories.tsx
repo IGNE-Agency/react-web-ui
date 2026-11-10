@@ -24,7 +24,7 @@ import {
 	type within,
 } from "storybook/test";
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
-import { Button } from "../button/button.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Drawer } from "../drawer/drawer.tsx";
 import { Icon, type SvgComponent } from "../icon/icon.tsx";
 import { Nav, type NavRootProps } from "./nav.tsx";
@@ -231,19 +231,16 @@ const Sidebar = (args: NavRootProps): ReactElement => {
 			{...args}
 			className={styles.sidebar}
 			data-collapsed={collapsed ? "true" : undefined}>
-			<Button
+			<IconButton
 				variant="tertiary"
-				iconOnly
-				icon={
-					collapsed ? (
-						<Icon svg={MenuIcon} label="" />
-					) : (
-						<Icon svg={MenuOpenIcon} label="" />
-					)
-				}
 				label={TOGGLE_RAIL}
-				onClick={() => setCollapsed(current => !current)}
-			/>
+				onClick={() => setCollapsed(current => !current)}>
+				{collapsed ? (
+					<Icon svg={MenuIcon} label="" />
+				) : (
+					<Icon svg={MenuOpenIcon} label="" />
+				)}
+			</IconButton>
 			<Nav.List className={styles.grow}>
 				<RailEntries labelled={!collapsed} />
 				<li aria-hidden="true" className={styles.spacer} />

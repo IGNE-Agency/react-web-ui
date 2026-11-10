@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { IconButton } from "../button/index.ts";
 import type {
 	FieldBlurHandler,
 	FieldProps,
@@ -166,19 +167,46 @@ export const TextField = ({
 			)}
 			<TextInput.Pending />
 			{clearable === true && (
-				<TextInput.Clear label={clearLabel}>
-					{clearIcon}
-				</TextInput.Clear>
+				<TextInput.Clear
+					render={
+						<IconButton
+							label={clearLabel}
+							variant="tertiary"
+							size="sm">
+							{clearIcon}
+						</IconButton>
+					}
+				/>
 			)}
 			{copyable === true && (
 				<TextInput.Copy
-					label={copyLabel}
 					copiedLabel={copiedLabel}
 					failedLabel={copyFailedLabel}
-					copiedIcon={copiedIcon}
-					failedIcon={copyFailedIcon}>
-					{copyIcon}
-				</TextInput.Copy>
+					render={(props, { outcome }) => (
+						<IconButton
+							{...props}
+							label={
+								{
+									idle: copyLabel,
+									copied: copiedLabel,
+									failed: copyFailedLabel,
+								}[outcome]
+							}
+							tone={
+								outcome === "failed" ? "danger" : "brand"
+							}
+							variant="tertiary"
+							size="sm">
+							{
+								{
+									idle: copyIcon,
+									copied: copiedIcon ?? copyIcon,
+									failed: copyFailedIcon ?? copyIcon,
+								}[outcome]
+							}
+						</IconButton>
+					)}
+				/>
 			)}
 		</TextInput.Group>
 		<TextInput.Counter />

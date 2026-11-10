@@ -160,10 +160,7 @@ const FormErrors = ({
 	);
 };
 
-export type FormSubmitProps = Omit<
-	Extract<ButtonProps, Readonly<{ iconOnly?: false }>>,
-	"type" | "iconOnly"
-> &
+export type FormSubmitProps = Omit<ButtonProps, "type"> &
 	Readonly<{
 		/** What a wait is announced as once it has lasted, such as "Saving". */
 		busyLabel: string;

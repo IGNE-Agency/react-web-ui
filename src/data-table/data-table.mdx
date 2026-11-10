@@ -12,7 +12,10 @@ import { Beside } from "../../docs/design-system/beside";
 import { DoDont } from "../../docs/design-system/do-dont";
 import { Example } from "../../docs/design-system/example";
 import { StoryProviders } from "../lib/storybook/story-providers.tsx";
-import { Button } from "../components/button/button.tsx";
+import {
+	Button,
+	IconButton,
+} from "../components/button/button.tsx";
 import { Tag } from "../components/tag/tag.tsx";
 import { Checkbox } from "../components/checkbox-field/checkbox.tsx";
 import { Icon } from "../components/icon/icon.tsx";
@@ -64,8 +67,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for A. de Vries"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for J. Bakker"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
             </tbody>
           </table>
         </div>
@@ -93,8 +96,8 @@ Cell padding is tighter vertically than horizontally, and the header gets the la
               <tr><th>Client</th><th>Status</th><th className={styles.fit} aria-label="Actions" /></tr>
             </thead>
             <tbody>
-              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for A. de Vries" /></td></tr>
-              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><Button variant="tertiary" iconOnly icon={<Icon svg={MoreVertIcon} label="" />} label="Actions for J. Bakker" /></td></tr>
+              <tr><td>A. de Vries</td><td><Tag.Root tone="info">Submitted</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for A. de Vries"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
+              <tr className={styles.stripe}><td>J. Bakker</td><td><Tag.Root tone="success">Paid</Tag.Root></td><td className={styles.fit}><IconButton variant="tertiary" label="Actions for J. Bakker"><Icon svg={MoreVertIcon} label="" /></IconButton></td></tr>
             </tbody>
           </table>
         </div>

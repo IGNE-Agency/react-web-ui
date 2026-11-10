@@ -15,20 +15,7 @@
 	}
 
 	.control {
-		flex: 1;
-		min-inline-size: 0;
-		border: none;
-		background: none;
-		padding: 0;
-		color: inherit;
-		font: inherit;
-
-		@include form.bare-native-entry;
-		@include form.field-text-metrics;
-
-		&::placeholder {
-			color: var(--field-placeholder-fg);
-		}
+		@include form.bare-control;
 	}
 
 	.bar {

@@ -10,7 +10,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import {
 	type FieldBlurHandler,
 	fieldStateAttributes,
@@ -344,9 +344,7 @@ const PhotoInputRemove = ({
 		return null;
 	}
 	return (
-		<Button
-			iconOnly
-			icon={icon}
+		<IconButton
 			label={label}
 			variant="secondary"
 			className={clsx(style.remove, className)}
@@ -354,8 +352,9 @@ const PhotoInputRemove = ({
 				onClick?.(event);
 				void remove();
 			}}
-			{...props}
-		/>
+			{...props}>
+			{icon}
+		</IconButton>
 	);
 };
 

@@ -42,7 +42,7 @@
 	.icon {
 		display: inline-flex;
 		flex-shrink: 0;
-		color: var(--select-icon-fg, var(--field-muted-fg));
+		color: var(--select-icon-fg, var(--_field-muted-fg));
 	}
 
 	.positioner {

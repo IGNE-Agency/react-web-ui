@@ -84,12 +84,11 @@ export const ignore = () => undefined;
 ```tsx
 <TextInput.Group>
 	<TextInput.Input />
-	<Button
-		iconOnly
-		icon={<CloseIcon />}
+	<IconButton
 		label={clearLabel}
-		onClick={() => setValue("")}
-	/>
+		onClick={() => setValue("")}>
+		<CloseIcon />
+	</IconButton>
 </TextInput.Group>
 ```
 

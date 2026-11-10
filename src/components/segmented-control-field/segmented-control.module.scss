@@ -9,7 +9,7 @@
 	.group {
 		@include form.ink;
 
-		--field-fg: var(
+		--_field-fg: var(
 			--segmented-control-fg,
 			var(--sys-color-on-primary-container)
 		);
@@ -93,7 +93,7 @@
 			--segmented-control-option-padding-inline,
 			var(--sys-unit-10)
 		);
-		color: var(--field-fg);
+		color: var(--_field-fg);
 		font: var(
 			--segmented-control-font,
 			var(--sys-font-label-medium)

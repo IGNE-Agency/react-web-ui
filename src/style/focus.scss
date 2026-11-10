@@ -1,8 +1,9 @@
 // See `docs/design-system/interaction.mdx`.
 
 /// Declares the ring at 0-width so a broad `transition` grows it in from the
-/// brand colour. Do not unwrap the `& {}`: it keeps the declarations in source
-/// order when this is included after nested rules.
+/// focus-ring colour. Do not unwrap the `& {}`: it keeps the declarations in
+/// source order when this is included after nested rules. Given a `$name`, the
+/// ring reads `--<name>-ring-color` and `--<name>-ring-offset` first.
 ///
 /// @example
 ///   @use "../../style/focus.scss" as focus;
@@ -10,17 +11,37 @@
 ///   .my-thing {
 ///       @include focus.ring-idle;
 ///   }
-@mixin ring-idle {
+@mixin ring-idle($name: null) {
 	& {
-		outline: 0 solid var(--sys-color-focus-ring);
-		outline-offset: var(--sys-focus-ring-offset);
+		@if $name {
+			outline: 0 solid
+				var(
+					--#{$name}-ring-color,
+					var(--sys-color-focus-ring)
+				);
+			outline-offset: var(
+				--#{$name}-ring-offset,
+				var(--sys-focus-ring-offset)
+			);
+		} @else {
+			outline: 0 solid var(--sys-color-focus-ring);
+			outline-offset: var(--sys-focus-ring-offset);
+		}
 	}
 }
 
 /// Widens an idle ring into view. Pair with `ring-idle` to drive one element's
-/// ring from another element's focus state.
-@mixin ring-shown {
-	outline-width: var(--sys-focus-ring-width);
+/// ring from another element's focus state. Given a `$name`, the width reads
+/// `--<name>-ring-width` first.
+@mixin ring-shown($name: null) {
+	@if $name {
+		outline-width: var(
+			--#{$name}-ring-width,
+			var(--sys-focus-ring-width)
+		);
+	} @else {
+		outline-width: var(--sys-focus-ring-width);
+	}
 }
 
 /// The keyboard focus ring. Every focusable element needs this.
@@ -31,11 +52,11 @@
 ///   .my-button {
 ///       @include focus.ring;
 ///   }
-@mixin ring {
-	@include ring-idle;
+@mixin ring($name: null) {
+	@include ring-idle($name);
 
 	&:focus-visible {
-		@include ring-shown;
+		@include ring-shown($name);
 	}
 }
 
@@ -46,12 +67,12 @@
 ///
 /// @example
 ///   .my-control {
-///       @include focus.ring-projected;
+///       @include focus.ring-projected("field");
 ///   }
-@mixin ring-projected {
-	@include ring-idle;
+@mixin ring-projected($name: null) {
+	@include ring-idle($name);
 
 	&[data-focus-visible] {
-		@include ring-shown;
+		@include ring-shown($name);
 	}
 }

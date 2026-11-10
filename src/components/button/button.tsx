@@ -19,20 +19,22 @@ export type ButtonSize = "sm" | "md" | "lg";
 /** A button's colour role. */
 export type ButtonTone = "brand" | "danger";
 
-type BaseProps = ComponentPropsWithRef<"button"> &
-	Readonly<{
-		/** Visual tier. @default "secondary" */
-		variant?: ButtonVariant;
-		/** @default "md" */
-		size?: ButtonSize;
-		/**
-		 * Colour role. `danger` re-points every tier to the error role, for
-		 * irreversible actions. @default "brand"
-		 */
-		tone?: ButtonTone;
-		/** A library part this button should render as, e.g. `<Menu.Trigger />`. */
-		render?: ReactElement;
-	}>;
+/** The props every button takes, whatever it shows. */
+export type ButtonBaseProps =
+	ComponentPropsWithRef<"button"> &
+		Readonly<{
+			/** Visual tier. @default "secondary" */
+			variant?: ButtonVariant;
+			/** @default "md" */
+			size?: ButtonSize;
+			/**
+			 * Colour role. `danger` re-points every tier to the error role, for
+			 * irreversible actions. @default "brand"
+			 */
+			tone?: ButtonTone;
+			/** A library part this button should render as, e.g. `<Menu.Trigger />`. */
+			render?: ReactElement;
+		}>;
 
 type ElementProps = ComponentPropsWithRef<"button"> &
 	Readonly<{ render?: ReactElement }>;
@@ -43,94 +45,86 @@ const ButtonElement = ({
 }: ElementProps): ReactElement =>
 	useRender({ defaultTagName: "button", render, props });
 
-type TextButtonProps = BaseProps &
+export type ButtonProps = ButtonBaseProps &
 	Readonly<{
-		iconOnly?: false;
 		/** Optional leading icon rendered before the label. */
 		icon?: ReactNode;
+		/** The button's text, which is also its accessible name. */
 		children: ReactNode;
 	}>;
 
-type IconOnlyButtonProps = BaseProps &
-	Readonly<{
-		iconOnly: true;
-		/** Icon to render; required in icon-only mode. */
-		icon: ReactNode;
-		/** Accessible name, surfaced as the tooltip hint and set as `aria-label`, since the icon alone conveys no text. */
-		label: string;
-		children?: never;
-	}>;
-
-export type ButtonProps =
-	| TextButtonProps
-	| IconOnlyButtonProps;
-
 /**
  * Composite button over Material 3's tiers: `primary` is a filled button,
- * `secondary` a tonal one, and `tertiary` a text button. In icon-only mode an
- * accessible `label` is required and surfaced as both a tooltip and an
- * `aria-label`.
+ * `secondary` a tonal one, and `tertiary` a text button. A button whose only
+ * content is an icon is an `IconButton`.
  *
  * @example
  * <Button variant="primary" size="md" onClick={apply}>Apply</Button>
  */
-export const Button = (props: ButtonProps): ReactNode => {
-	if (props.iconOnly) {
-		const {
+export const Button = ({
+	variant,
+	size,
+	tone,
+	className,
+	icon,
+	children,
+	render,
+	...nativeProps
+}: ButtonProps): ReactNode => (
+	<ButtonElement
+		render={render}
+		type="button"
+		{...buttonAttributes({
 			variant,
 			size,
 			tone,
 			className,
-			iconOnly,
-			icon,
-			label,
-			render,
-			...nativeProps
-		} = props;
-		return (
-			<Tooltip content={label}>
-				<ButtonElement
-					render={render}
-					type="button"
-					aria-label={label}
-					{...buttonAttributes({
-						variant,
-						size,
-						tone,
-						className,
-					})}
-					data-icon-only={iconOnly}
-					{...nativeProps}>
-					{icon}
-				</ButtonElement>
-			</Tooltip>
-		);
-	}
+		})}
+		{...nativeProps}>
+		{icon}
+		{children}
+	</ButtonElement>
+);
 
-	const {
-		variant,
-		size,
-		tone,
-		className,
-		iconOnly: _iconOnly,
-		icon,
-		children,
-		render,
-		...nativeProps
-	} = props;
-	return (
+export type IconButtonProps = ButtonBaseProps &
+	Readonly<{
+		/** Accessible name, surfaced as the tooltip hint and set as `aria-label`, since the icon alone conveys no text. */
+		label: string;
+		/** The icon, drawn in `currentColor` at `1em`. */
+		children: ReactNode;
+	}>;
+
+/**
+ * A button whose only content is an icon: a circle with its `label` as its
+ * accessible name and as a tooltip, since the icon alone says nothing.
+ *
+ * @example
+ * <IconButton label="Export" onClick={exportRows}><DownloadIcon /></IconButton>
+ */
+export const IconButton = ({
+	variant,
+	size,
+	tone,
+	className,
+	label,
+	children,
+	render,
+	...nativeProps
+}: IconButtonProps): ReactNode => (
+	<Tooltip content={label}>
 		<ButtonElement
 			render={render}
 			type="button"
+			aria-label={label}
 			{...buttonAttributes({
 				variant,
 				size,
 				tone,
 				className,
 			})}
+			data-icon-only={true}
 			{...nativeProps}>
-			{icon}
 			{children}
 		</ButtonElement>
-	);
-};
+	</Tooltip>
+);

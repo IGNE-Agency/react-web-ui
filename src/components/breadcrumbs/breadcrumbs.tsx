@@ -6,7 +6,7 @@ import type {
 	ReactNode,
 	Ref,
 } from "react";
-import { Button } from "../button/button.tsx";
+import { IconButton } from "../button/button.tsx";
 import { Menu } from "../menu/menu.tsx";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import style from "./breadcrumbs.module.scss";
@@ -265,12 +265,11 @@ const Gauge = ({
 				{separator}
 			</Separator>
 			<li data-gauge="overflow" className={style.item}>
-				<Button
+				<IconButton
 					variant="tertiary"
-					iconOnly
-					icon={overflowIcon}
-					label={overflowLabel}
-				/>
+					label={overflowLabel}>
+					{overflowIcon}
+				</IconButton>
 			</li>
 		</ol>
 	</div>

@@ -9,7 +9,7 @@ import {
 } from "react-aria-components";
 import { formatBytes } from "../../lib/format-bytes.ts";
 import { AttachmentTile } from "../attachment-tile/index.ts";
-import { Button } from "../button/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { useComposerContext } from "./composer.context.ts";
 import style from "./composer.module.scss";
@@ -48,16 +48,15 @@ export const ComposerAttachButton = ({
 					addFiles(Array.from(files));
 				}
 			}}>
-			<Button
+			<IconButton
 				className={className}
 				variant="tertiary"
 				size="md"
-				iconOnly
-				icon={children}
 				disabled={disabled}
 				label={label}
-				render={<AriaButton isDisabled={disabled} />}
-			/>
+				render={<AriaButton isDisabled={disabled} />}>
+				{children}
+			</IconButton>
 		</AriaFileTrigger>
 	);
 };

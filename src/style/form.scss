@@ -2,10 +2,19 @@
 
 // See `docs/design-system/components.mdx`.
 
-$field-border: 1px;
-$field-padding: var(--sys-unit-6);
-$field-block-size: calc(
-	1lh + 2 * #{$field-padding} + 2 * #{$field-border}
+$field-border: var(--field-border-width, 1px);
+$field-padding: var(--field-pad-y, var(--sys-unit-6));
+$field-pad-start: var(
+	--field-pad-start,
+	var(--field-pad-x, var(--sys-unit-6))
+);
+$field-pad-end: var(
+	--field-pad-end,
+	var(--field-pad-x, var(--sys-unit-6))
+);
+$field-block-size: var(
+	--field-min-block-size,
+	calc(1lh + 2 * #{$field-padding} + 2 * #{$field-border})
 );
 $field-touch-target: var(--sys-unit-22);
 
@@ -18,8 +27,11 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.label;
 ///   }
 @mixin label {
-	color: var(--sys-color-text);
-	font: var(--sys-font-label-medium);
+	color: var(--field-label-fg, var(--sys-color-text));
+	font: var(
+		--field-label-font,
+		var(--sys-font-label-medium)
+	);
 	cursor: default;
 }
 
@@ -31,11 +43,23 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.disabled;
 ///   }
 @mixin disabled {
-	--field-fg: var(--sys-color-disabled-fg);
-	--field-muted-fg: var(--sys-color-disabled-fg);
-	--field-placeholder-fg: var(--sys-color-disabled-fg);
+	--_field-fg: var(
+		--field-disabled-fg,
+		var(--sys-color-disabled-fg)
+	);
+	--_field-muted-fg: var(
+		--field-disabled-fg,
+		var(--sys-color-disabled-fg)
+	);
+	--_field-placeholder-fg: var(
+		--field-disabled-fg,
+		var(--sys-color-disabled-fg)
+	);
 
-	color: var(--sys-color-disabled-fg);
+	color: var(
+		--field-disabled-fg,
+		var(--sys-color-disabled-fg)
+	);
 	cursor: not-allowed;
 }
 
@@ -49,22 +73,35 @@ $field-touch-target: var(--sys-unit-22);
 ///   }
 @mixin optional-suffix {
 	vertical-align: middle;
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-body-small);
-	font-size: 0.75rem;
+	color: var(
+		--field-optional-fg,
+		var(--sys-color-text-muted)
+	);
+	font: var(
+		--field-optional-font,
+		var(--sys-font-body-small)
+	);
+	font-size: var(--field-optional-font-size, 0.75rem);
 }
 
 /// The ink a field's parts read: the control's own text, the muted ink its
-/// affixes, separators, chevrons and inlays take, and its placeholder's.
+/// affixes, separators, chevrons and inlays take, and its placeholder's. States
+/// re-point these, so a part reads `--_field-*` and an app sets `--field-*`.
 ///
 /// @example
 ///   .separator {
-///       color: var(--field-muted-fg);
+///       color: var(--_field-muted-fg);
 ///   }
 @mixin ink {
-	--field-fg: var(--sys-color-text);
-	--field-muted-fg: var(--sys-color-text-muted);
-	--field-placeholder-fg: var(--sys-color-text-placeholder);
+	--_field-fg: var(--field-fg, var(--sys-color-text));
+	--_field-muted-fg: var(
+		--field-muted-fg,
+		var(--sys-color-text-muted)
+	);
+	--_field-placeholder-fg: var(
+		--field-placeholder-fg,
+		var(--sys-color-text-placeholder)
+	);
 }
 
 /// The invalid treatment for any form control.
@@ -74,13 +111,29 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.invalid;
 ///   }
 @mixin invalid {
-	--field-fg: var(--sys-color-error-fg);
-	--field-muted-fg: var(--sys-color-error-fg);
-	--field-placeholder-fg: var(--sys-color-error-fg);
+	--_field-fg: var(
+		--field-invalid-fg,
+		var(--sys-color-error-fg)
+	);
+	--_field-muted-fg: var(
+		--field-invalid-fg,
+		var(--sys-color-error-fg)
+	);
+	--_field-placeholder-fg: var(
+		--field-invalid-fg,
+		var(--sys-color-error-fg)
+	);
+	--_field-fill: var(
+		--field-invalid-bg,
+		var(--sys-color-error-bg)
+	);
 
-	border-color: var(--sys-color-error-fg);
-	background-color: var(--sys-color-error-bg);
-	color: var(--field-fg);
+	border-color: var(
+		--field-invalid-border-color,
+		var(--sys-color-error-fg)
+	);
+	background-color: var(--_field-fill);
+	color: var(--_field-fg);
 }
 
 /// Suppresses the user agent's own affordances inside a text entry, so the only
@@ -102,6 +155,40 @@ $field-touch-target: var(--sys-unit-22);
 	}
 }
 
+/// Paints the field's own fill and ink over the user agent's autofill tint, on
+/// the element the browser fills. The user agent forces its colours with
+/// `!important`, so the fill is an inset shadow in `--_field-fill`, which a
+/// bare control inherits from its group, and the ink is the text fill colour.
+///
+/// @example
+///   .input {
+///       @include form.autofill-cover;
+///   }
+@mixin autofill-cover {
+	@each $state in (":autofill", ":-webkit-autofill") {
+		&#{$state} {
+			box-shadow: inset 0 0 0 100vmax var(--_field-fill);
+			-webkit-text-fill-color: var(--_field-fg);
+			caret-color: var(--_field-fg);
+			filter: none;
+		}
+	}
+}
+
+/// The fill a field takes once the browser has filled it in for the user.
+/// Included before the read-only, invalid and disabled treatments, which win.
+///
+/// @example
+///   .group:has(:autofill) {
+///       @include form.autofilled;
+///   }
+@mixin autofilled {
+	--_field-fill: var(
+		--field-autofill-bg,
+		var(--sys-color-autofill-bg)
+	);
+}
+
 /// The chrome every field wears: a hairline on the page surface that warms to
 /// the brand colour while the pointer, the focus or an open popup is on it, and
 /// every state treatment behind it. States are keyed off the projected `data-*`
@@ -110,30 +197,72 @@ $field-touch-target: var(--sys-unit-22);
 @mixin field-chrome {
 	@include ink;
 
-	align-items: center;
-	box-sizing: border-box;
-	min-block-size: $field-block-size;
-	border: $field-border solid var(--sys-color-border);
-	border-radius: var(--sys-radius-sm);
-	background: var(--sys-color-surface);
-	padding: $field-padding;
-	color: var(--field-fg);
-	font: var(--sys-font-body-medium);
+	& {
+		--_field-fill: var(
+			--field-bg,
+			var(--sys-color-surface)
+		);
 
-	@include focus.ring-projected;
+		align-items: center;
+		box-sizing: border-box;
+		min-block-size: $field-block-size;
+		border: $field-border solid
+			var(--field-border-color, var(--sys-color-border));
+		border-radius: var(
+			--field-radius,
+			var(--sys-radius-sm)
+		);
+		background: var(--_field-fill);
+		padding-block: $field-padding;
+		padding-inline: $field-pad-start $field-pad-end;
+		box-shadow: var(--field-shadow, none);
+		color: var(--_field-fg);
+		font: var(--field-font, var(--sys-font-body-medium));
+		backdrop-filter: var(--field-backdrop-filter, none);
+	}
+
+	@include focus.ring-projected("field");
 
 	@media not (prefers-reduced-motion) {
 		transition:
 			border-color var(--sys-motion-instant)
 				var(--sys-motion-standard),
 			background var(--sys-motion-instant)
+				var(--sys-motion-standard),
+			box-shadow var(--sys-motion-instant)
 				var(--sys-motion-standard);
 	}
 
-	&:hover:not([data-disabled], [data-readonly]),
+	&:hover:not(
+			[data-disabled],
+			[data-readonly],
+			[data-focused],
+			[data-popup-open]
+		) {
+		border-color: var(
+			--field-hover-border-color,
+			var(--sys-color-primary)
+		);
+	}
+
 	&[data-focused],
 	&[data-popup-open] {
-		border-color: var(--sys-color-primary);
+		border-width: var(
+			--field-focus-border-width,
+			#{$field-border}
+		);
+		border-color: var(
+			--field-focus-border-color,
+			var(--sys-color-primary)
+		);
+		box-shadow: var(
+			--field-focus-shadow,
+			var(--field-shadow, none)
+		);
+	}
+
+	&:has(:autofill) {
+		@include autofilled;
 	}
 
 	&[data-readonly] {
@@ -146,12 +275,24 @@ $field-touch-target: var(--sys-unit-22);
 
 	&[data-invalid] {
 		@include invalid;
+
+		border-width: var(
+			--field-invalid-border-width,
+			#{$field-border}
+		);
+		box-shadow: var(
+			--field-invalid-shadow,
+			var(--field-shadow, none)
+		);
 	}
 
 	&[data-disabled] {
 		@include disabled;
 
-		background: var(--sys-color-disabled-bg);
+		--_field-fill: var(
+			--field-disabled-bg,
+			var(--sys-color-disabled-bg)
+		);
 	}
 }
 
@@ -172,7 +313,48 @@ $field-touch-target: var(--sys-unit-22);
 	}
 
 	&::placeholder {
-		color: var(--field-placeholder-fg);
+		color: var(--_field-placeholder-fg);
+	}
+
+	@each $state in (":autofill", ":-webkit-autofill") {
+		&#{$state}:not(
+			[data-readonly],
+			[data-invalid],
+			[data-disabled]
+		) {
+			@include autofilled;
+		}
+	}
+
+	@include autofill-cover;
+}
+
+/// The bare control inside a `group`: no chrome of its own, the group's ink,
+/// and the group's fill over the user agent's autofill tint.
+///
+/// @example
+///   @use "../../style/form.scss" as form;
+///
+///   .control {
+///       @include form.bare-control;
+///   }
+@mixin bare-control {
+	@include bare-native-entry;
+	@include field-text-metrics;
+	@include autofill-cover;
+
+	& {
+		flex: 1;
+		min-inline-size: 0;
+		border: none;
+		background: none;
+		padding: 0;
+		color: inherit;
+		font: inherit;
+	}
+
+	&::placeholder {
+		color: var(--_field-placeholder-fg);
 	}
 }
 
@@ -186,12 +368,22 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.readonly;
 ///   }
 @mixin readonly {
-	--field-fg: var(--sys-color-text);
+	--_field-fg: var(
+		--field-readonly-fg,
+		var(--sys-color-text)
+	);
+	--_field-fill: var(
+		--field-readonly-bg,
+		var(--sys-color-surface-high)
+	);
 
-	border-style: dashed;
-	border-color: var(--sys-color-outline);
-	background: var(--sys-color-surface-high);
-	color: var(--field-fg);
+	border-style: var(--field-readonly-border-style, dashed);
+	border-color: var(
+		--field-readonly-border-color,
+		var(--sys-color-outline)
+	);
+	background: var(--_field-fill);
+	color: var(--_field-fg);
 }
 
 /// The pending treatment for a control waiting on background work.
@@ -202,7 +394,10 @@ $field-touch-target: var(--sys-unit-22);
 ///   }
 @mixin pending {
 	cursor: progress;
-	caret-color: var(--sys-color-text-muted);
+	caret-color: var(
+		--field-pending-caret,
+		var(--sys-color-text-muted)
+	);
 }
 
 /// The shell around a control that shares its box with inlays: `field-chrome` on
@@ -226,7 +421,7 @@ $field-touch-target: var(--sys-unit-22);
 	& {
 		position: relative;
 		display: flex;
-		gap: var(--sys-unit-4);
+		gap: var(--field-inlay-gap, var(--sys-unit-4));
 	}
 }
 
@@ -259,9 +454,12 @@ $field-touch-target: var(--sys-unit-22);
 	display: inline-flex;
 	flex: none;
 	align-items: center;
-	gap: var(--sys-unit-2);
-	color: var(--field-muted-fg);
-	font: var(--sys-font-body-medium);
+	gap: var(--field-inlay-content-gap, var(--sys-unit-2));
+	color: var(--field-inlay-fg, var(--_field-muted-fg));
+	font: var(
+		--field-inlay-font,
+		var(--sys-font-body-medium)
+	);
 	cursor: default;
 	pointer-events: none;
 
