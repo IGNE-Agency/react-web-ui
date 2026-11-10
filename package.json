@@ -1,6 +1,6 @@
 {
 	"name": "@igne-agency/react-web-ui",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"description": "IGNE's React web component kit: primitives and the presets over them, form controls in three tiers with a TanStack Form bridge, and DTCG tokens themed per app.",
 	"license": "MIT",
 	"repository": {
