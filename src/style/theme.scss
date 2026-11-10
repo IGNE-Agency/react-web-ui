@@ -7,7 +7,7 @@
 /// @example
 ///   .backdrop {
 ///       @include theme.dark {
-///           --overlay-dim: 0.6;
+///           --_overlay-dim: 0.6;
 ///       }
 ///   }
 @mixin dark {

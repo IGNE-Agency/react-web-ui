@@ -7,11 +7,11 @@
 ///   @use "../../style/tone.scss" as tone;
 ///
 ///   .tag {
-///       @include tone.variants("tag");
+///       @include tone.variants("_tag");
 ///
-///       border: 1px solid var(--tag-border);
-///       background: var(--tag-bg);
-///       color: var(--tag-fg);
+///       border: 1px solid var(--tag-border, var(--_tag-border));
+///       background: var(--tag-bg, var(--_tag-bg));
+///       color: var(--tag-fg, var(--_tag-fg));
 ///   }
 @mixin variants($prefix) {
 	&[data-variant="subtle"] {

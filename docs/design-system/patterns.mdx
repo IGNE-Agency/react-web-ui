@@ -1811,14 +1811,14 @@ The clear affordance, a password reveal, a calendar trigger and a copy-to-clipbo
 
 <Details title="Invalid re-points the field's ink and leaves its buttons alone">
 
-`--field-fg` and `--field-muted-fg` are re-pointed once, on the control or on the group, and every part that is ink reads them bare, with no fallback literal. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
+The field's ink, `--_field-fg` and `--_field-muted-fg`, is re-pointed once, on the control or on the group, and every part that is ink reads it bare, with no fallback literal. An app colours the ink through the public knobs those read first, `--field-fg` and `--field-muted-fg`, and through `--field-invalid-fg` for the invalid state. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
 
 <DoDont>
 <Example kind="do" caption="Ink reads the knob, and the action leaves its colour to the button.">
 
 ```scss
 .separator {
-	color: var(--field-muted-fg);
+	color: var(--_field-muted-fg);
 }
 
 .action {
@@ -2033,7 +2033,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--overlay-dim: 0.22;
+	--_overlay-dim: 0.22;
 	backdrop-filter: blur(1px);
 }
 ```
@@ -2043,7 +2043,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--overlay-dim: 0.7;
+	--_overlay-dim: 0.7;
 	backdrop-filter: blur(8px);
 }
 
@@ -2068,7 +2068,7 @@ An overlay includes `overlay.backdrop` and re-points the tier rather than restat
 .backdrop {
 	@include overlay.backdrop;
 
-	--overlay-dim: 0.22;
+	--_overlay-dim: 0.22;
 }
 ```
 

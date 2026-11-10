@@ -43,9 +43,9 @@ Which controls carry the layer, and when a row tints instead, is decided under [
 
 For someone who moves with the keyboard, focus is the cursor. Lose sight of it and they're lost on the page, with no way of knowing what the next key press will do. So focus has to be visible on everything, against every background, and it has to look the same wherever it lands, so it's recognised at a glance.
 
-The kit draws one ring for all of it: in the brand colour, three pixels wide, two pixels outside the element's edge, following the element's own corners. It never changes shape or colour from one control to the next.
+The kit draws one ring for all of it, three pixels wide, two pixels outside the element's edge, following the element's own corners. It never changes shape or colour from one control to the next. Its colour, width and offset are the `focus-ring` tokens: the kit's own theme paints it in the brand colour, and an app's theme sets whatever its design calls for. A field can take a different ring through its own knobs, such as a design that marks a focused field with a halo instead.
 
-<Specimen caption="One ring for every shape: it follows the element's own corners, a fixed gap outside its edge, in the brand colour.">
+<Specimen caption="One ring for every shape: it follows the element's own corners, a fixed gap outside its edge, in the focus-ring colour.">
 	<FocusRingSpecimen />
 </Specimen>
 
@@ -87,9 +87,9 @@ It never changes shape or colour from one control to the next, so it is recognis
 
 </Details>
 
-<Details title="The focus ring is the brand colour, outside the edge, following the element's corners">
+<Details title="The focus ring is drawn outside the edge, following the element's corners">
 
-Three pixels wide and two pixels outside the element's edge. It is drawn as an outline, which follows the element's border radius by itself. Shown in [The focus ring](#the-focus-ring).
+It is drawn as an outline, which follows the element's border radius by itself, in the `focus-ring` tokens' colour, width and offset: three pixels wide and two pixels outside the edge in the kit's theme, in the brand colour. An app's theme sets those tokens; a field also reads `--field-ring-color`, `--field-ring-width` and `--field-ring-offset` first. Shown in [The focus ring](#the-focus-ring).
 
 </Details>
 
