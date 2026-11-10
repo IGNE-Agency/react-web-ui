@@ -8,6 +8,7 @@ import {
 	useState,
 } from "react";
 import { lengthTone } from "../../lib/text-length.ts";
+import { AttachmentTile } from "../attachment-tile/index.ts";
 import { IconButton } from "../button/index.ts";
 import {
 	fieldStateAttributes,
@@ -37,6 +38,7 @@ import {
 import {
 	ComposerEditor,
 	type ComposerEditorProps,
+	ComposerPlaceholder,
 } from "./composer-editor.tsx";
 import {
 	ComposerMentions,
@@ -314,12 +316,20 @@ const SendButton = ({
 };
 
 /** The attachment controls the `Composer` prefab renders, and what they say. */
-export type ComposerAttachmentOptions = Omit<
+export type ComposerAttachmentOptions = Pick<
 	ComposerAttachmentsProps,
-	"className"
+	"label"
 > &
 	ComposerAttachmentsErrorProps &
 	Readonly<{
+		/** Each tile's remove button's accessible name, such as "Remove". */
+		removeLabel: string;
+		/** Each tile's remove glyph. */
+		removeIcon: ReactNode;
+		/** A tile's file-type glyph. Left out, a tile that is not an image shows only the file's extension. */
+		fileIcon?: ReactNode;
+		/** A tile's tooltip, from the file's name and formatted size. */
+		fileHint: (name: string, size: string) => string;
 		/** The attach button's accessible name and tooltip, such as "Add attachment". */
 		attachLabel: string;
 		/** The attach button's glyph. */
@@ -333,6 +343,8 @@ export type ComposerProps = Omit<
 > &
 	Omit<ComposerEditorProps, "children" | "className"> &
 	Readonly<{
+		/** Shown while the draft is empty, and describes the editor. */
+		placeholder?: string;
 		/** The `@` typeahead, where the composer takes mentions. */
 		mentions?: ComposerMentionsProps;
 		/** The staged files and the button that adds them, where the composer takes attachments. */
@@ -357,13 +369,23 @@ const Prefab = ({
 	<Root {...props}>
 		{attachments === undefined ? null : (
 			<>
-				<ComposerAttachments
-					label={attachments.label}
-					removeLabel={attachments.removeLabel}
-					removeIcon={attachments.removeIcon}
-					fileIcon={attachments.fileIcon}
-					fileHint={attachments.fileHint}
-				/>
+				<ComposerAttachments label={attachments.label}>
+					{(attachment, { oversized, size, disabled }) => (
+						<AttachmentTile
+							id={attachment.id}
+							file={attachment.file}
+							hint={attachments.fileHint(
+								attachment.file.name,
+								size,
+							)}
+							removeLabel={attachments.removeLabel}
+							removeIcon={attachments.removeIcon}
+							icon={attachments.fileIcon}
+							invalid={oversized}
+							disabled={disabled}
+						/>
+					)}
+				</ComposerAttachments>
 				<ComposerAttachmentsError
 					tooLargeError={attachments.tooLargeError}
 				/>
@@ -371,9 +393,13 @@ const Prefab = ({
 		)}
 		<ComposerEditor
 			label={label}
-			placeholder={placeholder}
 			minLines={minLines}
 			maxLines={maxLines}>
+			{placeholder === undefined ? null : (
+				<ComposerPlaceholder>
+					{placeholder}
+				</ComposerPlaceholder>
+			)}
 			{mentions === undefined ? null : (
 				<ComposerMentions {...mentions} />
 			)}
@@ -397,6 +423,7 @@ export type ComposerParts = typeof Prefab &
 	Readonly<{
 		Root: typeof Root;
 		Editor: typeof ComposerEditor;
+		Placeholder: typeof ComposerPlaceholder;
 		Mentions: typeof ComposerMentions;
 		Toolbar: typeof Toolbar;
 		Attachments: typeof ComposerAttachments;
@@ -428,6 +455,7 @@ export const Composer: ComposerParts = Object.assign(
 	{
 		Root,
 		Editor: ComposerEditor,
+		Placeholder: ComposerPlaceholder,
 		Mentions: ComposerMentions,
 		Toolbar,
 		Attachments: ComposerAttachments,

@@ -8,6 +8,7 @@ import {
 	type within,
 } from "storybook/test";
 import { Button } from "../button/button.tsx";
+import { Spinner } from "../spinner/spinner.tsx";
 import { Stale, type StaleRootProps } from "./stale.tsx";
 
 const CONTENT = "This week's invoices";
@@ -31,6 +32,24 @@ const StaleExample = (
 			<Stale.Retry onRetry={retried}>
 				{TRY_AGAIN}
 			</Stale.Retry>
+		</Stale.Overlay>
+	</Stale.Root>
+);
+
+const ComposedStale = (
+	props: StaleRootProps,
+): ReactElement => (
+	<Stale.Root {...props}>
+		<Stale.Content>
+			<p>{CONTENT}</p>
+		</Stale.Content>
+		<Stale.Overlay>
+			<Stale.Status>
+				<Stale.Illustration>
+					<Spinner size={3} />
+				</Stale.Illustration>
+				{SLOW_MESSAGE}
+			</Stale.Status>
 		</Stale.Overlay>
 	</Stale.Root>
 );
@@ -177,6 +196,16 @@ export const Slow: Story = {
 				name: TRY_AGAIN,
 			}),
 		).not.toBeInTheDocument();
+	},
+};
+
+export const ComposedStatus: Story = {
+	args: Slow.args,
+	render: ComposedStale,
+	play: async ({ canvas }) => {
+		await expect(
+			await canvas.findByRole("status"),
+		).toHaveTextContent(SLOW_MESSAGE);
 	},
 };
 

@@ -52,6 +52,12 @@ export type StaleContentProps =
 export type StaleOverlayProps =
 	useRender.ComponentProps<"div">;
 
+export type StaleStatusProps =
+	useRender.ComponentProps<"p">;
+
+export type StaleIllustrationProps =
+	useRender.ComponentProps<"span">;
+
 export type StaleMessageProps =
 	useRender.ComponentProps<"p"> &
 		Readonly<{
@@ -155,15 +161,22 @@ const Overlay = ({
 	});
 };
 
-/** The overlay's status: a moving indicator over its copy. */
-const Message = ({
-	illustration,
+/**
+ * The overlay's status line, announced as it appears: an `Illustration` over
+ * its copy.
+ *
+ * @example
+ * <Stale.Status>
+ * 	<Stale.Illustration><Logo animated /></Stale.Illustration>
+ * 	This is taking longer than usual.
+ * </Stale.Status>
+ */
+const Status = ({
 	render,
 	className,
 	ref,
-	children,
 	...props
-}: StaleMessageProps): ReactElement =>
+}: StaleStatusProps): ReactElement =>
 	useRender({
 		defaultTagName: "p",
 		render,
@@ -172,18 +185,46 @@ const Message = ({
 			role: "status",
 			...props,
 			className: clsx(style.message, className),
-			children: (
-				<>
-					<span
-						className={style.illustration}
-						aria-hidden="true">
-						{illustration ?? <Spinner size={2} />}
-					</span>
-					{children}
-				</>
-			),
 		},
 	});
+
+/**
+ * The moving indicator above the status's copy, such as a spinner or the
+ * app's animated logo, hidden from assistive technology.
+ *
+ * @example
+ * <Stale.Illustration><Spinner size={2} /></Stale.Illustration>
+ */
+const Illustration = ({
+	render,
+	className,
+	ref,
+	...props
+}: StaleIllustrationProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.illustration, className),
+		},
+	});
+
+/** The overlay's status: a moving indicator over its copy, a spinner unless `illustration` names another. */
+const Message = ({
+	illustration,
+	children,
+	...props
+}: StaleMessageProps): ReactElement => (
+	<Status {...props}>
+		<Illustration>
+			{illustration ?? <Spinner size={2} />}
+		</Illustration>
+		{children}
+	</Status>
+);
 
 /** The way out once the refresh looks stuck: a button that appears only then. */
 const Retry = ({
@@ -217,6 +258,8 @@ type StaleNamespace = Readonly<{
 	Content: typeof Content;
 	Overlay: typeof Overlay;
 	Message: typeof Message;
+	Status: typeof Status;
+	Illustration: typeof Illustration;
 	Retry: typeof Retry;
 }>;
 
@@ -224,7 +267,8 @@ type StaleNamespace = Readonly<{
  * Content that stays visible while a background refresh runs, escalating the
  * longer the refresh takes: `Content` dims once busy, `Overlay` surfaces once
  * slow with its `Message`, and `Retry` appears once stuck. A refresh that
- * finishes within `busyAfter` shows nothing.
+ * finishes within `busyAfter` shows nothing. `Message` composes a `Status`
+ * and its `Illustration`, which compose one by hand.
  *
  * @example
  * <Stale.Root busy={query.isFetching}>
@@ -240,5 +284,7 @@ export const Stale: StaleNamespace = {
 	Content,
 	Overlay,
 	Message,
+	Status,
+	Illustration,
 	Retry,
 };

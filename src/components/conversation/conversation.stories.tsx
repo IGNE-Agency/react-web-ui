@@ -17,6 +17,7 @@ import { Temporal } from "temporal-polyfill";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { STORY_TIME_ZONE } from "../../lib/storybook/story-providers.tsx";
 import { SentAttachmentTile } from "../attachment-tile/index.ts";
+import { IconButton } from "../button/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import {
 	Conversation,
@@ -84,10 +85,16 @@ const FILES = (
 			/>
 		))}
 		<Conversation.MessageFilesDownloadAll
-			label={DOWNLOAD_ALL}
-			onClick={downloadAll}>
-			<Icon svg={DownloadIcon} label="" />
-		</Conversation.MessageFilesDownloadAll>
+			onClick={downloadAll}
+			render={
+				<IconButton
+					variant="tertiary"
+					size="sm"
+					label={DOWNLOAD_ALL}>
+					<Icon svg={DownloadIcon} label="" />
+				</IconButton>
+			}
+		/>
 	</>
 );
 
@@ -196,10 +203,15 @@ const SCROLL_BUTTON = {
 	none: undefined,
 	scrollToBottom: (
 		<Conversation.ScrollToBottom
-			label={SCROLL_TO_LATEST}
-			onClick={scrollToBottom}>
-			<Icon svg={ScrollDownIcon} label="" />
-		</Conversation.ScrollToBottom>
+			onClick={scrollToBottom}
+			render={
+				<IconButton
+					variant="tertiary"
+					label={SCROLL_TO_LATEST}>
+					<Icon svg={ScrollDownIcon} label="" />
+				</IconButton>
+			}
+		/>
 	),
 };
 
@@ -209,6 +221,7 @@ const Burst = ({
 	messages: ConversationBurst<ConversationMessage>["items"];
 }>) => {
 	const [first] = messages;
+	const last = messages.at(-1) ?? first;
 
 	return (
 		<Conversation.Message side={first.side}>
@@ -220,6 +233,13 @@ const Burst = ({
 				<Conversation.MessageTimestamp
 					date={first.sentAt}
 				/>
+				{last.status === undefined ? null : (
+					<Conversation.MessageReadIndicator
+						status={last.status}
+						label={last.status === "read" ? READ : UNREAD}>
+						<Conversation.MessageReadDot />
+					</Conversation.MessageReadIndicator>
+				)}
 			</Conversation.MessageAuthor>
 			{messages.map(item => (
 				<Fragment key={item.id}>

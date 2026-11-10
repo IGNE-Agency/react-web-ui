@@ -38,6 +38,16 @@ The consequence to respect: the real row and the duplicate must keep identical b
 </Example>
 </DoDont>
 
+### A strip that may outgrow its room scrolls sideways
+
+Tabs never wrap onto a second row. Put the `List` in a `Scroller` wherever the strip may be wider than its room, such as on a phone or with translated labels, and it scrolls sideways instead.
+
+```tsx
+<Tabs.Scroller>
+	<Tabs.List label="Invoice">…</Tabs.List>
+</Tabs.Scroller>
+```
+
 ### Tabs switch what one page shows; links to pages are a nav
 
 A tab opens a panel on the page you are on, and moving between tabs keeps the address. Tabs that lead to other pages are a horizontal [nav](?path=/docs/components-nav--docs), whose entries are links a router marks current.

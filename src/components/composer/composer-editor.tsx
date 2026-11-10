@@ -10,8 +10,17 @@ import {
 	$getRoot,
 	defineExtension,
 } from "lexical";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import { type ReactNode, useId, useState } from "react";
+import {
+	createContext,
+	type ReactElement,
+	type ReactNode,
+	useEffect,
+	useId,
+	useState,
+} from "react";
+import { useRequiredContext } from "../../lib/use-required-context.ts";
 import { useComposerContext } from "./composer.context.ts";
 import style from "./composer-editor.module.scss";
 import { EditorBehaviorPlugin } from "./editor-behavior.tsx";
@@ -46,11 +55,17 @@ const seedEditorState = (value: string) => (): void => {
 	root.append(paragraph);
 };
 
+type PlaceholderSlot = Readonly<{
+	id: string;
+	register: (mounted: boolean) => void;
+}>;
+
+const PlaceholderContext =
+	createContext<PlaceholderSlot | null>(null);
+
 export type ComposerEditorProps = Readonly<{
 	/** The editor's accessible name, such as "Comment". */
 	label: string;
-	/** Shown while the draft is empty, and describes the editor. */
-	placeholder?: string;
 	/** Lines of height while short. @default 3 */
 	minLines?: number;
 	/** Lines of height before it scrolls. */
@@ -63,14 +78,12 @@ export type ComposerEditorProps = Readonly<{
 /** The composer's plain-text editor, with mentions and Enter to send. */
 export const ComposerEditor = ({
 	label,
-	placeholder,
 	minLines = 3,
 	maxLines,
 	children,
 	className,
 }: ComposerEditorProps): ReactNode => {
 	const {
-		value,
 		initialValue,
 		disabled,
 		setValue,
@@ -79,6 +92,7 @@ export const ComposerEditor = ({
 		mentionsActiveOptionId,
 	} = useComposerContext();
 	const placeholderId = useId();
+	const [described, setDescribed] = useState(false);
 
 	const [extension] = useState(() =>
 		defineExtension({
@@ -111,9 +125,7 @@ export const ComposerEditor = ({
 					className={style.content}
 					aria-label={label}
 					aria-describedby={
-						placeholder === undefined
-							? undefined
-							: placeholderId
+						described ? placeholderId : undefined
 					}
 					aria-disabled={disabled || undefined}
 					{...(mentionsListboxId === null
@@ -129,15 +141,6 @@ export const ComposerEditor = ({
 									mentionsActiveOptionId ?? undefined,
 							})}
 				/>
-				{placeholder === undefined ? null : (
-					<div
-						id={placeholderId}
-						className={style.placeholder}
-						hidden={value !== ""}
-						aria-hidden="true">
-						{placeholder}
-					</div>
-				)}
 				<OnChangePlugin
 					ignoreSelectionChange
 					onChange={editorState =>
@@ -147,8 +150,57 @@ export const ComposerEditor = ({
 					}
 				/>
 				<EditorBehaviorPlugin />
-				{children}
+				<PlaceholderContext
+					value={{
+						id: placeholderId,
+						register: setDescribed,
+					}}>
+					{children}
+				</PlaceholderContext>
 			</div>
 		</LexicalExtensionComposer>
 	);
+};
+
+export type ComposerPlaceholderProps =
+	useRender.ComponentProps<"div">;
+
+/**
+ * What the editor shows while the draft is empty, inside the `Editor`. It also
+ * describes the editor.
+ *
+ * @example
+ * <Composer.Editor label="Comment">
+ * 	<Composer.Placeholder>Write a comment</Composer.Placeholder>
+ * </Composer.Editor>
+ */
+export const ComposerPlaceholder = ({
+	render,
+	className,
+	ref,
+	...props
+}: ComposerPlaceholderProps): ReactElement => {
+	const { value } = useComposerContext();
+	const { id, register } = useRequiredContext(
+		PlaceholderContext,
+		"Composer.Placeholder must be rendered within <Composer.Editor>.",
+	);
+
+	useEffect(() => {
+		register(true);
+		return () => register(false);
+	}, [register]);
+
+	return useRender({
+		defaultTagName: "div",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			id,
+			hidden: value !== "",
+			className: clsx(style.placeholder, className),
+		},
+	});
 };

@@ -17,6 +17,7 @@ import {
 	pngFile,
 } from "../../lib/storybook/files.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { AttachmentTile } from "../attachment-tile/index.ts";
 import { Button } from "../button/index.ts";
 import {
 	Composer,
@@ -118,18 +119,26 @@ const ComposerParts = ({
 		maxLength={maxLength}
 		maxFileSize={maxFileSize}
 		onSend={onSend}>
-		<Composer.Attachments
-			label={ATTACHMENTS}
-			removeLabel={REMOVE}
-			removeIcon={<Icon svg={CloseIcon} label="" />}
-			fileHint={fileHint}
-		/>
+		<Composer.Attachments label={ATTACHMENTS}>
+			{(attachment, state) => (
+				<AttachmentTile
+					id={attachment.id}
+					file={attachment.file}
+					hint={fileHint(attachment.file.name, state.size)}
+					removeLabel={REMOVE}
+					removeIcon={<Icon svg={CloseIcon} label="" />}
+					invalid={state.oversized}
+					disabled={state.disabled}
+				/>
+			)}
+		</Composer.Attachments>
 		<Composer.AttachmentsError
 			tooLargeError={tooLargeError}
 		/>
-		<Composer.Editor
-			label={EDITOR_LABEL}
-			placeholder={PLACEHOLDER}>
+		<Composer.Editor label={EDITOR_LABEL}>
+			<Composer.Placeholder>
+				{PLACEHOLDER}
+			</Composer.Placeholder>
 			<Composer.Mentions
 				label={MENTIONS}
 				sources={[PEOPLE_SOURCE]}

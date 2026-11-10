@@ -17,23 +17,20 @@ import style from "./nav.module.scss";
 export type NavEntryProps = Readonly<{
 	/** @default "row" */
 	layout?: NavLayout;
-	/** When false, the label hides and the entry is named by `label` and the nav's tooltip instead. @default true */
-	labelled?: boolean;
-	/** The entry's name, for where no visible `Label` carries it. */
-	label: string;
+	/** The entry's name where no visible `Label` carries it: announced, and shown by the nav's `Hint`. */
+	label?: string;
 }>;
 
-type EntryShellProps = NavEntryProps &
+type EntryShellProps = Pick<NavEntryProps, "label"> &
 	Readonly<{
 		element: ReactElement;
 	}>;
 
 /**
- * Hangs an entry's element off the nav's one tooltip, which names it while it
- * is unlabelled. Outside a `Nav.Root` the element stands alone.
+ * Hangs an entry's element off the nav's one hint, which shows its `label`.
+ * Outside a `Nav.Root` the element stands alone.
  */
 export const EntryShell = ({
-	labelled = true,
 	label,
 	element,
 }: EntryShellProps): ReactNode => {
@@ -45,7 +42,7 @@ export const EntryShell = ({
 		<BaseTooltip.Trigger
 			handle={nav.hint}
 			payload={label}
-			disabled={labelled}
+			disabled={label === undefined}
 			render={element}
 		/>
 	);
@@ -54,16 +51,13 @@ export const EntryShell = ({
 /** The attributes an entry's element carries for its layout and label. */
 export const entryAttributes = ({
 	layout = "row",
-	labelled = true,
 	label,
 }: NavEntryProps): Readonly<{
 	"data-layout": NavLayout;
-	"data-labelled": "false" | undefined;
 	"aria-label": string | undefined;
 }> => ({
 	"data-layout": layout,
-	"data-labelled": labelled ? undefined : "false",
-	"aria-label": labelled ? undefined : label,
+	"aria-label": label,
 });
 
 const NavItemElement = ({
@@ -88,18 +82,15 @@ export type NavItemRootProps =
  */
 const Root = ({
 	layout,
-	labelled,
 	label,
 	className,
 	...props
 }: NavItemRootProps): ReactNode => (
 	<EntryShell
-		layout={layout}
-		labelled={labelled}
 		label={label}
 		element={
 			<NavItemElement
-				{...entryAttributes({ layout, labelled, label })}
+				{...entryAttributes({ layout, label })}
 				className={clsx(style.item, className)}
 				{...props}
 			/>
@@ -128,7 +119,7 @@ const NavItemIcon = ({
 	</span>
 );
 
-/** The entry's text. Fades out where the entry is named by its tooltip instead. */
+/** The entry's text. Leave it out where the entry is named by its `label` and the nav's `Hint` instead. */
 const Label = ({
 	className,
 	...props
@@ -151,7 +142,7 @@ type NavItemViewParts = Readonly<{
  * is not a link, such as the trigger of an overflow sheet.
  *
  * @example
- * <NavItemView.Root render={<Drawer.Trigger />} label="More" layout="stack">
+ * <NavItemView.Root render={<Drawer.Trigger />} layout="stack">
  * 	<NavItemView.Icon><MoreIcon /></NavItemView.Icon>
  * 	<NavItemView.Label>More</NavItemView.Label>
  * </NavItemView.Root>

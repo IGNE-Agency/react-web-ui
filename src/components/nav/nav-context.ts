@@ -13,7 +13,7 @@ export type NavLayout = "row" | "stack";
 
 export type NavContextValue = Readonly<{
 	orientation: NavOrientation;
-	/** The one tooltip every unlabelled entry in the nav names itself through. */
+	/** The one hint every entry with a `label` names itself through. */
 	hint: BaseTooltip.Handle<string>;
 }>;
 

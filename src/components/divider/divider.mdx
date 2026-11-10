@@ -16,4 +16,15 @@ Space separates two groups before a line does, and a surface tier before that. R
 
 A subtitle under the rule says what the next group is, such as "Earlier messages", in the small muted body text. A divider with nothing to name has no subtitle.
 
+### The prefab is the parts, composed
+
+`Divider` takes a `subtitle` and composes the parts hanging off it: `Root` holds the space around the divider, `Rule` is the bare `<hr>`, and `Label` is the subtitle. Compose the parts by hand where the subtitle needs other markup.
+
+```tsx
+<Divider.Root>
+	<Divider.Rule />
+	<Divider.Label>Earlier messages</Divider.Label>
+</Divider.Root>
+```
+
 </DocsPage>
