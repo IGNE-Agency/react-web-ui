@@ -48,12 +48,12 @@ $field-touch-target: var(--sys-unit-22);
 		var(--sys-color-disabled-fg)
 	);
 	--_field-muted-fg: var(
-		--field-disabled-fg,
-		var(--sys-color-disabled-fg)
+		--field-disabled-muted-fg,
+		var(--field-disabled-fg, var(--sys-color-disabled-fg))
 	);
 	--_field-placeholder-fg: var(
-		--field-disabled-fg,
-		var(--sys-color-disabled-fg)
+		--field-disabled-placeholder-fg,
+		var(--field-disabled-fg, var(--sys-color-disabled-fg))
 	);
 
 	color: var(
@@ -102,6 +102,7 @@ $field-touch-target: var(--sys-unit-22);
 		--field-placeholder-fg,
 		var(--sys-color-text-placeholder)
 	);
+	--_field-caret: var(--field-caret, auto);
 }
 
 /// The invalid treatment for any form control.
@@ -116,12 +117,12 @@ $field-touch-target: var(--sys-unit-22);
 		var(--sys-color-error-fg)
 	);
 	--_field-muted-fg: var(
-		--field-invalid-fg,
-		var(--sys-color-error-fg)
+		--field-invalid-muted-fg,
+		var(--field-invalid-fg, var(--sys-color-error-fg))
 	);
 	--_field-placeholder-fg: var(
-		--field-invalid-fg,
-		var(--sys-color-error-fg)
+		--field-invalid-placeholder-fg,
+		var(--field-invalid-fg, var(--sys-color-error-fg))
 	);
 	--_field-fill: var(
 		--field-invalid-bg,
@@ -169,7 +170,7 @@ $field-touch-target: var(--sys-unit-22);
 		&#{$state} {
 			box-shadow: inset 0 0 0 100vmax var(--_field-fill);
 			-webkit-text-fill-color: var(--_field-fg);
-			caret-color: var(--_field-fg);
+			caret-color: var(--_field-caret, var(--_field-fg));
 			filter: none;
 		}
 	}
@@ -218,6 +219,7 @@ $field-touch-target: var(--sys-unit-22);
 		box-shadow: var(--field-shadow, none);
 		color: var(--_field-fg);
 		font: var(--field-font, var(--sys-font-body-medium));
+		caret-color: var(--_field-caret);
 		backdrop-filter: var(--field-backdrop-filter, none);
 	}
 
