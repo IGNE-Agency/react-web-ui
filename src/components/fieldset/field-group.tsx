@@ -1,6 +1,6 @@
 import { type ReactNode, useId } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import type { FieldProps } from "../field/index.ts";
+import { Field, type FieldProps } from "../field/index.ts";
 import { Fieldset } from "./fieldset.tsx";
 import type {
 	FieldsetErrorFormat,
@@ -70,10 +70,9 @@ export const FieldGroup = ({
 			formatError={formatError}
 			aria-describedby={describedBy}
 			className={className}>
-			<Fieldset.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{legend}
+			<Fieldset.Legend>
+				{legend}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</Fieldset.Legend>
 			<Fieldset.Description id={descriptionId}>
 				{description}

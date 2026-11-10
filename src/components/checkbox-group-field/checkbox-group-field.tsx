@@ -1,6 +1,7 @@
 import type { CheckboxGroup as BaseCheckboxGroup } from "@base-ui/react/checkbox-group";
 import type { ReactNode } from "react";
 import {
+	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 } from "../field/index.ts";
@@ -81,10 +82,9 @@ export const CheckboxGroupField = ({
 			touched={touched}
 			pending={pending}
 			filled={value !== undefined && value.length > 0}>
-			<CheckboxGroup.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<CheckboxGroup.Legend>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</CheckboxGroup.Legend>
 
 			<CheckboxGroup.Group

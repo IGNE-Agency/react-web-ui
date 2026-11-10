@@ -56,6 +56,7 @@ const CheckboxRoot = ({
 			className={clsx(style.root, className)}
 			disabled={field.disabled}
 			invalid={field.invalid}
+			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
 			{...fieldStateAttributes(field.state)}
@@ -148,12 +149,13 @@ export type CheckboxParts = Readonly<{
  * `CheckboxField`.
  *
  * @example
- * <Checkbox.Root filled={agreed}>
+ * <Checkbox.Root filled={agreed} requiredness="required">
  * 	<Checkbox.Label>
  * 		<Checkbox.Control checked={agreed} onCheckedChange={setAgreed}>
  * 			<Checkbox.Indicator><CheckIcon /></Checkbox.Indicator>
  * 		</Checkbox.Control>
- * 		I agree to the terms
+ * 		<Field.InlineLabelText>I agree to the terms <Field.RequiredMark /></Field.InlineLabelText>
+ * 		<Field.InlineOptional optionalLabel="optional" />
  * 	</Checkbox.Label>
  * </Checkbox.Root>
  */

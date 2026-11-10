@@ -36,12 +36,12 @@ const textFieldOf =
 	(args: FieldRootProps) => (
 		<Field.Root
 			{...args}
+			requiredness={requiredness}
 			invalid={errors !== undefined}
 			className={style.field}>
-			<Field.Label
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{LABEL}
+			<Field.Label>
+				{LABEL}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</Field.Label>
 			<Field.Control
 				className={style.input}
@@ -60,9 +60,7 @@ const textFieldOf =
 
 const PendingField = (args: FieldRootProps) => (
 	<Field.Root {...args} className={style.field}>
-		<Field.Label optionalLabel={OPTIONAL_LABEL}>
-			{LABEL}
-		</Field.Label>
+		<Field.Label>{LABEL}</Field.Label>
 		<div
 			className={style.group}
 			{...fieldStateAttributes({ pending: true })}>
@@ -73,28 +71,32 @@ const PendingField = (args: FieldRootProps) => (
 );
 
 const CaptionField = (args: FieldRootProps) => (
-	<Field.Root {...args} className={style.field}>
-		<Field.Caption
-			requiredness="optional"
-			optionalLabel={OPTIONAL_LABEL}>
-			{CAPTION}
+	<Field.Root
+		{...args}
+		requiredness="optional"
+		className={style.field}>
+		<Field.Caption>
+			{CAPTION}{" "}
+			<Field.Requiredness optionalLabel={OPTIONAL_LABEL} />
 		</Field.Caption>
 		<p>{CAPTION_VALUE}</p>
 	</Field.Root>
 );
 
 const InlineField = (args: FieldRootProps) => (
-	<Field.Root {...args} className={style.field}>
-		<Field.Label
-			optionalLabel={OPTIONAL_LABEL}
-			className={style.inline}>
+	<Field.Root
+		{...args}
+		requiredness="optional"
+		className={style.field}>
+		<Field.Label className={style.inline}>
 			<Field.Control
 				type="checkbox"
 				className={style.box}
 			/>
-			<Field.InlineLabelText
-				label={CHECKBOX_LABEL}
-				requiredness="optional"
+			<Field.InlineLabelText>
+				{CHECKBOX_LABEL} <Field.RequiredMark />
+			</Field.InlineLabelText>
+			<Field.InlineOptional
 				optionalLabel={OPTIONAL_LABEL}
 			/>
 		</Field.Label>

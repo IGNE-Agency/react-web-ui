@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Field } from "../field/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
@@ -61,7 +62,6 @@ export const TextareaField = ({
 		disabled={disabled}
 		readOnly={readOnly}
 		requiredness={requiredness}
-		optionalLabel={optionalLabel}
 		errors={errors}
 		dirty={dirty}
 		touched={touched}
@@ -69,7 +69,10 @@ export const TextareaField = ({
 		maxLength={maxLength}
 		state={state}
 		className={className}>
-		<TextInput.Label>{label}</TextInput.Label>
+		<TextInput.Label>
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
+		</TextInput.Label>
 		<TextInput.Group className={style.group}>
 			<Textarea
 				rows={rows}

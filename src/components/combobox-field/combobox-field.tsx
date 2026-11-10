@@ -242,10 +242,12 @@ const FieldBody = <TItem,>({
 
 	const parts = (
 		<>
-			<Field.Label
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<Field.Label>
+				{label}{" "}
+				<Field.Requiredness
+					requiredness={requiredness}
+					optionalLabel={optionalLabel}
+				/>
 			</Field.Label>
 
 			{mode.multiple === true ? (

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { FieldProps } from "../field/index.ts";
+import { Field, type FieldProps } from "../field/index.ts";
 import {
 	OtpInput,
 	type OtpInputRootProps,
@@ -31,10 +31,14 @@ export const OtpField = ({
 	label,
 	description,
 	slotLabel,
+	optionalLabel,
 	...rootProps
 }: OtpFieldProps): ReactNode => (
 	<OtpInput.Root {...rootProps}>
-		<OtpInput.Label>{label}</OtpInput.Label>
+		<OtpInput.Label>
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
+		</OtpInput.Label>
 		<OtpInput.Group>
 			<OtpInput.Slots slotLabel={slotLabel} />
 			<OtpInput.Pending />

@@ -22,7 +22,10 @@ import {
 } from "../field/index.ts";
 import style from "./file-field.module.scss";
 
-export type FileInputRootProps = FieldRootProps &
+export type FileInputRootProps = Omit<
+	FieldRootProps,
+	"requiredness"
+> &
 	Readonly<{
 		/** The states projected onto the field as `data-*` attributes. */
 		state?: FieldState;
@@ -37,6 +40,7 @@ const FileInputRoot = ({
 	<Field.Root
 		render={<BaseFieldset.Root disabled={disabled} />}
 		disabled={disabled}
+		requiredness={state?.requiredness}
 		{...fieldStateAttributes(state ?? {})}
 		{...props}
 	/>
@@ -240,7 +244,7 @@ export type FileInputParts = Readonly<{
  *
  * @example
  * <FileInput.Root state={{ requiredness: "optional" }}>
- * 	<FileInput.Legend optionalLabel="optional">Attachments</FileInput.Legend>
+ * 	<FileInput.Legend>Attachments <Field.Requiredness optionalLabel="optional" /></FileInput.Legend>
  * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
  * 		<FileInput.Hint icon={<UploadFileIcon />}>Drag files here</FileInput.Hint>
  * 		<FileInput.Trigger label="Choose files" icon={<AttachFileIcon />} onSelect={onSelect} />

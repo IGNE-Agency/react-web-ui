@@ -73,9 +73,10 @@ export const SwitchField = ({
 					required={requiredness === "required"}
 					{...props}
 				/>
-				<Field.InlineLabelText
-					label={label}
-					requiredness={requiredness}
+				<Field.InlineLabelText>
+					{label} <Field.RequiredMark />
+				</Field.InlineLabelText>
+				<Field.InlineOptional
 					optionalLabel={optionalLabel}
 				/>
 			</Switch.Label>

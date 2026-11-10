@@ -14,6 +14,7 @@ import { z } from "zod";
 import { getFieldErrors } from "../../lib/forms/errors.ts";
 import { useConnectedField } from "../../lib/forms/use-connected-field.ts";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
+import { Field } from "../field/index.ts";
 import { Form } from "../form/index.ts";
 import { TextInput } from "../text-field/index.ts";
 import {
@@ -421,10 +422,12 @@ const RawAddressField = ({
 			{...state}
 			value={field.state.value}
 			onValueChange={field.handleChange}
-			optionalLabel={OPTIONAL_LABEL}
 			className={style.customField}>
 			<TextInput.Label className={style.customLabel}>
-				{label}
+				{label}{" "}
+				<Field.Requiredness
+					optionalLabel={OPTIONAL_LABEL}
+				/>
 			</TextInput.Label>
 			<TextInput.Group className={style.customControl}>
 				<TextInput.Input name={name} onBlur={onBlur} />
@@ -436,6 +439,7 @@ const RawAddressField = ({
 
 const CustomLayoutForm = ({
 	legend,
+	requiredness,
 	optionalLabel,
 }: FieldGroupProps): ReactElement => {
 	const form = useAppForm({
@@ -452,9 +456,14 @@ const CustomLayoutForm = ({
 
 	return (
 		<Form.Root form={form} className={style.form}>
-			<Fieldset.Root members={members}>
-				<Fieldset.Legend optionalLabel={optionalLabel}>
-					{legend}
+			<Fieldset.Root
+				members={members}
+				requiredness={requiredness}>
+				<Fieldset.Legend>
+					{legend}{" "}
+					<Field.Requiredness
+						optionalLabel={optionalLabel}
+					/>
 				</Fieldset.Legend>
 				<div className={style.customRow}>
 					<form.AppField name="postalCode">

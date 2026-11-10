@@ -28,7 +28,7 @@ import style from "./number-field.module.scss";
 
 export type NumberInputRootProps = Omit<
 	FieldProps,
-	"label" | "description"
+	"label" | "description" | "optionalLabel"
 > &
 	Readonly<{
 		value: number | null;
@@ -53,7 +53,7 @@ export type NumberInputRootProps = Omit<
  * and projecting its state onto every part.
  *
  * @example
- * <NumberInput.Root value={hours} onValueChange={setHours} optionalLabel="optional">…</NumberInput.Root>
+ * <NumberInput.Root value={hours} onValueChange={setHours}>…</NumberInput.Root>
  */
 const NumberInputRoot = ({
 	value,
@@ -65,7 +65,6 @@ const NumberInputRoot = ({
 	disabled,
 	readOnly,
 	requiredness,
-	optionalLabel,
 	errors,
 	dirty,
 	touched,
@@ -95,12 +94,12 @@ const NumberInputRoot = ({
 			value={{
 				state: field.state,
 				errors,
-				optionalLabel,
 				phase: field.phase,
 			}}>
 			<Field.Root
 				disabled={field.disabled}
 				invalid={field.invalid}
+				requiredness={field.state.requiredness}
 				dirty={dirty}
 				touched={touched}
 				className={clsx(style.root, className)}
@@ -294,8 +293,8 @@ export type NumberInputParts = Readonly<{
  * description too. `Error` renders the errors `Root` was given.
  *
  * @example
- * <NumberInput.Root value={hours} onValueChange={setHours} optionalLabel="optional">
- * 	<NumberInput.Label>Hours</NumberInput.Label>
+ * <NumberInput.Root value={hours} onValueChange={setHours} requiredness="optional">
+ * 	<NumberInput.Label>Hours <Field.Requiredness optionalLabel="optional" /></NumberInput.Label>
  * 	<NumberInput.Group>
  * 		<NumberInput.Decrement label="Decrease">
  * 			<RemoveIcon />

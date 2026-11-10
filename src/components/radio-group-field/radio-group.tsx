@@ -75,8 +75,8 @@ export type RadioGroupParts = Readonly<{
  * its `Legend`. For the ordinary case, use `RadioGroupField`.
  *
  * @example
- * <RadioGroup.Root filled={kind !== null}>
- * 	<RadioGroup.Legend optionalLabel="optional">Kind</RadioGroup.Legend>
+ * <RadioGroup.Root filled={kind !== null} requiredness="optional">
+ * 	<RadioGroup.Legend>Kind <Field.Requiredness optionalLabel="optional" /></RadioGroup.Legend>
  * 	<RadioGroup.Group value={kind} onValueChange={setKind}>
  * 		<RadioGroup.Item>
  * 			<RadioGroup.Radio value="direct" />

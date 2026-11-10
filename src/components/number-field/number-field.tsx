@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import type {
-	FieldBlurHandler,
-	FieldProps,
+import {
+	Field,
+	type FieldBlurHandler,
+	type FieldProps,
 } from "../field/index.ts";
 import {
 	NumberInput,
@@ -73,10 +74,14 @@ export const NumberField = ({
 	enterKeyHint,
 	onBlur,
 	onFocus,
+	optionalLabel,
 	...rootProps
 }: NumberFieldProps): ReactNode => (
 	<NumberInput.Root {...rootProps}>
-		<NumberInput.Label>{label}</NumberInput.Label>
+		<NumberInput.Label>
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
+		</NumberInput.Label>
 		<NumberInput.Group>
 			<NumberInput.Decrement label={decrementLabel}>
 				{decrementIcon}

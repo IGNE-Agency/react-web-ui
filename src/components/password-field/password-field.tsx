@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from "react";
 import type { ZxcvbnLanguages } from "../../lib/password-strength/password-strength.ts";
 import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import {
 	TextInput,
 	type TextFieldBaseProps,
@@ -105,14 +106,16 @@ export const PasswordField = ({
 			disabled={disabled}
 			readOnly={readOnly}
 			requiredness={requiredness}
-			optionalLabel={optionalLabel}
 			errors={errors}
 			dirty={dirty}
 			touched={touched}
 			pending={pending}
 			state={state}
 			className={className}>
-			<TextInput.Label>{label}</TextInput.Label>
+			<TextInput.Label>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
+			</TextInput.Label>
 			<TextInput.Group>
 				<TextInput.Input
 					{...inputProps}

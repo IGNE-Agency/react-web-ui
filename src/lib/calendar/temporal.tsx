@@ -501,10 +501,12 @@ export const TemporalFrame = ({
 			<Field.Label
 				id={labelId}
 				nativeLabel={false}
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}
 				render={<span />}>
-				{label}
+				{label}{" "}
+				<Field.Requiredness
+					requiredness={requiredness}
+					optionalLabel={optionalLabel}
+				/>
 			</Field.Label>
 			{children({ labelId, describedBy, controlId })}
 			<Field.Description id={descriptionId}>

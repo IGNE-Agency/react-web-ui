@@ -54,6 +54,7 @@ const SwitchRoot = ({
 			className={clsx(style.root, className)}
 			disabled={field.disabled}
 			invalid={field.invalid}
+			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
 			{...fieldStateAttributes(field.state)}
@@ -103,10 +104,11 @@ export type SwitchParts = Readonly<{
  * share one hit area. For the ordinary case, use `SwitchField`.
  *
  * @example
- * <Switch.Root filled={enabled}>
+ * <Switch.Root filled={enabled} requiredness="optional">
  * 	<Switch.Label>
  * 		<Switch.Control checked={enabled} onCheckedChange={setEnabled} />
- * 		Email me about new messages
+ * 		<Field.InlineLabelText>Email me about new messages <Field.RequiredMark /></Field.InlineLabelText>
+ * 		<Field.InlineOptional optionalLabel="optional" />
  * 	</Switch.Label>
  * </Switch.Root>
  */

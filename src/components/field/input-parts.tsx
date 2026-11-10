@@ -18,8 +18,6 @@ export type InputPartsContextValue = Readonly<{
 	state: FieldState;
 	/** The errors `Root` was given, which `Error` renders. */
 	errors: unknown;
-	/** The word an optional field's label trails. */
-	optionalLabel: string;
 	phase: BusyPhase;
 }>;
 
@@ -40,31 +38,18 @@ export const useInputPartsContext =
 			"Input parts must be rendered within their input's <Root>.",
 		);
 
-export type InputLabelProps = Omit<
-	FieldLabelProps,
-	"requiredness" | "optionalLabel"
->;
+export type InputLabelProps = FieldLabelProps;
 
 /**
- * The label above a raw input, trailing the requiredness its `Root` was given.
+ * The label above a raw input. Add `Field.Requiredness` to trail the
+ * requiredness its `Root` was given.
  *
  * @example
- * <TextInput.Label>Email</TextInput.Label>
+ * <TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
  */
-export const InputLabel = ({
-	children,
-	...props
-}: InputLabelProps): ReactNode => {
-	const { state, optionalLabel } = useInputPartsContext();
-	return (
-		<Field.Label
-			requiredness={state.requiredness}
-			optionalLabel={optionalLabel}
-			{...props}>
-			{children}
-		</Field.Label>
-	);
-};
+export const InputLabel = (
+	props: InputLabelProps,
+): ReactNode => <Field.Label {...props} />;
 
 export type InputPendingProps = Readonly<{
 	className?: string;

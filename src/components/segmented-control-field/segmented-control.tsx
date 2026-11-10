@@ -132,8 +132,8 @@ export type SegmentedControlParts = Readonly<{
  * `SegmentedControlField`.
  *
  * @example
- * <SegmentedControl.Root filled={view !== null}>
- * 	<SegmentedControl.Legend optionalLabel="optional">View</SegmentedControl.Legend>
+ * <SegmentedControl.Root filled={view !== null} requiredness="optional">
+ * 	<SegmentedControl.Legend>View <Field.Requiredness optionalLabel="optional" /></SegmentedControl.Legend>
  * 	<SegmentedControl.Group value={view === null ? [] : [view]} onValueChange={next => setView(next[0] ?? null)}>
  * 		<SegmentedControl.Option value="list">List</SegmentedControl.Option>
  * 		<SegmentedControl.Option value="board">Board</SegmentedControl.Option>

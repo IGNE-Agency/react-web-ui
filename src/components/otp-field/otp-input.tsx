@@ -32,7 +32,7 @@ export type { OtpInputBaseProps };
 
 export type OtpInputRootProps = Omit<
 	FieldProps,
-	"label" | "description"
+	"label" | "description" | "optionalLabel"
 > &
 	OtpInputBaseProps &
 	Readonly<{
@@ -51,12 +51,11 @@ export type OtpInputRootProps = Omit<
  * projecting its state onto every part.
  *
  * @example
- * <OtpInput.Root value={code} onValueChange={setCode} optionalLabel="optional">…</OtpInput.Root>
+ * <OtpInput.Root value={code} onValueChange={setCode}>…</OtpInput.Root>
  */
 const OtpInputRoot = ({
 	length = DEFAULT_LENGTH,
 	requiredness,
-	optionalLabel,
 	errors,
 	dirty,
 	touched,
@@ -83,7 +82,6 @@ const OtpInputRoot = ({
 			value={{
 				state: field.state,
 				errors,
-				optionalLabel,
 				phase: field.phase,
 			}}>
 			<OtpInputContext
@@ -99,6 +97,7 @@ const OtpInputRoot = ({
 				<Field.Root
 					disabled={field.disabled}
 					invalid={field.invalid}
+					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
 					className={clsx(style.root, className)}
@@ -255,8 +254,8 @@ export type OtpInputParts = Readonly<{
  * given.
  *
  * @example
- * <OtpInput.Root value={code} onValueChange={setCode} optionalLabel="optional">
- * 	<OtpInput.Label>Verification code</OtpInput.Label>
+ * <OtpInput.Root value={code} onValueChange={setCode} requiredness="optional">
+ * 	<OtpInput.Label>Verification code <Field.Requiredness optionalLabel="optional" /></OtpInput.Label>
  * 	<OtpInput.Group>
  * 		<OtpInput.Slots slotLabel={(index, total) => `character ${index} of ${total}`} />
  * 		<OtpInput.Pending />

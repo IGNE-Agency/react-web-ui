@@ -42,7 +42,7 @@ const COPIED_FEEDBACK_MS = 2000;
 
 export type TextInputRootProps = Omit<
 	FieldProps,
-	"label" | "description"
+	"label" | "description" | "optionalLabel"
 > &
 	Readonly<{
 		value: string;
@@ -62,7 +62,7 @@ export type TextInputRootProps = Omit<
  * state onto every part.
  *
  * @example
- * <TextInput.Root value={value} onValueChange={setValue} optionalLabel="optional">…</TextInput.Root>
+ * <TextInput.Root value={value} onValueChange={setValue}>…</TextInput.Root>
  */
 const TextInputRoot = ({
 	value,
@@ -70,7 +70,6 @@ const TextInputRoot = ({
 	disabled,
 	readOnly,
 	requiredness,
-	optionalLabel,
 	errors,
 	dirty,
 	touched,
@@ -98,7 +97,6 @@ const TextInputRoot = ({
 			value={{
 				state: field.state,
 				errors,
-				optionalLabel,
 				phase: field.phase,
 			}}>
 			<TextInputContext
@@ -119,6 +117,7 @@ const TextInputRoot = ({
 				<Field.Root
 					disabled={field.disabled}
 					invalid={field.invalid}
+					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
 					className={clsx(style.root, className)}
@@ -497,8 +496,8 @@ export type TextInputParts = Readonly<{
  * label or description too. `Error` renders the errors `Root` was given.
  *
  * @example
- * <TextInput.Root value={value} onValueChange={setValue} errors={errors} optionalLabel="optional">
- * 	<TextInput.Label>Email</TextInput.Label>
+ * <TextInput.Root value={value} onValueChange={setValue} errors={errors} requiredness="optional">
+ * 	<TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
  * 	<TextInput.Group>
  * 		<TextInput.Input type="email" />
  * 		<TextInput.Clear

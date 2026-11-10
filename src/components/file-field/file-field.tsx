@@ -244,10 +244,9 @@ export const FileField = ({
 					onBlur?.();
 				}
 			}}>
-			<FileInput.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<FileInput.Legend>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</FileInput.Legend>
 
 			<FileInput.DropTarget

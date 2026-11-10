@@ -109,10 +109,12 @@ export const PhotoField = ({
 			<Field.Label
 				id={labelId}
 				nativeLabel={false}
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}
 				render={<span />}>
-				{label}
+				{label}{" "}
+				<Field.Requiredness
+					requiredness={requiredness}
+					optionalLabel={optionalLabel}
+				/>
 			</Field.Label>
 			<PhotoInput.Root
 				{...controlProps}

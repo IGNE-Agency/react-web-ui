@@ -1,9 +1,10 @@
 import type { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
 import type { ReactNode } from "react";
-import type {
-	FieldBlurHandler,
-	ChoiceOption,
-	FieldProps,
+import {
+	Field,
+	type FieldBlurHandler,
+	type ChoiceOption,
+	type FieldProps,
 } from "../field/index.ts";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
 import { SegmentedControl } from "./segmented-control.tsx";
@@ -73,10 +74,9 @@ export const SegmentedControlField = ({
 			touched={touched}
 			pending={pending}
 			filled={value !== null}>
-			<SegmentedControl.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<SegmentedControl.Legend>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</SegmentedControl.Legend>
 
 			<SegmentedControl.Group

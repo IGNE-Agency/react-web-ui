@@ -1,6 +1,7 @@
 import type { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 import type { ReactNode } from "react";
 import {
+	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	type ChoiceOption,
@@ -77,10 +78,9 @@ export const RadioGroupField = ({
 				value !== null &&
 				value !== ""
 			}>
-			<RadioGroup.Legend
-				requiredness={requiredness}
-				optionalLabel={optionalLabel}>
-				{label}
+			<RadioGroup.Legend>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
 			</RadioGroup.Legend>
 
 			<RadioGroup.Group<string | null>

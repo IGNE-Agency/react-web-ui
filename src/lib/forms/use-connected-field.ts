@@ -28,7 +28,7 @@ export type ConnectedField<TValue> = Readonly<{
  *
  * @example
  * const { field, props: { name, onBlur, ...state } } = useConnectedField<string>(label);
- * <TextInput.Root {...state} value={field.state.value} onValueChange={field.handleChange} optionalLabel="optional">
+ * <TextInput.Root {...state} value={field.state.value} onValueChange={field.handleChange}>
  * 	<TextInput.Input name={name} onBlur={onBlur} />
  * </TextInput.Root>
  */

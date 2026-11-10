@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { IconButton } from "../button/index.ts";
-import type {
-	FieldBlurHandler,
-	FieldProps,
+import {
+	Field,
+	type FieldBlurHandler,
+	type FieldProps,
 } from "../field/index.ts";
 import {
 	TextInput,
@@ -138,7 +139,6 @@ export const TextField = ({
 		disabled={disabled}
 		readOnly={readOnly}
 		requiredness={requiredness}
-		optionalLabel={optionalLabel}
 		errors={errors}
 		dirty={dirty}
 		touched={touched}
@@ -150,7 +150,8 @@ export const TextField = ({
 			className={
 				labelHidden ? style.visuallyHidden : undefined
 			}>
-			{label}
+			{label}{" "}
+			<Field.Requiredness optionalLabel={optionalLabel} />
 		</TextInput.Label>
 		<TextInput.Group>
 			{icon !== undefined && (
