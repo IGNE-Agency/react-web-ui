@@ -1,10 +1,6 @@
 import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
-import {
-	type CloseButtonProps,
-	CloseButton as KitCloseButton,
-} from "../button/close-button.tsx";
 import styles from "./drawer.module.scss";
 
 export type DrawerRootProps<Payload = unknown> = Omit<
@@ -102,7 +98,7 @@ const Title = ({
 
 export type DrawerHeaderProps = ComponentProps<"div">;
 
-/** The title's line. Put a `Drawer.CloseButton` in it to trail a way out. */
+/** The title's line. Put a `Drawer.Close` in it to trail a way out. */
 const Header = ({
 	className,
 	...props
@@ -110,23 +106,6 @@ const Header = ({
 	<div
 		className={clsx(styles.header, className)}
 		{...props}
-	/>
-);
-
-export type DrawerCloseButtonProps = Pick<
-	CloseButtonProps,
-	"closeLabel" | "icon"
->;
-
-/** The icon-only way out, for a header or a footer, drawn with the app's `icon`. */
-const CloseButton = ({
-	closeLabel,
-	icon,
-}: DrawerCloseButtonProps): ReactNode => (
-	<KitCloseButton
-		closeLabel={closeLabel}
-		icon={icon}
-		render={<BaseDrawer.Close />}
 	/>
 );
 
@@ -167,7 +146,6 @@ type DrawerParts = Readonly<{
 	Header: typeof Header;
 	Title: typeof Title;
 	Close: typeof BaseDrawer.Close;
-	CloseButton: typeof CloseButton;
 	createHandle: typeof BaseDrawer.createHandle;
 }>;
 
@@ -182,7 +160,13 @@ type DrawerParts = Readonly<{
  *   <Drawer.Sheet>
  *     <Drawer.Header>
  *       <Drawer.Title>Filters</Drawer.Title>
- *       <Drawer.CloseButton closeLabel="Close" icon={<CloseIcon />} />
+ *       <Drawer.Close
+ *         render={
+ *           <IconButton label="Close" variant="tertiary">
+ *             <CloseIcon />
+ *           </IconButton>
+ *         }
+ *       />
  *     </Drawer.Header>
  *     <Drawer.Close>Done</Drawer.Close>
  *   </Drawer.Sheet>
@@ -200,6 +184,5 @@ export const Drawer: DrawerParts = {
 	Header,
 	Title,
 	Close: BaseDrawer.Close,
-	CloseButton,
 	createHandle: BaseDrawer.createHandle,
 };

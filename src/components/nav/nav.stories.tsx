@@ -319,10 +319,16 @@ const MobileNav = (args: NavRootProps): ReactElement => {
 									<Drawer.Content className={styles.sheet}>
 										<Drawer.Header>
 											<Drawer.Title>{MORE}</Drawer.Title>
-											<Drawer.CloseButton
-												closeLabel={CLOSE_MORE}
-												icon={
-													<Icon svg={CloseIcon} label="" />
+											<Drawer.Close
+												render={
+													<IconButton
+														label={CLOSE_MORE}
+														variant="tertiary">
+														<Icon
+															svg={CloseIcon}
+															label=""
+														/>
+													</IconButton>
 												}
 											/>
 										</Drawer.Header>

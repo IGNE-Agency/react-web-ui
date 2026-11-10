@@ -220,19 +220,23 @@ export type FilterBarContentProps = Readonly<{
 	className?: string;
 }>;
 
-/** The drawer itself: its portal, backdrop, viewport and popup, around the content. */
+/**
+ * The drawer itself, a `Drawer.Sheet`: its portal, backdrop, viewport and popup,
+ * around the content. For a drawer without the backdrop, compose `Drawer.Portal`,
+ * `Drawer.Viewport`, `Drawer.Popup` and `Drawer.Content` in its place.
+ *
+ * @example
+ * <FilterBar.Content>
+ * 	<FilterBar.Fields>…</FilterBar.Fields>
+ * </FilterBar.Content>
+ */
 const Content = ({
 	children,
 	className,
 }: FilterBarContentProps): ReactNode => (
-	<Drawer.Portal>
-		<Drawer.Backdrop />
-		<Drawer.Viewport>
-			<Drawer.Popup className={className}>
-				<Drawer.Content>{children}</Drawer.Content>
-			</Drawer.Popup>
-		</Drawer.Viewport>
-	</Drawer.Portal>
+	<Drawer.Sheet className={className}>
+		{children}
+	</Drawer.Sheet>
 );
 
 export type FilterBarFieldsProps =
@@ -391,7 +395,7 @@ type FilterBarParts = Readonly<{
  * Composite filter surface. `Root` holds a `useFilterView` in context: `Search`
  * and the `Drawer` share the leading row, and `Active`, the applied-filter row,
  * takes a line of its own. The drawer's header is the `Drawer` component's own
- * `Drawer.Header`, `Drawer.Title` and `Drawer.CloseButton`.
+ * `Drawer.Header`, `Drawer.Title` and `Drawer.Close`.
  *
  * @example
  * <FilterBar.Root filters={filters}>
@@ -401,7 +405,7 @@ type FilterBarParts = Readonly<{
  * 		<FilterBar.Content>
  * 			<Drawer.Header>
  * 				<Drawer.Title>Filter clients</Drawer.Title>
- * 				<Drawer.CloseButton closeLabel="Close" icon={<CloseIcon />} />
+ * 				<Drawer.Close render={<IconButton label="Close" variant="tertiary"><CloseIcon /></IconButton>} />
  * 			</Drawer.Header>
  * 			<FilterBar.Fields><ClientFilterFields filters={filters} /></FilterBar.Fields>
  * 			<FilterBar.Footer>

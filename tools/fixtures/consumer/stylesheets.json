@@ -101,17 +101,9 @@
 		"tooltip/tooltip"
 	],
 	"detail-list": ["detail-list/detail-list"],
-	"dialog": [
-		"button/button",
-		"dialog/dialog",
-		"tooltip/tooltip"
-	],
+	"dialog": ["dialog/dialog"],
 	"divider": ["divider/divider"],
-	"drawer": [
-		"button/button",
-		"drawer/drawer",
-		"tooltip/tooltip"
-	],
+	"drawer": ["drawer/drawer"],
 	"email-field": [
 		"button/button",
 		"error-text/error-text",
@@ -181,7 +173,7 @@
 		"status-message/status-message"
 	],
 	"locale-provider": [],
-	"menu": ["button/button", "menu/menu", "tooltip/tooltip"],
+	"menu": ["menu/menu"],
 	"nav": ["button/button", "nav/nav", "tooltip/tooltip"],
 	"number-field": [
 		"button/button",
