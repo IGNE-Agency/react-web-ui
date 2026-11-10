@@ -1,3 +1,4 @@
+import { TemporalRangeCalendar } from "../../lib/calendar/calendar-prefab.tsx";
 import type { CalendarDate } from "@internationalized/date";
 import type { ReactNode } from "react";
 import {
@@ -80,6 +81,7 @@ export type DateRangeInputParts = Readonly<{
 	Popover: typeof TemporalPopover;
 	Dialog: typeof TemporalDialog;
 	Calendar: typeof RangeCalendarRoot;
+	StandardCalendar: typeof TemporalRangeCalendar;
 	CalendarHeader: typeof CalendarHeader;
 	Heading: typeof CalendarHeading;
 	Previous: typeof CalendarPrevious;
@@ -103,7 +105,8 @@ export type DateRangeInputParts = Readonly<{
  * entry plus a range calendar popover, following react-aria's own anatomy. It
  * sits in a `Field.Root` and names itself through `Label`'s id. For the
  * ordinary case, use `DateRangeField`, which is assembled from exactly these
- * parts.
+ * parts. `StandardCalendar` is the whole range calendar, its header, pickers
+ * and grids, assembled from them.
  *
  * @example
  * const ids = DateRangeInput.useIds();
@@ -171,6 +174,7 @@ export const DateRangeInput: DateRangeInputParts = {
 	Popover: TemporalPopover,
 	Dialog: TemporalDialog,
 	Calendar: RangeCalendarRoot,
+	StandardCalendar: TemporalRangeCalendar,
 	CalendarHeader,
 	Heading: CalendarHeading,
 	Previous: CalendarPrevious,

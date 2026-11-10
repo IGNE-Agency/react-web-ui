@@ -286,12 +286,10 @@
 		"textarea-field/textarea-field"
 	],
 	"time-field": [
-		"button/button",
 		"error-text/error-text",
 		"field/field",
 		"lib/calendar/temporal",
-		"spinner/spinner",
-		"tooltip/tooltip"
+		"spinner/spinner"
 	],
 	"time-zone-provider": [],
 	"toast": [

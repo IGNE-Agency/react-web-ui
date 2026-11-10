@@ -1,3 +1,4 @@
+import { TemporalCalendar } from "../../lib/calendar/calendar-prefab.tsx";
 import type { CalendarDate } from "@internationalized/date";
 import { type ReactNode, useId } from "react";
 import {
@@ -78,6 +79,7 @@ export type DateInputParts = Readonly<{
 	Popover: typeof TemporalPopover;
 	Dialog: typeof TemporalDialog;
 	Calendar: typeof CalendarRoot;
+	StandardCalendar: typeof TemporalCalendar;
 	CalendarHeader: typeof CalendarHeader;
 	Heading: typeof CalendarHeading;
 	Previous: typeof CalendarPrevious;
@@ -99,7 +101,8 @@ export type DateInputParts = Readonly<{
  * The styled parts of a react-aria `DatePicker`, a date entry plus a calendar
  * popover, following react-aria's own anatomy. It sits in a `Field.Root` and
  * names itself through `Label`'s id. For the ordinary case, use `DateField`,
- * which is assembled from exactly these parts.
+ * which is assembled from exactly these parts. `StandardCalendar` is the whole
+ * calendar, its header, pickers and grid, assembled from them.
  *
  * @example
  * const ids = DateInput.useIds();
@@ -156,6 +159,7 @@ export const DateInput: DateInputParts = {
 	Popover: TemporalPopover,
 	Dialog: TemporalDialog,
 	Calendar: CalendarRoot,
+	StandardCalendar: TemporalCalendar,
 	CalendarHeader,
 	Heading: CalendarHeading,
 	Previous: CalendarPrevious,
