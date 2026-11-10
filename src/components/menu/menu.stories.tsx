@@ -17,6 +17,7 @@ import {
 	useOverlayFrame,
 	withOverlayFrame,
 } from "../../lib/storybook/overlay-frame.tsx";
+import { Button, IconButton } from "../button/button.tsx";
 import { Menu } from "./menu.tsx";
 import { Icon } from "../icon/index.ts";
 
@@ -42,19 +43,16 @@ const MenuItems = () => {
 	return (
 		<Menu.Content container={container} sideOffset={8}>
 			<Menu.Arrow />
-			<Menu.Item
-				icon={<Icon svg={DownloadIcon} label="" />}
-				onClick={download}>
+			<Menu.Item onClick={download}>
+				<Icon svg={DownloadIcon} label="" />
 				{DOWNLOAD}
 			</Menu.Item>
-			<Menu.Item
-				icon={<Icon svg={CommentIcon} label="" />}
-				onClick={comment}>
+			<Menu.Item onClick={comment}>
+				<Icon svg={CommentIcon} label="" />
 				{ADD_COMMENT}
 			</Menu.Item>
-			<Menu.Item
-				icon={<Icon svg={ArchiveIcon} label="" />}
-				disabled>
+			<Menu.Item disabled>
+				<Icon svg={ArchiveIcon} label="" />
 				{ARCHIVE}
 			</Menu.Item>
 			<Menu.Separator />
@@ -74,8 +72,11 @@ const MenuItems = () => {
 const MenuExample = (props: MenuExampleProps) => (
 	<Menu.Root {...props}>
 		<Menu.Trigger
-			icon={<Icon svg={MoreVertIcon} label="" />}
-			label={ROW_ACTIONS}
+			render={
+				<IconButton label={ROW_ACTIONS} variant="tertiary">
+					<Icon svg={MoreVertIcon} label="" />
+				</IconButton>
+			}
 		/>
 		<MenuItems />
 	</Menu.Root>
@@ -83,7 +84,11 @@ const MenuExample = (props: MenuExampleProps) => (
 
 const TextTriggerMenu = (props: MenuExampleProps) => (
 	<Menu.Root {...props}>
-		<Menu.Trigger>{ACTIONS}</Menu.Trigger>
+		<Menu.Trigger
+			render={
+				<Button variant="secondary">{ACTIONS}</Button>
+			}
+		/>
 		<MenuItems />
 	</Menu.Root>
 );

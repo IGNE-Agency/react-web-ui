@@ -170,11 +170,11 @@
 		transform: translateY(-50%);
 	}
 
-	.titleSkeleton {
+	.title .skeletonText {
 		min-inline-size: 12ch;
 	}
 
-	.valueSkeleton {
+	.rowValue .skeletonText {
 		min-inline-size: 8ch;
 	}
 }
