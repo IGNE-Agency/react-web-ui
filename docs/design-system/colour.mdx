@@ -1682,7 +1682,9 @@ The one legitimate use of a theme selector inside a component file is a value th
 .backdrop {
 	--_overlay-dim: 0.4;
 
-	background-color: rgb(0 0 0 / var(--overlay-dim, var(--_overlay-dim)));
+	background-color: rgb(
+		0 0 0 / var(--overlay-dim, var(--_overlay-dim))
+	);
 
 	@include theme.dark {
 		--_overlay-dim: 0.6;
