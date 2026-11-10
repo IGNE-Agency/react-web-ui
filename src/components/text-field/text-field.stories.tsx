@@ -5,6 +5,8 @@ import ErrorIcon from "@material-design-icons/svg/outlined/error_outline.svg?rea
 import LanguageIcon from "@material-design-icons/svg/outlined/language.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -20,6 +22,7 @@ import {
 	TextField,
 	type TextFieldCopyProps,
 	type TextFieldProps,
+	TextInput,
 } from "./index.ts";
 
 const COUNTER_MAX = 40;
@@ -33,6 +36,8 @@ const SUFFIX = ".nl";
 const CLEAR_LABEL = "Clear";
 const COPY_LABEL = "Copy";
 const COPIED_LABEL = "Copied";
+const SEARCH_LABEL = "Search orders";
+const SEARCH_ACTION_LABEL = "Search";
 const COPY_FAILED_LABEL =
 	"Couldn't copy automatically. Text selected, copy it manually.";
 
@@ -59,6 +64,56 @@ const ControlledTextField = (
 				updateArgs({ value });
 			}}
 		/>
+	);
+};
+
+const ActionTextInput = (
+	args: TextFieldProps,
+): ReactElement => {
+	const [, updateArgs] = useArgs<TextFieldProps>();
+	return (
+		<TextInput.Root
+			value={args.value}
+			onValueChange={value => {
+				args.onValueChange(value);
+				updateArgs({ value });
+			}}
+			disabled={args.disabled}>
+			<TextInput.Label>{args.label}</TextInput.Label>
+			<TextInput.Group>
+				<TextInput.Input type="search" />
+				<TextInput.Action
+					render={
+						<Button variant="tertiary" size="sm">
+							{SEARCH_ACTION_LABEL}
+						</Button>
+					}
+				/>
+			</TextInput.Group>
+		</TextInput.Root>
+	);
+};
+
+const LabelRowTextInput = (
+	args: TextFieldProps,
+): ReactElement => {
+	const [, updateArgs] = useArgs<TextFieldProps>();
+	return (
+		<TextInput.Root
+			value={args.value}
+			onValueChange={value => {
+				args.onValueChange(value);
+				updateArgs({ value });
+			}}
+			maxLength={args.maxLength}>
+			<Field.LabelRow>
+				<TextInput.Label>{args.label}</TextInput.Label>
+				<TextInput.Counter />
+			</Field.LabelRow>
+			<TextInput.Group>
+				<TextInput.Input />
+			</TextInput.Group>
+		</TextInput.Root>
 	);
 };
 
@@ -224,6 +279,28 @@ export const AllInlays: Story = {
 		clearLabel: CLEAR_LABEL,
 		clearIcon: <Icon svg={CloseIcon} label="" />,
 		...COPY_LABELS,
+	},
+};
+
+export const WithAction: Story = {
+	render: ActionTextInput,
+	args: { label: SEARCH_LABEL, value: VALUE },
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("button", {
+				name: SEARCH_ACTION_LABEL,
+			}),
+		).toBeEnabled();
+	},
+};
+
+export const CounterBesideLabel: Story = {
+	render: LabelRowTextInput,
+	args: { value: VALUE, maxLength: COUNTER_MAX },
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByText(`${VALUE.length}/${COUNTER_MAX}`),
+		).toBeVisible();
 	},
 };
 
