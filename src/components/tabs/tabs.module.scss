@@ -38,7 +38,10 @@
 	.indicator {
 		@include indicator.pill("--active-tab", 0px);
 
-		border-radius: var(--sys-radius-full);
+		border-radius: var(
+			--tab-indicator-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--tab-indicator,
 			var(--sys-color-primary)
@@ -59,7 +62,10 @@
 	}
 
 	.panel {
-		border-radius: var(--sys-radius-sm);
+		border-radius: var(
+			--tabs-panel-radius,
+			var(--sys-radius-sm)
+		);
 
 		@include focus.ring;
 	}
