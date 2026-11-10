@@ -1,7 +1,7 @@
 import { Accordion as BaseAccordion } from "@base-ui/react/accordion";
 import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import style from "./accordion.module.scss";
 
 export type AccordionRootProps = Omit<
@@ -38,6 +38,9 @@ export type AccordionPanelProps = Omit<
 	"className"
 > &
 	Readonly<{ className?: string }>;
+
+export type AccordionContentProps =
+	useRender.ComponentProps<"div">;
 
 /** The stack of items. */
 const Root = ({
@@ -101,18 +104,40 @@ const Indicator = ({
 		: element;
 };
 
-/** What the item holds, folding along its height. */
+/** What the item holds, folding along its height; its `Content` pads it. */
 const Panel = ({
 	className,
-	children,
 	...props
 }: AccordionPanelProps): ReactNode => (
-	<BaseAccordion.Panel className={style.panel} {...props}>
-		<div className={clsx(style.content, className)}>
-			{children}
-		</div>
-	</BaseAccordion.Panel>
+	<BaseAccordion.Panel
+		{...props}
+		className={clsx(style.panel, className)}
+	/>
 );
+
+/**
+ * The padded content inside the `Panel`.
+ *
+ * @example
+ * <Accordion.Panel>
+ * 	<Accordion.Content>{settings}</Accordion.Content>
+ * </Accordion.Panel>
+ */
+const Content = ({
+	render,
+	className,
+	ref,
+	...props
+}: AccordionContentProps): ReactElement =>
+	useRender({
+		defaultTagName: "div",
+		render,
+		ref,
+		props: {
+			...props,
+			className: clsx(style.content, className),
+		},
+	});
 
 type AccordionNamespace = Readonly<{
 	Root: typeof Root;
@@ -121,6 +146,7 @@ type AccordionNamespace = Readonly<{
 	Trigger: typeof Trigger;
 	Indicator: typeof Indicator;
 	Panel: typeof Panel;
+	Content: typeof Content;
 }>;
 
 /**
@@ -137,7 +163,9 @@ type AccordionNamespace = Readonly<{
  * 				<Accordion.Indicator><ChevronIcon /></Accordion.Indicator>
  * 			</Accordion.Trigger>
  * 		</Accordion.Header>
- * 		<Accordion.Panel>{fees}</Accordion.Panel>
+ * 		<Accordion.Panel>
+ * 			<Accordion.Content>{fees}</Accordion.Content>
+ * 		</Accordion.Panel>
  * 	</Accordion.Item>
  * </Accordion.Root>
  */
@@ -148,4 +176,5 @@ export const Accordion: AccordionNamespace = {
 	Trigger,
 	Indicator,
 	Panel,
+	Content,
 };

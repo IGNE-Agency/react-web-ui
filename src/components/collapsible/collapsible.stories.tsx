@@ -65,7 +65,11 @@ const meta = {
 						<Icon svg={ExpandMoreIcon} label="" />
 					</Collapsible.Indicator>
 				</Collapsible.Trigger>
-				<Collapsible.Panel>{CONTENT}</Collapsible.Panel>
+				<Collapsible.Panel>
+					<Collapsible.Content>
+						{CONTENT}
+					</Collapsible.Content>
+				</Collapsible.Panel>
 			</>
 		),
 	},
