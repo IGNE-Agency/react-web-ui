@@ -172,7 +172,7 @@
 	],
 	"locale-provider": [],
 	"menu": ["menu/menu"],
-	"nav": ["button/button", "nav/nav", "tooltip/tooltip"],
+	"nav": ["nav/nav", "tooltip/tooltip"],
 	"number-field": [
 		"button/button",
 		"error-text/error-text",
