@@ -13,9 +13,13 @@ import {
 } from "../field/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import {
-	FileInput,
-	type FileInputItemRemoval,
-} from "./file-input.tsx";
+	AttachmentTile,
+	useAttachmentPreview,
+} from "../attachment-tile/index.ts";
+import { Button, IconButton } from "../button/index.ts";
+import { Spinner } from "../spinner/index.ts";
+import { Tooltip } from "../tooltip/index.ts";
+import { FileInput } from "./file-input.tsx";
 import {
 	isOversized,
 	oversizedFiles,
@@ -85,6 +89,64 @@ export type FileFieldProps = FieldProps &
 
 		className?: string;
 	}>;
+
+type StagedFileProps = Readonly<{
+	id: string;
+	file: File;
+	hint: string;
+	invalid: boolean;
+	disabled: boolean | undefined;
+	icon: ReactNode;
+	removeLabel: string | undefined;
+	removeIcon: ReactNode;
+}>;
+
+const StagedFile = ({
+	id,
+	file,
+	hint,
+	invalid,
+	disabled,
+	icon,
+	removeLabel,
+	removeIcon,
+}: StagedFileProps): ReactNode => {
+	const preview = useAttachmentPreview(file);
+	return (
+		<FileInput.Item
+			id={id}
+			textValue={file.name}
+			invalid={invalid}
+			disabled={disabled}>
+			<Tooltip content={hint}>
+				<AttachmentTile.Preview
+					name={file.name}
+					src={preview.src}
+					pending={preview.pending}>
+					<AttachmentTile.Image />
+					<AttachmentTile.Icon>{icon}</AttachmentTile.Icon>
+					<AttachmentTile.Extension />
+					<AttachmentTile.Skeleton />
+					<AttachmentTile.Name />
+				</AttachmentTile.Preview>
+			</Tooltip>
+			{removeLabel === undefined ? null : (
+				<AttachmentTile.Corner>
+					<AttachmentTile.Remove
+						render={
+							<IconButton
+								variant="tertiary"
+								size="sm"
+								label={removeLabel}>
+								{removeIcon}
+							</IconButton>
+						}
+					/>
+				</AttachmentTile.Corner>
+			)}
+		</FileInput.Item>
+	);
+};
 
 /**
  * A labelled drop target holding the staged files as removable tiles, with a
@@ -198,16 +260,13 @@ export const FileField = ({
 		}
 	};
 
-	const removal: FileInputItemRemoval =
-		readOnly === true ? {} : { removeLabel, removeIcon };
-
 	const tiles =
 		value.length === 0 ? null : (
 			<FileInput.List
 				label={filesLabel}
 				onRemove={readOnly === true ? undefined : remove}>
 				{value.map((file, index) => (
-					<FileInput.Item
+					<StagedFile
 						key={keyOf(file, index)}
 						id={keyOf(file, index)}
 						file={file}
@@ -221,7 +280,10 @@ export const FileField = ({
 						}
 						disabled={fieldState.disabled}
 						icon={fileIcon}
-						{...removal}
+						removeLabel={
+							readOnly === true ? undefined : removeLabel
+						}
+						removeIcon={removeIcon}
 					/>
 				))}
 			</FileInput.List>
@@ -267,12 +329,21 @@ export const FileField = ({
 				}}>
 				{readOnly === true ? null : (
 					<>
-						<FileInput.Hint icon={dropIcon}>
+						<FileInput.Hint>
+							<FileInput.HintIcon>
+								{dropIcon}
+							</FileInput.HintIcon>
 							{dropHint}
 						</FileInput.Hint>
 						<FileInput.Trigger
-							label={chooseLabel}
-							icon={chooseIcon}
+							render={
+								<Button
+									variant="secondary"
+									size="sm"
+									icon={chooseIcon}>
+									{chooseLabel}
+								</Button>
+							}
 							disabled={field.disabled}
 							describedBy={describedBy}
 							buttonRef={triggerRef}
@@ -286,7 +357,11 @@ export const FileField = ({
 					</>
 				)}
 				{tiles}
-				{field.phase !== "fresh" && <FileInput.Pending />}
+				{field.phase !== "fresh" && (
+					<FileInput.Pending>
+						<Spinner size={1} />
+					</FileInput.Pending>
+				)}
 			</FileInput.DropTarget>
 
 			<FileInput.Description id={ids.descriptionId}>
