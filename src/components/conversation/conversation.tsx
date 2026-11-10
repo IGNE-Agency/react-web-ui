@@ -15,7 +15,6 @@ import {
 	Avatar,
 	type AvatarProps,
 } from "../avatar/index.ts";
-import { IconButton } from "../button/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import type {
@@ -270,12 +269,12 @@ export type ConversationMessageReadIndicatorProps =
 		status: ConversationMessageStatus;
 		/** What the status is announced as, such as "Read" or "Unread". */
 		label: string;
-		/** Replaces the dot shown for the status. */
+		/** What shows for the status, such as a `MessageReadDot`. */
 		children?: ReactNode;
 	}> &
 		Omit<ComponentProps<"div">, "children">;
 
-/** Whether the other party has read the message: a dot, and its `label` for assistive tech. */
+/** Whether the other party has read the message: its children, and its `label` for assistive tech. */
 const MessageReadIndicator = ({
 	status,
 	label,
@@ -287,15 +286,38 @@ const MessageReadIndicator = ({
 		className={clsx(style.messageReadIndicator, className)}
 		data-status={status}
 		{...props}>
-		{children ?? (
-			<span
-				aria-hidden="true"
-				className={style.statusDot}
-			/>
-		)}
+		{children}
 		<span className={style.visuallyHidden}>{label}</span>
 	</div>
 );
+
+export type ConversationMessageReadDotProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * The dot a `MessageReadIndicator` shows, filled while the message is unread.
+ *
+ * @example
+ * <Conversation.MessageReadIndicator status="unread" label="Unread">
+ * 	<Conversation.MessageReadDot />
+ * </Conversation.MessageReadIndicator>
+ */
+const MessageReadDot = ({
+	className,
+	render,
+	ref,
+	...props
+}: ConversationMessageReadDotProps): ReactElement =>
+	useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		props: {
+			"aria-hidden": true,
+			...props,
+			className: clsx(style.statusDot, className),
+		},
+	});
 
 export type ConversationMessageContentProps = Readonly<{
 	/** Cuts the text off after this many lines. */
@@ -344,71 +366,66 @@ const MessageFiles = ({
 		),
 	});
 
-export type ConversationMessageFilesDownloadAllProps =
+export type ConversationMessageFilesDownloadAllProps = Omit<
+	useRender.ComponentProps<"button">,
+	"render"
+> &
 	Readonly<{
-		/** The button's accessible name and tooltip, such as "Download all files". */
-		label: string;
-		/** The download glyph. */
-		children: ReactNode;
-	}> &
-		Omit<useRender.ComponentProps<"button">, "children">;
+		/** The button to render, such as `<IconButton label="Download all files"><DownloadIcon /></IconButton>`. */
+		render: useRender.RenderProp;
+	}>;
 
-/** An icon button that downloads every file of a message; its children are the glyph. */
+/**
+ * The button that downloads every file of a message. It renders whichever
+ * button it is given.
+ *
+ * @example
+ * <Conversation.MessageFilesDownloadAll
+ * 	onClick={downloadAll}
+ * 	render={<IconButton label="Download all files" variant="tertiary" size="sm"><DownloadIcon /></IconButton>}
+ * />
+ */
 const MessageFilesDownloadAll = ({
-	label,
-	children,
 	render,
 	...props
 }: ConversationMessageFilesDownloadAllProps): ReactElement =>
 	useRender({
 		defaultTagName: "button",
-		render: render ?? (
-			<IconButton
-				variant="tertiary"
-				size="sm"
-				label={label}>
-				{children}
-			</IconButton>
-		),
-		props: mergeProps<"button">(
-			{
-				type: "button",
-				children:
-					render === undefined ? undefined : children,
-			},
-			props,
-		),
+		render,
+		props: mergeProps<"button">({ type: "button" }, props),
 	});
 
-export type ConversationScrollToBottomProps = Readonly<{
-	/** The button's accessible name and tooltip, such as "Scroll to latest". */
-	label: string;
-	/** The jump glyph, such as a down arrow. */
-	children: ReactNode;
-}> &
-	Omit<useRender.ComponentProps<"button">, "children">;
+export type ConversationScrollToBottomProps = Omit<
+	useRender.ComponentProps<"button">,
+	"render"
+> &
+	Readonly<{
+		/** The button to render, such as `<IconButton label="Scroll to latest"><ArrowDownIcon /></IconButton>`. */
+		render: useRender.RenderProp;
+	}>;
 
-/** An icon button, pinned to the log's bottom corner, that jumps to the latest message; its children are the glyph. */
+/**
+ * The button, pinned to the log's bottom corner, that jumps to the latest
+ * message. It renders whichever button it is given.
+ *
+ * @example
+ * <Conversation.ScrollToBottom
+ * 	onClick={scrollToLatest}
+ * 	render={<IconButton label="Scroll to latest" variant="tertiary"><ArrowDownIcon /></IconButton>}
+ * />
+ */
 const ScrollToBottom = ({
-	label,
-	children,
 	className,
 	render,
 	...props
 }: ConversationScrollToBottomProps): ReactElement =>
 	useRender({
 		defaultTagName: "button",
-		render: render ?? (
-			<IconButton variant="tertiary" label={label}>
-				{children}
-			</IconButton>
-		),
+		render,
 		props: mergeProps<"button">(
 			{
 				type: "button",
 				className: clsx(style.scrollToBottom, className),
-				children:
-					render === undefined ? undefined : children,
 			},
 			props,
 		),
@@ -520,8 +537,9 @@ const Prefab = ({
 									{status === undefined ? null : (
 										<MessageReadIndicator
 											status={status}
-											label={statusLabel[status]}
-										/>
+											label={statusLabel[status]}>
+											<MessageReadDot />
+										</MessageReadIndicator>
 									)}
 								</MessageAuthor>
 								{burst.items.map(message => (
@@ -562,6 +580,7 @@ export type ConversationParts = typeof Prefab &
 		MessageAvatar: typeof MessageAvatar;
 		MessageTimestamp: typeof MessageTimestamp;
 		MessageReadIndicator: typeof MessageReadIndicator;
+		MessageReadDot: typeof MessageReadDot;
 		MessageContent: typeof MessageContent;
 		MessageFiles: typeof MessageFiles;
 		MessageFilesDownloadAll: typeof MessageFilesDownloadAll;
@@ -596,6 +615,7 @@ export const Conversation: ConversationParts =
 		MessageAvatar,
 		MessageTimestamp,
 		MessageReadIndicator,
+		MessageReadDot,
 		MessageContent,
 		MessageFiles,
 		MessageFilesDownloadAll,
