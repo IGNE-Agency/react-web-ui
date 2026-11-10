@@ -18,30 +18,46 @@ The group carries a name for what the people are, such as "Invitees", and each a
 
 ### The prefab is the parts, composed
 
-`AvatarGroup` takes `people` and composes the parts hanging off it: `Root` names the stack and sets the avatar size, `Avatar` is one overlapping member, `Overflow` is the count's button with the popover's content as its children, and `List` and `ListItem` are the usual list of everyone, with a muted `suffix` after a name. Compose the parts by hand where the stack or the list needs other markup, such as listing only the people the stack leaves out.
+`AvatarGroup` takes `people` and composes the parts hanging off it, each one element: `Root` names the stack and sets its size, `Avatar` is one overlapping member holding the person's `Avatar`, `Overflow` is the count's button holding a `Count`, rendered as the trigger of a `Popover`, and `Popup` is that popover's surface, named after the group. `List` and `ListItem` are the usual list of everyone, each item an `Avatar` and a `Name`, with a muted `Suffix` after a name. Compose the parts by hand where the stack or the list needs other markup, such as listing only the people the stack leaves out.
 
 ```tsx
 <AvatarGroup.Root label="Invitees">
 	{shown.map(person => (
-		<AvatarGroup.Avatar
-			key={person.id}
-			name={person.name}
-			src={person.src}
-		/>
+		<AvatarGroup.Avatar key={person.id} name={person.name}>
+			<Avatar
+				name={person.name}
+				src={person.src}
+				size={1.5}
+			/>
+		</AvatarGroup.Avatar>
 	))}
-	<AvatarGroup.Overflow
-		count={rest.length}
-		label={`+${rest.length}, show all invitees`}>
-		<AvatarGroup.List>
-			{rest.map(person => (
-				<AvatarGroup.ListItem
-					key={person.id}
-					name={person.name}
-					src={person.src}
-				/>
-			))}
-		</AvatarGroup.List>
-	</AvatarGroup.Overflow>
+	<Popover.Root>
+		<AvatarGroup.Overflow
+			label={`+${rest.length}, show all invitees`}
+			render={<Popover.Trigger openOnHover />}>
+			<AvatarGroup.Count count={rest.length} />
+		</AvatarGroup.Overflow>
+		<Popover.Portal>
+			<Popover.Positioner side="top" sideOffset={8}>
+				<AvatarGroup.Popup>
+					<AvatarGroup.List>
+						{rest.map(person => (
+							<AvatarGroup.ListItem key={person.id}>
+								<Avatar
+									name={person.name}
+									src={person.src}
+									size={1.5}
+								/>
+								<AvatarGroup.Name>
+									{person.name}
+								</AvatarGroup.Name>
+							</AvatarGroup.ListItem>
+						))}
+					</AvatarGroup.List>
+				</AvatarGroup.Popup>
+			</Popover.Positioner>
+		</Popover.Portal>
+	</Popover.Root>
 </AvatarGroup.Root>
 ```
 

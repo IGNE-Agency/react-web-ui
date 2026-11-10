@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactElement } from "react";
 import { expect } from "storybook/test";
 import { Divider } from "./divider.tsx";
 
@@ -31,6 +32,23 @@ export const Default: Story = {
 export const WithSubtitle: Story = {
 	args: { subtitle: SUBTITLE },
 	play: async ({ canvas }) => {
+		await expect(canvas.getByText(SUBTITLE)).toBeVisible();
+	},
+};
+
+const ComposedDivider = (): ReactElement => (
+	<Divider.Root>
+		<Divider.Rule />
+		<Divider.Label>{SUBTITLE}</Divider.Label>
+	</Divider.Root>
+);
+
+export const Composed: Story = {
+	render: ComposedDivider,
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("separator"),
+		).toBeVisible();
 		await expect(canvas.getByText(SUBTITLE)).toBeVisible();
 	},
 };

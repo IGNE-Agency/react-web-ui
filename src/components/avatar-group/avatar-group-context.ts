@@ -4,18 +4,16 @@ import { useRequiredContext } from "../../lib/use-required-context.ts";
 export type AvatarGroupContextValue = Readonly<{
 	/** The group's accessible name, which its list carries too. */
 	label: string;
-	/** Avatar diameter relative to the surrounding font size (in `em`). */
-	size: number;
 }>;
 
 export const AvatarGroupContext: Context<AvatarGroupContextValue | null> =
 	createContext<AvatarGroupContextValue | null>(null);
 
 /**
- * The enclosing `AvatarGroup.Root`'s name and avatar size.
+ * The enclosing `AvatarGroup.Root`'s name.
  *
  * @example
- * const { size } = useAvatarGroup();
+ * const { label } = useAvatarGroup();
  */
 export const useAvatarGroup = (): AvatarGroupContextValue =>
 	useRequiredContext(
