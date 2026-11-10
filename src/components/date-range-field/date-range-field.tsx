@@ -1,15 +1,18 @@
 import { type ReactNode, useRef } from "react";
-import type {
-	CalendarIcons,
-	CalendarLabels,
-} from "../../lib/calendar/temporal.tsx";
+import {
+	type CalendarIcons,
+	type CalendarLabels,
+	TemporalRangeCalendar,
+} from "../../lib/calendar/calendar-prefab.tsx";
 import {
 	dayRangeToIso,
 	type IsoDateRange,
 	isoToDay,
 	isoToDayRange,
 } from "../../lib/calendar/temporal-value.ts";
+import { IconButton } from "../button/index.ts";
 import {
+	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	useFieldState,
@@ -134,80 +137,106 @@ export const DateRangeField = ({
 	const { phase } = field;
 	const fieldState = field.state;
 
+	const ids = DateRangeInput.useIds();
+
 	return (
-		<DateRangeInput.Frame
-			label={label}
-			description={description}
-			errors={errors}
+		<Field.Root
+			className={className}
+			invalid={field.invalid}
+			disabled={field.disabled}
 			requiredness={requiredness}
-			optionalLabel={optionalLabel}
 			dirty={dirty}
-			touched={touched}
-			className={className}>
-			{({ labelId, describedBy, controlId }) => (
-				<DateRangeInput.Root
-					state={fieldState}
-					aria-labelledby={labelId}
-					aria-describedby={describedBy}
-					value={value === undefined ? undefined : range}
-					defaultValue={
-						isoToDayRange(defaultValue, timeZone) ??
-						undefined
-					}
-					onChange={next =>
-						onValueChange?.(dayRangeToIso(next))
-					}
-					onBlur={onBlur}
-					minValue={
-						isoToDay(minValue, timeZone) ?? undefined
-					}
-					maxValue={
-						isoToDay(maxValue, timeZone) ?? undefined
-					}
-					startName={startName ?? `${controlId}-start`}
-					endName={endName ?? `${controlId}-end`}
-					isDisabled={field.disabled}
-					isReadOnly={readOnly}
-					isRequired={requiredness === "required"}
-					isInvalid={field.invalid}>
-					{({ isFocusWithin }) => (
-						<>
-							<DateRangeInput.Group
-								state={{
-									...fieldState,
-									focused: isFocusWithin,
-								}}>
-								<DateRangeInput.Input slot="start" />
-								<DateRangeInput.Separator />
-								<DateRangeInput.Input slot="end" />
-								<DateRangeInput.Spacer />
-								{phase !== "fresh" && (
-									<DateRangeInput.Pending />
+			touched={touched}>
+			<DateRangeInput.Label id={ids.labelId}>
+				{label}{" "}
+				<Field.Requiredness optionalLabel={optionalLabel} />
+			</DateRangeInput.Label>
+			<DateRangeInput.Root
+				state={fieldState}
+				aria-labelledby={ids.labelId}
+				aria-describedby={ids.describedBy(
+					description !== undefined,
+					field.invalid,
+				)}
+				value={value === undefined ? undefined : range}
+				defaultValue={
+					isoToDayRange(defaultValue, timeZone) ?? undefined
+				}
+				onChange={next =>
+					onValueChange?.(dayRangeToIso(next))
+				}
+				onBlur={onBlur}
+				minValue={isoToDay(minValue, timeZone) ?? undefined}
+				maxValue={isoToDay(maxValue, timeZone) ?? undefined}
+				startName={startName ?? `${ids.controlId}-start`}
+				endName={endName ?? `${ids.controlId}-end`}
+				isDisabled={field.disabled}
+				isReadOnly={readOnly}
+				isRequired={requiredness === "required"}
+				isInvalid={field.invalid}>
+				{({ isFocusWithin }) => (
+					<>
+						<DateRangeInput.Group
+							state={{
+								...fieldState,
+								focused: isFocusWithin,
+							}}>
+							<DateRangeInput.Input slot="start">
+								{segment => (
+									<DateRangeInput.Segment
+										segment={segment}
+									/>
 								)}
-								<DateRangeInput.Trigger
-									label={openCalendarLabel}
-									ref={triggerRef}>
-									{openCalendarIcon}
-								</DateRangeInput.Trigger>
-							</DateRangeInput.Group>
-							<DateRangeInput.Popup triggerRef={triggerRef}>
-								<DateRangeInput.Calendar
-									visibleMonths={visibleMonths}
-									previousMonthLabel={previousMonthLabel}
-									nextMonthLabel={nextMonthLabel}
-									monthLabel={monthLabel}
-									yearLabel={yearLabel}
-									noMatchingYearLabel={noMatchingYearLabel}
-									previousIcon={previousIcon}
-									nextIcon={nextIcon}
-									checkIcon={checkIcon}
-									expandIcon={expandIcon}
-								/>
-							</DateRangeInput.Popup>
-						</>
-					)}
-				</DateRangeInput.Root>
-			)}
-		</DateRangeInput.Frame>
+							</DateRangeInput.Input>
+							<DateRangeInput.Separator>
+								–
+							</DateRangeInput.Separator>
+							<DateRangeInput.Input slot="end">
+								{segment => (
+									<DateRangeInput.Segment
+										segment={segment}
+									/>
+								)}
+							</DateRangeInput.Input>
+							<DateRangeInput.Spacer />
+							{phase !== "fresh" && (
+								<DateRangeInput.Pending />
+							)}
+							<DateRangeInput.Trigger
+								ref={triggerRef}
+								render={
+									<IconButton
+										label={openCalendarLabel}
+										variant="tertiary"
+										size="sm">
+										{openCalendarIcon}
+									</IconButton>
+								}
+							/>
+						</DateRangeInput.Group>
+						<DateRangeInput.Popup triggerRef={triggerRef}>
+							<TemporalRangeCalendar
+								visibleMonths={visibleMonths}
+								previousMonthLabel={previousMonthLabel}
+								nextMonthLabel={nextMonthLabel}
+								monthLabel={monthLabel}
+								yearLabel={yearLabel}
+								noMatchingYearLabel={noMatchingYearLabel}
+								previousIcon={previousIcon}
+								nextIcon={nextIcon}
+								checkIcon={checkIcon}
+								expandIcon={expandIcon}
+							/>
+						</DateRangeInput.Popup>
+					</>
+				)}
+			</DateRangeInput.Root>
+			<DateRangeInput.Description id={ids.descriptionId}>
+				{description}
+			</DateRangeInput.Description>
+			<DateRangeInput.Error id={ids.errorId}>
+				{errors}
+			</DateRangeInput.Error>
+		</Field.Root>
 	);
 };
