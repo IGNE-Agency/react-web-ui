@@ -14,7 +14,7 @@
 			--skeleton-bg,
 			var(--sys-color-surface-highest)
 		);
-		block-size: 1em;
+		block-size: var(--skeleton-block-size, 1em);
 
 		@include loading.pulse(var(--skeleton-rest, 0.75));
 	}

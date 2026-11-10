@@ -10,10 +10,13 @@
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		border-radius: var(--sys-radius-circle);
+		border-radius: var(
+			--avatar-radius,
+			var(--sys-radius-circle)
+		);
 		background-color: var(--avatar-bg, var(--_avatar-bg));
 		color: var(--avatar-fg, var(--_avatar-fg));
-		font-weight: 600;
+		font-weight: var(--avatar-font-weight, 600);
 		line-height: 1;
 		text-transform: uppercase;
 		overflow: hidden;
