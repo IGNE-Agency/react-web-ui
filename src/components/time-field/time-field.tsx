@@ -1,3 +1,4 @@
+import { Spinner } from "../spinner/index.ts";
 import type { ReactNode } from "react";
 import {
 	isoToTimeOfDay,
@@ -114,7 +115,11 @@ export const TimeField = ({
 							<TimeInput.Segment segment={segment} />
 						)}
 					</TimeInput.Input>
-					{phase !== "fresh" && <TimeInput.Pending />}
+					{phase !== "fresh" && (
+						<TimeInput.Pending>
+							<Spinner size={1} />
+						</TimeInput.Pending>
+					)}
 				</TimeInput.Group>
 			</TimeInput.Root>
 			<TimeInput.Description id={ids.descriptionId}>

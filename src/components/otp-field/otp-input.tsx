@@ -258,7 +258,9 @@ export type OtpInputParts = Readonly<{
  * 	<OtpInput.Label>Verification code <Field.Requiredness optionalLabel="optional" /></OtpInput.Label>
  * 	<OtpInput.Group>
  * 		<OtpInput.Slots slotLabel={(index, total) => `character ${index} of ${total}`} />
- * 		<OtpInput.Pending />
+ * 		<OtpInput.Pending>
+ * 			<Spinner size={1} />
+ * 		</OtpInput.Pending>
  * 	</OtpInput.Group>
  * 	<OtpInput.Error />
  * </OtpInput.Root>

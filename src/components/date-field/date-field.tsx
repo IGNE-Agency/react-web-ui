@@ -8,6 +8,7 @@ import {
 	dayToIso,
 	isoToDay,
 } from "../../lib/calendar/temporal-value.ts";
+import { Spinner } from "../spinner/index.ts";
 import { IconButton } from "../button/index.ts";
 import {
 	Field,
@@ -171,7 +172,11 @@ export const DateField = ({
 									<DateInput.Segment segment={segment} />
 								)}
 							</DateInput.Input>
-							{phase !== "fresh" && <DateInput.Pending />}
+							{phase !== "fresh" && (
+								<DateInput.Pending>
+									<Spinner size={1} />
+								</DateInput.Pending>
+							)}
 							<DateInput.Trigger
 								ref={triggerRef}
 								render={

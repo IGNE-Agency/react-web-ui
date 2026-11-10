@@ -28,15 +28,13 @@
 	"checkbox-field": [
 		"checkbox-field/checkbox",
 		"error-text/error-text",
-		"field/field",
-		"spinner/spinner"
+		"field/field"
 	],
 	"checkbox-group-field": [
 		"checkbox-field/checkbox",
 		"checkbox-group-field/checkbox-group",
 		"error-text/error-text",
-		"field/field",
-		"spinner/spinner"
+		"field/field"
 	],
 	"collapsible": ["collapsible/collapsible"],
 	"combobox-field": [
@@ -118,11 +116,7 @@
 	],
 	"error-message": ["status-message/status-message"],
 	"error-text": ["error-text/error-text"],
-	"field": [
-		"error-text/error-text",
-		"field/field",
-		"spinner/spinner"
-	],
+	"field": ["error-text/error-text", "field/field"],
 	"field-placeholder": [
 		"field-placeholder/field-placeholder",
 		"skeleton/skeleton"
@@ -130,8 +124,7 @@
 	"fieldset": [
 		"error-text/error-text",
 		"field/field",
-		"fieldset/fieldset",
-		"spinner/spinner"
+		"fieldset/fieldset"
 	],
 	"file-field": [
 		"attachment-tile/attachment-tile",
@@ -218,15 +211,13 @@
 		"error-text/error-text",
 		"field/field",
 		"photo-field/photo-input",
-		"spinner/spinner",
 		"tooltip/tooltip"
 	],
 	"popover": ["popover/popover", "skeleton/skeleton"],
 	"radio-group-field": [
 		"error-text/error-text",
 		"field/field",
-		"radio-group-field/radio-group",
-		"spinner/spinner"
+		"radio-group-field/radio-group"
 	],
 	"search-field": [
 		"button/button",
@@ -239,8 +230,7 @@
 	"segmented-control-field": [
 		"error-text/error-text",
 		"field/field",
-		"segmented-control-field/segmented-control",
-		"spinner/spinner"
+		"segmented-control-field/segmented-control"
 	],
 	"select-field": [
 		"button/button",
@@ -263,7 +253,6 @@
 	"switch-field": [
 		"error-text/error-text",
 		"field/field",
-		"spinner/spinner",
 		"switch-field/switch"
 	],
 	"table-storage": [],
@@ -300,7 +289,6 @@
 	"toggle-group-field": [
 		"error-text/error-text",
 		"field/field",
-		"spinner/spinner",
 		"toggle-group-field/toggle-group"
 	],
 	"tone": [],

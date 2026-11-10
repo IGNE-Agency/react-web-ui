@@ -317,9 +317,12 @@ const TablePagination = () => (
 	<DataTable.Pagination>
 		<Pagination.PageSize>
 			<Select.Label>{PAGE_SIZE_LABEL}</Select.Label>
-			<Select.Trigger
-				icon={<Icon svg={ExpandMoreIcon} label="" />}
-			/>
+			<Select.Trigger>
+				<Select.Value />
+				<Select.Icon>
+					<Icon svg={ExpandMoreIcon} label="" />
+				</Select.Icon>
+			</Select.Trigger>
 			<Select.Portal>
 				<Select.Positioner>
 					<Select.Popup>

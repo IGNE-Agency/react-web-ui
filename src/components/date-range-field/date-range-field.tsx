@@ -10,6 +10,7 @@ import {
 	isoToDay,
 	isoToDayRange,
 } from "../../lib/calendar/temporal-value.ts";
+import { Spinner } from "../spinner/index.ts";
 import { IconButton } from "../button/index.ts";
 import {
 	Field,
@@ -200,7 +201,9 @@ export const DateRangeField = ({
 							</DateRangeInput.Input>
 							<DateRangeInput.Spacer />
 							{phase !== "fresh" && (
-								<DateRangeInput.Pending />
+								<DateRangeInput.Pending>
+									<Spinner size={1} />
+								</DateRangeInput.Pending>
 							)}
 							<DateRangeInput.Trigger
 								ref={triggerRef}
