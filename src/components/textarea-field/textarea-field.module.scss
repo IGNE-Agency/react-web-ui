@@ -1,9 +1,31 @@
 @use "../../style/layers.scss";
+@use "../../style/form.scss" as form;
 
 @layer kit.components {
 	.group {
 		flex-direction: column;
 		align-items: stretch;
+		min-block-size: var(
+			--textarea-min-block-size,
+			#{form.$field-block-size}
+		);
+		border-radius: var(
+			--textarea-radius,
+			var(--field-radius, var(--sys-radius-sm))
+		);
+		padding-block: var(
+			--textarea-pad-y,
+			#{form.$field-padding}
+		);
+		padding-inline: var(
+				--textarea-pad-x,
+				#{form.$field-pad-start}
+			)
+			var(--textarea-pad-x, #{form.$field-pad-end});
+		font: var(
+			--textarea-font,
+			var(--field-font, var(--sys-font-body-medium))
+		);
 	}
 
 	.textarea {

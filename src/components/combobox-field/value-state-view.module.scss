@@ -5,7 +5,7 @@
 	.muted {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--sys-unit-2);
+		gap: var(--combobox-unavailable-gap, var(--sys-unit-2));
 		min-inline-size: 0;
 		color: var(
 			--combobox-unavailable-fg,
