@@ -15,6 +15,8 @@ import {
 	useFieldState,
 } from "../field/index.ts";
 import { detachHiddenInput } from "../field/hidden-input.ts";
+import { Spinner } from "../spinner/index.ts";
+import { Tooltip } from "../tooltip/index.ts";
 import {
 	Combobox,
 	type ComboboxPopupLabels,
@@ -250,26 +252,19 @@ const FieldBody = <TItem,>({
 				/>
 			</Field.Label>
 
-			{mode.multiple === true ? (
-				<Combobox.Control
-					ref={anchorRef}
-					state={fieldState}
-					icon={icon}
-					onBlur={onBlur}
-					tags={
-						first === undefined ? (
+			<Combobox.Control
+				ref={anchorRef}
+				state={fieldState}
+				onBlur={onBlur}>
+				{mode.multiple === true && (
+					<Combobox.Chips>
+						{first === undefined ? (
 							<span aria-hidden="true">{placeholder}</span>
 						) : (
-							<Combobox.Tags
+							<Combobox.ChipList
 								label={mode.selectedLabel}
 								items={states}
 								itemKey={state => state.key}
-								itemLabel={nameOf}
-								removeLabel={mode.removeLabel}
-								removeHint={state =>
-									mode.removeHint(nameOf(state))
-								}
-								removeIcon={mode.removeIcon}
 								disabled={disabled}
 								readOnly={readOnly}
 								onRemove={remaining => {
@@ -282,23 +277,47 @@ const FieldBody = <TItem,>({
 										),
 									);
 								}}>
-								{view}
-							</Combobox.Tags>
-						)
-					}>
-					{first === undefined
-						? placeholder
-						: states.map(nameOf).join(", ")}
-				</Combobox.Control>
-			) : (
-				<Combobox.Control
-					ref={anchorRef}
-					state={fieldState}
-					icon={icon}
-					onBlur={onBlur}>
-					{first === undefined ? placeholder : view(first)}
-				</Combobox.Control>
-			)}
+								{state => (
+									<Combobox.Chip
+										key={state.key}
+										id={state.key}
+										textValue={nameOf(state)}>
+										{view(state)}
+										<Tooltip
+											content={mode.removeHint(
+												nameOf(state),
+											)}>
+											<Combobox.ChipRemove
+												aria-label={mode.removeLabel}>
+												{mode.removeIcon}
+											</Combobox.ChipRemove>
+										</Tooltip>
+									</Combobox.Chip>
+								)}
+							</Combobox.ChipList>
+						)}
+					</Combobox.Chips>
+				)}
+				<Combobox.Trigger>
+					{mode.multiple === true ? (
+						<Combobox.SpokenValue>
+							{first === undefined
+								? placeholder
+								: states.map(nameOf).join(", ")}
+						</Combobox.SpokenValue>
+					) : (
+						<Combobox.TriggerValue>
+							{first === undefined
+								? placeholder
+								: view(first)}
+						</Combobox.TriggerValue>
+					)}
+					<Combobox.Pending>
+						<Spinner size={1} />
+					</Combobox.Pending>
+					<Combobox.Icon>{icon}</Combobox.Icon>
+				</Combobox.Trigger>
+			</Combobox.Control>
 
 			<Combobox.Portal>
 				<Combobox.Positioner anchor={anchorRef}>
