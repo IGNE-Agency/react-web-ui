@@ -14,10 +14,22 @@ $size: var(--sys-unit-16);
 ///       @include checkbox.box;
 ///   }
 @mixin box {
-	--box-border: var(--sys-color-border);
-	--box-bg: var(--sys-color-surface);
-	--box-fg: var(--sys-color-on-primary);
-	--box-checked-bg: var(--sys-color-primary);
+	--_checkbox-border: var(
+		--checkbox-border,
+		var(--sys-color-border)
+	);
+	--_checkbox-bg: var(
+		--checkbox-bg,
+		var(--sys-color-surface)
+	);
+	--_checkbox-fg: var(
+		--checkbox-fg,
+		var(--sys-color-on-primary)
+	);
+	--_checkbox-checked-bg: var(
+		--checkbox-checked-bg,
+		var(--sys-color-primary)
+	);
 
 	display: grid;
 	flex: 0 0 auto;
@@ -25,10 +37,14 @@ $size: var(--sys-unit-16);
 	box-sizing: border-box;
 	inline-size: var(--checkbox-size, #{$size});
 	block-size: var(--checkbox-size, #{$size});
-	border: 1px solid var(--box-border);
-	border-radius: var(--sys-radius-sm);
-	background: var(--box-bg);
-	color: var(--box-fg);
+	border: var(--checkbox-border-width, 1px) solid
+		var(--_checkbox-border);
+	border-radius: var(
+		--checkbox-radius,
+		var(--sys-radius-sm)
+	);
+	background: var(--_checkbox-bg);
+	color: var(--_checkbox-fg);
 
 	@media not (prefers-reduced-motion) {
 		transition:
@@ -42,39 +58,81 @@ $size: var(--sys-unit-16);
 /// Warms a focusable `box`'s rim for the keyboard, beside the ring.
 @mixin box-focus {
 	&:focus-visible {
-		border-color: var(--sys-color-primary);
+		border-color: var(
+			--checkbox-focus-border,
+			var(--sys-color-primary)
+		);
 	}
 }
 
 /// Fills a `box` to read as checked.
 @mixin box-checked {
-	--box-border: var(--box-checked-bg);
-	--box-bg: var(--box-checked-bg);
+	--_checkbox-border: var(
+		--checkbox-checked-border,
+		var(--_checkbox-checked-bg)
+	);
+	--_checkbox-bg: var(--_checkbox-checked-bg);
 }
 
 /// Re-points a `box`'s fill knobs to the error palette.
 @mixin box-invalid {
-	--box-border: var(--sys-color-error-fg);
-	--box-bg: var(--sys-color-error-bg);
-	--box-checked-bg: var(--sys-color-error-fg);
-	--box-fg: var(--sys-color-error-bg);
+	--_checkbox-border: var(
+		--checkbox-invalid-border,
+		var(--sys-color-error-fg)
+	);
+	--_checkbox-bg: var(
+		--checkbox-invalid-bg,
+		var(--sys-color-error-bg)
+	);
+	--_checkbox-checked-bg: var(
+		--checkbox-invalid-checked-bg,
+		var(--sys-color-error-fg)
+	);
+	--_checkbox-fg: var(
+		--checkbox-invalid-fg,
+		var(--sys-color-error-bg)
+	);
 }
 
 /// Re-points a `box`'s fill knobs to the read-only palette, dashed rim included.
 @mixin box-readonly {
-	--box-border: var(--sys-color-outline);
-	--box-bg: var(--sys-color-surface-high);
-	--box-checked-bg: var(--sys-color-primary-container);
-	--box-fg: var(--sys-color-on-primary-container);
+	--_checkbox-border: var(
+		--checkbox-readonly-border,
+		var(--sys-color-outline)
+	);
+	--_checkbox-bg: var(
+		--checkbox-readonly-bg,
+		var(--sys-color-surface-high)
+	);
+	--_checkbox-checked-bg: var(
+		--checkbox-readonly-checked-bg,
+		var(--sys-color-primary-container)
+	);
+	--_checkbox-fg: var(
+		--checkbox-readonly-fg,
+		var(--sys-color-on-primary-container)
+	);
 
-	border-style: dashed;
+	border-style: var(
+		--checkbox-readonly-border-style,
+		dashed
+	);
 }
 
 /// Re-points a `box`'s fill knobs to the disabled palette, checked or not.
 @mixin box-disabled {
-	--box-bg: var(--sys-color-disabled-bg);
-	--box-checked-bg: var(--sys-color-disabled-bg);
-	--box-fg: var(--sys-color-disabled-fg);
+	--_checkbox-bg: var(
+		--checkbox-disabled-bg,
+		var(--sys-color-disabled-bg)
+	);
+	--_checkbox-checked-bg: var(
+		--checkbox-disabled-checked-bg,
+		var(--sys-color-disabled-bg)
+	);
+	--_checkbox-fg: var(
+		--checkbox-disabled-fg,
+		var(--sys-color-disabled-fg)
+	);
 
 	cursor: not-allowed;
 }
@@ -90,7 +148,10 @@ $size: var(--sys-unit-16);
 	cursor: pointer;
 
 	&:hover #{$box} {
-		border-color: var(--sys-color-primary);
+		border-color: var(
+			--checkbox-hover-border,
+			var(--sys-color-primary)
+		);
 	}
 
 	:where([data-readonly], [data-disabled]) & {
@@ -98,8 +159,8 @@ $size: var(--sys-unit-16);
 
 		&:hover #{$box}:not([data-checked]) {
 			border-color: var(
-				--box-border,
-				var(--sys-color-border)
+				--_checkbox-border,
+				var(--checkbox-border, var(--sys-color-border))
 			);
 		}
 	}
@@ -119,7 +180,9 @@ $size: var(--sys-unit-16);
 	grid-template-columns: auto 1fr;
 	grid-template-areas: "control text";
 	align-items: center;
-	gap: var(--sys-unit-1) var(--sys-unit-6);
+	gap: var(--checkbox-label-row-gap, var(--sys-unit-1))
+		var(--checkbox-label-gap, var(--sys-unit-6));
+	font: var(--checkbox-label-font, inherit);
 
 	&:has(> [data-optional-suffix]) {
 		grid-template-areas:
@@ -146,8 +209,14 @@ $size: var(--sys-unit-16);
 	place-items: center;
 
 	svg {
-		inline-size: calc(var(--checkbox-size, #{$size}) * 0.7);
-		block-size: calc(var(--checkbox-size, #{$size}) * 0.7);
+		inline-size: var(
+			--checkbox-indicator-size,
+			calc(var(--checkbox-size, #{$size}) * 0.7)
+		);
+		block-size: var(
+			--checkbox-indicator-size,
+			calc(var(--checkbox-size, #{$size}) * 0.7)
+		);
 	}
 }
 

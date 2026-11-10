@@ -4,12 +4,12 @@
 
 @layer kit.components {
 	.group {
-		--_toggle-group-fill: var(
-			--toggle-group-fill,
+		--_toggle-group-chip-pressed-bg: var(
+			--toggle-group-chip-pressed-bg,
 			var(--sys-color-primary)
 		);
-		--_toggle-group-on-fill: var(
-			--toggle-group-on-fill,
+		--_toggle-group-chip-pressed-fg: var(
+			--toggle-group-chip-pressed-fg,
 			var(--sys-color-on-primary)
 		);
 
@@ -32,8 +32,14 @@
 		}
 
 		&[data-invalid] {
-			--_toggle-group-fill: var(--sys-color-error-fg);
-			--_toggle-group-on-fill: var(--sys-color-error-bg);
+			--_toggle-group-chip-pressed-bg: var(
+				--toggle-group-chip-invalid-pressed-bg,
+				var(--sys-color-error-fg)
+			);
+			--_toggle-group-chip-pressed-fg: var(
+				--toggle-group-chip-invalid-pressed-fg,
+				var(--sys-color-error-bg)
+			);
 		}
 	}
 
@@ -43,20 +49,27 @@
 		flex: 0 0 auto;
 		align-items: center;
 		justify-content: center;
-		gap: var(--sys-unit-3);
+		gap: var(--toggle-group-chip-gap, var(--sys-unit-3));
 		box-sizing: border-box;
 		min-block-size: var(
 			--toggle-group-chip-block-size,
 			var(--sys-unit-20)
 		);
-		border: #{form.$field-border} solid transparent;
-		border-radius: var(--sys-radius-full);
+		border: var(
+				--toggle-group-chip-border-width,
+				#{form.$field-border}
+			)
+			solid var(--toggle-group-chip-border, transparent);
+		border-radius: var(
+			--toggle-group-chip-radius,
+			var(--sys-radius-full)
+		);
 		background: var(
 			--toggle-group-chip-bg,
 			var(--sys-color-surface-high)
 		);
 		padding-inline: var(
-			--toggle-group-chip-padding-inline,
+			--toggle-group-chip-pad-x,
 			var(--sys-unit-10)
 		);
 		color: var(
@@ -83,9 +96,16 @@
 			content: "";
 			position: absolute;
 			z-index: -1;
-			inset: calc(-1 * #{form.$field-border} - 0.5px);
+			inset: calc(
+				-1 *
+					var(
+						--toggle-group-chip-border-width,
+						#{form.$field-border}
+					) -
+					0.5px
+			);
 			border-radius: inherit;
-			background: var(--_toggle-group-fill);
+			background: var(--_toggle-group-chip-pressed-bg);
 			opacity: 0;
 			scale: 0;
 
@@ -110,8 +130,10 @@
 		}
 
 		&[data-pressed] {
-			background-color: var(--_toggle-group-fill);
-			color: var(--_toggle-group-on-fill);
+			background-color: var(
+				--_toggle-group-chip-pressed-bg
+			);
+			color: var(--_toggle-group-chip-pressed-fg);
 
 			@media not (prefers-reduced-motion) {
 				transition:
@@ -145,15 +167,17 @@
 			pointer-events: none;
 
 			&[data-pressed] {
-				--_toggle-group-fill: var(
-					--sys-color-primary-container
+				--_toggle-group-chip-pressed-bg: var(
+					--toggle-group-chip-readonly-pressed-bg,
+					var(--sys-color-primary-container)
 				);
-				--_toggle-group-on-fill: var(
-					--sys-color-on-primary-container
+				--_toggle-group-chip-pressed-fg: var(
+					--toggle-group-chip-readonly-pressed-fg,
+					var(--sys-color-on-primary-container)
 				);
 
-				background: var(--_toggle-group-fill);
-				color: var(--_toggle-group-on-fill);
+				background: var(--_toggle-group-chip-pressed-bg);
+				color: var(--_toggle-group-chip-pressed-fg);
 
 				&::before {
 					content: none;
@@ -164,16 +188,25 @@
 		&[data-disabled] {
 			@include form.disabled;
 
-			background-color: var(--sys-color-disabled-bg);
+			background-color: var(
+				--toggle-group-chip-disabled-bg,
+				var(--sys-color-disabled-bg)
+			);
 
 			&[data-pressed] {
-				--_toggle-group-fill: var(--sys-color-disabled-fg);
-				--_toggle-group-on-fill: var(
-					--sys-color-disabled-bg
+				--_toggle-group-chip-pressed-bg: var(
+					--toggle-group-chip-disabled-pressed-bg,
+					var(--sys-color-disabled-fg)
+				);
+				--_toggle-group-chip-pressed-fg: var(
+					--toggle-group-chip-disabled-pressed-fg,
+					var(--sys-color-disabled-bg)
 				);
 
-				background-color: var(--_toggle-group-fill);
-				color: var(--_toggle-group-on-fill);
+				background-color: var(
+					--_toggle-group-chip-pressed-bg
+				);
+				color: var(--_toggle-group-chip-pressed-fg);
 			}
 		}
 	}

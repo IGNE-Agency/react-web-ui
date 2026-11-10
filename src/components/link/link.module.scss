@@ -4,7 +4,8 @@
 @layer kit.components {
 	.link {
 		color: var(--link-fg, var(--sys-color-primary));
-		text-decoration: underline;
+		font: var(--link-font, inherit);
+		text-decoration: var(--link-text-decoration, underline);
 		text-underline-offset: var(
 			--link-underline-offset,
 			var(--sys-unit-1)

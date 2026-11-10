@@ -11,5 +11,12 @@
 
 	.label {
 		@include checkbox.inline-label('[role="checkbox"]');
+
+		&[data-disabled]:not([data-disabled] &) {
+			opacity: var(
+				--checkbox-group-item-disabled-opacity,
+				1
+			);
+		}
 	}
 }
