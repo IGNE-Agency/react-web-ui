@@ -15,12 +15,17 @@
 ///   }
 @mixin thin-scrollbar {
 	scrollbar-width: thin;
-	scrollbar-color: var(--sys-color-outline) transparent;
+	scrollbar-color: var(
+			--popup-scrollbar-fg,
+			var(--sys-color-outline)
+		)
+		transparent;
 }
 
 /// A trigger that opens a popover: sets the colour of the disclosure line
-/// beneath it, the text's own colour faded, at full strength on hover and while
-/// the popup is open. Pair with `disclosure-line` on whatever holds the text.
+/// beneath it, the text's own colour faded (`--disclosure-line`), at full
+/// strength on hover and while the popup is open (`--disclosure-line-hover`).
+/// Pair with `disclosure-line` on whatever holds the text.
 ///
 /// @example
 ///   @use "../../style/popup.scss" as popup;
@@ -33,17 +38,19 @@
 ///       }
 ///   }
 @mixin disclosure-trigger {
-	--disclosure-line: color-mix(
-		in oklab,
-		currentcolor 50%,
-		transparent
+	--_disclosure-line: var(
+		--disclosure-line,
+		color-mix(in oklab, currentcolor 50%, transparent)
 	);
 
 	@include focus.ring;
 
 	&:hover,
 	&[data-popup-open] {
-		--disclosure-line: currentcolor;
+		--_disclosure-line: var(
+			--disclosure-line-hover,
+			currentcolor
+		);
 	}
 }
 
@@ -58,8 +65,11 @@
 ///       @include popup.disclosure-line;
 ///   }
 @mixin disclosure-line {
-	text-decoration: underline dotted var(--disclosure-line);
-	text-underline-offset: var(--sys-unit-1);
+	text-decoration: underline dotted var(--_disclosure-line);
+	text-underline-offset: var(
+		--disclosure-line-offset,
+		var(--sys-unit-1)
+	);
 }
 
 /// The space a positioned popup keeps from the viewport's edges: the
@@ -101,16 +111,19 @@
 @mixin surface($shadow: true) {
 	box-sizing: border-box;
 	border: none;
-	border-radius: var(--sys-radius-md);
-	background: var(--sys-color-surface-overlay);
-	padding: var(--sys-unit-4);
-	color: var(--sys-color-text);
+	border-radius: var(--popup-radius, var(--sys-radius-md));
+	background: var(
+		--popup-bg,
+		var(--sys-color-surface-overlay)
+	);
+	padding: var(--popup-pad, var(--sys-unit-4));
+	color: var(--popup-fg, var(--sys-color-text));
 	transform-origin: var(--transform-origin);
 
 	@include thin-scrollbar;
 
 	@if $shadow {
-		box-shadow: var(--sys-elevation-1);
+		box-shadow: var(--popup-shadow, var(--sys-elevation-1));
 	}
 
 	@media not (prefers-reduced-motion) {
@@ -129,7 +142,8 @@
 }
 
 /// One selectable row inside a `popup.surface`. Drives its own highlight from
-/// `data-highlighted`, so it takes no focus ring.
+/// `data-highlighted`, so it takes no focus ring. A `data-selected` row looks
+/// like any other until `--popup-item-selected-bg` or `-fg` is set.
 ///
 /// @example
 ///   @use "../../style/popup.scss" as popup;
@@ -140,26 +154,60 @@
 @mixin item {
 	display: flex;
 	align-items: center;
-	gap: var(--sys-unit-6);
+	gap: var(--popup-item-gap, var(--sys-unit-6));
 	box-sizing: border-box;
-	min-block-size: var(--sys-unit-20);
-	border-radius: var(--sys-radius-sm);
-	padding: var(--sys-unit-4) var(--sys-unit-6);
-	color: var(--sys-color-text);
-	font: var(--sys-font-body-medium);
+	min-block-size: var(
+		--popup-item-min-block-size,
+		var(--sys-unit-20)
+	);
+	border-radius: var(
+		--popup-item-radius,
+		var(--sys-radius-sm)
+	);
+	background: var(--popup-item-bg, transparent);
+	padding: var(--popup-item-pad-y, var(--sys-unit-4))
+		var(--popup-item-pad-x, var(--sys-unit-6));
+	color: var(
+		--popup-item-fg,
+		var(--popup-fg, var(--sys-color-text))
+	);
+	font: var(--popup-item-font, var(--sys-font-body-medium));
 	user-select: none;
 
 	@include state.layer;
 
 	outline: none;
 
+	&[data-selected] {
+		background: var(
+			--popup-item-selected-bg,
+			var(--popup-item-bg, transparent)
+		);
+		color: var(
+			--popup-item-selected-fg,
+			var(
+				--popup-item-fg,
+				var(--popup-fg, var(--sys-color-text))
+			)
+		);
+	}
+
 	&[data-highlighted] {
-		background: var(--sys-color-primary-container);
-		color: var(--sys-color-on-primary-container);
+		background: var(
+			--popup-item-highlighted-bg,
+			var(--sys-color-primary-container)
+		);
+		color: var(
+			--popup-item-highlighted-fg,
+			var(--sys-color-on-primary-container)
+		);
 	}
 
 	&[data-disabled] {
-		color: var(--sys-color-disabled-fg);
+		color: var(
+			--popup-item-disabled-fg,
+			var(--sys-color-disabled-fg)
+		);
 	}
 }
 
@@ -177,12 +225,13 @@
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
-	gap: var(--sys-unit-4);
+	gap: var(--popup-note-gap, var(--sys-unit-4));
 	contain: inline-size;
 	min-block-size: 1lh;
-	padding: var(--sys-unit-4) var(--sys-unit-6);
-	color: var(--sys-color-text-muted);
-	font: var(--sys-font-body-medium);
+	padding: var(--popup-note-pad-y, var(--sys-unit-4))
+		var(--popup-note-pad-x, var(--sys-unit-6));
+	color: var(--popup-note-fg, var(--sys-color-text-muted));
+	font: var(--popup-note-font, var(--sys-font-body-medium));
 
 	&:empty {
 		min-block-size: 0;

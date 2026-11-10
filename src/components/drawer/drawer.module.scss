@@ -6,7 +6,7 @@
 	.backdrop {
 		@include overlay.backdrop;
 
-		--overlay-dim: 0.22;
+		--_overlay-dim: 0.22;
 		--overlay-opacity: calc(
 			1 - var(--drawer-swipe-progress)
 		);
@@ -22,7 +22,7 @@
 		}
 
 		@include theme.dark {
-			--overlay-dim: 0.4;
+			--_overlay-dim: 0.4;
 		}
 
 		&[data-swiping] {
@@ -52,23 +52,25 @@
 
 	.popup {
 		--drawer-bleed: 3rem;
-		--drawer-inset: var(--sys-unit-16);
 
 		position: relative;
 		box-sizing: border-box;
-		inline-size: calc(33dvw + var(--drawer-bleed));
-		min-inline-size: 24rem;
+		inline-size: calc(
+			var(--drawer-inline-size, 33dvw) + var(--drawer-bleed)
+		);
+		min-inline-size: var(--drawer-min-inline-size, 24rem);
 		block-size: 100%;
 		background: var(
 			--drawer-surface,
 			var(--sys-color-surface)
 		);
-		padding: var(--drawer-inset);
+		padding: var(--drawer-inset, var(--sys-unit-16));
 		padding-right: calc(
-			var(--drawer-inset) + var(--drawer-bleed)
+			var(--drawer-inset, var(--sys-unit-16)) +
+				var(--drawer-bleed)
 		);
 		margin-right: calc(-1 * var(--drawer-bleed));
-		color: var(--sys-color-text);
+		color: var(--drawer-fg, var(--sys-color-text));
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		touch-action: auto;
@@ -85,10 +87,22 @@
 			position: absolute;
 			inset-inline-start: var(--sys-unit-3);
 			inset-block-start: 50%;
-			inline-size: var(--sys-unit-2);
-			block-size: var(--sys-unit-16);
-			border-radius: var(--sys-radius-full);
-			background: var(--sys-color-outline);
+			inline-size: var(
+				--drawer-handle-thickness,
+				var(--sys-unit-2)
+			);
+			block-size: var(
+				--drawer-handle-length,
+				var(--sys-unit-16)
+			);
+			border-radius: var(
+				--drawer-handle-radius,
+				var(--sys-radius-full)
+			);
+			background: var(
+				--drawer-handle-bg,
+				var(--sys-color-outline)
+			);
 			translate: 0 -50%;
 		}
 
@@ -116,7 +130,10 @@
 			--drawer-bleed: 0px;
 
 			margin-right: 0;
-			border-radius: var(--sys-radius-lg);
+			border-radius: var(
+				--drawer-radius,
+				var(--sys-radius-lg)
+			);
 		}
 
 		&[data-swipe-direction="down"] {
@@ -125,14 +142,24 @@
 			min-inline-size: 0;
 			block-size: var(--drawer-sheet-block-size, auto);
 			max-block-size: var(--drawer-sheet-max, 85dvh);
-			border-radius: var(--sys-radius-xl)
-				var(--sys-radius-xl) 0 0;
+			border-radius: var(
+					--drawer-sheet-radius,
+					var(--sys-radius-xl)
+				)
+				var(--drawer-sheet-radius, var(--sys-radius-xl)) 0 0;
 			margin-right: 0;
 			margin-bottom: calc(-1 * var(--drawer-bleed));
-			padding-top: var(--sys-unit-6);
-			padding-right: var(--drawer-inset);
+			padding-top: var(
+				--drawer-handle-space,
+				var(--sys-unit-6)
+			);
+			padding-right: var(
+				--drawer-inset,
+				var(--sys-unit-16)
+			);
 			padding-bottom: calc(
-				var(--drawer-inset) + var(--drawer-bleed) + 1.75rem
+				var(--drawer-inset, var(--sys-unit-16)) +
+					var(--drawer-bleed) + 1.75rem
 			);
 			transform: translateY(var(--drawer-swipe-movement-y));
 
@@ -140,10 +167,19 @@
 				position: static;
 				display: block;
 				flex-shrink: 0;
-				inline-size: var(--sys-unit-16);
-				block-size: var(--sys-unit-2);
+				inline-size: var(
+					--drawer-handle-length,
+					var(--sys-unit-16)
+				);
+				block-size: var(
+					--drawer-handle-thickness,
+					var(--sys-unit-2)
+				);
 				margin-inline: auto;
-				margin-block-end: var(--sys-unit-6);
+				margin-block-end: var(
+					--drawer-handle-space,
+					var(--sys-unit-6)
+				);
 				translate: none;
 			}
 
@@ -174,11 +210,17 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--sys-unit-8);
+		gap: var(--drawer-header-gap, var(--sys-unit-8));
 	}
 
 	.title {
-		color: var(--sys-color-text);
-		font: var(--sys-font-heading-small);
+		color: var(
+			--drawer-title-fg,
+			var(--drawer-fg, var(--sys-color-text))
+		);
+		font: var(
+			--drawer-title-font,
+			var(--sys-font-heading-small)
+		);
 	}
 }

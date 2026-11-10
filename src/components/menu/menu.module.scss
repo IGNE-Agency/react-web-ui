@@ -6,13 +6,16 @@
 		@include popup.edge-padding;
 
 		outline: none;
-		filter: var(--sys-elevation-1-filter);
+		filter: var(
+			--menu-filter,
+			var(--sys-elevation-1-filter)
+		);
 	}
 
 	.popup {
 		@include popup.surface($shadow: false);
 
-		min-inline-size: 12rem;
+		min-inline-size: var(--menu-min-inline-size, 12rem);
 	}
 
 	.arrow {
@@ -39,7 +42,7 @@
 	}
 
 	.arrowFill {
-		fill: var(--sys-color-surface-overlay);
+		fill: var(--popup-bg, var(--sys-color-surface-overlay));
 	}
 
 	.item {
@@ -51,14 +54,27 @@
 	}
 
 	.separator {
-		block-size: 1px;
-		margin: var(--sys-unit-2) 0;
-		background: var(--sys-color-border);
+		block-size: var(--menu-separator-size, 1px);
+		margin: var(--menu-separator-space, var(--sys-unit-2)) 0;
+		background: var(
+			--menu-separator-bg,
+			var(--sys-color-border)
+		);
 	}
 
 	.groupLabel {
-		padding: var(--sys-unit-4) var(--sys-unit-6);
-		color: var(--sys-color-text-muted);
-		font: var(--sys-font-label-small);
+		padding: var(
+				--menu-group-label-pad-y,
+				var(--sys-unit-4)
+			)
+			var(--menu-group-label-pad-x, var(--sys-unit-6));
+		color: var(
+			--menu-group-label-fg,
+			var(--sys-color-text-muted)
+		);
+		font: var(
+			--menu-group-label-font,
+			var(--sys-font-label-small)
+		);
 	}
 }

@@ -10,7 +10,7 @@
 	.popup {
 		@include dialog.surface;
 
-		padding: var(--sys-unit-20);
+		padding: var(--confirm-dialog-pad, var(--sys-unit-20));
 	}
 
 	.title {
