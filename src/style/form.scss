@@ -156,10 +156,12 @@ $field-touch-target: var(--sys-unit-22);
 	}
 }
 
-/// Paints the field's own fill and ink over the user agent's autofill tint, on
-/// the element the browser fills. The user agent forces its colours with
-/// `!important`, so the fill is an inset shadow in `--_field-fill`, which a
-/// bare control inherits from its group, and the ink is the text fill colour.
+/// Hides the user agent's autofill tint on the element the browser fills, so
+/// the field's own fill shows instead. The user agent forces its colours with
+/// `!important`, so its background is clipped to the glyphs, which the text
+/// fill colour paints over, and the ink is that text fill colour. A bare
+/// control is then transparent over its group at any fill opacity; a `control`
+/// paints its own fill back on top.
 ///
 /// @example
 ///   .input {
@@ -168,7 +170,8 @@ $field-touch-target: var(--sys-unit-22);
 @mixin autofill-cover {
 	@each $state in (":autofill", ":-webkit-autofill") {
 		&#{$state} {
-			box-shadow: inset 0 0 0 100vmax var(--_field-fill);
+			-webkit-background-clip: text;
+			background-clip: text;
 			-webkit-text-fill-color: var(--_field-fg);
 			caret-color: var(--_field-caret, var(--_field-fg));
 			filter: none;
@@ -176,8 +179,10 @@ $field-touch-target: var(--sys-unit-22);
 	}
 }
 
-/// The fill a field takes once the browser has filled it in for the user.
-/// Included before the read-only, invalid and disabled treatments, which win.
+/// The fill a field takes once the browser has filled it in for the user. It
+/// is included after the read-only, invalid and disabled treatments and wins
+/// over their fill, because the value is still the browser's while the form
+/// submits or after a failed submit; their border, ink and opacity still show.
 ///
 /// @example
 ///   .group:has(:autofill) {
@@ -263,10 +268,6 @@ $field-touch-target: var(--sys-unit-22);
 		);
 	}
 
-	&:has(:autofill) {
-		@include autofilled;
-	}
-
 	&[data-readonly] {
 		@include readonly;
 	}
@@ -296,6 +297,10 @@ $field-touch-target: var(--sys-unit-22);
 			var(--sys-color-disabled-bg)
 		);
 	}
+
+	&:has(:autofill) {
+		@include autofilled;
+	}
 }
 
 /// The text-entry control: `field-chrome` on the element that takes the value.
@@ -318,17 +323,15 @@ $field-touch-target: var(--sys-unit-22);
 		color: var(--_field-placeholder-fg);
 	}
 
+	@include autofill-cover;
+
 	@each $state in (":autofill", ":-webkit-autofill") {
-		&#{$state}:not(
-			[data-readonly],
-			[data-invalid],
-			[data-disabled]
-		) {
+		&#{$state} {
 			@include autofilled;
+
+			box-shadow: inset 0 0 0 100vmax var(--_field-fill);
 		}
 	}
-
-	@include autofill-cover;
 }
 
 /// The bare control inside a `group`: no chrome of its own, the group's ink,
@@ -361,7 +364,7 @@ $field-touch-target: var(--sys-unit-22);
 }
 
 /// The read-only treatment: legible and selectable, but no longer inviting
-/// entry. Its border is dashed — that dash is the app's read-only signal, and
+/// entry. Its border is dashed â€” that dash is the app's read-only signal, and
 /// every control that can be read-only wears it. The cursor is left to the
 /// control, because text that can still be selected still takes a caret.
 ///
@@ -431,7 +434,7 @@ $field-touch-target: var(--sys-unit-22);
 /// line-height. A native entry lays its value out from the top of its box and
 /// leaves the leading below it, so a box the height of the line box reads as
 /// text with a gap under it. A box the height of the font, centred by the
-/// group, reads as centred — and every text part in the row has to agree, or
+/// group, reads as centred â€” and every text part in the row has to agree, or
 /// the unit sits a pixel off the value beside it.
 ///
 /// @example
