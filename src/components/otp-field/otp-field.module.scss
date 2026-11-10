@@ -25,7 +25,7 @@
 			--otp-field-slot-size,
 			var(--sys-unit-24)
 		);
-		padding-inline: 0;
+		padding-inline: var(--otp-field-slot-pad-x, 0);
 		font-variant-numeric: tabular-nums;
 		text-align: center;
 		cursor: text;
@@ -34,8 +34,11 @@
 	}
 
 	.separator {
-		inline-size: var(--sys-unit-8);
-		block-size: 1px;
+		inline-size: var(
+			--otp-field-separator-inline-size,
+			var(--sys-unit-8)
+		);
+		block-size: var(--otp-field-separator-block-size, 1px);
 		background: var(
 			--otp-field-separator-bg,
 			var(--sys-color-border)

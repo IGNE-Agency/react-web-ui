@@ -21,15 +21,19 @@
 		inline-size: 100%;
 		aspect-ratio: 1;
 		margin: 0;
-		border: 1px solid
+		border: var(--photo-input-border-width, 1px) solid
 			var(--photo-input-border, var(--sys-color-border));
-		border-radius: var(--sys-radius-circle);
-		padding: var(--sys-unit-2);
+		border-radius: var(
+			--photo-input-radius,
+			var(--sys-radius-circle)
+		);
+		padding: var(--photo-input-pad-y, var(--sys-unit-2))
+			var(--photo-input-pad-x, var(--sys-unit-2));
 		background-color: var(
 			--photo-input-bg,
 			var(--sys-color-surface)
 		);
-		color: var(--sys-color-text);
+		color: var(--photo-input-fg, var(--sys-color-text));
 		cursor: pointer;
 
 		@include focus.ring;
@@ -83,13 +87,19 @@
 		display: grid;
 		place-items: center;
 		overflow: hidden;
-		border-radius: var(--sys-radius-circle);
+		border-radius: var(
+			--photo-input-radius,
+			var(--sys-radius-circle)
+		);
 
 		&::after {
 			content: "";
 			position: absolute;
 			inset: 0;
-			background-color: var(--sys-color-primary);
+			background-color: var(
+				--photo-input-state-layer-bg,
+				var(--sys-color-primary)
+			);
 			opacity: var(--_well-state-layer);
 			pointer-events: none;
 		}
@@ -99,7 +109,10 @@
 			inline-size: 100%;
 			block-size: 100%;
 			object-fit: cover;
-			border-radius: var(--sys-radius-circle);
+			border-radius: var(
+				--photo-input-radius,
+				var(--sys-radius-circle)
+			);
 		}
 	}
 
@@ -109,10 +122,23 @@
 		inset-inline-end: 0;
 		display: grid;
 		place-items: center;
-		inline-size: var(--sys-unit-20);
-		block-size: var(--sys-unit-20);
-		border: 3px solid var(--sys-color-surface);
-		border-radius: var(--sys-radius-circle);
+		inline-size: var(
+			--photo-input-badge-size,
+			var(--sys-unit-20)
+		);
+		block-size: var(
+			--photo-input-badge-size,
+			var(--sys-unit-20)
+		);
+		border: var(--photo-input-badge-border-width, 3px) solid
+			var(
+				--photo-input-badge-border,
+				var(--sys-color-surface)
+			);
+		border-radius: var(
+			--photo-input-badge-radius,
+			var(--sys-radius-circle)
+		);
 		background-color: var(
 			--photo-input-badge-bg,
 			var(--sys-color-primary)
@@ -128,7 +154,12 @@
 		position: absolute;
 		inset-block-start: 0;
 		inset-inline-end: 0;
-		border: 3px solid var(--sys-color-surface);
+		border: var(--photo-input-remove-border-width, 3px)
+			solid
+			var(
+				--photo-input-remove-border,
+				var(--sys-color-surface)
+			);
 	}
 
 	.picker,

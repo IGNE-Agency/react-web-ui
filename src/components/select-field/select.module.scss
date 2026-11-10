@@ -8,6 +8,10 @@
 		flex-direction: column;
 		gap: var(--field-gap, var(--sys-unit-4));
 		inline-size: 100%;
+
+		&:has(.trigger[data-disabled]) {
+			opacity: var(--field-disabled-opacity, 1);
+		}
 	}
 
 	.label {
@@ -18,7 +22,10 @@
 		@include form.control;
 
 		position: relative;
-		gap: var(--select-gap, var(--sys-unit-6));
+		gap: var(
+			--select-gap,
+			var(--field-inlay-gap, var(--sys-unit-6))
+		);
 		justify-content: space-between;
 		min-inline-size: 0;
 		text-align: start;
@@ -37,12 +44,26 @@
 		text-overflow: ellipsis;
 
 		@include form.field-text-metrics;
+
+		&[data-placeholder] {
+			color: var(--select-placeholder-fg, var(--_field-fg));
+		}
 	}
 
 	.icon {
 		display: inline-flex;
 		flex-shrink: 0;
 		color: var(--select-icon-fg, var(--_field-muted-fg));
+		font-size: var(--select-icon-size, 1em);
+
+		@media not (prefers-reduced-motion) {
+			transition: rotate var(--sys-motion-short)
+				var(--sys-motion-standard);
+		}
+
+		&[data-popup-open] {
+			rotate: var(--select-icon-open-rotate, none);
+		}
 	}
 
 	.positioner {

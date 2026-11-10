@@ -13,10 +13,12 @@
 				--file-field-min-block-size,
 				var(--sys-unit-40)
 			);
-			padding: var(
-				--file-field-padding,
-				var(--sys-unit-12)
+			border-radius: var(
+				--file-field-radius,
+				var(--field-radius, var(--sys-radius-sm))
 			);
+			padding: var(--file-field-pad-y, var(--sys-unit-12))
+				var(--file-field-pad-x, var(--sys-unit-12));
 			text-align: center;
 			cursor: pointer;
 		}
@@ -26,7 +28,10 @@
 		}
 
 		&[data-drop-target] {
-			border-style: dashed;
+			border-style: var(
+				--file-field-drop-border-style,
+				dashed
+			);
 			border-color: var(
 				--file-field-drop-border,
 				var(--sys-color-primary)
@@ -46,9 +51,12 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: center;
-		gap: var(--sys-unit-2);
+		gap: var(--file-field-hint-gap, var(--sys-unit-2));
 		color: var(--_field-muted-fg);
-		font: var(--sys-font-body-medium);
+		font: var(
+			--file-field-hint-font,
+			var(--sys-font-body-medium)
+		);
 		overflow-wrap: normal;
 		hyphens: auto;
 	}

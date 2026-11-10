@@ -19,7 +19,10 @@
 
 	.controls {
 		display: flex;
-		gap: var(--sys-unit-4);
+		gap: var(
+			--field-placeholder-controls-gap,
+			var(--sys-unit-4)
+		);
 		inline-size: 100%;
 	}
 
