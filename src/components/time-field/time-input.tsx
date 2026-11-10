@@ -5,9 +5,9 @@ import {
 	type TimeFieldProps as AriaTimeFieldProps,
 } from "react-aria-components";
 import {
-	TemporalFrame,
 	TemporalGroup,
 	TemporalInput,
+	TemporalLabel,
 	TemporalSegment,
 	type TemporalStateProps,
 } from "../../lib/calendar/temporal.tsx";
@@ -38,31 +38,45 @@ const TimeInputRoot = ({
 
 /** The parts of a time input. */
 export type TimeInputParts = Readonly<{
-	Frame: typeof TemporalFrame;
 	Root: typeof TimeInputRoot;
+	Label: typeof TemporalLabel;
 	Group: typeof TemporalGroup;
 	Input: typeof TemporalInput;
 	Segment: typeof TemporalSegment;
 	Pending: typeof Field.Pending;
+	Description: typeof Field.Description;
+	Error: typeof Field.Error;
+	useIds: typeof Field.useIds;
 }>;
 
 /**
- * The styled parts of a react-aria `TimeField`, carrying the field frame's ids
- * rather than a label of their own. Its `Group` is the bordered box the
- * segments and any inlay share. For the ordinary case, use `TimeField`.
+ * The styled parts of a react-aria `TimeField`, following react-aria's own
+ * anatomy. It sits in a `Field.Root` and names itself through `Label`'s id.
+ * Its `Group` is the bordered box the segments and any inlay share. For the
+ * ordinary case, use `TimeField`, which is assembled from exactly these parts.
  *
  * @example
- * <TimeInput.Root aria-labelledby={labelId}>
- * 	<TimeInput.Group state={{ requiredness: "optional" }}>
- * 		<TimeInput.Input />
- * 	</TimeInput.Group>
- * </TimeInput.Root>
+ * const ids = TimeInput.useIds();
+ *
+ * <Field.Root>
+ * 	<TimeInput.Label id={ids.labelId}>Start time</TimeInput.Label>
+ * 	<TimeInput.Root aria-labelledby={ids.labelId}>
+ * 		<TimeInput.Group role="presentation">
+ * 			<TimeInput.Input>
+ * 				{segment => <TimeInput.Segment segment={segment} />}
+ * 			</TimeInput.Input>
+ * 		</TimeInput.Group>
+ * 	</TimeInput.Root>
+ * </Field.Root>
  */
 export const TimeInput: TimeInputParts = {
-	Frame: TemporalFrame,
 	Root: TimeInputRoot,
+	Label: TemporalLabel,
 	Group: TemporalGroup,
 	Input: TemporalInput,
 	Segment: TemporalSegment,
 	Pending: Field.Pending,
+	Description: Field.Description,
+	Error: Field.Error,
+	useIds: Field.useIds,
 };
