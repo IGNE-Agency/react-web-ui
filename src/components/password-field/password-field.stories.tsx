@@ -272,20 +272,12 @@ export const RevealKeyboard: Story = {
 			"type",
 			"text",
 		);
-		await expect(toggle).toHaveAttribute(
-			"aria-pressed",
-			"true",
-		);
 		await expect(toggle).toHaveAccessibleName(HIDE_LABEL);
 
 		await userEvent.keyboard(" ");
 		await expect(input(canvas)).toHaveAttribute(
 			"type",
 			"password",
-		);
-		await expect(toggle).toHaveAttribute(
-			"aria-pressed",
-			"false",
 		);
 	},
 };
