@@ -66,9 +66,7 @@
 	],
 	"conversation": [
 		"avatar/avatar",
-		"button/button",
-		"conversation/conversation",
-		"tooltip/tooltip"
+		"conversation/conversation"
 	],
 	"data-table": [
 		"button/button",
