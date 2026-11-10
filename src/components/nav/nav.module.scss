@@ -61,7 +61,7 @@
 		&[aria-current="page"],
 		&[data-active="true"] {
 			color: var(
-				--tab-fg-active,
+				--tab-active-fg,
 				var(--sys-color-on-primary)
 			);
 

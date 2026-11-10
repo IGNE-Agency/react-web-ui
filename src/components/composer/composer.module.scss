@@ -43,7 +43,7 @@
 		&:hover:not([data-disabled]),
 		&[data-focused] {
 			--_composer-border: var(
-				--composer-border-active,
+				--composer-active-border,
 				var(--sys-color-primary)
 			);
 		}
