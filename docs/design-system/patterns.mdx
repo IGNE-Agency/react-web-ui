@@ -1786,9 +1786,16 @@ The clear affordance, a password reveal, a calendar trigger and a copy-to-clipbo
 <TextInput.Group>
 	<TextInput.Affix>{"€"}</TextInput.Affix>
 	<TextInput.Input inputMode="decimal" />
-	<TextInput.Clear label={clearLabel}>
-		<CloseIcon />
-	</TextInput.Clear>
+	<TextInput.Clear
+		render={
+			<IconButton
+				label={clearLabel}
+				variant="tertiary"
+				size="sm">
+				<CloseIcon />
+			</IconButton>
+		}
+	/>
 </TextInput.Group>
 ```
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { IconButton } from "../button/index.ts";
 import {
 	Field,
 	type FieldBlurHandler,
@@ -9,6 +10,7 @@ import {
 	type NumberInputInputProps,
 	type NumberInputRootProps,
 } from "./number-input.tsx";
+import { Spinner } from "../spinner/index.ts";
 
 export type NumberFieldProps = FieldProps &
 	Omit<
@@ -83,9 +85,16 @@ export const NumberField = ({
 			<Field.Requiredness optionalLabel={optionalLabel} />
 		</NumberInput.Label>
 		<NumberInput.Group>
-			<NumberInput.Decrement label={decrementLabel}>
-				{decrementIcon}
-			</NumberInput.Decrement>
+			<NumberInput.Decrement
+				render={
+					<IconButton
+						label={decrementLabel}
+						variant="tertiary"
+						size="sm">
+						{decrementIcon}
+					</IconButton>
+				}
+			/>
 			{prefix !== undefined && (
 				<NumberInput.Affix>{prefix}</NumberInput.Affix>
 			)}
@@ -100,10 +109,19 @@ export const NumberField = ({
 			{suffix !== undefined && (
 				<NumberInput.Affix>{suffix}</NumberInput.Affix>
 			)}
-			<NumberInput.Pending />
-			<NumberInput.Increment label={incrementLabel}>
-				{incrementIcon}
-			</NumberInput.Increment>
+			<NumberInput.Pending>
+				<Spinner size={1} />
+			</NumberInput.Pending>
+			<NumberInput.Increment
+				render={
+					<IconButton
+						label={incrementLabel}
+						variant="tertiary"
+						size="sm">
+						{incrementIcon}
+					</IconButton>
+				}
+			/>
 		</NumberInput.Group>
 		<NumberInput.Description>
 			{description}

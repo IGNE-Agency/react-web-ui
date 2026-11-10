@@ -346,7 +346,10 @@ const PaginationContent = ({
 	<>
 		<PaginationPageSize>
 			<Select.Label>{pageSizeLabel}</Select.Label>
-			<Select.Trigger icon={expandIcon} />
+			<Select.Trigger>
+				<Select.Value />
+				<Select.Icon>{expandIcon}</Select.Icon>
+			</Select.Trigger>
 			<Select.Portal>
 				<Select.Positioner>
 					<Select.Popup>

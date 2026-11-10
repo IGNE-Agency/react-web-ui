@@ -11,6 +11,7 @@ import {
 	type TextInputRootProps,
 } from "./text-input.tsx";
 import style from "./text-field.module.scss";
+import { Spinner } from "../spinner/index.ts";
 
 /** The clear button: off, or on with its accessible name. */
 export type TextFieldClearProps =
@@ -166,7 +167,9 @@ export const TextField = ({
 			{suffix !== undefined && (
 				<TextInput.Affix>{suffix}</TextInput.Affix>
 			)}
-			<TextInput.Pending />
+			<TextInput.Pending>
+				<Spinner size={1} />
+			</TextInput.Pending>
 			{clearable === true && (
 				<TextInput.Clear
 					render={

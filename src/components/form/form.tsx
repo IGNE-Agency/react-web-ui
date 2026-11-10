@@ -1,9 +1,11 @@
+import { useRender } from "@base-ui/react/use-render";
 import {
 	type AnyFormApi,
 	useStore,
 } from "@tanstack/react-form";
 import {
 	type ComponentPropsWithRef,
+	type ReactElement,
 	type ReactNode,
 	useEffect,
 	useRef,
@@ -160,6 +162,32 @@ const FormErrors = ({
 	);
 };
 
+export type FormPendingProps =
+	useRender.ComponentProps<"span">;
+
+/**
+ * What the form shows while its wait is worth showing, such as a spinner: it
+ * renders once the form has been busy for 150 ms, and stays at least 200 ms.
+ * It is decoration; `Form.Submit` announces the wait.
+ *
+ * @example
+ * <Form.Pending render={<Spinner size={1} />} />
+ */
+const FormPending = ({
+	render,
+	ref,
+	...props
+}: FormPendingProps): ReactElement | null => {
+	const busy = useFormDisabled();
+	return useRender({
+		defaultTagName: "span",
+		render,
+		ref,
+		enabled: useBusyPhase({ busy }) !== "fresh",
+		props,
+	});
+};
+
 export type FormSubmitProps = Omit<ButtonProps, "type"> &
 	Readonly<{
 		/** What a wait is announced as once it has lasted, such as "Saving". */
@@ -167,8 +195,9 @@ export type FormSubmitProps = Omit<ButtonProps, "type"> &
 	}>;
 
 /**
- * The form's submit button. A wait that lasts 150 ms shows a spinner, is
- * announced as `busyLabel`, and stays shown at least 200 ms.
+ * The form's submit button. A wait that lasts 150 ms shows a `Form.Pending`
+ * spinner in place of its icon, is announced as `busyLabel`, and stays shown
+ * at least 200 ms.
  *
  * @example
  * <Form.Submit busyLabel="Saving">Save</Form.Submit>
@@ -192,7 +221,7 @@ const FormSubmit = ({
 				variant={variant}
 				icon={shown ? undefined : icon}
 				aria-busy={shown || undefined}>
-				{shown ? <Spinner size={1} /> : null}
+				<FormPending render={<Spinner size={1} />} />
 				{children}
 			</Button>
 			{shown && status !== null
@@ -206,12 +235,14 @@ const FormSubmit = ({
 export type FormParts = Readonly<{
 	Root: typeof FormRoot;
 	Errors: typeof FormErrors;
+	Pending: typeof FormPending;
 	Submit: typeof FormSubmit;
 }>;
 
 /**
  * A form over a TanStack Form instance: `Root` is the `<form>`, `Errors` its
- * form-level errors and `Submit` its submit button.
+ * form-level errors, `Submit` its submit button and `Pending` what shows while
+ * it waits.
  *
  * @example
  * <Form.Root form={form}>
@@ -223,5 +254,6 @@ export type FormParts = Readonly<{
 export const Form: FormParts = {
 	Root: FormRoot,
 	Errors: FormErrors,
+	Pending: FormPending,
 	Submit: FormSubmit,
 };

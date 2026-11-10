@@ -10,6 +10,7 @@ import {
 	PasswordStrength,
 	type PasswordScoreLabels,
 } from "./password-strength.tsx";
+import { Spinner } from "../spinner/index.ts";
 
 /** The strength meter: off, or on with the copy it shows. */
 export type PasswordFieldStrengthProps =
@@ -121,7 +122,9 @@ export const PasswordField = ({
 					{...inputProps}
 					type={revealed ? "text" : "password"}
 				/>
-				<TextInput.Pending />
+				<TextInput.Pending>
+					<Spinner size={1} />
+				</TextInput.Pending>
 				<TextInput.Reveal
 					revealed={revealed}
 					onRevealedChange={setRevealed}

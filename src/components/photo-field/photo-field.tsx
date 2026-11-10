@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { IconButton } from "../button/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -103,6 +104,7 @@ export const PhotoField = ({
 	return (
 		<Field.Root
 			className={className}
+			disabled={field.disabled}
 			invalid={invalid}
 			dirty={dirty}
 			touched={touched}>
@@ -128,14 +130,22 @@ export const PhotoField = ({
 				invalid={invalid}
 				pending={field.state.pending}>
 				<PhotoInput.Well>
-					<PhotoInput.Face previewLabel={previewLabel}>
-						{defaultPreview}
+					<PhotoInput.Face>
+						<PhotoInput.Image alt={previewLabel} />
+						<PhotoInput.Fallback>
+							{defaultPreview}
+						</PhotoInput.Fallback>
 					</PhotoInput.Face>
 					<PhotoInput.Badge>{icon}</PhotoInput.Badge>
 				</PhotoInput.Well>
 				<PhotoInput.Remove
-					label={removeLabel}
-					icon={removeIcon}
+					render={
+						<IconButton
+							label={removeLabel}
+							variant="secondary">
+							{removeIcon}
+						</IconButton>
+					}
 				/>
 				<PhotoInput.ValueText
 					photoSetLabel={photoSetLabel}

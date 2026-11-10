@@ -98,7 +98,9 @@ export const RadioGroupField = ({
 					<RadioGroup.Item
 						key={option.value}
 						disabled={option.disabled}>
-						<RadioGroup.Radio value={option.value} />
+						<RadioGroup.Radio value={option.value}>
+							<RadioGroup.Indicator />
+						</RadioGroup.Radio>
 						{option.label}
 					</RadioGroup.Item>
 				))}

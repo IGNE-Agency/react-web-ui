@@ -1,7 +1,12 @@
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import type { ComponentProps, ReactNode } from "react";
-import { IconButton } from "../button/index.ts";
+import type {
+	ComponentProps,
+	ComponentPropsWithRef,
+	ReactElement,
+	ReactNode,
+} from "react";
 import {
 	Field,
 	type FieldProps,
@@ -23,6 +28,7 @@ import {
 	type InputPendingProps,
 	useInputPartsContext,
 } from "../field/input-parts.tsx";
+import { renderAs } from "../../lib/render-as.tsx";
 import { useLocale } from "../locale-provider/index.ts";
 import style from "./number-field.module.scss";
 
@@ -216,54 +222,85 @@ const NumberInputInput = ({
 	/>
 );
 
-export type NumberInputStepProps = Readonly<{
-	/** Accessible name and tooltip hint, such as "Increase". */
-	label: string;
-	className?: string;
-	/** The icon the button shows. */
-	children: ReactNode;
-}>;
+export type NumberInputStepProps = Omit<
+	BaseNumberField.Decrement.Props,
+	"render" | "children"
+> &
+	Readonly<{
+		/** The button to render, such as `<IconButton label="Increase" variant="tertiary" size="sm"><AddIcon /></IconButton>`. */
+		render: useRender.RenderProp;
+	}>;
 
 /**
- * The icon-only button that steps the value down.
+ * Hands a stepper's props to the button it renders, without the name the
+ * stepper gives itself when the caller gave none, so the button names itself.
  *
  * @example
- * <NumberInput.Decrement label="Decrease"><RemoveIcon /></NumberInput.Decrement>
+ * <BaseNumberField.Decrement render={stepRender(render, props["aria-label"])} />
+ */
+const stepRender =
+	(
+		render: useRender.RenderProp,
+		ownLabel: string | undefined,
+	) =>
+	({
+		"aria-label": stepperLabel,
+		...props
+	}: ComponentPropsWithRef<"button">): ReactElement =>
+		renderAs(render)(
+			ownLabel === undefined
+				? props
+				: { ...props, "aria-label": stepperLabel },
+		);
+
+/**
+ * The button that steps the value down. It renders whichever button it is
+ * given.
+ *
+ * @example
+ * <NumberInput.Decrement
+ * 	render={
+ * 		<IconButton label="Decrease" variant="tertiary" size="sm">
+ * 			<RemoveIcon />
+ * 		</IconButton>
+ * 	}
+ * />
  */
 const NumberInputDecrement = ({
-	label,
+	render,
 	className,
-	children,
+	...props
 }: NumberInputStepProps): ReactNode => (
-	<IconButton
-		label={label}
-		variant="tertiary"
-		size="sm"
+	<BaseNumberField.Decrement
 		className={clsx(style.action, className)}
-		render={<BaseNumberField.Decrement />}>
-		{children}
-	</IconButton>
+		{...props}
+		render={stepRender(render, props["aria-label"])}
+	/>
 );
 
 /**
- * The icon-only button that steps the value up.
+ * The button that steps the value up. It renders whichever button it is
+ * given.
  *
  * @example
- * <NumberInput.Increment label="Increase"><AddIcon /></NumberInput.Increment>
+ * <NumberInput.Increment
+ * 	render={
+ * 		<IconButton label="Increase" variant="tertiary" size="sm">
+ * 			<AddIcon />
+ * 		</IconButton>
+ * 	}
+ * />
  */
 const NumberInputIncrement = ({
-	label,
+	render,
 	className,
-	children,
+	...props
 }: NumberInputStepProps): ReactNode => (
-	<IconButton
-		label={label}
-		variant="tertiary"
-		size="sm"
+	<BaseNumberField.Increment
 		className={clsx(style.action, className)}
-		render={<BaseNumberField.Increment />}>
-		{children}
-	</IconButton>
+		{...props}
+		render={stepRender(render, props["aria-label"])}
+	/>
 );
 
 export type NumberInputPendingProps = InputPendingProps;
@@ -296,13 +333,21 @@ export type NumberInputParts = Readonly<{
  * <NumberInput.Root value={hours} onValueChange={setHours} requiredness="optional">
  * 	<NumberInput.Label>Hours <Field.Requiredness optionalLabel="optional" /></NumberInput.Label>
  * 	<NumberInput.Group>
- * 		<NumberInput.Decrement label="Decrease">
- * 			<RemoveIcon />
- * 		</NumberInput.Decrement>
+ * 		<NumberInput.Decrement
+ * 			render={
+ * 				<IconButton label="Decrease" variant="tertiary" size="sm">
+ * 					<RemoveIcon />
+ * 				</IconButton>
+ * 			}
+ * 		/>
  * 		<NumberInput.Input aria-roledescription="Number field" />
- * 		<NumberInput.Increment label="Increase">
- * 			<AddIcon />
- * 		</NumberInput.Increment>
+ * 		<NumberInput.Increment
+ * 			render={
+ * 				<IconButton label="Increase" variant="tertiary" size="sm">
+ * 					<AddIcon />
+ * 				</IconButton>
+ * 			}
+ * 		/>
  * 	</NumberInput.Group>
  * 	<NumberInput.Error />
  * </NumberInput.Root>

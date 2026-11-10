@@ -1,8 +1,12 @@
 import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import {
 	type ComponentProps,
+	type ComponentPropsWithRef,
 	type HTMLAttributes,
+	type MouseEvent,
+	type ReactElement,
 	type ReactNode,
 	type RefCallback,
 	useCallback,
@@ -10,7 +14,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { IconButton } from "../button/index.ts";
 import {
 	type FieldBlurHandler,
 	fieldStateAttributes,
@@ -267,30 +270,73 @@ const PhotoInputWell = ({
 	);
 };
 
-export type PhotoInputFaceProps = ComponentProps<"span"> &
+/**
+ * The picture inside the well, holding the picked photo's `Image` and the
+ * `Fallback` shown until one is picked.
+ *
+ * @example
+ * <PhotoInput.Face>
+ * 	<PhotoInput.Image alt="Preview" />
+ * 	<PhotoInput.Fallback><Avatar name={user.name} /></PhotoInput.Fallback>
+ * </PhotoInput.Face>
+ */
+const PhotoInputFace = ({
+	className,
+	...props
+}: ComponentProps<"span">): ReactNode => (
+	<span
+		className={clsx(style.face, className)}
+		{...props}
+	/>
+);
+
+export type PhotoInputImageProps = Omit<
+	ComponentProps<"img">,
+	"src" | "alt"
+> &
 	Readonly<{
 		/** The picked photo's alternative text, such as "Preview". */
-		previewLabel: string;
+		alt: string;
 	}>;
 
-/** The picture inside the well: the picked photo, else its children, such as a placeholder or the stored photo. */
-const PhotoInputFace = ({
-	previewLabel,
+/**
+ * The picked photo. Renders nothing until one is picked.
+ *
+ * @example
+ * <PhotoInput.Image alt="Preview" />
+ */
+const PhotoInputImage = ({
+	alt,
+	...props
+}: PhotoInputImageProps): ReactNode => {
+	const { value } = usePhotoInput();
+	const previewSource = usePreviewSource(value);
+	return value === undefined ? null : (
+		<img ref={previewSource} alt={alt} {...props} />
+	);
+};
+
+/**
+ * What the face shows until a photo is picked, such as a placeholder or the
+ * stored photo. Renders nothing once one is picked, or without children.
+ *
+ * @example
+ * <PhotoInput.Fallback><Avatar name={user.name} /></PhotoInput.Fallback>
+ */
+const PhotoInputFallback = ({
 	className,
 	children,
 	...props
-}: PhotoInputFaceProps): ReactNode => {
+}: ComponentProps<"span">): ReactNode => {
 	const { value } = usePhotoInput();
-	const previewSource = usePreviewSource(value);
-	return (
+	return value !== undefined ||
+		children === undefined ||
+		children === null ||
+		children === false ? null : (
 		<span
-			className={clsx(style.face, className)}
+			className={clsx(style.fallback, className)}
 			{...props}>
-			{value === undefined ? (
-				children
-			) : (
-				<img ref={previewSource} alt={previewLabel} />
-			)}
+			{children}
 		</span>
 	);
 };
@@ -321,41 +367,47 @@ const PhotoInputBadge = ({
 };
 
 export type PhotoInputRemoveProps = Omit<
-	ComponentProps<"button">,
+	ComponentPropsWithRef<"button">,
 	"children"
 > &
 	Readonly<{
-		/** The button's accessible name and tooltip, such as "Remove photo". */
-		label: string;
-		/** The button's icon, such as a cross. */
-		icon: ReactNode;
+		/** The button to render, such as `<IconButton label="Remove photo" variant="secondary"><CloseIcon /></IconButton>`. */
+		render: useRender.RenderProp;
 	}>;
 
-/** The icon-only button on the rim that removes a picked photo. It renders only while one is picked. */
+/**
+ * The button on the rim that removes a picked photo. It renders whichever
+ * button it is given, only while a photo is picked.
+ *
+ * @example
+ * <PhotoInput.Remove
+ * 	render={
+ * 		<IconButton label="Remove photo" variant="secondary">
+ * 			<CloseIcon />
+ * 		</IconButton>
+ * 	}
+ * />
+ */
 const PhotoInputRemove = ({
-	label,
-	icon,
+	render,
 	className,
 	onClick,
 	...props
-}: PhotoInputRemoveProps): ReactNode => {
+}: PhotoInputRemoveProps): ReactElement | null => {
 	const { value, readOnly, remove } = usePhotoInput();
-	if (readOnly || value === undefined) {
-		return null;
-	}
-	return (
-		<IconButton
-			label={label}
-			variant="secondary"
-			className={clsx(style.remove, className)}
-			onClick={event => {
+	return useRender({
+		render,
+		enabled: !readOnly && value !== undefined,
+		props: {
+			type: "button",
+			...props,
+			className: clsx(style.remove, className),
+			onClick: (event: MouseEvent<HTMLButtonElement>) => {
 				onClick?.(event);
 				void remove();
-			}}
-			{...props}>
-			{icon}
-		</IconButton>
-	);
+			},
+		},
+	});
 };
 
 export type PhotoInputValueTextProps = Omit<
@@ -392,6 +444,8 @@ export type PhotoInputParts = Readonly<{
 	Root: typeof PhotoInputRoot;
 	Well: typeof PhotoInputWell;
 	Face: typeof PhotoInputFace;
+	Image: typeof PhotoInputImage;
+	Fallback: typeof PhotoInputFallback;
 	Badge: typeof PhotoInputBadge;
 	Remove: typeof PhotoInputRemove;
 	ValueText: typeof PhotoInputValueText;
@@ -406,12 +460,19 @@ export type PhotoInputParts = Readonly<{
  * @example
  * <PhotoInput.Root labelledBy={labelId} value={file} onValueChange={setFile}>
  * 	<PhotoInput.Well>
- * 		<PhotoInput.Face previewLabel="Preview">
- * 			<Avatar name={user.name} />
+ * 		<PhotoInput.Face>
+ * 			<PhotoInput.Image alt="Preview" />
+ * 			<PhotoInput.Fallback><Avatar name={user.name} /></PhotoInput.Fallback>
  * 		</PhotoInput.Face>
  * 		<PhotoInput.Badge><PhotoCameraIcon /></PhotoInput.Badge>
  * 	</PhotoInput.Well>
- * 	<PhotoInput.Remove label="Remove photo" icon={<CloseIcon />} />
+ * 	<PhotoInput.Remove
+ * 		render={
+ * 			<IconButton label="Remove photo" variant="secondary">
+ * 				<CloseIcon />
+ * 			</IconButton>
+ * 		}
+ * 	/>
  * 	<PhotoInput.ValueText photoSetLabel="Photo set" noPhotoLabel="No photo" />
  * </PhotoInput.Root>
  */
@@ -419,6 +480,8 @@ export const PhotoInput: PhotoInputParts = {
 	Root: PhotoInputRoot,
 	Well: PhotoInputWell,
 	Face: PhotoInputFace,
+	Image: PhotoInputImage,
+	Fallback: PhotoInputFallback,
 	Badge: PhotoInputBadge,
 	Remove: PhotoInputRemove,
 	ValueText: PhotoInputValueText,

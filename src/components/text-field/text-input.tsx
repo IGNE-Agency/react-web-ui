@@ -7,6 +7,7 @@ import { clsx } from "clsx";
 import {
 	type ComponentProps,
 	type ComponentPropsWithRef,
+	type ReactElement,
 	type ReactNode,
 	useRef,
 	useState,
@@ -285,6 +286,40 @@ const TextInputClear = ({
 	});
 };
 
+export type TextInputActionProps = Omit<
+	ComponentPropsWithRef<"button">,
+	"children"
+> &
+	Readonly<{
+		/** The button to render, such as `<Button variant="tertiary" size="sm">Search</Button>`. */
+		render: useRender.RenderProp;
+	}>;
+
+/**
+ * Any button inside the group, in the place an inlay that acts takes, such as
+ * a search field's trailing "Search" button. It renders whichever button it is
+ * given, disabled while the field is.
+ *
+ * @example
+ * <TextInput.Action render={<Button variant="tertiary" size="sm" type="submit">Search</Button>} />
+ */
+const TextInputAction = ({
+	render,
+	className,
+	...props
+}: TextInputActionProps): ReactElement => {
+	const { state } = useTextInputContext();
+	return useRender({
+		render,
+		props: {
+			type: "button",
+			disabled: state.disabled,
+			...props,
+			className: clsx(style.action, className),
+		},
+	});
+};
+
 /** Where a copy stands: not tried, landed, or refused and selected instead. */
 export type TextInputCopyOutcome =
 	| "idle"
@@ -478,6 +513,7 @@ export type TextInputParts = Readonly<{
 	Inlay: typeof TextInputInlay;
 	Affix: typeof TextInputAffix;
 	Input: typeof TextInputInput;
+	Action: typeof TextInputAction;
 	Clear: typeof TextInputClear;
 	Copy: typeof TextInputCopy;
 	Reveal: typeof TextInputReveal;
@@ -490,7 +526,8 @@ export type TextInputParts = Readonly<{
 /**
  * The parts of a text input: the field frame, a group carrying the border and
  * its inlays, and the bare control inside it. A `Bar` is a strip of inlays along
- * the bottom edge of the group, for a control the inlays cannot sit beside. For
+ * the bottom edge of the group, for a control the inlays cannot sit beside, and
+ * an `Action` is any button placed in the group. For
  * the ordinary case, use the `TextField` shorthand, which is assembled from
  * exactly these parts. An `Affix` is decoration, so its meaning belongs in the
  * label or description too. `Error` renders the errors `Root` was given.
@@ -519,6 +556,7 @@ export const TextInput: TextInputParts = {
 	Inlay: TextInputInlay,
 	Affix: TextInputAffix,
 	Input: TextInputInput,
+	Action: TextInputAction,
 	Clear: TextInputClear,
 	Copy: TextInputCopy,
 	Reveal: TextInputReveal,
