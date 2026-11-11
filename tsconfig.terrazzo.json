@@ -6,7 +6,7 @@
 		"moduleResolution": "nodenext",
 		"lib": ["ESNext"],
 		"jsx": "preserve",
-		"types": [],
+		"types": ["bun"],
 		"outDir": "dist/terrazzo",
 		"rootDir": "src/terrazzo",
 		"declaration": true,

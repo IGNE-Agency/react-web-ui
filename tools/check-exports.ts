@@ -20,6 +20,8 @@
  * - importing a subpath brings other kit stylesheets than the ones
  *   `tools/fixtures/consumer/stylesheets.json` lists for it, in a build or in
  *   the dev server's pre-bundle
+ * - the packed `react-web-ui-tokens` command fails to build the fixture's
+ *   tokens, or loads the fixture's Vite config while it does
  *
  * @example
  *   bun tools/check-exports.ts
@@ -38,6 +40,7 @@ type Exports = Readonly<Record<string, unknown>>;
 
 type Manifest = Readonly<{
 	name: string;
+	bin?: Readonly<Record<string, string>>;
 	exports?: Exports;
 	peerDependenciesMeta?: Readonly<
 		Record<string, Readonly<{ optional?: boolean }>>
@@ -827,6 +830,51 @@ const checkConsumer = (): readonly string[] => {
 	];
 };
 
+/** Builds the fixture's tokens with the packed kit's token command, which must not load the fixture's Vite config. */
+const checkTokenCommand = (): readonly string[] => {
+	const command = manifest.bin?.["react-web-ui-tokens"];
+	if (command === undefined) {
+		return ["package.json has no react-web-ui-tokens bin"];
+	}
+	const output = join(
+		fixture,
+		"dist",
+		"tokens",
+		"tokens.gen.css",
+	);
+	rmSync(output, { force: true });
+	const result = Bun.spawnSync(
+		[
+			"bun",
+			join(
+				fixture,
+				"node_modules",
+				...manifest.name.split("/"),
+				command,
+			),
+		],
+		{
+			cwd: fixture,
+			stdout: "pipe",
+			stderr: "pipe",
+			env: { ...process.env, KIT_FORBID_VITE_CONFIG: "1" },
+		},
+	);
+	if (result.exitCode !== 0) {
+		return [
+			`react-web-ui-tokens: ${result.stdout.toString()}${result.stderr.toString()}`,
+		];
+	}
+	return existsSync(output) &&
+		readFileSync(output, "utf8").includes(
+			"--sys-color-primary:",
+		)
+		? []
+		: [
+				`react-web-ui-tokens: ${output} has no --sys-* roles`,
+			];
+};
+
 const sections: readonly Readonly<{
 	title: string;
 	problems: readonly string[];
@@ -863,6 +911,12 @@ const sections: readonly Readonly<{
 		problems: checkConsumer(),
 		passed:
 			"typechecks and builds against the packed kit, every subpath brings only the stylesheets it lists, in a build and in the dev server, and each lazy package has a chunk of its own, loaded on demand.",
+	},
+	{
+		title: "token command",
+		problems: checkTokenCommand(),
+		passed:
+			"react-web-ui-tokens builds the fixture's tokens from the packed kit without loading the fixture's Vite config.",
 	},
 ];
 

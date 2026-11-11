@@ -19,7 +19,7 @@ Some entry points need an optional peer as well:
 | `@igne-agency/react-web-ui/data-table` | `@tanstack/react-table` |
 | `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query` |
 | `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
-| `@igne-agency/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/plugin-css` |
+| `@igne-agency/react-web-ui/terrazzo` and `react-web-ui-tokens` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css` |
 
 Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
 
@@ -99,6 +99,18 @@ export default defineConfig({
 	plugins: [kitTokens({ filename: "tokens.gen.css" })],
 });
 ```
+
+Build it with the kit's `react-web-ui-tokens` command, not `tz build`:
+
+```json
+{
+	"scripts": {
+		"tokens": "react-web-ui-tokens"
+	}
+}
+```
+
+`tz build` loads `terrazzo.config.ts` through a Vite dev server, and that server also loads the app's own `vite.config.ts`. Every plugin in it runs, including dev-only ones such as an HTTPS certificate plugin, even when the tokens build as part of a production build. `react-web-ui-tokens` runs the same Terrazzo build without Vite. It reads `terrazzo.config.*` from the working directory and needs Bun.
 
 The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters. Typography tokens name no family, so the preset narrows Terrazzo's `core/valid-typography` rule to `fontSize`, `fontWeight` and `lineHeight`.
 
