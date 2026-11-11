@@ -20,7 +20,8 @@
 		".claude",
 		"dist",
 		"storybook-static",
-		"tools/fixtures/consumer/src"
+		"tools/fixtures/consumer/src",
+		"tools/fixtures/consumer/terrazzo.config.ts"
 	],
 	"rules": {
 		"curly": "error",
