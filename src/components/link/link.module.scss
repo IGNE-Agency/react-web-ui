@@ -3,11 +3,14 @@
 
 @layer kit.components {
 	.link {
-		color: var(--link-fg, var(--sys-color-primary));
-		font: var(--link-font, inherit);
-		text-decoration: var(--link-text-decoration, underline);
+		color: var(--kit-link-fg, var(--sys-color-primary));
+		font: var(--kit-link-font, inherit);
+		text-decoration: var(
+			--kit-link-text-decoration,
+			underline
+		);
 		text-underline-offset: var(
-			--link-underline-offset,
+			--kit-link-underline-offset,
 			var(--sys-unit-1)
 		);
 
@@ -15,7 +18,7 @@
 
 		&:hover {
 			color: var(
-				--link-hover-fg,
+				--kit-link-hover-fg,
 				var(--sys-color-on-primary-container)
 			);
 		}

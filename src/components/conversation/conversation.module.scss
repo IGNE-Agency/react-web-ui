@@ -6,13 +6,16 @@
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
-		gap: var(--conversation-gap, var(--sys-unit-12));
+		gap: var(--kit-conversation-gap, var(--sys-unit-12));
 	}
 
 	.group {
 		display: flex;
 		flex-direction: column;
-		gap: var(--conversation-group-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-conversation-group-gap,
+			var(--sys-unit-4)
+		);
 	}
 
 	.groupSeparator {
@@ -20,24 +23,27 @@
 		top: 0;
 		align-self: center;
 		border-radius: var(
-			--conversation-separator-radius,
+			--kit-conversation-separator-radius,
 			var(--sys-radius-full)
 		);
 		background: var(
-			--conversation-separator-bg,
+			--kit-conversation-separator-bg,
 			var(--sys-color-surface-high)
 		);
 		padding: var(
-				--conversation-separator-pad-y,
+				--kit-conversation-separator-pad-y,
 				var(--sys-unit-2)
 			)
-			var(--conversation-separator-pad-x, var(--sys-unit-6));
+			var(
+				--kit-conversation-separator-pad-x,
+				var(--sys-unit-6)
+			);
 		color: var(
-			--conversation-muted-fg,
+			--kit-conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--conversation-separator-font,
+			--kit-conversation-separator-font,
 			var(--sys-font-label-small)
 		);
 	}
@@ -45,16 +51,19 @@
 	.message {
 		display: flex;
 		flex-direction: column;
-		gap: var(--conversation-message-gap, var(--sys-unit-2));
+		gap: var(
+			--kit-conversation-message-gap,
+			var(--sys-unit-2)
+		);
 		max-inline-size: var(
-			--conversation-message-max-inline-size,
+			--kit-conversation-message-max-inline-size,
 			min(72ch, 80%)
 		);
 	}
 
 	.message + .message {
 		margin-block-start: var(
-			--conversation-message-space,
+			--kit-conversation-message-space,
 			var(--sys-unit-6)
 		);
 	}
@@ -76,22 +85,28 @@
 	.messageBubble {
 		display: flex;
 		flex-direction: column;
-		gap: var(--conversation-bubble-gap, var(--sys-unit-2));
+		gap: var(
+			--kit-conversation-bubble-gap,
+			var(--sys-unit-2)
+		);
 		border-radius: var(
-			--conversation-bubble-radius,
+			--kit-conversation-bubble-radius,
 			var(--sys-radius-lg)
 		);
 		background: var(
-			--conversation-bubble-bg,
+			--kit-conversation-bubble-bg,
 			var(--sys-color-surface-high)
 		);
 		padding: var(
-				--conversation-bubble-pad-y,
+				--kit-conversation-bubble-pad-y,
 				var(--sys-unit-6)
 			)
-			var(--conversation-bubble-pad-x, var(--sys-unit-8));
+			var(
+				--kit-conversation-bubble-pad-x,
+				var(--sys-unit-8)
+			);
 		color: var(
-			--conversation-bubble-fg,
+			--kit-conversation-bubble-fg,
 			var(--sys-color-text)
 		);
 	}
@@ -99,25 +114,25 @@
 	.message[data-side="own"] .messageBubble,
 	.message[data-side="colleague"] .messageBubble {
 		border-start-end-radius: var(
-			--conversation-bubble-point-radius,
+			--kit-conversation-bubble-point-radius,
 			var(--sys-radius-xs)
 		);
 	}
 
 	.message[data-side="other"] .messageBubble {
 		border-start-start-radius: var(
-			--conversation-bubble-point-radius,
+			--kit-conversation-bubble-point-radius,
 			var(--sys-radius-xs)
 		);
 	}
 
 	.message[data-side="own"] .messageBubble {
 		background: var(
-			--conversation-bubble-own-bg,
+			--kit-conversation-bubble-own-bg,
 			var(--sys-color-primary-container)
 		);
 		color: var(
-			--conversation-bubble-own-fg,
+			--kit-conversation-bubble-own-fg,
 			var(--sys-color-on-primary-container)
 		);
 	}
@@ -126,20 +141,23 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--conversation-author-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-conversation-author-gap,
+			var(--sys-unit-4)
+		);
 		padding-inline: var(
-			--conversation-author-pad-x,
+			--kit-conversation-author-pad-x,
 			var(--sys-unit-8)
 		);
 		font: var(
-			--conversation-author-font,
+			--kit-conversation-author-font,
 			var(--sys-font-label-small)
 		);
 	}
 
 	.message + .messageAuthor {
 		margin-block-start: var(
-			--conversation-author-space,
+			--kit-conversation-author-space,
 			var(--sys-unit-12)
 		);
 	}
@@ -150,15 +168,15 @@
 
 	.messageTimestamp {
 		color: var(
-			--conversation-muted-fg,
+			--kit-conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--conversation-timestamp-font,
+			--kit-conversation-timestamp-font,
 			var(--sys-font-body-medium)
 		);
 		font-size: var(
-			--conversation-timestamp-font-size,
+			--kit-conversation-timestamp-font-size,
 			0.75em
 		);
 	}
@@ -168,41 +186,41 @@
 		flex-direction: row;
 		align-items: center;
 		gap: var(
-			--conversation-read-indicator-gap,
+			--kit-conversation-read-indicator-gap,
 			var(--sys-unit-2)
 		);
 		color: var(
-			--conversation-muted-fg,
+			--kit-conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
 		font-size: var(
-			--conversation-read-indicator-font-size,
+			--kit-conversation-read-indicator-font-size,
 			0.75em
 		);
 	}
 
 	.statusDot {
 		inline-size: var(
-			--conversation-status-dot-size,
+			--kit-conversation-status-dot-size,
 			var(--sys-unit-4)
 		);
 		block-size: var(
-			--conversation-status-dot-size,
+			--kit-conversation-status-dot-size,
 			var(--sys-unit-4)
 		);
 		border-radius: var(
-			--conversation-status-dot-radius,
+			--kit-conversation-status-dot-radius,
 			var(--sys-radius-circle)
 		);
 		background: var(
-			--conversation-status-dot-bg,
+			--kit-conversation-status-dot-bg,
 			transparent
 		);
 	}
 
 	.messageReadIndicator[data-status="unread"] .statusDot {
 		background: var(
-			--conversation-unread-bg,
+			--kit-conversation-unread-bg,
 			var(--sys-color-primary)
 		);
 	}
@@ -214,8 +232,10 @@
 		&[data-clamped] {
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
-			-webkit-line-clamp: var(--line-clamp);
-			line-clamp: var(--line-clamp);
+			-webkit-line-clamp: var(
+				--_kit-conversation-line-clamp
+			);
+			line-clamp: var(--_kit-conversation-line-clamp);
 			overflow: hidden;
 		}
 	}
@@ -225,7 +245,10 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--conversation-files-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-conversation-files-gap,
+			var(--sys-unit-4)
+		);
 	}
 
 	.message[data-side="own"] .messageFiles {
@@ -244,9 +267,12 @@
 		flex-grow: 1;
 		align-items: center;
 		justify-content: center;
-		gap: var(--conversation-empty-gap, var(--sys-unit-6));
+		gap: var(
+			--kit-conversation-empty-gap,
+			var(--sys-unit-6)
+		);
 		color: var(
-			--conversation-muted-fg,
+			--kit-conversation-muted-fg,
 			var(--sys-color-text-muted)
 		);
 	}

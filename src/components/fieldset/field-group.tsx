@@ -31,7 +31,7 @@ export type FieldGroupProps = Pick<
  * Related fields side by side under one legend, with one error for all of
  * them: the lines of its `members`, each tied to its field's control, then its
  * own `errors`. Every field's label, control, description and error line up
- * with its neighbours'. The `--field-group-columns` knob sets the columns.
+ * with its neighbours'. The `--kit-field-group-columns` knob sets the columns.
  *
  * @example
  * <FieldGroup legend="Address" optionalLabel="optional" members={members}>

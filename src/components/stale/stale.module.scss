@@ -12,7 +12,7 @@
 		}
 
 		&[data-busy] {
-			opacity: var(--stale-busy-opacity, 0.55);
+			opacity: var(--kit-stale-busy-opacity, 0.55);
 			pointer-events: none;
 		}
 	}
@@ -24,18 +24,18 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: var(--stale-gap, var(--sys-unit-8));
-		padding: var(--stale-pad, var(--sys-unit-16));
+		gap: var(--kit-stale-gap, var(--sys-unit-8));
+		padding: var(--kit-stale-pad, var(--sys-unit-16));
 		background-color: color-mix(
 			in oklab,
-			var(--stale-scrim, var(--sys-color-surface)),
+			var(--kit-stale-scrim, var(--sys-color-surface)),
 			transparent 25%
 		);
 		backdrop-filter: var(
-			--stale-backdrop-filter,
+			--kit-stale-backdrop-filter,
 			blur(8px)
 		);
-		color: var(--stale-fg, var(--sys-color-text));
+		color: var(--kit-stale-fg, var(--sys-color-text));
 		text-align: center;
 
 		@media not (prefers-reduced-motion) {
@@ -56,14 +56,14 @@
 	.message {
 		display: grid;
 		justify-items: center;
-		gap: var(--stale-gap, var(--sys-unit-8));
-		max-inline-size: var(--stale-measure, 40ch);
+		gap: var(--kit-stale-gap, var(--sys-unit-8));
+		max-inline-size: var(--kit-stale-measure, 40ch);
 		color: var(
-			--stale-message-fg,
+			--kit-stale-message-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--stale-message-font,
+			--kit-stale-message-font,
 			var(--sys-font-body-medium)
 		);
 	}
@@ -72,7 +72,7 @@
 		display: grid;
 		place-items: center;
 		color: var(
-			--stale-illustration-fg,
+			--kit-stale-illustration-fg,
 			var(--sys-color-primary)
 		);
 	}

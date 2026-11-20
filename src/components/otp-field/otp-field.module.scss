@@ -9,7 +9,7 @@
 	.group {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--otp-field-gap, var(--sys-unit-4));
+		gap: var(--kit-otp-field-gap, var(--sys-unit-4));
 		align-items: center;
 	}
 
@@ -18,14 +18,14 @@
 
 		justify-content: center;
 		inline-size: var(
-			--otp-field-slot-size,
+			--kit-otp-field-slot-size,
 			var(--sys-unit-24)
 		);
 		min-block-size: var(
-			--otp-field-slot-size,
+			--kit-otp-field-slot-size,
 			var(--sys-unit-24)
 		);
-		padding-inline: var(--otp-field-slot-pad-x, 0);
+		padding-inline: var(--kit-otp-field-slot-pad-x, 0);
 		font-variant-numeric: tabular-nums;
 		text-align: center;
 		cursor: text;
@@ -35,12 +35,15 @@
 
 	.separator {
 		inline-size: var(
-			--otp-field-separator-inline-size,
+			--kit-otp-field-separator-inline-size,
 			var(--sys-unit-8)
 		);
-		block-size: var(--otp-field-separator-block-size, 1px);
+		block-size: var(
+			--kit-otp-field-separator-block-size,
+			1px
+		);
 		background: var(
-			--otp-field-separator-bg,
+			--kit-otp-field-separator-bg,
 			var(--sys-color-border)
 		);
 	}

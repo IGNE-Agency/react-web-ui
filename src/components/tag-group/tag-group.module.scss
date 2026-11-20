@@ -6,23 +6,26 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--tag-group-gap, var(--sys-unit-4));
+		gap: var(--kit-tag-group-gap, var(--sys-unit-4));
 	}
 
 	.list {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--tag-group-gap, var(--sys-unit-4));
+		gap: var(--kit-tag-group-gap, var(--sys-unit-4));
 	}
 
 	.tag {
-		@include tag.shell("tag");
+		@include tag.shell("kit-tag");
 	}
 
 	.remove {
 		@include tag.remove;
 
-		font-size: var(--tag-group-remove-icon-size, 0.875em);
+		font-size: var(
+			--kit-tag-group-remove-icon-size,
+			0.875em
+		);
 	}
 }

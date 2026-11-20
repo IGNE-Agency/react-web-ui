@@ -10,7 +10,7 @@
 ///   @use "../../style/disclosure.scss" as disclosure;
 ///
 ///   .trigger {
-///       @include disclosure.trigger("collapsible");
+///       @include disclosure.trigger("kit-collapsible");
 ///   }
 @mixin trigger($prefix) {
 	display: flex;

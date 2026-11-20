@@ -5,9 +5,12 @@
 	@include error.pop-in-keyframes;
 
 	.text {
-		color: var(--error-text-fg, var(--sys-color-error-fg));
+		color: var(
+			--kit-error-text-fg,
+			var(--sys-color-error-fg)
+		);
 		font: var(
-			--error-text-font,
+			--kit-error-text-font,
 			var(--sys-font-body-medium)
 		);
 	}

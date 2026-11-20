@@ -4,7 +4,7 @@ import { type RefCallback, useCallback } from "react";
 export type SlidingIndicatorOptions = Readonly<{
 	/** Matches the active item inside the indicator's parent, such as `"[data-pressed]"`. */
 	active: string;
-	/** The custom-property prefix the indicator's styles read. @default "--active-item" */
+	/** The custom-property prefix the indicator's styles read. @default "--_kit-sliding-indicator-item" */
 	prefix?: string;
 	/**
 	 * Which element carries the custom properties: the indicator, or its parent,
@@ -123,7 +123,7 @@ export const useSlidingIndicator = <
 	TElement extends HTMLElement,
 >({
 	active,
-	prefix = "--active-item",
+	prefix = "--_kit-sliding-indicator-item",
 	publishOn = "indicator",
 }: SlidingIndicatorOptions): RefCallback<TElement> =>
 	useCallback(

@@ -3,11 +3,11 @@
 @layer kit.components {
 	.description {
 		color: var(
-			--fieldset-description-fg,
+			--kit-fieldset-description-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--fieldset-description-font,
+			--kit-fieldset-description-font,
 			var(--sys-font-body-medium)
 		);
 	}
@@ -19,8 +19,14 @@
 		grid-template-rows:
 			[label] auto [control] auto [extra] auto
 			[description] auto [error] auto;
-		grid-template-columns: var(--field-group-columns, none);
-		column-gap: var(--field-group-gap, var(--sys-unit-8));
+		grid-template-columns: var(
+			--kit-field-group-columns,
+			none
+		);
+		column-gap: var(
+			--kit-field-group-gap,
+			var(--sys-unit-8)
+		);
 
 		> [data-field-group-member] {
 			display: grid;

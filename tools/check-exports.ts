@@ -13,6 +13,9 @@
  * - an emitted stylesheet does not open with the cascade layer order, or has
  *   a rule outside the kit's layers
  * - a packed file or source map points at a file the package leaves out
+ * - a packed stylesheet or module uses a custom property that is not
+ *   `--kit-*`, `--_kit-*`, `--sys-*`, `--ref-*` or one base-ui or react-aria
+ *   publishes
  * - the consumer fixture (`tools/fixtures/consumer/`) fails to typecheck or
  *   build against the packed kit, one of its entries brings other kit
  *   stylesheets than the ones it lists, or a package it should load lazily,
@@ -300,6 +303,66 @@ const unlayered = packedFiles
 			),
 		);
 	});
+
+const CUSTOM_PROPERTY =
+	/(?<![\w-])--_?[a-zA-Z][\w-]*[a-zA-Z0-9]/g;
+
+const QUOTED_CUSTOM_PROPERTY =
+	/["'`](--[a-zA-Z][\w-]*[a-zA-Z0-9])/g;
+
+/** Every custom property the headless libraries publish on their parts, such as base-ui's `--available-width`, read from their own code. */
+const libraryProperties: ReadonlySet<string> = new Set(
+	[
+		"@base-ui/react/**/*.js",
+		"react-aria-components/dist/**/*.mjs",
+		"react-aria/dist/**/*.mjs",
+		"@react-aria/*/dist/**/*.mjs",
+	].flatMap(pattern =>
+		[
+			...new Bun.Glob(pattern).scanSync({
+				cwd: join(root, "node_modules"),
+			}),
+		].flatMap(file =>
+			[
+				...readFileSync(
+					join(root, "node_modules", file),
+					"utf8",
+				).matchAll(QUOTED_CUSTOM_PROPERTY),
+			].flatMap(([, name]) =>
+				name === undefined ? [] : [name],
+			),
+		),
+	),
+);
+
+/** Whether a custom property may appear in the kit's output: its own, a token, or one a headless library publishes, or the stem the kit passes to name those. */
+const isAllowedProperty = (name: string): boolean =>
+	/^--_?kit-/.test(name) ||
+	/^--(sys|ref)-/.test(name) ||
+	libraryProperties.has(name) ||
+	[...libraryProperties].some(property =>
+		property.startsWith(`${name}-`),
+	);
+
+const unnamespaced = packedFiles
+	.filter(path => /\.(css|js)$/.test(path))
+	.flatMap(path =>
+		[
+			...new Set(
+				[
+					...readFileSync(
+						join(root, path),
+						"utf8",
+					).matchAll(CUSTOM_PROPERTY),
+				].map(([name]) => name),
+			),
+		]
+			.filter(name => !isAllowedProperty(name))
+			.map(
+				name =>
+					`${path} uses ${name}, which is neither --kit-*, --_kit-*, --sys-*, --ref-* nor a property a headless library publishes`,
+			),
+	);
 
 /** Where a packed file's source map or a source map's source points, resolved from the packed file. */
 const mapTargets = (path: string): readonly string[] => {
@@ -902,9 +965,10 @@ const sections: readonly Readonly<{
 			...unshippable,
 			...unlayered,
 			...danglingMaps,
+			...unnamespaced,
 		],
 		passed:
-			"no docs, Storybook, stories, MDX, SVGs or vendor folder, every stylesheet opens with the layer order and keeps its rules in the kit's layers, and no source map points at a file the package leaves out.",
+			"no docs, Storybook, stories, MDX, SVGs or vendor folder, every stylesheet opens with the layer order and keeps its rules in the kit's layers, no source map points at a file the package leaves out, and every custom property is the kit's own (`--kit-*`, `--_kit-*`), a token (`--sys-*`, `--ref-*`) or one a headless library publishes.",
 	},
 	{
 		title: "consumer fixture",

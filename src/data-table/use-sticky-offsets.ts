@@ -4,22 +4,23 @@ import {
 	useRef,
 } from "react";
 
-const START_PROPERTY = "--table-sticky-inset";
-const END_PROPERTY = "--table-sticky-end";
-const TOTAL_PROPERTY = "--table-sticky-total";
-const END_TOTAL_PROPERTY = "--table-sticky-end-total";
-const SCROLLBAR_BLOCK_PROPERTY = "--table-scrollbar-block";
+const START_PROPERTY = "--kit-table-sticky-inset";
+const END_PROPERTY = "--kit-table-sticky-end";
+const TOTAL_PROPERTY = "--kit-table-sticky-total";
+const END_TOTAL_PROPERTY = "--kit-table-sticky-end-total";
+const SCROLLBAR_BLOCK_PROPERTY =
+	"--kit-table-scrollbar-block";
 const SCROLLBAR_INLINE_PROPERTY =
-	"--table-scrollbar-inline";
+	"--kit-table-scrollbar-inline";
 
 /**
  * Publishes the measured geometry of a table's pinned columns as custom
  * properties on the element the returned ref is attached to: one
- * `--table-sticky-inset-{n}` per column pinned to the start and one
- * `--table-sticky-end-{n}` per column pinned to the end, each holding
- * everything between it and its edge, plus `--table-sticky-total` and
- * `--table-sticky-end-total` for each group as a whole, and
- * `--table-scrollbar-block` / `--table-scrollbar-inline` for the space the
+ * `--kit-table-sticky-inset-{n}` per column pinned to the start and one
+ * `--kit-table-sticky-end-{n}` per column pinned to the end, each holding
+ * everything between it and its edge, plus `--kit-table-sticky-total` and
+ * `--kit-table-sticky-end-total` for each group as a whole, and
+ * `--kit-table-scrollbar-block` / `--kit-table-scrollbar-inline` for the space the
  * scroller's own scrollbars take. Widths are measured off the header cells of
  * the frame's own table and re-measured on resize.
  *
@@ -29,7 +30,7 @@ const SCROLLBAR_INLINE_PROPERTY =
  *
  * @example
  * const frameRef = useStickyOffsets(pinnedIds.join(","));
- * // <div ref={frameRef}> … <td style={{ insetInlineStart: "var(--table-sticky-inset-0)" }} />
+ * // <div ref={frameRef}> … <td style={{ insetInlineStart: "var(--kit-table-sticky-inset-0)" }} />
  */
 export const useStickyOffsets = (
 	pinnedColumnKey: string,

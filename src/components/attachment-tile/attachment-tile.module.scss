@@ -4,32 +4,36 @@
 
 @layer kit.components {
 	.tile {
-		--_tile-size: var(--attachment-tile-size, 5rem);
-		--_tile-border-width: var(
-			--attachment-tile-border-width,
+		--_kit-attachment-tile-size: var(
+			--kit-attachment-tile-size,
+			5rem
+		);
+		--_kit-attachment-tile-border-width: var(
+			--kit-attachment-tile-border-width,
 			1px
 		);
-		--_tile-radius: var(
-			--attachment-tile-radius,
+		--_kit-attachment-tile-radius: var(
+			--kit-attachment-tile-radius,
 			var(--sys-radius-sm)
 		);
-		--_tile-inner-radius: calc(
-			var(--_tile-radius) - var(--_tile-border-width)
+		--_kit-attachment-tile-inner-radius: calc(
+			var(--_kit-attachment-tile-radius) -
+				var(--_kit-attachment-tile-border-width)
 		);
 
 		position: relative;
 		box-sizing: border-box;
-		inline-size: var(--_tile-size);
-		block-size: var(--_tile-size);
-		border: var(--_tile-border-width) solid
-			var(--attachment-tile-border, transparent);
-		border-radius: var(--_tile-radius);
+		inline-size: var(--_kit-attachment-tile-size);
+		block-size: var(--_kit-attachment-tile-size);
+		border: var(--_kit-attachment-tile-border-width) solid
+			var(--kit-attachment-tile-border, transparent);
+		border-radius: var(--_kit-attachment-tile-radius);
 		background: var(
-			--attachment-tile-bg,
+			--kit-attachment-tile-bg,
 			var(--sys-color-surface-highest)
 		);
 		color: var(
-			--attachment-tile-fg,
+			--kit-attachment-tile-fg,
 			var(--sys-color-text-muted)
 		);
 		cursor: default;
@@ -42,15 +46,15 @@
 
 		&[data-invalid] {
 			border-color: var(
-				--attachment-tile-invalid-border,
+				--kit-attachment-tile-invalid-border,
 				var(--sys-color-error-border)
 			);
 			background: var(
-				--attachment-tile-invalid-bg,
+				--kit-attachment-tile-invalid-bg,
 				var(--sys-color-error-bg)
 			);
 			color: var(
-				--attachment-tile-invalid-fg,
+				--kit-attachment-tile-invalid-fg,
 				var(--sys-color-error-fg)
 			);
 		}
@@ -59,7 +63,7 @@
 	.tile:any-link {
 		display: block;
 		color: var(
-			--attachment-tile-fg,
+			--kit-attachment-tile-fg,
 			var(--sys-color-text-muted)
 		);
 		text-decoration: none;
@@ -67,11 +71,11 @@
 
 		&:hover {
 			border-color: var(
-				--attachment-tile-hover-border,
+				--kit-attachment-tile-hover-border,
 				var(--sys-color-primary)
 			);
 			color: var(
-				--attachment-tile-fg,
+				--kit-attachment-tile-fg,
 				var(--sys-color-text-muted)
 			);
 		}
@@ -82,11 +86,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: var(--attachment-tile-gap, var(--sys-unit-2));
+		gap: var(--kit-attachment-tile-gap, var(--sys-unit-2));
 		position: absolute;
 		inset: 0;
 		overflow: hidden;
-		border-radius: var(--_tile-inner-radius);
+		border-radius: var(--_kit-attachment-tile-inner-radius);
 	}
 
 	.image {
@@ -96,20 +100,20 @@
 	}
 
 	.imageSkeleton {
-		--skeleton-bg: var(
-			--attachment-tile-skeleton-bg,
+		--kit-skeleton-bg: var(
+			--kit-attachment-tile-skeleton-bg,
 			var(--sys-color-outline)
 		);
 
 		position: absolute;
 		inset: 0;
-		border-radius: var(--_tile-inner-radius);
+		border-radius: var(--_kit-attachment-tile-inner-radius);
 		block-size: auto;
 	}
 
 	.icon {
 		display: inline-flex;
-		font-size: var(--attachment-tile-icon-size, 1.5em);
+		font-size: var(--kit-attachment-tile-icon-size, 1.5em);
 
 		> svg {
 			inline-size: 1em;
@@ -120,7 +124,7 @@
 
 	.extension {
 		font: var(
-			--attachment-tile-extension-font,
+			--kit-attachment-tile-extension-font,
 			var(--sys-font-label-small)
 		);
 		text-transform: uppercase;
@@ -137,11 +141,11 @@
 		inset-block-start: calc(-1 * var(--sys-unit-2));
 		inset-inline-end: calc(-1 * var(--sys-unit-2));
 		border-radius: var(
-			--attachment-tile-remove-radius,
+			--kit-attachment-tile-remove-radius,
 			var(--sys-radius-circle)
 		);
 		background: var(
-			--attachment-tile-remove-bg,
+			--kit-attachment-tile-remove-bg,
 			var(--sys-color-surface)
 		);
 	}

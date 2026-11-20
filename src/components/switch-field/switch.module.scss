@@ -8,53 +8,53 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: var(--switch-gap, var(--sys-unit-8));
+		gap: var(--kit-switch-gap, var(--sys-unit-8));
 	}
 
 	.label {
 		@include checkbox.inline-label(".control");
 
 		min-block-size: var(
-			--switch-label-min-block-size,
+			--kit-switch-label-min-block-size,
 			var(--sys-unit-20)
 		);
 	}
 
 	.control {
-		--_switch-track-inline-size: var(
-			--switch-track-inline-size,
+		--_kit-switch-track-inline-size: var(
+			--kit-switch-track-inline-size,
 			var(--sys-unit-26)
 		);
-		--_switch-track-block-size: var(
-			--switch-track-block-size,
+		--_kit-switch-track-block-size: var(
+			--kit-switch-track-block-size,
 			var(--sys-unit-16)
 		);
-		--_switch-track-inset-x: calc(
-			var(--switch-border-width, 1px) +
-				var(--switch-pad-x, var(--sys-unit-2))
+		--_kit-switch-track-inset-x: calc(
+			var(--kit-switch-border-width, 1px) +
+				var(--kit-switch-pad-x, var(--sys-unit-2))
 		);
-		--_switch-track-inset-y: calc(
-			var(--switch-border-width, 1px) +
-				var(--switch-pad-y, var(--sys-unit-2))
+		--_kit-switch-track-inset-y: calc(
+			var(--kit-switch-border-width, 1px) +
+				var(--kit-switch-pad-y, var(--sys-unit-2))
 		);
-		--_switch-thumb-size: var(
-			--switch-thumb-size,
+		--_kit-switch-thumb-size: var(
+			--kit-switch-thumb-size,
 			calc(
-				var(--_switch-track-block-size) - 2 *
-					var(--_switch-track-inset-y)
+				var(--_kit-switch-track-block-size) - 2 *
+					var(--_kit-switch-track-inset-y)
 			)
 		);
-		--_switch-travel: calc(
-			var(--_switch-track-inline-size) - 2 *
-				var(--_switch-track-inset-x) -
-				var(--_switch-thumb-size)
+		--_kit-switch-travel: calc(
+			var(--_kit-switch-track-inline-size) - 2 *
+				var(--_kit-switch-track-inset-x) -
+				var(--_kit-switch-thumb-size)
 		);
-		--_switch-thumb-bg: var(
-			--switch-thumb-bg,
+		--_kit-switch-thumb-bg: var(
+			--kit-switch-thumb-bg,
 			var(--sys-color-outline)
 		);
-		--_switch-on-bg: var(
-			--switch-on-bg,
+		--_kit-switch-on-bg: var(
+			--kit-switch-on-bg,
 			var(--sys-color-primary)
 		);
 
@@ -66,22 +66,22 @@
 		align-self: center;
 		justify-self: center;
 		box-sizing: border-box;
-		inline-size: var(--_switch-track-inline-size);
-		block-size: var(--_switch-track-block-size);
-		border: var(--switch-border-width, 1px) solid
-			var(--switch-border, var(--sys-color-border));
+		inline-size: var(--_kit-switch-track-inline-size);
+		block-size: var(--_kit-switch-track-block-size);
+		border: var(--kit-switch-border-width, 1px) solid
+			var(--kit-switch-border, var(--sys-color-border));
 		border-radius: var(
-			--switch-radius,
+			--kit-switch-radius,
 			var(--sys-radius-full)
 		);
 		background: var(
-			--switch-track-bg,
+			--kit-switch-track-bg,
 			var(--sys-color-surface)
 		);
-		padding: var(--switch-pad-y, var(--sys-unit-2))
-			var(--switch-pad-x, var(--sys-unit-2));
+		padding: var(--kit-switch-pad-y, var(--sys-unit-2))
+			var(--kit-switch-pad-x, var(--sys-unit-2));
 		color: var(
-			--switch-thumb-on-bg,
+			--kit-switch-thumb-on-bg,
 			var(--sys-color-on-primary)
 		);
 
@@ -97,31 +97,31 @@
 
 		&[data-focused] {
 			border-color: var(
-				--switch-focus-border,
-				var(--_switch-on-bg)
+				--kit-switch-focus-border,
+				var(--_kit-switch-on-bg)
 			);
 		}
 
 		&[data-checked] {
-			border-color: var(--_switch-on-bg);
-			background: var(--_switch-on-bg);
+			border-color: var(--_kit-switch-on-bg);
+			background: var(--_kit-switch-on-bg);
 		}
 
 		&[data-invalid] {
 			@include form.invalid;
 
-			--_switch-thumb-bg: var(
-				--switch-thumb-invalid-bg,
+			--_kit-switch-thumb-bg: var(
+				--kit-switch-thumb-invalid-bg,
 				var(--sys-color-error-outline)
 			);
 
 			&[data-checked] {
 				background: var(
-					--switch-invalid-on-bg,
+					--kit-switch-invalid-on-bg,
 					var(--sys-color-error-fg)
 				);
 				color: var(
-					--switch-thumb-invalid-on-bg,
+					--kit-switch-thumb-invalid-on-bg,
 					var(--sys-color-error-bg)
 				);
 			}
@@ -132,7 +132,7 @@
 
 			&[data-checked] {
 				background: var(
-					--switch-readonly-on-bg,
+					--kit-switch-readonly-on-bg,
 					var(--sys-color-primary-container)
 				);
 			}
@@ -142,30 +142,30 @@
 		&[data-disabled][data-checked] {
 			@include form.disabled;
 
-			--_switch-on-bg: var(
-				--switch-disabled-on-border,
+			--_kit-switch-on-bg: var(
+				--kit-switch-disabled-on-border,
 				var(--sys-color-disabled-bg)
 			);
-			--_switch-thumb-bg: var(
-				--switch-thumb-disabled-bg,
+			--_kit-switch-thumb-bg: var(
+				--kit-switch-thumb-disabled-bg,
 				var(--sys-color-disabled-fg)
 			);
 
 			background: var(
-				--switch-disabled-bg,
+				--kit-switch-disabled-bg,
 				var(--sys-color-disabled-bg)
 			);
 		}
 	}
 
 	.thumb {
-		inline-size: var(--_switch-thumb-size);
-		block-size: var(--_switch-thumb-size);
+		inline-size: var(--_kit-switch-thumb-size);
+		block-size: var(--_kit-switch-thumb-size);
 		border-radius: var(
-			--switch-thumb-radius,
+			--kit-switch-thumb-radius,
 			var(--sys-radius-circle)
 		);
-		background: var(--_switch-thumb-bg);
+		background: var(--_kit-switch-thumb-bg);
 		translate: 0;
 
 		@media not (prefers-reduced-motion) {
@@ -178,7 +178,7 @@
 
 		&[data-checked] {
 			background: currentcolor;
-			translate: var(--_switch-travel);
+			translate: var(--_kit-switch-travel);
 		}
 	}
 }

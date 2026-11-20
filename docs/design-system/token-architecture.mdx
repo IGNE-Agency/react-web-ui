@@ -44,7 +44,7 @@ Every product that follows our approach builds its tokens this way. It's not the
 
 1. **Reference.** Raw material: [colour ramps](?path=/docs/design-system-foundation-colour--docs#ramps), and the type scale. Nothing outside layer 2 may read it.
 2. **System.** [Colour roles](?path=/docs/design-system-foundation-colour--docs#roles). A brand fill and its ink, surface tiers, body and muted ink, a border, an outline, a focus ring, status containers. Everything a component reads.
-3. **Component.** A component's own tokens, declared at the top of its root rule and re-pointed by its variants.
+3. **Component.** A component's own tokens: the knobs an app sets to change it, and the private tokens behind them, declared at the top of its root rule and re-pointed by its variants.
 
 ## Speaking in roles
 
@@ -72,7 +72,7 @@ A colour, a size or a speed is decided once, named, and used by its name everywh
 
 <Details title="There are three layers, and each reads only the one below">
 
-Layer 1, reference, holds the raw material: the colour ramps and the type scale. Layer 2, system, holds the roles, and is the only layer that reads layer 1. Layer 3, component, holds a component's own knobs and reads only layer 2. Explained in [Three layers](#three-layers).
+Layer 1, reference, holds the raw material: the colour ramps and the type scale. Layer 2, system, holds the roles, and is the only layer that reads layer 1. Layer 3, component, holds a component's own knobs and reads only layer 2. The one exception is the typeface: every type token, the reference scale's included, takes its family from `--sys-font-family-body` or `--sys-font-family-heading`, which the app sets. Explained in [Three layers](#three-layers).
 
 </Details>
 
@@ -170,9 +170,16 @@ Layers 2 and 3 are pure `var()`.
 
 </Details>
 
-<Details title="Every shared token names its layer">
+<Details title="Every custom property names who owns it">
 
-A prefix marks a token as part of the system rather than a component's knob or a library's published property. The segment after it says which layer it belongs to. The names are longer than one app on one page needs. What they buy is that the layer rules are visible at the call site and checkable by a script: a reference token used outside the token files is a violation you can grep for.
+Custom properties are global and inherit, so a name says who may set it and who reads it. Four namespaces cover every name the kit writes or reads:
+
+- `--ref-*` and `--sys-*` are the shared layers, and the segment after the dashes says which one. They are the app's theme as much as the kit's: the app builds them, and its own components read them.
+- `--kit-<component>-*` is a component's knob, the name an app sets to change one component.
+- `--_kit-<component>-*` is a component's private token, declared and read by the kit alone.
+- A headless library's published properties keep the library's names.
+
+The names are longer than one app on one page needs. What they buy is that the rules are visible at the call site and checkable by a script: a reference token outside the token files is a violation you can grep for, and `check:exports` fails on any custom property in the package outside these namespaces.
 
 <DoDont>
 <Example kind="do" caption="The badge reads its status roles from the system layer.">
@@ -197,21 +204,42 @@ A prefix marks a token as part of the system rather than a component's knob or a
 </Example>
 </DoDont>
 
-Only the shared layers are prefixed, which has three consequences.
-
-A component's own tokens carry no prefix, and the absence is the marker: a bare token is local to the file that declares it, and a prefixed token is never declared in a component stylesheet.
+A component's own tokens carry the kit's namespace and the component's name. An app's own CSS has no reason to use either, so a `--button-bg` the app sets for its own buttons never reaches the kit's.
 
 <DoDont>
-<Example kind="do" caption="The bare name says the knob belongs to this file.">
+<Example kind="do" caption="The namespace keeps the knob apart from anything the app names.">
 
 ```scss
 .button {
-	--_btn-bg: var(--sys-color-primary);
+	background: var(--kit-button-bg, var(--_kit-button-bg));
 }
 ```
 
 </Example>
-<Example kind="dont" caption="A prefixed name declared in a component passes for a shared token that no shared file defines.">
+<Example kind="dont" caption="An app that sets its own --button-bg on any ancestor restyles the kit's button.">
+
+```scss
+.button {
+	background: var(--button-bg, var(--_button-bg));
+}
+```
+
+</Example>
+</DoDont>
+
+A component never declares a shared token. A `--sys-*` name declared in a component stylesheet passes for a role that no token file defines.
+
+<DoDont>
+<Example kind="do" caption="The private token is declared where the component reads it.">
+
+```scss
+.button {
+	--_kit-button-bg: var(--sys-color-primary);
+}
+```
+
+</Example>
+<Example kind="dont" caption="A shared name declared in a component passes for a role that no token file defines.">
 
 ```scss
 .button {
@@ -222,7 +250,7 @@ A component's own tokens carry no prefix, and the absence is the marker: a bare 
 </Example>
 </DoDont>
 
-A bare token that a consumer is meant to set is never declared at all. Write the default into the `var()` fallback and read it there. A declared token has to be out-specified to be changed, and across CSS Modules the winner is decided by emission order, which no file controls; an undeclared one has nothing to out-specify, so setting it anywhere above the component works, at any specificity. Repeat the fallback rather than resolving it into a local token in the same rule, or derive one on a descendant that still reads the public name.
+A knob, the `--kit-*` name an app is meant to set, is never declared at all. Write the default into the `var()` fallback and read it there. A declared token has to be out-specified to be changed, and across CSS Modules the winner is decided by emission order, which no file controls; an undeclared one has nothing to out-specify, so setting it anywhere above the component works, at any specificity. Repeat the fallback rather than resolving it into a private token in the same rule, or derive one on a descendant that still reads the knob.
 
 <DoDont>
 <Example kind="do" caption="Any ancestor can set it, and nothing has to win a specificity argument.">
@@ -230,7 +258,7 @@ A bare token that a consumer is meant to set is never declared at all. Write the
 ```scss
 .skeleton {
 	background-color: var(
-		--skeleton-bg,
+		--kit-skeleton-bg,
 		var(--sys-color-surface-highest)
 	);
 }
@@ -241,16 +269,16 @@ A bare token that a consumer is meant to set is never declared at all. Write the
 
 ```scss
 .skeleton {
-	--skeleton-bg: var(--sys-color-surface-highest);
+	--kit-skeleton-bg: var(--sys-color-surface-highest);
 
-	background-color: var(--skeleton-bg);
+	background-color: var(--kit-skeleton-bg);
 }
 ```
 
 </Example>
 </DoDont>
 
-Neither are a library's published properties. A headless UI library hands you anchor widths, available heights, transform origins and swipe progress. Read those and never rename them. They look local because they effectively are.
+A library's published properties stay outside the kit's namespace. A headless UI library hands you anchor widths, available heights, transform origins and swipe progress. Read those under the library's name and never rename them.
 
 <DoDont>
 <Example kind="do" caption="The library's property is read under the name its documentation uses.">
@@ -267,9 +295,9 @@ Neither are a library's published properties. A headless UI library hands you an
 
 ```scss
 .popup {
-	--popup-max-height: var(--available-height);
+	--_kit-popup-max-height: var(--available-height);
 
-	max-block-size: var(--popup-max-height);
+	max-block-size: var(--_kit-popup-max-height);
 }
 ```
 
@@ -278,30 +306,30 @@ Neither are a library's published properties. A headless UI library hands you an
 
 </Details>
 
-<Details title="A component's own tokens are declared at the top of its root rule">
+<Details title="A component's private tokens are declared at the top of its root rule">
 
-Declaring the knobs first makes the variants below readable as a table of what changes.
+Declaring the private tokens first makes the variants below readable as a table of what changes. Each one sits behind the knob of the same name, which an app sets to override it.
 
 <DoDont>
-<Example kind="do" caption="The knobs come first, so the variant below reads as a table of what changes.">
+<Example kind="do" caption="The private tokens come first, so the variant below reads as a table of what changes.">
 
 ```scss
 .button {
-	--_btn-bg: transparent;
-	--_btn-fg: var(--sys-color-text);
+	--_kit-button-bg: transparent;
+	--_kit-button-fg: var(--sys-color-text);
 
-	background: var(--btn-bg, var(--_btn-bg));
-	color: var(--btn-fg, var(--_btn-fg));
+	background: var(--kit-button-bg, var(--_kit-button-bg));
+	color: var(--kit-button-fg, var(--_kit-button-fg));
 }
 
 .button[data-variant="primary"] {
-	--_btn-bg: var(--sys-color-primary);
-	--_btn-fg: var(--sys-color-on-primary);
+	--_kit-button-bg: var(--sys-color-primary);
+	--_kit-button-fg: var(--sys-color-on-primary);
 }
 ```
 
 </Example>
-<Example kind="dont" caption="The variant restates the property instead of re-pointing the knob.">
+<Example kind="dont" caption="The variant restates the property instead of re-pointing the private token.">
 
 ```scss
 .button {
@@ -354,7 +382,7 @@ Each token in the JSON carries a `$description` that says what it's for. When yo
 
 <Details title="Breakpoints and gutters belong to the app, not to the kit's tokens">
 
-The kit's token files hold no `breakpoint` or `gutter` group. Where the page bends and how far content sits from the edge are the app's layout, and a media query can't read a custom property anyway. An app declares its breakpoint as a Sass variable and a script constant of its own, and sets its gutter on the kit's knobs, such as `--popup-edge-padding`. See [the layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares).
+The kit's token files hold no `breakpoint` or `gutter` group. Where the page bends and how far content sits from the edge are the app's layout, and a media query can't read a custom property anyway. An app declares its breakpoint as a Sass variable and a script constant of its own, and sets its gutter on the kit's knobs, such as `--kit-popup-edge-padding`. See [the layout changes at one viewport width](?path=/docs/design-system-principles-responsiveness--docs#the-layout-changes-at-one-viewport-width-which-the-app-declares).
 
 </Details>
 

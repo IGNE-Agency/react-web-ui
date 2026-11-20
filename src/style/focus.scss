@@ -67,7 +67,7 @@
 ///
 /// @example
 ///   .my-control {
-///       @include focus.ring-projected("field");
+///       @include focus.ring-projected("kit-field");
 ///   }
 @mixin ring-projected($name: null) {
 	@include ring-idle($name);
