@@ -23,127 +23,15 @@
 				"$value": "{ref.neutral.800}"
 			},
 			"identity": {
-				"1": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					}
+				"$description": "A person's colour behind their initials. Grey, since telling people apart by colour is the app's choice to make",
+				"bg": {
+					"$type": "color",
+					"$value": "{sys.color.surface-highest}"
 				},
-				"2": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					}
-				},
-				"3": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					}
-				},
-				"4": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					}
-				},
-				"$description": "The brand container, turned to a hue of its own"
+				"fg": {
+					"$type": "color",
+					"$value": "{sys.color.text}"
+				}
 			},
 			"success": {
 				"$description": "Done, approved",
@@ -322,6 +210,26 @@
 					"$description": "The ink of a control that cannot be used: its text, icons and the marks of its choice",
 					"$type": "color",
 					"$value": "{ref.neutral.300}"
+				}
+			},
+			"scrim": {
+				"$description": "The sheet a dialog dims the page with",
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.4
+				}
+			},
+			"scrim-low": {
+				"$description": "The lighter sheet a drawer dims the page with",
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.22
 				}
 			}
 		},
