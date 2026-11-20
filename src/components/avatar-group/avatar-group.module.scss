@@ -46,7 +46,7 @@
 		font: inherit;
 		font-weight: var(
 			--kit-avatar-group-overflow-font-weight,
-			600
+			var(--sys-font-label-medium-font-weight)
 		);
 		line-height: 1;
 		cursor: default;

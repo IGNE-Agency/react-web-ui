@@ -19,7 +19,10 @@
 			var(--_kit-avatar-bg)
 		);
 		color: var(--kit-avatar-fg, var(--_kit-avatar-fg));
-		font-weight: var(--kit-avatar-font-weight, 600);
+		font-weight: var(
+			--kit-avatar-font-weight,
+			var(--sys-font-label-medium-font-weight)
+		);
 		line-height: 1;
 		text-transform: uppercase;
 		overflow: hidden;
