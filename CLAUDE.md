@@ -33,10 +33,10 @@ The kit ships built JavaScript, one module per source file, and one plain `.css`
 - No module under `src/` outside stories imports an SVG or an icon set; lint rejects `@material-design-icons/*` and `*.svg?react` everywhere but `*.stories.tsx`, `docs/` and `.storybook/`. SVGR runs only in Storybook (`.storybook/svgr.ts`), never in the library build.
 - Every `dependencies` and `peerDependencies` package is external. `sideEffects` is `["**/*.css"]`.
 - Declarations come from `tsc -p tsconfig.build.json`. `isolatedDeclarations` is on: every exported value carries a type the declaration emitter can read without inference. Annotate component return types, and type namespace objects explicitly.
-- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/` or `.storybook/`, no `*.stories.*`, `*.mdx` or `.svg` and no `vendor/` folder is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server. Last, it runs the packed `react-web-ui-tokens` in the fixture, whose Vite config throws if anything loads it.
+- `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/` or `.storybook/`, no `*.stories.*`, `*.mdx` or `.svg` and no `vendor/` folder is packed, and that every packed stylesheet opens with the layer order. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server. Last, it asserts that the packed `./terrazzo/vite` plugin in the fixture's Vite config builds the fixture's tokens, in a build and when a dev server starts.
 - The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`, `lexical`). Those have their own entry: `./composer`, `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`.
 - The public lib modules have subpaths of their own too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`.
-- `./terrazzo` is the token preset, built for Node with `tsconfig.terrazzo.json`. The same build emits `react-web-ui-tokens` (`src/terrazzo/build-tokens.ts`), the `bin` an app builds its tokens with instead of `tz build`, which loads the app's `vite.config.ts` and runs its plugins. `./base.css` and `./tokens.css` are the reset and the default theme. `./tokens/*` are the DTCG files an app's resolver layers.
+- `./terrazzo` is the token preset and `./terrazzo/vite` the Vite plugin that builds an app's tokens with it, both built for Node with `tsconfig.terrazzo.json`. The plugin reads `terrazzo.config.*` from the working directory, which Terrazzo resolves the config's paths from, and builds the tokens before `vite build` and when the dev server starts, then again on every change to the config or a token file the resolver reads. It never goes through `tz build`, which loads the app's `vite.config.ts` a second time. The kit's own Vite configs, the library's and Storybook's, use it too. `./base.css` and `./tokens.css` are the reset and the default theme. `./tokens/*` are the DTCG files an app's resolver layers.
 - Relative imports only, with their `.ts` / `.tsx` extension. There is no `@/` alias.
 - A dependency an app also imports is a peer dependency. Only packages no app imports itself are `dependencies`. Stories, MDX, docs and Storybook never ship (`files: ["dist", "tokens"]`).
 
@@ -47,9 +47,9 @@ The kit ships built JavaScript, one module per source file, and one plain `.css`
 Before finishing any task:
 
 ```
-bun fix                  # Tokens, format, and every auto-fixable lint
-bun check                # Tokens, format check, lint and type-check, all through oxc
-bun run build            # The package, its declarations and the token preset
+bun run build            # The tokens, the package, its declarations and the token preset
+bun fix                  # Format, and every auto-fixable lint
+bun check                # Format check, lint and type-check, all through oxc
 bun run check:exports    # The exports map and what the package contains
 bun run test             # Unit tests, then every story as a render, a11y and interaction test in light and dark
 ```
@@ -85,7 +85,7 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 ### Tokens
 
 - Three layers in DTCG JSON: `tokens/ref.tokens.json` for the ramps and the type scale, `tokens/sys.tokens.json` for the roles, `tokens/dark.tokens.json` for the roles' dark values. `tokens/kit.resolver.json` layers them.
-- `bun run tokens` builds them through the kit's own preset (`src/terrazzo/`) into `src/style/tokens.gen.css`: the token's path, dots as hyphens, with no prefix (`--ref-*`, `--sys-*`).
+- The `./terrazzo/vite` plugin builds them through the kit's own preset (`src/terrazzo/`) into `src/style/tokens.gen.css` whenever Vite runs: the token's path, dots as hyphens, with no prefix (`--ref-*`, `--sys-*`).
 - **A component reads only `--sys-*`.** Never `--ref-*`, and never a hard-coded colour, size or duration that a role covers. A token's use is its `$description`.
 - The kit owns no breakpoints and no gutters. They are app layout, and a media query cannot read a custom property. Where a component would react to the viewport, it takes the answer from the caller or from a knob.
 - The token files hold the same values as the native kit's (`@igne-agency/react-native-ui`). A change to one is made in both.
@@ -123,7 +123,7 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 ## Generated files
 
 - Generated files are gitignored, listed by **named path** under the "generated files" heading in `.gitignore`. Never use a `*.gen.*` glob.
-- `src/style/tokens.gen.css` is generated by `bun run tokens`. `dist/` is generated by `bun run build`.
+- `src/style/tokens.gen.css` and `docs/design-system/tokens.gen.*` are generated by the `./terrazzo/vite` plugin whenever Vite runs: `bun run build`, Storybook and the tests. `dist/` is generated by `bun run build`.
 - Do not edit generated files.
 - Add new generated files or folders to the gitignore, under the right comment heading.
 - Gitignored files that aren't under the generated-files heading are not necessarily generated, so this rule doesn't cover them.
