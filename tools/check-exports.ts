@@ -20,8 +20,8 @@
  * - importing a subpath brings other kit stylesheets than the ones
  *   `tools/fixtures/consumer/stylesheets.json` lists for it, in a build or in
  *   the dev server's pre-bundle
- * - the packed `react-web-ui-tokens` command fails to build the fixture's
- *   tokens, or loads the fixture's Vite config while it does
+ * - the packed `./terrazzo/vite` plugin in the fixture's Vite config fails to
+ *   build the fixture's tokens in a build or when a dev server starts
  *
  * @example
  *   bun tools/check-exports.ts
@@ -40,7 +40,6 @@ type Exports = Readonly<Record<string, unknown>>;
 
 type Manifest = Readonly<{
 	name: string;
-	bin?: Readonly<Record<string, string>>;
 	exports?: Exports;
 	peerDependenciesMeta?: Readonly<
 		Record<string, Readonly<{ optional?: boolean }>>
@@ -66,17 +65,18 @@ const manifest: Manifest = await Bun.file(
 
 const exportsMap = manifest.exports ?? {};
 
-/** Runs a command from the repository root and returns its output, or the failure as a problem. */
+/** Runs a command, from the repository root unless `cwd` says otherwise, and returns its output, or the failure as a problem. */
 const run = (
 	command: readonly string[],
 	env: Readonly<Record<string, string>> = {},
+	cwd: string = root,
 ): Readonly<{
 	ok: boolean;
 	stdout: string;
 	output: string;
 }> => {
 	const result = Bun.spawnSync([...command], {
-		cwd: root,
+		cwd,
 		stdout: "pipe",
 		stderr: "pipe",
 		env: { ...process.env, ...env },
@@ -654,6 +654,7 @@ const checkSubpaths = (): readonly string[] => {
 			"subpaths",
 		],
 		env,
+		fixture,
 	);
 	if (!build.ok) {
 		return [
@@ -673,6 +674,7 @@ const checkSubpaths = (): readonly string[] => {
 			"subpaths",
 		],
 		env,
+		fixture,
 	);
 	if (!prebundle.ok) {
 		return [
@@ -804,16 +806,20 @@ const checkConsumer = (): readonly string[] => {
 			: [`fixture typecheck:\n${typecheck.output}`]),
 		...fixtureEntries.flatMap(
 			({ entry, sheets, lazy = [] }) => {
-				const build = run([
-					"bun",
-					"x",
-					"vite",
-					"build",
-					"--config",
-					join(fixture, "vite.config.ts"),
-					"--mode",
-					entry,
-				]);
+				const build = run(
+					[
+						"bun",
+						"x",
+						"vite",
+						"build",
+						"--config",
+						join(fixture, "vite.config.ts"),
+						"--mode",
+						entry,
+					],
+					{},
+					fixture,
+				);
 				if (!build.ok) {
 					return [
 						`fixture build of ${entry}:\n${build.output}`,
@@ -830,12 +836,11 @@ const checkConsumer = (): readonly string[] => {
 	];
 };
 
-/** Builds the fixture's tokens with the packed kit's token command, which must not load the fixture's Vite config. */
-const checkTokenCommand = (): readonly string[] => {
-	const command = manifest.bin?.["react-web-ui-tokens"];
-	if (command === undefined) {
-		return ["package.json has no react-web-ui-tokens bin"];
-	}
+/** Runs a command in the fixture that must build its tokens through the plugin in its Vite config, and reports what went wrong. */
+const fixtureTokens = (
+	label: string,
+	command: readonly string[],
+): readonly string[] => {
 	const output = join(
 		fixture,
 		"dist",
@@ -843,26 +848,14 @@ const checkTokenCommand = (): readonly string[] => {
 		"tokens.gen.css",
 	);
 	rmSync(output, { force: true });
-	const result = Bun.spawnSync(
-		[
-			"bun",
-			join(
-				fixture,
-				"node_modules",
-				...manifest.name.split("/"),
-				command,
-			),
-		],
-		{
-			cwd: fixture,
-			stdout: "pipe",
-			stderr: "pipe",
-			env: { ...process.env, KIT_FORBID_VITE_CONFIG: "1" },
-		},
-	);
+	const result = Bun.spawnSync([...command], {
+		cwd: fixture,
+		stdout: "pipe",
+		stderr: "pipe",
+	});
 	if (result.exitCode !== 0) {
 		return [
-			`react-web-ui-tokens: ${result.stdout.toString()}${result.stderr.toString()}`,
+			`${label}: ${result.stdout.toString()}${result.stderr.toString()}`,
 		];
 	}
 	return existsSync(output) &&
@@ -870,10 +863,26 @@ const checkTokenCommand = (): readonly string[] => {
 			"--sys-color-primary:",
 		)
 		? []
-		: [
-				`react-web-ui-tokens: ${output} has no --sys-* roles`,
-			];
+		: [`${label}: ${output} has no --sys-* roles`];
 };
+
+/** Builds the fixture's tokens through the packed kit's Vite plugin, in a build and in a dev server. */
+const checkTokenPlugin = (): readonly string[] => [
+	...fixtureTokens("vite build", [
+		"bun",
+		"x",
+		"vite",
+		"build",
+		"--config",
+		join(fixture, "vite.config.ts"),
+		"--mode",
+		"root",
+	]),
+	...fixtureTokens("vite dev server", [
+		"node",
+		join(fixture, "serve-tokens.ts"),
+	]),
+];
 
 const sections: readonly Readonly<{
 	title: string;
@@ -913,10 +922,10 @@ const sections: readonly Readonly<{
 			"typechecks and builds against the packed kit, every subpath brings only the stylesheets it lists, in a build and in the dev server, and each lazy package has a chunk of its own, loaded on demand.",
 	},
 	{
-		title: "token command",
-		problems: checkTokenCommand(),
+		title: "token plugin",
+		problems: checkTokenPlugin(),
 		passed:
-			"react-web-ui-tokens builds the fixture's tokens from the packed kit without loading the fixture's Vite config.",
+			"the packed ./terrazzo/vite plugin in the fixture's Vite config builds its tokens in a build and when a dev server starts.",
 	},
 ];
 

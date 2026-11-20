@@ -13,6 +13,8 @@
 		"package.json",
 		".storybook/vite.config.ts",
 		".storybook/svgr.ts",
+		"src/terrazzo/build.ts",
+		"src/terrazzo/vite.ts",
 		"tools"
 	],
 	"exclude": ["tools/fixtures", "terrazzo.config.ts"],

@@ -1,3 +1,4 @@
+import { tokens } from "@igne-agency/react-web-ui/terrazzo/vite";
 import {
 	defineConfig,
 	type Plugin,
@@ -28,19 +29,6 @@ const subpathEntries = (): Plugin => ({
 			: undefined,
 });
 
-/** A dev-only plugin that fails while `KIT_FORBID_VITE_CONFIG` is set, so the check can prove the token command never loads this config. */
-const forbidViteConfig = (): Plugin => ({
-	name: "kit-forbid-vite-config",
-	apply: "serve",
-	config: () => {
-		if (process.env.KIT_FORBID_VITE_CONFIG !== undefined) {
-			throw new Error(
-				"The token command loaded the app's Vite config.",
-			);
-		}
-	},
-});
-
 /**
  * Builds one entry of the fixture app per mode: `vite build --mode button`.
  * Mode `subpaths` builds one app entry per subpath in `KIT_SUBPATHS`, and
@@ -51,7 +39,7 @@ const config: UserConfigFnObject = defineConfig(
 	({ mode }) => ({
 		root: import.meta.dirname,
 		logLevel: "warn",
-		plugins: [subpathEntries(), forbidViteConfig()],
+		plugins: [subpathEntries(), tokens()],
 		optimizeDeps: {
 			noDiscovery: true,
 			include: subpaths.map(specifier),

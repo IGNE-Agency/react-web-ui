@@ -19,7 +19,8 @@ Some entry points need an optional peer as well:
 | `@igne-agency/react-web-ui/data-table` | `@tanstack/react-table` |
 | `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query` |
 | `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
-| `@igne-agency/react-web-ui/terrazzo` and `react-web-ui-tokens` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css` |
+| `@igne-agency/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css` |
+| `@igne-agency/react-web-ui/terrazzo/vite` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css`, `vite` |
 
 Lexical is a peer because it must be a single copy per app: an app that uses Lexical itself shares the kit's.
 
@@ -100,17 +101,19 @@ export default defineConfig({
 });
 ```
 
-Build it with the kit's `react-web-ui-tokens` command, not `tz build`:
+Add the kit's Vite plugin to the app's Vite config:
 
-```json
-{
-	"scripts": {
-		"tokens": "react-web-ui-tokens"
-	}
-}
+```ts
+// vite.config.ts
+import { tokens } from "@igne-agency/react-web-ui/terrazzo/vite";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+	plugins: [tokens()],
+});
 ```
 
-`tz build` loads `terrazzo.config.ts` through a Vite dev server, and that server also loads the app's own `vite.config.ts`. Every plugin in it runs, including dev-only ones such as an HTTPS certificate plugin, even when the tokens build as part of a production build. `react-web-ui-tokens` runs the same Terrazzo build without Vite. It reads `terrazzo.config.*` from the working directory and needs Bun.
+It reads `terrazzo.config.*` from the working directory, which Terrazzo resolves the config's paths from, and builds the tokens before `vite build` and when the dev server starts, then again whenever the config, the resolver or a token file it references changes. The app needs no `tokens` script and no `tz build`. Gitignore the file it writes. Under Node, a `terrazzo.config.ts` needs Node 22.18 or later.
 
 The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters. Typography tokens name no family, so the preset narrows Terrazzo's `core/valid-typography` rule to `fontSize`, `fontWeight` and `lineHeight`.
 

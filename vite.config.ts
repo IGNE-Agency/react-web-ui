@@ -13,6 +13,7 @@ import {
 } from "vite";
 import { libInjectCss } from "vite-plugin-lib-inject-css";
 import manifest from "./package.json" with { type: "json" };
+import { tokens } from "./src/terrazzo/vite.ts";
 
 const root = import.meta.dirname;
 const src = join(root, "src");
@@ -106,6 +107,7 @@ const config: UserConfig = defineConfig({
 		react({ compiler: true }),
 		libInjectCss(),
 		stylesheets(),
+		tokens(),
 	],
 	css: {
 		modules: {
