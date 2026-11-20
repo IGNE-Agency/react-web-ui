@@ -57,9 +57,6 @@ const SOURCES: readonly unknown[] = [ref, sys];
 
 const groupNode = z.record(z.string(), z.unknown());
 const described = z.object({ $description: z.string() });
-const derivedExtension = z.object({
-	"nl.igne.derived": z.object({ hue: z.number() }),
-});
 const filterExtension = z.object({
 	"nl.igne.css": z.object({
 		property: z.literal("filter"),
@@ -298,25 +295,18 @@ export const colourIn = (id: TokenId, theme: Theme) => {
 };
 
 /**
- * What a colour token points at in one theme, in words: a ramp step, another
- * role, or the hue it turns its role to.
+ * What a colour token points at in one theme, in words: a ramp step or another
+ * role.
  *
  * @example
  * sourceOf("sys.color.primary", "light"); // "neutral-750"
  * sourceOf("sys.color.focus-ring", "light"); // "primary"
- * sourceOf("sys.color.identity.1.bg", "light"); // "hue 84°"
  */
 export const sourceOf = (id: TokenId, theme: Theme) => {
 	const token = tokenOf(id, theme);
-	const derived = derivedExtension.safeParse(
-		token.$extensions,
-	).data?.["nl.igne.derived"];
 	const target = token.aliasChain?.[0];
-	if (derived !== undefined) {
-		return `hue ${derived.hue}°`;
-	}
 	if (target === undefined) {
-		return "derived";
+		return "its own value";
 	}
 	const ramp = rampOf(target);
 	return ramp === undefined

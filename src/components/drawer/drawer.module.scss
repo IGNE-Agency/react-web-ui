@@ -1,12 +1,13 @@
 @use "../../style/layers.scss";
 @use "../../style/overlay.scss" as overlay;
-@use "../../style/theme.scss" as theme;
+
+$settle: 0.2s;
 
 @layer kit.components {
 	.backdrop {
 		@include overlay.backdrop;
 
-		--_kit-overlay-dim: 0.22;
+		--_kit-overlay-scrim: var(--sys-color-scrim-low);
 		--_kit-overlay-opacity: calc(
 			1 - var(--drawer-swipe-progress)
 		);
@@ -21,17 +22,13 @@
 			position: absolute;
 		}
 
-		@include theme.dark {
-			--_kit-overlay-dim: 0.4;
-		}
-
 		&[data-swiping] {
 			transition-duration: 0ms;
 		}
 
 		&[data-ending-style] {
 			transition-duration: calc(
-				var(--drawer-swipe-strength) * 0.2s
+				var(--drawer-swipe-strength) * #{$settle}
 			);
 		}
 	}
@@ -127,7 +124,7 @@
 
 		&[data-ending-style] {
 			transition-duration: calc(
-				var(--drawer-swipe-strength) * 0.2s
+				var(--drawer-swipe-strength) * #{$settle}
 			);
 		}
 

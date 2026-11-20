@@ -22,7 +22,7 @@ const meta = {
 			{
 				page: "Foundation/Colour",
 				section:
-					"A person's colour is an identity tone, never a status colour",
+					"A person's colour is the identity role, never a status colour",
 			},
 		],
 	},
@@ -43,22 +43,6 @@ export const Initials: Story = {
 		);
 		await expect(image(canvasElement)).toBeNull();
 	},
-};
-
-export const IdentityTone1: Story = {
-	args: { name: "Sem de Jong" },
-};
-
-export const IdentityTone2: Story = {
-	args: { name: "Sanne de Vries" },
-};
-
-export const IdentityTone3: Story = {
-	args: { name: "Anna de Vries" },
-};
-
-export const IdentityTone4: Story = {
-	args: { name: "Mark Jansen" },
 };
 
 export const WithImage: Story = {
@@ -92,7 +76,7 @@ export const Large: Story = {
 };
 
 const ComposedAvatar = (): ReactElement => (
-	<Avatar.Root name="Ada Lovelace" size={4}>
+	<Avatar.Root size={4}>
 		<Avatar.Image src={PORTRAIT} />
 		<Avatar.Fallback>AL</Avatar.Fallback>
 	</Avatar.Root>
