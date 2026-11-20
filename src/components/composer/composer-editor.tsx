@@ -118,8 +118,8 @@ export const ComposerEditor = ({
 			<div
 				className={clsx(style.editor, className)}
 				style={{
-					"--composer-min-lines": minLines,
-					"--composer-max-lines": maxLines,
+					"--kit-composer-min-lines": minLines,
+					"--kit-composer-max-lines": maxLines,
 				}}>
 				<ContentEditable
 					className={style.content}

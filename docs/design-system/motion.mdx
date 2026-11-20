@@ -357,7 +357,7 @@ Every transition reads its timing from the motion scale, so it matches every oth
 
 ```scss
 .popup {
-	transition: opacity var(--sys-motion-short)
+	transition: opacity var(--sys-motion-instant)
 		var(--sys-motion-standard);
 }
 ```
@@ -386,7 +386,7 @@ Guard it with the `prefers-reduced-motion` media query. Explained in [Time and p
 ```scss
 .popup {
 	@media not (prefers-reduced-motion) {
-		transition: opacity var(--sys-motion-short)
+		transition: opacity var(--sys-motion-instant)
 			var(--sys-motion-standard);
 	}
 }

@@ -1,6 +1,6 @@
 import { type RefCallback, useState } from "react";
 
-const RESOLVED_PROPERTY = "--_popup-edge-padding";
+const RESOLVED_PROPERTY = "--_kit-popup-edge-padding";
 
 /** What {@link usePopupEdgePadding} hands a positioner. */
 export type PopupEdgePadding = Readonly<{
@@ -12,7 +12,7 @@ export type PopupEdgePadding = Readonly<{
 
 /**
  * Reads a positioned popup's collision padding at runtime from the
- * `--popup-edge-padding` knob, resolved to pixels on the positioner by the
+ * `--kit-popup-edge-padding` knob, resolved to pixels on the positioner by the
  * `popup.edge-padding` mixin. `0` until the positioner mounts.
  *
  * @example

@@ -8,15 +8,18 @@
 	}
 
 	.trigger {
-		@include disclosure.trigger("collapsible");
+		@include disclosure.trigger("kit-collapsible");
 	}
 
 	.indicator {
 		@include disclosure.chevron;
 
 		display: inline-flex;
-		color: var(--collapsible-indicator-fg, currentcolor);
-		font-size: var(--collapsible-indicator-size, 1.5em);
+		color: var(
+			--kit-collapsible-indicator-fg,
+			currentcolor
+		);
+		font-size: var(--kit-collapsible-indicator-size, 1.5em);
 	}
 
 	.panel {
@@ -24,7 +27,7 @@
 	}
 
 	.content {
-		padding: var(--collapsible-pad-y, var(--sys-unit-4))
-			var(--collapsible-pad-x, var(--sys-unit-6));
+		padding: var(--kit-collapsible-pad-y, var(--sys-unit-4))
+			var(--kit-collapsible-pad-x, var(--sys-unit-6));
 	}
 }

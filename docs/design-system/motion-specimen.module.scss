@@ -211,7 +211,7 @@
 		}
 
 		&[data-scene="checkbox"] {
-			--checkbox-size: var(--sys-unit-40);
+			--kit-checkbox-size: var(--sys-unit-40);
 
 			display: grid;
 			place-items: center;
@@ -334,17 +334,17 @@
 	}
 
 	.selectionBar {
-		--selection-radius: var(--sys-radius-md);
-		--selection-pad: var(--sys-unit-2);
-		--selection-text-inset: 0;
+		--kit-table-selection-radius: var(--sys-radius-md);
+		--kit-table-selection-pad: var(--sys-unit-2);
+		--kit-table-selection-text-inset: 0;
 
 		display: flex;
 		position: relative;
 		align-items: center;
 		gap: var(--sys-unit-6);
 		isolation: isolate;
-		border-radius: var(--selection-radius);
-		padding-block: var(--selection-pad);
+		border-radius: var(--kit-table-selection-radius);
+		padding-block: var(--kit-table-selection-pad);
 		padding-inline: 0;
 
 		&::before {
@@ -359,9 +359,9 @@
 		}
 
 		&[data-selected] {
-			--selection-text-inset: var(--sys-unit-6);
+			--kit-table-selection-text-inset: var(--sys-unit-6);
 
-			padding-inline: var(--selection-pad);
+			padding-inline: var(--kit-table-selection-pad);
 
 			&::before {
 				opacity: 1;
@@ -397,7 +397,9 @@
 		flex: 0 1 auto;
 		min-inline-size: 0;
 		align-items: center;
-		padding-inline-start: var(--selection-text-inset);
+		padding-inline-start: var(
+			--kit-table-selection-text-inset
+		);
 
 		@media not (prefers-reduced-motion) {
 			transition: padding-inline-start
@@ -451,7 +453,7 @@
 		flex: 1 1 auto;
 		min-inline-size: 0;
 		align-items: center;
-		gap: var(--selection-pad);
+		gap: var(--kit-table-selection-pad);
 
 		.selectionBar:not([data-selected]) & {
 			visibility: hidden;
@@ -480,7 +482,8 @@
 		flex: 0 1 auto;
 		min-inline-size: 0;
 		border-radius: calc(
-			var(--selection-radius) - var(--selection-pad)
+			var(--kit-table-selection-radius) -
+				var(--kit-table-selection-pad)
 		);
 		inline-size: 6rem;
 		block-size: var(--sys-unit-16);

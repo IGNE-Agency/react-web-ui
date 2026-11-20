@@ -234,12 +234,12 @@ export const IndicatorFollows: Story = {
 		);
 		await expect(
 			indicator.style.getPropertyValue(
-				"--active-item-left",
+				"--_kit-sliding-indicator-item-left",
 			),
 		).toBe(`${paid.offsetLeft}px`);
 		await expect(
 			indicator.style.getPropertyValue(
-				"--active-item-width",
+				"--_kit-sliding-indicator-item-width",
 			),
 		).toBe(`${paid.offsetWidth}px`);
 	},

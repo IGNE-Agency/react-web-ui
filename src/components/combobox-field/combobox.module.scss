@@ -11,8 +11,8 @@
 
 		position: relative;
 		gap: var(
-			--combobox-gap,
-			var(--field-inlay-gap, var(--sys-unit-6))
+			--kit-combobox-gap,
+			var(--kit-field-inlay-gap, var(--sys-unit-6))
 		);
 		justify-content: space-between;
 		inline-size: 100%;
@@ -29,9 +29,9 @@
 		flex: 1;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--combobox-content-gap, var(--sys-unit-2));
+		gap: var(--kit-combobox-content-gap, var(--sys-unit-2));
 		min-block-size: var(
-			--combobox-content-min-block-size,
+			--kit-combobox-content-min-block-size,
 			var(--sys-unit-14)
 		);
 		min-inline-size: 0;
@@ -41,7 +41,7 @@
 		@include form.field-text-metrics;
 
 		.control[data-placeholder] & {
-			color: var(--_field-placeholder-fg);
+			color: var(--_kit-field-placeholder-fg);
 		}
 	}
 
@@ -50,8 +50,8 @@
 		flex: 1;
 		align-items: center;
 		gap: var(
-			--combobox-gap,
-			var(--field-inlay-gap, var(--sys-unit-6))
+			--kit-combobox-gap,
+			var(--kit-field-inlay-gap, var(--sys-unit-6))
 		);
 		min-inline-size: 0;
 		text-align: start;
@@ -67,8 +67,11 @@
 
 	.icon {
 		display: inline-flex;
-		color: var(--combobox-icon-fg, var(--_field-muted-fg));
-		font-size: var(--combobox-icon-size, 1em);
+		color: var(
+			--kit-combobox-icon-fg,
+			var(--_kit-field-muted-fg)
+		);
+		font-size: var(--kit-combobox-icon-size, 1em);
 
 		@media not (prefers-reduced-motion) {
 			transition: rotate var(--sys-motion-short)
@@ -76,7 +79,7 @@
 		}
 
 		.control[data-popup-open] & {
-			rotate: var(--combobox-icon-open-rotate, none);
+			rotate: var(--kit-combobox-icon-open-rotate, none);
 		}
 	}
 
@@ -89,12 +92,15 @@
 		flex: 1;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--combobox-tag-list-gap, var(--sys-unit-2));
+		gap: var(
+			--kit-combobox-tag-list-gap,
+			var(--sys-unit-2)
+		);
 		min-inline-size: 0;
 	}
 
 	.tag {
-		@include tag.shell("combobox-tag");
+		@include tag.shell("kit-combobox-tag");
 
 		max-inline-size: 100%;
 	}
@@ -118,7 +124,7 @@
 		max-inline-size: var(--available-width);
 		max-block-size: min(
 			var(--available-height, 22rem),
-			var(--combobox-popup-max-block-size, 22rem)
+			var(--kit-combobox-popup-max-block-size, 22rem)
 		);
 	}
 
@@ -127,7 +133,7 @@
 
 		flex-shrink: 0;
 		margin-block-end: var(
-			--combobox-search-gap,
+			--kit-combobox-search-gap,
 			var(--sys-unit-4)
 		);
 		inline-size: 100%;
@@ -160,7 +166,7 @@
 		display: inline-flex;
 		flex-shrink: 0;
 		color: var(
-			--combobox-indicator-fg,
+			--kit-combobox-indicator-fg,
 			var(--sys-color-primary)
 		);
 	}
@@ -178,7 +184,7 @@
 		@include checkbox.indicator-hidden;
 
 		font-size: calc(
-			var(--checkbox-size, #{checkbox.$size}) * 0.7
+			var(--kit-checkbox-size, #{checkbox.$size}) * 0.7
 		);
 
 		&[data-selected] {

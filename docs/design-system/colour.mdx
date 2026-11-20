@@ -911,13 +911,13 @@ Each person gets one of the identity tones: the brand container's lightness and 
 
 <Details title="Tints are mixed into surfaces in oklab">
 
-The palette's own values are written in `oklch`, so every step's lightness and chroma can be read straight off it. A tint mixed into a surface is mixed in `oklab` instead, so it dilutes towards the surface rather than swinging round the hue circle on the way.
+The palette's steps are written in `oklch`, so their lightness and chroma can be read straight off them. Step 500 of each ramp is the exception: it is the colour the ramp is built around, kept in the sRGB hex it was picked in. A tint mixed into a surface is mixed in `oklab` instead, so it dilutes towards the surface rather than swinging round the hue circle on the way.
 
 <DoDont>
 <Example kind="do" caption="On white and on charcoal alike, the neutral dilutes the tint instead of steering it.">
 
 ```scss
---row-stripe: color-mix(
+--_kit-table-row-stripe: color-mix(
 	in oklab,
 	var(--sys-color-primary-container) 45%,
 	var(--sys-color-surface)
@@ -928,7 +928,7 @@ The palette's own values are written in `oklch`, so every step's lightness and c
 <Example kind="dont" caption="Fine on white, halfway to blue on charcoal.">
 
 ```scss
---row-stripe: color-mix(
+--_kit-table-row-stripe: color-mix(
 	in oklch,
 	var(--sys-color-primary-container) 45%,
 	var(--sys-color-surface)
@@ -1533,7 +1533,7 @@ The page's theme is two conditions, not one. A stored mode pins it, and auto fol
 ```scss
 .backdrop {
 	@include theme.dark {
-		--_overlay-dim: 0.6;
+		--_kit-overlay-dim: 0.6;
 	}
 }
 ```
@@ -1543,7 +1543,7 @@ The page's theme is two conditions, not one. A stored mode pins it, and auto fol
 
 ```scss
 html[data-theme="dark"] .backdrop {
-	--_overlay-dim: 0.6;
+	--_kit-overlay-dim: 0.6;
 }
 ```
 
@@ -1680,14 +1680,14 @@ The one legitimate use of a theme selector inside a component file is a value th
 
 ```scss
 .backdrop {
-	--_overlay-dim: 0.4;
+	--_kit-overlay-dim: 0.4;
 
 	background-color: rgb(
-		0 0 0 / var(--overlay-dim, var(--_overlay-dim))
+		0 0 0 / var(--kit-overlay-dim, var(--_kit-overlay-dim))
 	);
 
 	@include theme.dark {
-		--_overlay-dim: 0.6;
+		--_kit-overlay-dim: 0.6;
 	}
 }
 ```

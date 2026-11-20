@@ -302,18 +302,18 @@ export const EdgePadding: Story = {
 		docs: {
 			description: {
 				story:
-					"The positioner keeps the `--popup-edge-padding` knob's distance from the viewport's edges, read at runtime.",
+					"The positioner keeps the `--kit-popup-edge-padding` knob's distance from the viewport's edges, read at runtime.",
 			},
 		},
 	},
 	beforeEach: () => {
 		const root = document.documentElement;
 		root.style.setProperty(
-			"--popup-edge-padding",
+			"--kit-popup-edge-padding",
 			`${EDGE_PADDING_PX}px`,
 		);
 		return () => {
-			root.style.removeProperty("--popup-edge-padding");
+			root.style.removeProperty("--kit-popup-edge-padding");
 		};
 	},
 	play: async () => {

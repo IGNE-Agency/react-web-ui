@@ -5,14 +5,14 @@
 	.viewport {
 		position: fixed;
 		inset-block: auto
-			var(--toast-viewport-inset, var(--sys-unit-16));
+			var(--kit-toast-viewport-inset, var(--sys-unit-16));
 		inset-inline: auto
-			var(--toast-viewport-inset, var(--sys-unit-16));
+			var(--kit-toast-viewport-inset, var(--sys-unit-16));
 		display: flex;
 		flex-direction: column;
-		gap: var(--toast-viewport-gap, var(--sys-unit-8));
+		gap: var(--kit-toast-viewport-gap, var(--sys-unit-8));
 		inline-size: var(
-			--toast-width,
+			--kit-toast-width,
 			min(24rem, calc(100vw - 2rem))
 		);
 
@@ -20,23 +20,29 @@
 	}
 
 	.toast {
-		--_toast-fg: var(--sys-color-text);
-		--_toast-bg: var(--sys-color-surface-overlay-high);
+		--_kit-toast-fg: var(--sys-color-text);
+		--_kit-toast-bg: var(--sys-color-surface-overlay-high);
 
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) auto;
 		align-items: center;
-		row-gap: var(--toast-gap, var(--sys-unit-6));
+		row-gap: var(--kit-toast-gap, var(--sys-unit-6));
 		box-sizing: border-box;
 		border-radius: var(
-			--toast-radius,
+			--kit-toast-radius,
 			var(--sys-radius-md)
 		);
-		background: var(--toast-bg, var(--_toast-bg));
-		box-shadow: var(--toast-shadow, var(--sys-elevation-2));
-		padding: var(--toast-pad, var(--sys-unit-8));
-		color: var(--toast-fg, var(--_toast-fg));
-		font: var(--toast-font, var(--sys-font-body-medium));
+		background: var(--kit-toast-bg, var(--_kit-toast-bg));
+		box-shadow: var(
+			--kit-toast-shadow,
+			var(--sys-elevation-2)
+		);
+		padding: var(--kit-toast-pad, var(--sys-unit-8));
+		color: var(--kit-toast-fg, var(--_kit-toast-fg));
+		font: var(
+			--kit-toast-font,
+			var(--sys-font-body-medium)
+		);
 
 		@media not (prefers-reduced-motion) {
 			transition:
@@ -54,8 +60,8 @@
 
 		@each $tone in (success, error, warning, info) {
 			&[data-tone="#{$tone}"] {
-				--_toast-fg: var(--sys-color-#{$tone}-fg);
-				--_toast-bg: var(--sys-color-#{$tone}-bg);
+				--_kit-toast-fg: var(--sys-color-#{$tone}-fg);
+				--_kit-toast-bg: var(--sys-color-#{$tone}-bg);
 			}
 		}
 	}
@@ -65,10 +71,10 @@
 		flex-shrink: 0;
 		grid-area: 1 / 1;
 		margin-inline-end: var(
-			--toast-icon-space,
+			--kit-toast-icon-space,
 			var(--sys-unit-4)
 		);
-		font-size: var(--toast-icon-size, 1.2em);
+		font-size: var(--kit-toast-icon-size, 1.2em);
 
 		> svg {
 			inline-size: 1em;
@@ -81,17 +87,20 @@
 		grid-area: 1 / 2;
 		min-inline-size: 0;
 		font: var(
-			--toast-title-font,
+			--kit-toast-title-font,
 			var(--sys-font-label-medium)
 		);
 	}
 
 	.close {
-		--btn-fg: var(--toast-fg, var(--_toast-fg));
+		--kit-button-fg: var(
+			--kit-toast-fg,
+			var(--_kit-toast-fg)
+		);
 
 		grid-area: 1 / 3;
 		margin-inline-start: var(
-			--toast-close-space,
+			--kit-toast-close-space,
 			var(--sys-unit-6)
 		);
 	}
@@ -99,8 +108,8 @@
 	.description {
 		grid-column: 1 / -1;
 		font: var(
-			--toast-description-font,
-			var(--toast-font, var(--sys-font-body-medium))
+			--kit-toast-description-font,
+			var(--kit-toast-font, var(--sys-font-body-medium))
 		);
 		text-wrap: pretty;
 	}
@@ -108,27 +117,39 @@
 	.actions {
 		display: flex;
 		grid-column: 1 / -1;
-		gap: var(--toast-actions-gap, var(--sys-unit-4));
+		gap: var(--kit-toast-actions-gap, var(--sys-unit-4));
 		margin-block-start: var(
-			--toast-actions-space,
+			--kit-toast-actions-space,
 			var(--sys-unit-2)
 		);
 
 		> [data-variant="primary"] {
-			--btn-bg: var(--toast-fg, var(--_toast-fg));
-			--btn-fg: var(--toast-bg, var(--_toast-bg));
+			--kit-button-bg: var(
+				--kit-toast-fg,
+				var(--_kit-toast-fg)
+			);
+			--kit-button-fg: var(
+				--kit-toast-bg,
+				var(--_kit-toast-bg)
+			);
 		}
 
 		> [data-variant="secondary"] {
-			--btn-bg: var(
-				--toast-action-secondary-bg,
+			--kit-button-bg: var(
+				--kit-toast-action-secondary-bg,
 				var(--sys-color-surface-overlay-high)
 			);
-			--btn-fg: var(--toast-fg, var(--_toast-fg));
+			--kit-button-fg: var(
+				--kit-toast-fg,
+				var(--_kit-toast-fg)
+			);
 		}
 
 		> [data-variant="tertiary"] {
-			--btn-fg: var(--toast-fg, var(--_toast-fg));
+			--kit-button-fg: var(
+				--kit-toast-fg,
+				var(--_kit-toast-fg)
+			);
 		}
 	}
 }

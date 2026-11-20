@@ -17,7 +17,7 @@ export type BadgeProps = ComponentPropsWithRef<"span"> &
 
 /**
  * Small styled leaf for counts and short status labels. Coloured by
- * `[data-tone]` × `[data-variant]` through the `--badge-*` knobs.
+ * `[data-tone]` × `[data-variant]` through the `--kit-badge-*` knobs.
  *
  * @example
  * <Badge tone="info" variant="solid">3</Badge>

@@ -7,7 +7,7 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: var(--checkbox-gap, var(--sys-unit-8));
+		gap: var(--kit-checkbox-gap, var(--sys-unit-8));
 	}
 
 	.label {
@@ -49,8 +49,10 @@
 		@include checkbox.indicator-hidden;
 
 		font-size: var(
-			--checkbox-indicator-size,
-			calc(var(--checkbox-size, #{checkbox.$size}) * 0.7)
+			--kit-checkbox-indicator-size,
+			calc(
+				var(--kit-checkbox-size, #{checkbox.$size}) * 0.7
+			)
 		);
 
 		&[data-checked],

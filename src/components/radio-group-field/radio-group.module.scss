@@ -7,24 +7,27 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: var(--radio-group-gap, var(--sys-unit-2));
+		gap: var(--kit-radio-group-gap, var(--sys-unit-2));
 	}
 
 	.item {
 		display: inline-flex;
 		flex: 0 0 auto;
 		align-items: center;
-		gap: var(--radio-group-item-gap, var(--sys-unit-6));
+		gap: var(--kit-radio-group-item-gap, var(--sys-unit-6));
 		min-block-size: var(
-			--radio-group-item-min-block-size,
+			--kit-radio-group-item-min-block-size,
 			var(--sys-unit-20)
 		);
-		font: var(--radio-group-item-font, inherit);
+		font: var(--kit-radio-group-item-font, inherit);
 
 		@include checkbox.box-affordance(".radio");
 
 		&[data-disabled]:not([data-disabled] &) {
-			opacity: var(--radio-group-item-disabled-opacity, 1);
+			opacity: var(
+				--kit-radio-group-item-disabled-opacity,
+				1
+			);
 		}
 	}
 
@@ -35,7 +38,7 @@
 
 		position: relative;
 		border-radius: var(
-			--radio-group-radio-radius,
+			--kit-radio-group-radio-radius,
 			var(--sys-radius-circle)
 		);
 
@@ -61,19 +64,23 @@
 		@include checkbox.indicator-hidden;
 
 		inline-size: var(
-			--radio-group-indicator-size,
-			calc(var(--checkbox-size, #{checkbox.$size}) * 0.4)
+			--kit-radio-group-indicator-size,
+			calc(
+				var(--kit-checkbox-size, #{checkbox.$size}) * 0.4
+			)
 		);
 		block-size: var(
-			--radio-group-indicator-size,
-			calc(var(--checkbox-size, #{checkbox.$size}) * 0.4)
+			--kit-radio-group-indicator-size,
+			calc(
+				var(--kit-checkbox-size, #{checkbox.$size}) * 0.4
+			)
 		);
 		border-radius: var(
-			--radio-group-indicator-radius,
+			--kit-radio-group-indicator-radius,
 			var(--sys-radius-circle)
 		);
 		background: var(
-			--radio-group-indicator-bg,
+			--kit-radio-group-indicator-bg,
 			currentcolor
 		);
 

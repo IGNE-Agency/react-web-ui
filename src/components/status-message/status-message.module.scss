@@ -6,37 +6,43 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: var(--status-message-gap, var(--sys-unit-6));
-		padding: var(--status-message-pad, var(--sys-unit-12));
-		color: var(--status-message-fg, var(--sys-color-text));
+		gap: var(--kit-status-message-gap, var(--sys-unit-6));
+		padding: var(
+			--kit-status-message-pad,
+			var(--sys-unit-12)
+		);
+		color: var(
+			--kit-status-message-fg,
+			var(--sys-color-text)
+		);
 		text-align: center;
 	}
 
 	.disc {
-		@include tone.variants("_status-message-disc");
+		@include tone.variants("_kit-status-message-disc");
 
 		display: grid;
 		place-items: center;
 		inline-size: var(
-			--status-message-disc-size,
+			--kit-status-message-disc-size,
 			var(--sys-unit-32)
 		);
 		block-size: var(
-			--status-message-disc-size,
+			--kit-status-message-disc-size,
 			var(--sys-unit-32)
 		);
 		border-radius: var(
-			--status-message-disc-radius,
+			--kit-status-message-disc-radius,
 			var(--sys-radius-full)
 		);
-		font-size: var(--status-message-icon-size, 2em);
+		font-size: var(--kit-status-message-icon-size, 2em);
 		background: var(
-			--status-message-disc-bg,
-			var(--_status-message-disc-bg)
+			--kit-status-message-disc-bg,
+			var(--_kit-status-message-disc-bg)
 		);
 		color: var(
-			--status-message-disc-fg,
-			var(--_status-message-disc-fg)
+			--kit-status-message-disc-fg,
+			var(--_kit-status-message-disc-fg)
 		);
 	}
 
@@ -44,22 +50,25 @@
 		display: grid;
 		place-items: center;
 		color: var(
-			--status-message-illustration-fg,
+			--kit-status-message-illustration-fg,
 			var(--sys-color-primary)
 		);
 	}
 
 	.title {
 		font: var(
-			--status-message-title-font,
+			--kit-status-message-title-font,
 			var(--sys-font-heading-medium)
 		);
 	}
 
 	.description {
-		max-inline-size: var(--status-message-measure, 40ch);
+		max-inline-size: var(
+			--kit-status-message-measure,
+			40ch
+		);
 		font: var(
-			--status-message-description-font,
+			--kit-status-message-description-font,
 			var(--sys-font-body-medium)
 		);
 	}
@@ -69,7 +78,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: var(
-			--status-message-action-gap,
+			--kit-status-message-action-gap,
 			var(--sys-unit-4)
 		);
 	}

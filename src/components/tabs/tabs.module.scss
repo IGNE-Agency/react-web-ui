@@ -8,7 +8,7 @@
 	.root {
 		display: flex;
 		flex-direction: column;
-		gap: var(--tabs-gap, var(--sys-unit-8));
+		gap: var(--kit-tabs-gap, var(--sys-unit-8));
 	}
 
 	.scroller {
@@ -28,7 +28,7 @@
 
 		&[data-disabled] {
 			color: var(
-				--tab-disabled-fg,
+				--kit-tab-disabled-fg,
 				var(--sys-color-disabled-fg)
 			);
 			cursor: not-allowed;
@@ -39,11 +39,11 @@
 		@include indicator.pill("--active-tab", 0px);
 
 		border-radius: var(
-			--tab-indicator-radius,
+			--kit-tab-indicator-radius,
 			var(--sys-radius-full)
 		);
 		background: var(
-			--tab-indicator,
+			--kit-tab-indicator,
 			var(--sys-color-primary)
 		);
 	}
@@ -51,11 +51,11 @@
 	.indicatorLabels {
 		@include indicator.ink-copy("--active-tab");
 
-		gap: var(--tab-gap, var(--sys-unit-2));
+		gap: var(--kit-tab-gap, var(--sys-unit-2));
 
 		.tab {
 			color: var(
-				--tab-active-fg,
+				--kit-tab-active-fg,
 				var(--sys-color-on-primary)
 			);
 		}
@@ -63,7 +63,7 @@
 
 	.panel {
 		border-radius: var(
-			--tabs-panel-radius,
+			--kit-tabs-panel-radius,
 			var(--sys-radius-sm)
 		);
 
