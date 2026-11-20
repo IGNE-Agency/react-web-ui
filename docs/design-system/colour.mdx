@@ -55,13 +55,9 @@ The brand colour is the accent. A status colour is a status colour and nothing e
 <DoDont>
 	<Example
 		kind="do"
-		caption="An avatar fallback or mention pill is brand-tinted."
+		caption="A mention pill is brand-tinted."
 		visual={
 			<div className={styles.row}>
-				<span
-					className={`${styles.avatar} ${styles.brand}`}>
-					AV
-				</span>
 				<span className={`${styles.pill} ${styles.brand}`}>
 					@Anna de Vries
 				</span>
@@ -73,9 +69,6 @@ The brand colour is the accent. A status colour is a status colour and nothing e
 		caption="Blue here means nothing; it is not an info message."
 		visual={
 			<div className={styles.row}>
-				<span className={`${styles.avatar} ${styles.info}`}>
-					AV
-				</span>
 				<span className={`${styles.pill} ${styles.info}`}>
 					@Anna de Vries
 				</span>
@@ -84,12 +77,12 @@ The brand colour is the accent. A status colour is a status colour and nothing e
 	/>
 </DoDont>
 
-A person's colour is the one exception, because telling people apart takes more than one hue. It is an identity tone: the brand container's lightness and chroma, turned to a hue of its own that is no status colour. It tells one person from the next and means nothing else. It is cut from the container rather than from a ramp of its own, so it stays as soft as the brand tint and follows every theme with it.
+A person takes no hue from the kit. Every avatar wears the identity role, a grey, and the initials tell people apart. Whether colour should tell them apart too, and which colours, is a decision about the app's people, so it is the app's to make: it re-points the identity role, or sets each avatar's knobs. Whatever it picks is never a status colour, which would say something about the person that isn't true.
 
 <DoDont>
 	<Example
 		kind="do"
-		caption="Each person keeps a tone of their own, as soft as the brand tint."
+		caption="The initials tell people apart on the one identity grey."
 		visual={
 			<div className={styles.row}>
 				<Avatar name="Sem de Jong" />
@@ -880,17 +873,17 @@ Status colours belong on status tags, badges and toasts. Hover, focus, selection
 
 </Details>
 
-<Details title="A person's colour is an identity tone, never a status colour">
+<Details title="A person's colour is the identity role, never a status colour">
 
-Each person gets one of the identity tones: the brand container's lightness and chroma, turned to a hue no status uses. Explained in [A palette with meaning](#a-palette-with-meaning).
+Every avatar wears the identity role, grey unless the app sets it. Explained in [A palette with meaning](#a-palette-with-meaning).
 
 <DoDont>
-<Example kind="do" caption="Each person keeps a tone of their own, as soft as the brand tint.">
+<Example kind="do" caption="The avatar wears the identity role, which the app decides.">
 
 ```scss
-.avatar[data-tone="1"] {
-	background-color: var(--sys-color-identity-1-bg);
-	color: var(--sys-color-identity-1-fg);
+.avatar {
+	background-color: var(--sys-color-identity-bg);
+	color: var(--sys-color-identity-fg);
 }
 ```
 
@@ -898,7 +891,7 @@ Each person gets one of the identity tones: the brand container's lightness and 
 <Example kind="dont" caption="Green and orange say done and needs attention, which says nothing about a person.">
 
 ```scss
-.avatar[data-tone="1"] {
+.avatar {
 	background-color: var(--sys-color-success-bg);
 	color: var(--sys-color-success-fg);
 }
@@ -1523,18 +1516,16 @@ html[data-theme="dark"] .card {
 
 </Details>
 
-<Details title="The dark theme is two conditions, kept behind one mixin">
+<Details title="The dark theme is two conditions, and only the token build spells them out">
 
-The page's theme is two conditions, not one. A stored mode pins it, and auto follows the operating system — so a dark page is either the attribute on `<html>` or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the mode is mounted. The token build writes the dark roles on any `[data-theme="dark"]` element and on the auto-dark `<html>`, so a component that reads roles needs no condition at all. The mixin stays page-level, for a value that follows the page rather than a section, like the scrim behind a dialog or drawer that dims the whole viewport: because the condition is a pair of selectors, it lives behind `theme.dark` so no file spells out half of it.
+The page's theme is two conditions, not one. A stored mode pins it, and auto follows the operating system — so a dark page is either the attribute on `<html>` or a `prefers-color-scheme` match with no attribute contradicting it. Following the OS is the media query's job, never a script's: a resolved-once attribute freezes on whatever page the user happened to load, and only re-resolves where a component that reads the mode is mounted. The token build writes the dark roles on any `[data-theme="dark"]` element and on the auto-dark `<html>`, so a component that reads roles needs no condition at all, and none holds one.
 
 <DoDont>
-<Example kind="do" caption="The mixin carries both halves of the dark condition.">
+<Example kind="do" caption="The role carries both halves of the dark condition.">
 
 ```scss
 .backdrop {
-	@include theme.dark {
-		--_kit-overlay-dim: 0.6;
-	}
+	background-color: var(--sys-color-scrim);
 }
 ```
 
@@ -1543,7 +1534,7 @@ The page's theme is two conditions, not one. A stored mode pins it, and auto fol
 
 ```scss
 html[data-theme="dark"] .backdrop {
-	--_kit-overlay-dim: 0.6;
+	background-color: rgb(0 0 0 / 0.6);
 }
 ```
 
@@ -1670,31 +1661,30 @@ html {
 
 </Details>
 
-<Details title="Scrim opacity is the one theme selector a component may hold">
+<Details title="The scrim is a role, so no component holds a theme selector">
 
-<Beside>
+How far the page darkens behind a modal is the theme's to decide, like any other colour, so the theme sets it: `scrim` behind a dialog, and the lighter `scrim-low` behind a drawer. A value that differs per theme is a role, never a selector in a component file.
 
-The one legitimate use of a theme selector inside a component file is a value that is not a role and differs per theme, such as scrim opacity:
-
-<Example kind="do" caption="Scrim opacity is not a role, so the component states its dark value itself.">
+<DoDont>
+<Example kind="do" caption="The theme decides the scrim in both themes.">
 
 ```scss
 .backdrop {
-	--_kit-overlay-dim: 0.4;
-
-	background-color: rgb(
-		0 0 0 / var(--kit-overlay-dim, var(--_kit-overlay-dim))
-	);
-
-	@include theme.dark {
-		--_kit-overlay-dim: 0.6;
-	}
+	background-color: var(--sys-color-scrim);
 }
 ```
 
 </Example>
+<Example kind="dont" caption="A scrim the component picks itself is the same in every theme, and no theme can change it.">
 
-</Beside>
+```scss
+.backdrop {
+	background-color: rgb(0 0 0 / 0.4);
+}
+```
+
+</Example>
+</DoDont>
 
 </Details>
 

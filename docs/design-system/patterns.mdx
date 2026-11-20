@@ -2040,7 +2040,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_kit-overlay-dim: 0.22;
+	--_kit-overlay-scrim: var(--sys-color-scrim-low);
 	backdrop-filter: blur(1px);
 }
 ```
@@ -2050,7 +2050,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_kit-overlay-dim: 0.7;
+	--_kit-overlay-scrim: var(--sys-color-scrim);
 	backdrop-filter: blur(8px);
 }
 
@@ -2075,7 +2075,7 @@ An overlay includes `overlay.backdrop` and re-points the tier rather than restat
 .backdrop {
 	@include overlay.backdrop;
 
-	--_kit-overlay-dim: 0.22;
+	--_kit-overlay-scrim: var(--sys-color-scrim-low);
 }
 ```
 

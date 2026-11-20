@@ -6,8 +6,6 @@ import type {
 } from "react";
 import style from "./avatar.module.scss";
 
-const TONE_COUNT = 5;
-
 const INITIALS_RATIO = 0.4;
 
 const initialsOf = (name: string): string => {
@@ -22,35 +20,24 @@ const initialsOf = (name: string): string => {
 	return (first.charAt(0) + last.charAt(0)).toUpperCase();
 };
 
-const toneOf = (name: string): number => {
-	let hash = 0;
-	for (let i = 0; i < name.length; i++) {
-		hash = (hash + name.charCodeAt(i)) % TONE_COUNT;
-	}
-	return hash;
-};
-
 export type AvatarRootProps =
 	ComponentPropsWithRef<"span"> &
 		Readonly<{
-			/** Display name; drives the (stable) tone. */
-			name: string;
 			/** Diameter relative to the surrounding font size (in `em`). @default 2.5 */
 			size?: number;
 		}>;
 
 /**
- * The circle, in a colour that stays the same for the same `name`. Decorative:
- * the name it stands for is always beside it, so it is not announced.
+ * The circle, in the identity colour. Decorative: the name it stands for is
+ * always beside it, so it is not announced.
  *
  * @example
- * <Avatar.Root name="Ada Lovelace">
+ * <Avatar.Root>
  * 	<Avatar.Image src={colleague.portraitUrl} />
  * 	<Avatar.Fallback>AL</Avatar.Fallback>
  * </Avatar.Root>
  */
 const Root = ({
-	name,
 	size = 2.5,
 	className,
 	style: inlineStyle,
@@ -65,7 +52,6 @@ const Root = ({
 			blockSize: `${1 / INITIALS_RATIO}em`,
 			...inlineStyle,
 		}}
-		data-tone={toneOf(name)}
 		aria-hidden="true"
 	/>
 );
@@ -122,7 +108,7 @@ export type AvatarProps = Omit<
 	"children"
 > &
 	Readonly<{
-		/** Display name; drives the initials and the (stable) tone. */
+		/** Display name; drives the initials. */
 		name: string;
 		/** Portrait to show in place of the initials, where there is one. */
 		src?: string;
@@ -133,7 +119,7 @@ const Prefab = ({
 	src,
 	...props
 }: AvatarProps): ReactNode => (
-	<Root {...props} name={name}>
+	<Root {...props}>
 		{src === undefined ? null : <Image src={src} />}
 		<Fallback>{initialsOf(name)}</Fallback>
 	</Root>
@@ -148,8 +134,8 @@ export type AvatarParts = typeof Prefab &
 	}>;
 
 /**
- * A small circular avatar: the portrait at `src`, falling back to initials over
- * a colour that stays the same for the same name. Decorative: the name it
+ * A small circular avatar: the portrait at `src`, falling back to the name's
+ * initials over the identity colour. Decorative: the name it
  * stands for is always beside it, so it is not announced. Other props go to
  * the `<span>`. The parts hanging off it compose one by hand.
  *

@@ -12,9 +12,9 @@ import * as AvatarStories from "./avatar.stories.tsx";
 
 An avatar is a picture of someone whose name is already on the screen next to it, so it is hidden from assistive technology rather than read out twice. Where there is no room for the name, the name goes in a tooltip or a list, as `AvatarGroup` does, and the avatar still says nothing.
 
-### A person keeps one colour, and it is never a status colour
+### A person's colour is the identity role, never a status colour
 
-Without a portrait, an avatar shows the initials over a colour worked out from the name, so the same person has the same colour on every screen. The colours are the identity tones and the brand tint, never green, amber or red, which would read as a status.
+Without a portrait, an avatar shows the initials over the [identity role](?path=/docs/design-system-foundation-colour--docs#a-persons-colour-is-the-identity-role-never-a-status-colour), a grey unless the app sets it. An app that tells people apart by colour sets `--kit-avatar-bg` and `--kit-avatar-fg` per person, and never to green, amber or red, which would read as a status.
 
 ### A portrait that fails falls back to the initials
 
@@ -22,10 +22,10 @@ While a portrait loads, and when it fails, the initials show in its place, so an
 
 ### The prefab is the parts, composed
 
-`Avatar` takes a `name` and a `src` and composes the parts hanging off it: `Root` is the circle in the name's colour, `Image` the portrait, and `Fallback` what shows in its place, the initials. Compose the parts by hand where the fallback needs other content.
+`Avatar` takes a `name` and a `src` and composes the parts hanging off it: `Root` is the circle, `Image` the portrait, and `Fallback` what shows in its place, the initials. Compose the parts by hand where the fallback needs other content.
 
 ```tsx
-<Avatar.Root name="Ada Lovelace">
+<Avatar.Root>
 	<Avatar.Image src={colleague.portraitUrl} />
 	<Avatar.Fallback>AL</Avatar.Fallback>
 </Avatar.Root>
