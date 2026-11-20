@@ -158,19 +158,19 @@
 }
 
 .wellCard {
-	--field-border: var(--sys-color-border);
+	--kit-field-border: var(--sys-color-border);
 
 	background: var(--sys-color-surface);
 }
 
 .wellRecess {
-	--field-border: var(--sys-color-surface-highest);
+	--kit-field-border: var(--sys-color-surface-highest);
 
 	background: var(--sys-color-surface-highest);
 }
 
 .field {
-	border: 1px solid var(--field-border);
+	border: 1px solid var(--kit-field-border);
 	border-radius: var(--sys-radius-sm);
 	padding: var(--sys-unit-6) var(--sys-unit-8);
 	inline-size: 12rem;
@@ -281,19 +281,19 @@
 }
 
 .sheetHeading {
-	border-block-end: 1px solid var(--divider);
+	border-block-end: 1px solid var(--kit-divider);
 	padding-block-end: var(--sys-unit-6);
 	font: var(--sys-font-label-medium);
 }
 
 .linesRight {
 	--grab-bar: var(--sys-color-outline);
-	--divider: var(--sys-color-border);
+	--kit-divider: var(--sys-color-border);
 }
 
 .linesWrong {
 	--grab-bar: var(--sys-color-border);
-	--divider: var(--sys-color-text-muted);
+	--kit-divider: var(--sys-color-text-muted);
 }
 
 .stack {
@@ -546,7 +546,7 @@
 
 .fieldSample {
 	border: 1px solid
-		var(--field-border, var(--sys-color-border));
+		var(--kit-field-border, var(--sys-color-border));
 	border-radius: var(--sys-radius-sm);
 	padding: var(--sys-unit-6) var(--sys-unit-8);
 	inline-size: 10rem;
@@ -555,7 +555,7 @@
 }
 
 .borderHairline {
-	--field-border: var(--ref-neutral-650);
+	--kit-field-border: var(--ref-neutral-650);
 }
 
 .scroller {

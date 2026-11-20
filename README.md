@@ -41,9 +41,9 @@ import "@igne-agency/react-web-ui/tokens.css";
 
 `base.css` resets the user agent's styles and sets the body's font and colour, `::selection`, links and their focus ring. It also sets `isolation: isolate` on `#root` and `position: relative` on `body`, which base-ui's popups need. It loads no fonts; the app loads its own.
 
-`tokens.css` is the kit's default theme: the `--ref-*` ramps and the `--sys-*` roles, light on `:root` and dark on `html[data-theme="dark"]`, and under `prefers-color-scheme: dark` unless `data-theme="light"`.
+`tokens.css` is the kit's default theme: the `--ref-*` ramps and the `--sys-*` roles, light on `:root` and on any element with `data-theme="light"`, dark on any element with `data-theme="dark"`, and dark on `<html>` under `prefers-color-scheme: dark` unless it has `data-theme="light"`.
 
-All kit CSS sits in the cascade layers `kit.reset`, `kit.base` and `kit.components`, so any unlayered CSS in the app wins without a specificity fight. Each component reads its own custom properties ("knobs"), defaulting to a `--sys-*` role, so a stylesheet can retheme one component by setting its knobs.
+All kit CSS sits in the cascade layers `kit.reset`, `kit.base` and `kit.components`, so any unlayered CSS in the app wins without a specificity fight. Each component reads its own custom properties, its knobs, named `--kit-<component>-*` and defaulting to a `--sys-*` role, so a stylesheet can retheme one component by setting them. See [Every custom property names who owns it](docs/design-system/token-architecture.mdx) for the namespaces.
 
 ## Theming
 

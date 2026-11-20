@@ -60,7 +60,7 @@ export const ErrorText = ({
 			(node: HTMLElement | null) => {
 				if (node !== null) {
 					node.style.setProperty(
-						"--error-index",
+						"--_kit-error-text-index",
 						String(
 							cascade?.claim(
 								node,

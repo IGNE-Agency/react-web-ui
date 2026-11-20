@@ -8,7 +8,7 @@
 
 		outline: none;
 		filter: var(
-			--popover-filter,
+			--kit-popover-filter,
 			var(--sys-elevation-1-filter)
 		);
 	}
@@ -20,25 +20,28 @@
 	.popup {
 		box-sizing: border-box;
 		min-inline-size: min(
-			var(--popover-min-inline-size, 22rem),
+			var(--kit-popover-min-inline-size, 22rem),
 			var(--available-width)
 		);
 		max-inline-size: min(
-			var(--popover-max-inline-size, 28rem),
+			var(--kit-popover-max-inline-size, 28rem),
 			var(--available-width)
 		);
 		border: none;
 		border-radius: var(
-			--popover-radius,
+			--kit-popover-radius,
 			var(--sys-radius-lg)
 		);
 		background: var(
-			--popover-surface,
+			--kit-popover-surface,
 			var(--sys-color-surface-overlay)
 		);
-		padding: var(--popover-padding, var(--sys-unit-16));
-		color: var(--popover-fg, var(--sys-color-text));
-		font: var(--popover-font, var(--sys-font-body-medium));
+		padding: var(--kit-popover-padding, var(--sys-unit-16));
+		color: var(--kit-popover-fg, var(--sys-color-text));
+		font: var(
+			--kit-popover-font,
+			var(--sys-font-body-medium)
+		);
 		transform-origin: var(--transform-origin);
 
 		@media not (prefers-reduced-motion) {
@@ -81,22 +84,22 @@
 
 	.arrowFill {
 		fill: var(
-			--popover-surface,
+			--kit-popover-surface,
 			var(--sys-color-surface-overlay)
 		);
 	}
 
 	.title {
 		margin-block-end: var(
-			--popover-title-space,
+			--kit-popover-title-space,
 			var(--sys-unit-8)
 		);
 		color: var(
-			--popover-title-fg,
-			var(--popover-fg, var(--sys-color-text))
+			--kit-popover-title-fg,
+			var(--kit-popover-fg, var(--sys-color-text))
 		);
 		font: var(
-			--popover-title-font,
+			--kit-popover-title-font,
 			var(--sys-font-label-large)
 		);
 	}
@@ -106,12 +109,12 @@
 		display: grid;
 		grid-template-columns: max-content minmax(0, 1fr);
 		align-items: baseline;
-		gap: var(--popover-rows-gap, var(--sys-unit-3));
+		gap: var(--kit-popover-rows-gap, var(--sys-unit-3));
 	}
 
 	.row {
 		padding-block: var(
-			--popover-row-pad-y,
+			--kit-popover-row-pad-y,
 			var(--sys-unit-2)
 		);
 	}
@@ -123,30 +126,30 @@
 	.rows .rowLabel,
 	.rows .rowValue {
 		padding-block: var(
-			--popover-row-pad-y,
+			--kit-popover-row-pad-y,
 			var(--sys-unit-2)
 		);
 	}
 
 	.rowLabel {
 		color: var(
-			--popover-row-label-fg,
+			--kit-popover-row-label-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--popover-row-label-font,
-			var(--popover-font, var(--sys-font-body-medium))
+			--kit-popover-row-label-font,
+			var(--kit-popover-font, var(--sys-font-body-medium))
 		);
 	}
 
 	.rowValue {
 		color: var(
-			--popover-row-value-fg,
-			var(--popover-fg, var(--sys-color-text))
+			--kit-popover-row-value-fg,
+			var(--kit-popover-fg, var(--sys-color-text))
 		);
 		font: var(
-			--popover-row-value-font,
-			var(--popover-font, var(--sys-font-body-medium))
+			--kit-popover-row-value-font,
+			var(--kit-popover-font, var(--sys-font-body-medium))
 		);
 	}
 

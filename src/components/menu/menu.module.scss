@@ -7,7 +7,7 @@
 
 		outline: none;
 		filter: var(
-			--menu-filter,
+			--kit-menu-filter,
 			var(--sys-elevation-1-filter)
 		);
 	}
@@ -15,7 +15,7 @@
 	.popup {
 		@include popup.surface($shadow: false);
 
-		min-inline-size: var(--menu-min-inline-size, 12rem);
+		min-inline-size: var(--kit-menu-min-inline-size, 12rem);
 	}
 
 	.arrow {
@@ -42,7 +42,10 @@
 	}
 
 	.arrowFill {
-		fill: var(--popup-bg, var(--sys-color-surface-overlay));
+		fill: var(
+			--kit-popup-bg,
+			var(--sys-color-surface-overlay)
+		);
 	}
 
 	.item {
@@ -54,26 +57,30 @@
 	}
 
 	.separator {
-		block-size: var(--menu-separator-size, 1px);
-		margin: var(--menu-separator-space, var(--sys-unit-2)) 0;
+		block-size: var(--kit-menu-separator-size, 1px);
+		margin: var(
+				--kit-menu-separator-space,
+				var(--sys-unit-2)
+			)
+			0;
 		background: var(
-			--menu-separator-bg,
+			--kit-menu-separator-bg,
 			var(--sys-color-border)
 		);
 	}
 
 	.groupLabel {
 		padding: var(
-				--menu-group-label-pad-y,
+				--kit-menu-group-label-pad-y,
 				var(--sys-unit-4)
 			)
-			var(--menu-group-label-pad-x, var(--sys-unit-6));
+			var(--kit-menu-group-label-pad-x, var(--sys-unit-6));
 		color: var(
-			--menu-group-label-fg,
+			--kit-menu-group-label-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--menu-group-label-font,
+			--kit-menu-group-label-font,
 			var(--sys-font-label-small)
 		);
 	}

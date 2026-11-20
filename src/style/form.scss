@@ -2,18 +2,18 @@
 
 // See `docs/design-system/components.mdx`.
 
-$field-border: var(--field-border-width, 1px);
-$field-padding: var(--field-pad-y, var(--sys-unit-6));
+$field-border: var(--kit-field-border-width, 1px);
+$field-padding: var(--kit-field-pad-y, var(--sys-unit-6));
 $field-pad-start: var(
-	--field-pad-start,
-	var(--field-pad-x, var(--sys-unit-6))
+	--kit-field-pad-start,
+	var(--kit-field-pad-x, var(--sys-unit-6))
 );
 $field-pad-end: var(
-	--field-pad-end,
-	var(--field-pad-x, var(--sys-unit-6))
+	--kit-field-pad-end,
+	var(--kit-field-pad-x, var(--sys-unit-6))
 );
 $field-block-size: var(
-	--field-min-block-size,
+	--kit-field-min-block-size,
 	calc(1lh + 2 * #{$field-padding} + 2 * #{$field-border})
 );
 $field-touch-target: var(--sys-unit-22);
@@ -27,9 +27,9 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.label;
 ///   }
 @mixin label {
-	color: var(--field-label-fg, var(--sys-color-text));
+	color: var(--kit-field-label-fg, var(--sys-color-text));
 	font: var(
-		--field-label-font,
+		--kit-field-label-font,
 		var(--sys-font-label-medium)
 	);
 	cursor: default;
@@ -43,21 +43,27 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.disabled;
 ///   }
 @mixin disabled {
-	--_field-fg: var(
-		--field-disabled-fg,
+	--_kit-field-fg: var(
+		--kit-field-disabled-fg,
 		var(--sys-color-disabled-fg)
 	);
-	--_field-muted-fg: var(
-		--field-disabled-muted-fg,
-		var(--field-disabled-fg, var(--sys-color-disabled-fg))
+	--_kit-field-muted-fg: var(
+		--kit-field-disabled-muted-fg,
+		var(
+			--kit-field-disabled-fg,
+			var(--sys-color-disabled-fg)
+		)
 	);
-	--_field-placeholder-fg: var(
-		--field-disabled-placeholder-fg,
-		var(--field-disabled-fg, var(--sys-color-disabled-fg))
+	--_kit-field-placeholder-fg: var(
+		--kit-field-disabled-placeholder-fg,
+		var(
+			--kit-field-disabled-fg,
+			var(--sys-color-disabled-fg)
+		)
 	);
 
 	color: var(
-		--field-disabled-fg,
+		--kit-field-disabled-fg,
 		var(--sys-color-disabled-fg)
 	);
 	cursor: not-allowed;
@@ -74,35 +80,38 @@ $field-touch-target: var(--sys-unit-22);
 @mixin optional-suffix {
 	vertical-align: middle;
 	color: var(
-		--field-optional-fg,
+		--kit-field-optional-fg,
 		var(--sys-color-text-muted)
 	);
 	font: var(
-		--field-optional-font,
+		--kit-field-optional-font,
 		var(--sys-font-body-small)
 	);
-	font-size: var(--field-optional-font-size, 0.75rem);
+	font-size: var(--kit-field-optional-font-size, 0.75rem);
 }
 
 /// The ink a field's parts read: the control's own text, the muted ink its
 /// affixes, separators, chevrons and inlays take, and its placeholder's. States
-/// re-point these, so a part reads `--_field-*` and an app sets `--field-*`.
+/// re-point these, so a part reads `--_kit-field-*` and an app sets `--kit-field-*`.
 ///
 /// @example
 ///   .separator {
-///       color: var(--_field-muted-fg);
+///       color: var(--_kit-field-muted-fg);
 ///   }
 @mixin ink {
-	--_field-fg: var(--field-fg, var(--sys-color-text));
-	--_field-muted-fg: var(
-		--field-muted-fg,
+	--_kit-field-fg: var(
+		--kit-field-fg,
+		var(--sys-color-text)
+	);
+	--_kit-field-muted-fg: var(
+		--kit-field-muted-fg,
 		var(--sys-color-text-muted)
 	);
-	--_field-placeholder-fg: var(
-		--field-placeholder-fg,
+	--_kit-field-placeholder-fg: var(
+		--kit-field-placeholder-fg,
 		var(--sys-color-text-placeholder)
 	);
-	--_field-caret: var(--field-caret, auto);
+	--_kit-field-caret: var(--kit-field-caret, auto);
 }
 
 /// The invalid treatment for any form control.
@@ -112,29 +121,29 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.invalid;
 ///   }
 @mixin invalid {
-	--_field-fg: var(
-		--field-invalid-fg,
+	--_kit-field-fg: var(
+		--kit-field-invalid-fg,
 		var(--sys-color-error-fg)
 	);
-	--_field-muted-fg: var(
-		--field-invalid-muted-fg,
-		var(--field-invalid-fg, var(--sys-color-error-fg))
+	--_kit-field-muted-fg: var(
+		--kit-field-invalid-muted-fg,
+		var(--kit-field-invalid-fg, var(--sys-color-error-fg))
 	);
-	--_field-placeholder-fg: var(
-		--field-invalid-placeholder-fg,
-		var(--field-invalid-fg, var(--sys-color-error-fg))
+	--_kit-field-placeholder-fg: var(
+		--kit-field-invalid-placeholder-fg,
+		var(--kit-field-invalid-fg, var(--sys-color-error-fg))
 	);
-	--_field-fill: var(
-		--field-invalid-bg,
+	--_kit-field-fill: var(
+		--kit-field-invalid-bg,
 		var(--sys-color-error-bg)
 	);
 
 	border-color: var(
-		--field-invalid-border,
+		--kit-field-invalid-border,
 		var(--sys-color-error-fg)
 	);
-	background-color: var(--_field-fill);
-	color: var(--_field-fg);
+	background-color: var(--_kit-field-fill);
+	color: var(--_kit-field-fg);
 }
 
 /// Suppresses the user agent's own affordances inside a text entry, so the only
@@ -172,8 +181,11 @@ $field-touch-target: var(--sys-unit-22);
 		&#{$state} {
 			-webkit-background-clip: text;
 			background-clip: text;
-			-webkit-text-fill-color: var(--_field-fg);
-			caret-color: var(--_field-caret, var(--_field-fg));
+			-webkit-text-fill-color: var(--_kit-field-fg);
+			caret-color: var(
+				--_kit-field-caret,
+				var(--_kit-field-fg)
+			);
 			filter: none;
 		}
 	}
@@ -189,8 +201,8 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.autofilled;
 ///   }
 @mixin autofilled {
-	--_field-fill: var(
-		--field-autofill-bg,
+	--_kit-field-fill: var(
+		--kit-field-autofill-bg,
 		var(--sys-color-autofill-bg)
 	);
 }
@@ -204,8 +216,8 @@ $field-touch-target: var(--sys-unit-22);
 	@include ink;
 
 	& {
-		--_field-fill: var(
-			--field-bg,
+		--_kit-field-fill: var(
+			--kit-field-bg,
 			var(--sys-color-surface)
 		);
 
@@ -213,22 +225,25 @@ $field-touch-target: var(--sys-unit-22);
 		box-sizing: border-box;
 		min-block-size: $field-block-size;
 		border: $field-border solid
-			var(--field-border, var(--sys-color-border));
+			var(--kit-field-border, var(--sys-color-border));
 		border-radius: var(
-			--field-radius,
+			--kit-field-radius,
 			var(--sys-radius-sm)
 		);
-		background: var(--_field-fill);
+		background: var(--_kit-field-fill);
 		padding-block: $field-padding;
 		padding-inline: $field-pad-start $field-pad-end;
-		box-shadow: var(--field-shadow, none);
-		color: var(--_field-fg);
-		font: var(--field-font, var(--sys-font-body-medium));
-		caret-color: var(--_field-caret);
-		backdrop-filter: var(--field-backdrop-filter, none);
+		box-shadow: var(--kit-field-shadow, none);
+		color: var(--_kit-field-fg);
+		font: var(
+			--kit-field-font,
+			var(--sys-font-body-medium)
+		);
+		caret-color: var(--_kit-field-caret);
+		backdrop-filter: var(--kit-field-backdrop-filter, none);
 	}
 
-	@include focus.ring-projected("field");
+	@include focus.ring-projected("kit-field");
 
 	@media not (prefers-reduced-motion) {
 		transition:
@@ -247,7 +262,7 @@ $field-touch-target: var(--sys-unit-22);
 			[data-popup-open]
 		) {
 		border-color: var(
-			--field-hover-border,
+			--kit-field-hover-border,
 			var(--sys-color-primary)
 		);
 	}
@@ -255,16 +270,16 @@ $field-touch-target: var(--sys-unit-22);
 	&[data-focused],
 	&[data-popup-open] {
 		border-width: var(
-			--field-focus-border-width,
+			--kit-field-focus-border-width,
 			#{$field-border}
 		);
 		border-color: var(
-			--field-focus-border,
+			--kit-field-focus-border,
 			var(--sys-color-primary)
 		);
 		box-shadow: var(
-			--field-focus-shadow,
-			var(--field-shadow, none)
+			--kit-field-focus-shadow,
+			var(--kit-field-shadow, none)
 		);
 	}
 
@@ -280,20 +295,20 @@ $field-touch-target: var(--sys-unit-22);
 		@include invalid;
 
 		border-width: var(
-			--field-invalid-border-width,
+			--kit-field-invalid-border-width,
 			#{$field-border}
 		);
 		box-shadow: var(
-			--field-invalid-shadow,
-			var(--field-shadow, none)
+			--kit-field-invalid-shadow,
+			var(--kit-field-shadow, none)
 		);
 	}
 
 	&[data-disabled] {
 		@include disabled;
 
-		--_field-fill: var(
-			--field-disabled-bg,
+		--_kit-field-fill: var(
+			--kit-field-disabled-bg,
 			var(--sys-color-disabled-bg)
 		);
 	}
@@ -320,7 +335,7 @@ $field-touch-target: var(--sys-unit-22);
 	}
 
 	&::placeholder {
-		color: var(--_field-placeholder-fg);
+		color: var(--_kit-field-placeholder-fg);
 	}
 
 	@include autofill-cover;
@@ -329,7 +344,7 @@ $field-touch-target: var(--sys-unit-22);
 		&#{$state} {
 			@include autofilled;
 
-			box-shadow: inset 0 0 0 100vmax var(--_field-fill);
+			box-shadow: inset 0 0 0 100vmax var(--_kit-field-fill);
 		}
 	}
 }
@@ -359,7 +374,7 @@ $field-touch-target: var(--sys-unit-22);
 	}
 
 	&::placeholder {
-		color: var(--_field-placeholder-fg);
+		color: var(--_kit-field-placeholder-fg);
 	}
 }
 
@@ -373,22 +388,25 @@ $field-touch-target: var(--sys-unit-22);
 ///       @include form.readonly;
 ///   }
 @mixin readonly {
-	--_field-fg: var(
-		--field-readonly-fg,
+	--_kit-field-fg: var(
+		--kit-field-readonly-fg,
 		var(--sys-color-text)
 	);
-	--_field-fill: var(
-		--field-readonly-bg,
+	--_kit-field-fill: var(
+		--kit-field-readonly-bg,
 		var(--sys-color-surface-high)
 	);
 
-	border-style: var(--field-readonly-border-style, dashed);
+	border-style: var(
+		--kit-field-readonly-border-style,
+		dashed
+	);
 	border-color: var(
-		--field-readonly-border,
+		--kit-field-readonly-border,
 		var(--sys-color-outline)
 	);
-	background: var(--_field-fill);
-	color: var(--_field-fg);
+	background: var(--_kit-field-fill);
+	color: var(--_kit-field-fg);
 }
 
 /// The pending treatment for a control waiting on background work.
@@ -400,7 +418,7 @@ $field-touch-target: var(--sys-unit-22);
 @mixin pending {
 	cursor: progress;
 	caret-color: var(
-		--field-pending-caret,
+		--kit-field-pending-caret,
 		var(--sys-color-text-muted)
 	);
 }
@@ -426,7 +444,7 @@ $field-touch-target: var(--sys-unit-22);
 	& {
 		position: relative;
 		display: flex;
-		gap: var(--field-inlay-gap, var(--sys-unit-4));
+		gap: var(--kit-field-inlay-gap, var(--sys-unit-4));
 	}
 }
 
@@ -459,10 +477,16 @@ $field-touch-target: var(--sys-unit-22);
 	display: inline-flex;
 	flex: none;
 	align-items: center;
-	gap: var(--field-inlay-content-gap, var(--sys-unit-2));
-	color: var(--field-inlay-fg, var(--_field-muted-fg));
+	gap: var(
+		--kit-field-inlay-content-gap,
+		var(--sys-unit-2)
+	);
+	color: var(
+		--kit-field-inlay-fg,
+		var(--_kit-field-muted-fg)
+	);
 	font: var(
-		--field-inlay-font,
+		--kit-field-inlay-font,
 		var(--sys-font-body-medium)
 	);
 	cursor: default;

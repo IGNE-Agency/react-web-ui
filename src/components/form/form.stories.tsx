@@ -535,7 +535,7 @@ export const SubmitWithErrors: Story = {
 };
 
 const errorIndex = (element: HTMLElement) =>
-	element.style.getPropertyValue("--error-index");
+	element.style.getPropertyValue("--_kit-error-text-index");
 
 export const ErrorsCascade: Story = {
 	tags: ["!dev", "!autodocs"],

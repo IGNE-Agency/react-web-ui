@@ -43,7 +43,7 @@
 
 	.rangeSeparator {
 		flex: none;
-		color: var(--_field-muted-fg);
+		color: var(--_kit-field-muted-fg);
 	}
 
 	.rangeSpacer {
@@ -53,31 +53,31 @@
 
 	.segment {
 		border-radius: var(
-			--temporal-segment-radius,
+			--kit-temporal-segment-radius,
 			var(--sys-radius-xs)
 		);
-		padding-inline: var(--temporal-segment-pad-x, 1px);
+		padding-inline: var(--kit-temporal-segment-pad-x, 1px);
 		font-variant-numeric: tabular-nums;
 
 		&[data-placeholder] {
-			color: var(--_field-placeholder-fg);
+			color: var(--_kit-field-placeholder-fg);
 		}
 
 		&[data-type="literal"] {
 			padding-inline: var(
-				--temporal-segment-literal-pad-x,
+				--kit-temporal-segment-literal-pad-x,
 				0
 			);
-			color: var(--_field-muted-fg);
+			color: var(--_kit-field-muted-fg);
 		}
 
 		&[data-focused] {
 			background: var(
-				--temporal-segment-focused-bg,
+				--kit-temporal-segment-focused-bg,
 				var(--sys-color-primary-container)
 			);
 			color: var(
-				--temporal-segment-focused-fg,
+				--kit-temporal-segment-focused-fg,
 				var(--sys-color-on-primary-container)
 			);
 		}
@@ -108,13 +108,13 @@
 	.calendar {
 		display: flex;
 		flex-direction: column;
-		gap: var(--calendar-gap, var(--sys-unit-4));
+		gap: var(--kit-calendar-gap, var(--sys-unit-4));
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
-		gap: var(--calendar-header-gap, var(--sys-unit-2));
+		gap: var(--kit-calendar-header-gap, var(--sys-unit-2));
 	}
 
 	.navigation {
@@ -124,7 +124,7 @@
 		flex: 1;
 		align-items: center;
 		justify-content: center;
-		gap: var(--calendar-nav-gap, var(--sys-unit-2));
+		gap: var(--kit-calendar-nav-gap, var(--sys-unit-2));
 		min-inline-size: 0;
 	}
 
@@ -142,28 +142,31 @@
 	.navControl {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--calendar-nav-trigger-gap, var(--sys-unit-2));
+		gap: var(
+			--kit-calendar-nav-trigger-gap,
+			var(--sys-unit-2)
+		);
 		box-sizing: border-box;
 		min-block-size: var(
-			--calendar-nav-trigger-min-block-size,
+			--kit-calendar-nav-trigger-min-block-size,
 			var(--sys-unit-22)
 		);
 		border: none;
 		border-radius: var(
-			--calendar-nav-trigger-radius,
+			--kit-calendar-nav-trigger-radius,
 			var(--sys-radius-sm)
 		);
 		background: none;
 		padding-inline: var(
-			--calendar-nav-trigger-pad-x,
+			--kit-calendar-nav-trigger-pad-x,
 			var(--sys-unit-4)
 		);
 		color: var(
-			--calendar-nav-trigger-fg,
+			--kit-calendar-nav-trigger-fg,
 			var(--sys-color-text)
 		);
 		font: var(
-			--calendar-nav-trigger-font,
+			--kit-calendar-nav-trigger-font,
 			var(--sys-font-label-large)
 		);
 		cursor: pointer;
@@ -227,7 +230,7 @@
 		align-items: center;
 		align-self: stretch;
 		color: var(
-			--calendar-nav-trigger-icon-fg,
+			--kit-calendar-nav-trigger-icon-fg,
 			var(--sys-color-text-muted)
 		);
 		cursor: pointer;
@@ -237,7 +240,7 @@
 		display: inline-flex;
 		flex-shrink: 0;
 		color: var(
-			--calendar-nav-trigger-icon-fg,
+			--kit-calendar-nav-trigger-icon-fg,
 			var(--sys-color-text-muted)
 		);
 	}
@@ -264,7 +267,7 @@
 		max-inline-size: var(--available-width);
 		max-block-size: min(
 			var(--available-height, 22rem),
-			var(--calendar-year-popup-max-block-size, 22rem)
+			var(--kit-calendar-year-popup-max-block-size, 22rem)
 		);
 	}
 
@@ -294,7 +297,7 @@
 		justify-content: center;
 		inline-size: 1lh;
 		color: var(
-			--calendar-nav-indicator-fg,
+			--kit-calendar-nav-indicator-fg,
 			var(--sys-color-primary)
 		);
 	}
@@ -308,19 +311,21 @@
 		display: grid;
 		grid-auto-flow: column;
 		grid-auto-columns: 1fr;
-		gap: var(--calendar-months-gap, var(--sys-unit-8));
+		gap: var(--kit-calendar-months-gap, var(--sys-unit-8));
 		align-items: start;
 	}
 
 	.grid {
-		--_calendar-cell-size: var(
-			--calendar-cell-size,
+		--_kit-calendar-cell-size: var(
+			--kit-calendar-cell-size,
 			var(--sys-unit-20)
 		);
 
 		border-collapse: collapse;
 		table-layout: fixed;
-		min-inline-size: calc(7 * var(--_calendar-cell-size));
+		min-inline-size: calc(
+			7 * var(--_kit-calendar-cell-size)
+		);
 
 		td,
 		th {
@@ -330,19 +335,19 @@
 
 	.weekday {
 		padding-block: var(
-			--calendar-weekday-pad-y,
+			--kit-calendar-weekday-pad-y,
 			var(--sys-unit-2)
 		);
 		color: var(
-			--calendar-weekday-fg,
+			--kit-calendar-weekday-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--calendar-weekday-font,
+			--kit-calendar-weekday-font,
 			var(--sys-font-label-small)
 		);
 		font-weight: var(
-			--calendar-weekday-font-weight,
+			--kit-calendar-weekday-font-weight,
 			normal
 		);
 		text-align: center;
@@ -354,15 +359,18 @@
 		justify-content: center;
 		box-sizing: border-box;
 		margin-inline: auto;
-		inline-size: var(--_calendar-cell-size);
-		block-size: var(--_calendar-cell-size);
+		inline-size: var(--_kit-calendar-cell-size);
+		block-size: var(--_kit-calendar-cell-size);
 		border-radius: var(
-			--calendar-day-radius,
+			--kit-calendar-day-radius,
 			var(--sys-radius-circle)
 		);
-		color: var(--calendar-day-fg, var(--sys-color-text));
+		color: var(
+			--kit-calendar-day-fg,
+			var(--sys-color-text)
+		);
 		font: var(
-			--calendar-day-font,
+			--kit-calendar-day-font,
 			var(--sys-font-body-medium)
 		);
 		font-variant-numeric: tabular-nums;
@@ -377,7 +385,7 @@
 
 		&[data-outside-month] {
 			color: var(
-				--calendar-outside-month-fg,
+				--kit-calendar-outside-month-fg,
 				var(--sys-color-text-muted)
 			);
 		}
@@ -387,34 +395,34 @@
 			position: absolute;
 			inset-block-end: var(--sys-unit-1);
 			inline-size: var(
-				--calendar-today-mark-size,
+				--kit-calendar-today-mark-size,
 				var(--sys-unit-3)
 			);
 			block-size: var(
-				--calendar-today-mark-size,
+				--kit-calendar-today-mark-size,
 				var(--sys-unit-3)
 			);
 			border-radius: var(
-				--calendar-today-mark-radius,
+				--kit-calendar-today-mark-radius,
 				var(--sys-radius-circle)
 			);
 			background: var(
-				--calendar-today-mark-bg,
+				--kit-calendar-today-mark-bg,
 				currentcolor
 			);
 		}
 
 		&[data-selected] {
 			background: var(
-				--calendar-selected-bg,
+				--kit-calendar-selected-bg,
 				var(--sys-color-primary)
 			);
 			color: var(
-				--calendar-selected-fg,
+				--kit-calendar-selected-fg,
 				var(--sys-color-on-primary)
 			);
 			font-weight: var(
-				--calendar-selected-font-weight,
+				--kit-calendar-selected-font-weight,
 				700
 			);
 		}
@@ -425,20 +433,23 @@
 				[data-selection-end]
 			) {
 			border-radius: var(
-				--calendar-range-radius,
+				--kit-calendar-range-radius,
 				var(--sys-radius-none)
 			);
 			background: none;
 			color: var(
-				--calendar-range-fg,
+				--kit-calendar-range-fg,
 				var(--sys-color-on-primary-container)
 			);
-			font-weight: var(--calendar-range-font-weight, 600);
+			font-weight: var(
+				--kit-calendar-range-font-weight,
+				600
+			);
 		}
 
 		&[data-unavailable] {
 			color: var(
-				--calendar-unavailable-fg,
+				--kit-calendar-unavailable-fg,
 				var(--sys-color-text-muted)
 			);
 			text-decoration: line-through;
@@ -449,11 +460,11 @@
 
 			&[data-selected] {
 				background: var(
-					--calendar-disabled-selected-bg,
+					--kit-calendar-disabled-selected-bg,
 					var(--sys-color-disabled-fg)
 				);
 				color: var(
-					--calendar-disabled-selected-fg,
+					--kit-calendar-disabled-selected-fg,
 					var(--sys-color-disabled-bg)
 				);
 			}
@@ -467,11 +478,11 @@
 	.rangeCalendar .grid td {
 		background-image: linear-gradient(
 			var(
-				--calendar-range-bg,
+				--kit-calendar-range-bg,
 				var(--sys-color-primary-container)
 			),
 			var(
-				--calendar-range-bg,
+				--kit-calendar-range-bg,
 				var(--sys-color-primary-container)
 			)
 		);

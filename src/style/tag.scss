@@ -4,48 +4,54 @@
 // See `docs/design-system/components.mdx`.
 
 @function -colour($prefix, $property) {
-	@if $prefix == "tag" {
+	@if $prefix == "kit-tag" {
 		@return var(
-			--tag-#{$property},
-			var(--_tag-#{$property})
+			--kit-tag-#{$property},
+			var(--_kit-tag-#{$property})
 		);
 	}
 
 	@return var(
 		--#{$prefix}-#{$property},
-		var(--tag-#{$property}, var(--_#{$prefix}-#{$property}))
+		var(
+			--kit-tag-#{$property},
+			var(--_#{$prefix}-#{$property})
+		)
 	);
 }
 
 /// The tag shell: the tone tokens plus the pill shape and size every tag,
-/// removable or not, shares. Reads the `--tag-*` knobs, and for a `$prefix`
-/// other than `tag` its own `--<$prefix>-{bg,fg,border}` first.
+/// removable or not, shares. Reads the `--kit-tag-*` knobs, and for a `$prefix`
+/// other than `kit-tag` its own `--<$prefix>-{bg,fg,border}` first.
 ///
 /// @example
 ///   @use "../../style/tag.scss" as tag;
 ///
 ///   .root {
-///       @include tag.shell("tag");
+///       @include tag.shell("kit-tag");
 ///   }
 @mixin shell($prefix) {
 	@include tone.variants("_#{$prefix}");
 
 	display: inline-flex;
 	align-items: center;
-	gap: var(--tag-gap, var(--sys-unit-3));
+	gap: var(--kit-tag-gap, var(--sys-unit-3));
 	box-sizing: border-box;
 	min-block-size: var(
-		--tag-min-block-size,
+		--kit-tag-min-block-size,
 		var(--sys-unit-14)
 	);
-	border: var(--tag-border-width, 1px) solid
+	border: var(--kit-tag-border-width, 1px) solid
 		-colour($prefix, "border");
-	border-radius: var(--tag-radius, var(--sys-radius-full));
+	border-radius: var(
+		--kit-tag-radius,
+		var(--sys-radius-full)
+	);
 	background: -colour($prefix, "bg");
-	padding: var(--tag-pad-y, var(--sys-unit-2))
-		var(--tag-pad-x, var(--sys-unit-6));
+	padding: var(--kit-tag-pad-y, var(--sys-unit-2))
+		var(--kit-tag-pad-x, var(--sys-unit-6));
 	color: -colour($prefix, "fg");
-	font: var(--tag-font, var(--sys-font-label-small));
+	font: var(--kit-tag-font, var(--sys-font-label-small));
 
 	@include focus.ring;
 
@@ -68,20 +74,26 @@
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
-	inline-size: var(--tag-remove-size, var(--sys-unit-10));
-	block-size: var(--tag-remove-size, var(--sys-unit-10));
+	inline-size: var(
+		--kit-tag-remove-size,
+		var(--sys-unit-10)
+	);
+	block-size: var(
+		--kit-tag-remove-size,
+		var(--sys-unit-10)
+	);
 	margin-block: calc(-1 * var(--sys-unit-1));
 	margin-inline-start: var(
-		--tag-remove-gap,
+		--kit-tag-remove-gap,
 		var(--sys-unit-1)
 	);
 	margin-inline-end: calc(-1 * var(--sys-unit-2));
 	border: 0;
 	border-radius: var(
-		--tag-remove-radius,
+		--kit-tag-remove-radius,
 		var(--sys-radius-circle)
 	);
-	background: var(--tag-remove-bg, none);
+	background: var(--kit-tag-remove-bg, none);
 	padding: 0;
 	color: inherit;
 
@@ -94,7 +106,7 @@
 
 	&:hover {
 		background: var(
-			--tag-remove-hover-bg,
+			--kit-tag-remove-hover-bg,
 			color-mix(
 				in oklch,
 				currentcolor calc(var(--sys-state-hover) * 100%),
@@ -105,7 +117,7 @@
 
 	&:active {
 		background: var(
-			--tag-remove-pressed-bg,
+			--kit-tag-remove-pressed-bg,
 			color-mix(
 				in oklch,
 				currentcolor calc(var(--sys-state-pressed) * 100%),

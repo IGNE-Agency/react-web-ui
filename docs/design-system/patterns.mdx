@@ -1818,14 +1818,14 @@ The clear affordance, a password reveal, a calendar trigger and a copy-to-clipbo
 
 <Details title="Invalid re-points the field's ink and leaves its buttons alone">
 
-The field's ink, `--_field-fg` and `--_field-muted-fg`, is re-pointed once, on the control or on the group, and every part that is ink reads it bare, with no fallback literal. An app colours the ink through the public knobs those read first, `--field-fg` and `--field-muted-fg`, and through `--field-invalid-fg` for the invalid state. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
+The field's ink, `--_kit-field-fg` and `--_kit-field-muted-fg`, is re-pointed once, on the control or on the group, and every part that is ink reads it bare, with no fallback literal. An app colours the ink through the public knobs those read first, `--kit-field-fg` and `--kit-field-muted-fg`, and through `--kit-field-invalid-fg` for the invalid state. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
 
 <DoDont>
 <Example kind="do" caption="Ink reads the knob, and the action leaves its colour to the button.">
 
 ```scss
 .separator {
-	color: var(--_field-muted-fg);
+	color: var(--_kit-field-muted-fg);
 }
 
 .action {
@@ -1862,10 +1862,10 @@ On submit every problem shows at once, and the first invalid field takes focus a
 
 ```scss
 .chip {
-	@include tone.variants("chip");
+	@include tone.variants("_kit-chip");
 
-	background: var(--chip-bg);
-	color: var(--chip-fg);
+	background: var(--kit-chip-bg, var(--_kit-chip-bg));
+	color: var(--kit-chip-fg, var(--_kit-chip-fg));
 }
 ```
 
@@ -1893,8 +1893,8 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 ```scss
 &[data-variant="solid"] {
-	--chip-bg: var(--sys-color-error-fg);
-	--chip-fg: var(--sys-color-error-bg);
+	--_kit-chip-bg: var(--sys-color-error-fg);
+	--_kit-chip-fg: var(--sys-color-error-bg);
 }
 ```
 
@@ -1903,8 +1903,8 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 ```scss
 &[data-variant="solid"] {
-	--chip-bg: var(--ref-red-600);
-	--chip-fg: var(--ref-neutral-0);
+	--_kit-chip-bg: var(--ref-red-600);
+	--_kit-chip-fg: var(--ref-neutral-0);
 }
 ```
 
@@ -2040,7 +2040,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_overlay-dim: 0.22;
+	--_kit-overlay-dim: 0.22;
 	backdrop-filter: blur(1px);
 }
 ```
@@ -2050,7 +2050,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_overlay-dim: 0.7;
+	--_kit-overlay-dim: 0.7;
 	backdrop-filter: blur(8px);
 }
 
@@ -2075,7 +2075,7 @@ An overlay includes `overlay.backdrop` and re-points the tier rather than restat
 .backdrop {
 	@include overlay.backdrop;
 
-	--_overlay-dim: 0.22;
+	--_kit-overlay-dim: 0.22;
 }
 ```
 

@@ -827,7 +827,7 @@ Table rows and tabs hover to a tint, so they read as picked out rather than dimm
 
 ```scss
 .row:hover {
-	background: var(--table-row-hover);
+	background: var(--kit-table-row-hover);
 }
 ```
 
@@ -1123,7 +1123,7 @@ The trigger sets the line and the text draws it: faded at rest, full strength on
 
 ```scss
 .group {
-	--disclosure-line: color-mix(
+	--kit-disclosure-line: color-mix(
 		in oklab,
 		currentcolor 50%,
 		transparent
@@ -1131,11 +1131,12 @@ The trigger sets the line and the text draws it: faded at rest, full strength on
 
 	&:hover,
 	&[data-popup-open] {
-		--disclosure-line: currentcolor;
+		--kit-disclosure-line: currentcolor;
 	}
 
 	> * {
-		text-decoration: underline dotted var(--disclosure-line);
+		text-decoration: underline dotted
+			var(--kit-disclosure-line);
 	}
 }
 ```

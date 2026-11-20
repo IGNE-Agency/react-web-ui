@@ -16,15 +16,15 @@
 @mixin thin-scrollbar {
 	scrollbar-width: thin;
 	scrollbar-color: var(
-			--popup-scrollbar-fg,
+			--kit-popup-scrollbar-fg,
 			var(--sys-color-outline)
 		)
 		transparent;
 }
 
 /// A trigger that opens a popover: sets the colour of the disclosure line
-/// beneath it, the text's own colour faded (`--disclosure-line`), at full
-/// strength on hover and while the popup is open (`--disclosure-line-hover`).
+/// beneath it, the text's own colour faded (`--kit-disclosure-line`), at full
+/// strength on hover and while the popup is open (`--kit-disclosure-line-hover`).
 /// Pair with `disclosure-line` on whatever holds the text.
 ///
 /// @example
@@ -38,8 +38,8 @@
 ///       }
 ///   }
 @mixin disclosure-trigger {
-	--_disclosure-line: var(
-		--disclosure-line,
+	--_kit-disclosure-line: var(
+		--kit-disclosure-line,
 		color-mix(in oklab, currentcolor 50%, transparent)
 	);
 
@@ -47,8 +47,8 @@
 
 	&:hover,
 	&[data-popup-open] {
-		--_disclosure-line: var(
-			--disclosure-line-hover,
+		--_kit-disclosure-line: var(
+			--kit-disclosure-line-hover,
 			currentcolor
 		);
 	}
@@ -65,15 +65,16 @@
 ///       @include popup.disclosure-line;
 ///   }
 @mixin disclosure-line {
-	text-decoration: underline dotted var(--_disclosure-line);
+	text-decoration: underline dotted
+		var(--_kit-disclosure-line);
 	text-underline-offset: var(
-		--disclosure-line-offset,
+		--kit-disclosure-line-offset,
 		var(--sys-unit-1)
 	);
 }
 
 /// The space a positioned popup keeps from the viewport's edges: the
-/// `--popup-edge-padding` knob, `--sys-unit-16` by default, resolved to pixels
+/// `--kit-popup-edge-padding` knob, `--sys-unit-16` by default, resolved to pixels
 /// on the positioner for `usePopupEdgePadding` (`src/lib/popup-edge-padding.ts`)
 /// to pass as its collision padding.
 ///
@@ -84,13 +85,13 @@
 ///       @include popup.edge-padding;
 ///   }
 @mixin edge-padding {
-	--_popup-edge-padding: var(
-		--popup-edge-padding,
+	--_kit-popup-edge-padding: var(
+		--kit-popup-edge-padding,
 		var(--sys-unit-16)
 	);
 
 	@at-root {
-		@property --_popup-edge-padding {
+		@property --_kit-popup-edge-padding {
 			syntax: "<length>";
 			inherits: false;
 			initial-value: 0px;
@@ -111,19 +112,25 @@
 @mixin surface($shadow: true) {
 	box-sizing: border-box;
 	border: none;
-	border-radius: var(--popup-radius, var(--sys-radius-md));
+	border-radius: var(
+		--kit-popup-radius,
+		var(--sys-radius-md)
+	);
 	background: var(
-		--popup-bg,
+		--kit-popup-bg,
 		var(--sys-color-surface-overlay)
 	);
-	padding: var(--popup-pad, var(--sys-unit-4));
-	color: var(--popup-fg, var(--sys-color-text));
+	padding: var(--kit-popup-pad, var(--sys-unit-4));
+	color: var(--kit-popup-fg, var(--sys-color-text));
 	transform-origin: var(--transform-origin);
 
 	@include thin-scrollbar;
 
 	@if $shadow {
-		box-shadow: var(--popup-shadow, var(--sys-elevation-1));
+		box-shadow: var(
+			--kit-popup-shadow,
+			var(--sys-elevation-1)
+		);
 	}
 
 	@media not (prefers-reduced-motion) {
@@ -143,7 +150,7 @@
 
 /// One selectable row inside a `popup.surface`. Drives its own highlight from
 /// `data-highlighted`, so it takes no focus ring. A `data-selected` row looks
-/// like any other until `--popup-item-selected-bg` or `-fg` is set.
+/// like any other until `--kit-popup-item-selected-bg` or `-fg` is set.
 ///
 /// @example
 ///   @use "../../style/popup.scss" as popup;
@@ -154,24 +161,27 @@
 @mixin item {
 	display: flex;
 	align-items: center;
-	gap: var(--popup-item-gap, var(--sys-unit-6));
+	gap: var(--kit-popup-item-gap, var(--sys-unit-6));
 	box-sizing: border-box;
 	min-block-size: var(
-		--popup-item-min-block-size,
+		--kit-popup-item-min-block-size,
 		var(--sys-unit-20)
 	);
 	border-radius: var(
-		--popup-item-radius,
+		--kit-popup-item-radius,
 		var(--sys-radius-sm)
 	);
-	background: var(--popup-item-bg, transparent);
-	padding: var(--popup-item-pad-y, var(--sys-unit-4))
-		var(--popup-item-pad-x, var(--sys-unit-6));
+	background: var(--kit-popup-item-bg, transparent);
+	padding: var(--kit-popup-item-pad-y, var(--sys-unit-4))
+		var(--kit-popup-item-pad-x, var(--sys-unit-6));
 	color: var(
-		--popup-item-fg,
-		var(--popup-fg, var(--sys-color-text))
+		--kit-popup-item-fg,
+		var(--kit-popup-fg, var(--sys-color-text))
 	);
-	font: var(--popup-item-font, var(--sys-font-body-medium));
+	font: var(
+		--kit-popup-item-font,
+		var(--sys-font-body-medium)
+	);
 	user-select: none;
 
 	@include state.layer;
@@ -180,32 +190,32 @@
 
 	&[data-selected] {
 		background: var(
-			--popup-item-selected-bg,
-			var(--popup-item-bg, transparent)
+			--kit-popup-item-selected-bg,
+			var(--kit-popup-item-bg, transparent)
 		);
 		color: var(
-			--popup-item-selected-fg,
+			--kit-popup-item-selected-fg,
 			var(
-				--popup-item-fg,
-				var(--popup-fg, var(--sys-color-text))
+				--kit-popup-item-fg,
+				var(--kit-popup-fg, var(--sys-color-text))
 			)
 		);
 	}
 
 	&[data-highlighted] {
 		background: var(
-			--popup-item-highlighted-bg,
+			--kit-popup-item-highlighted-bg,
 			var(--sys-color-primary-container)
 		);
 		color: var(
-			--popup-item-highlighted-fg,
+			--kit-popup-item-highlighted-fg,
 			var(--sys-color-on-primary-container)
 		);
 	}
 
 	&[data-disabled] {
 		color: var(
-			--popup-item-disabled-fg,
+			--kit-popup-item-disabled-fg,
 			var(--sys-color-disabled-fg)
 		);
 	}
@@ -225,13 +235,19 @@
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
-	gap: var(--popup-note-gap, var(--sys-unit-4));
+	gap: var(--kit-popup-note-gap, var(--sys-unit-4));
 	contain: inline-size;
 	min-block-size: 1lh;
-	padding: var(--popup-note-pad-y, var(--sys-unit-4))
-		var(--popup-note-pad-x, var(--sys-unit-6));
-	color: var(--popup-note-fg, var(--sys-color-text-muted));
-	font: var(--popup-note-font, var(--sys-font-body-medium));
+	padding: var(--kit-popup-note-pad-y, var(--sys-unit-4))
+		var(--kit-popup-note-pad-x, var(--sys-unit-6));
+	color: var(
+		--kit-popup-note-fg,
+		var(--sys-color-text-muted)
+	);
+	font: var(
+		--kit-popup-note-font,
+		var(--sys-font-body-medium)
+	);
 
 	&:empty {
 		min-block-size: 0;

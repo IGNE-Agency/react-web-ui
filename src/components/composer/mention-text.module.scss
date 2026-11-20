@@ -3,25 +3,31 @@
 @layer kit.components {
 	.mention {
 		border-radius: var(
-			--mention-radius,
+			--kit-mention-radius,
 			var(--sys-radius-full)
 		);
 		background: var(
-			--mention-bg,
+			--kit-mention-bg,
 			var(--sys-color-neutral-bg)
 		);
-		padding: var(--mention-pad-y, var(--sys-unit-1))
-			var(--mention-pad-x, var(--sys-unit-4));
-		color: var(--mention-fg, var(--sys-color-neutral-fg));
-		font: var(--mention-font, var(--sys-font-label-small));
+		padding: var(--kit-mention-pad-y, var(--sys-unit-1))
+			var(--kit-mention-pad-x, var(--sys-unit-4));
+		color: var(
+			--kit-mention-fg,
+			var(--sys-color-neutral-fg)
+		);
+		font: var(
+			--kit-mention-font,
+			var(--sys-font-label-small)
+		);
 
 		&[data-you] {
 			background: var(
-				--mention-you-bg,
+				--kit-mention-you-bg,
 				var(--sys-color-primary-container)
 			);
 			color: var(
-				--mention-you-fg,
+				--kit-mention-you-fg,
 				var(--sys-color-on-primary-container)
 			);
 		}

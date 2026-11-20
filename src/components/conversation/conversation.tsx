@@ -344,7 +344,10 @@ const MessageContent = ({
 			style:
 				lineClamp === undefined
 					? inlineStyle
-					: { ...inlineStyle, "--line-clamp": lineClamp },
+					: {
+							...inlineStyle,
+							"--_kit-conversation-line-clamp": lineClamp,
+						},
 		},
 	});
 

@@ -460,7 +460,7 @@ Its padding on that edge is the larger of the padding it wants and the inset the
 
 <Details title="Content and popups keep one gutter from the screen's edge">
 
-Nothing comes closer to the screen's edge than the gutter: the wide one from the breakpoint up, the narrow one below it. The page's content is inset by it, and a popup that would run past it is pushed back inside it. The gutter and the breakpoint belong to the app, which declares both; the kit has neither. Every kit popup takes its distance from the edge from the `--popup-edge-padding` knob and hands it to its positioner in pixels, so the app sets that knob to its own gutter, once, and the layouts and the popups cannot drift apart. Explained in [The edge of the glass](#the-edge-of-the-glass).
+Nothing comes closer to the screen's edge than the gutter: the wide one from the breakpoint up, the narrow one below it. The page's content is inset by it, and a popup that would run past it is pushed back inside it. The gutter and the breakpoint belong to the app, which declares both; the kit has neither. Every kit popup takes its distance from the edge from the `--kit-popup-edge-padding` knob and hands it to its positioner in pixels, so the app sets that knob to its own gutter, once, and the layouts and the popups cannot drift apart. Explained in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The page and the kit's popups read the app's one gutter.">
@@ -468,7 +468,7 @@ Nothing comes closer to the screen's edge than the gutter: the wide one from the
 ```scss
 :root {
 	--app-gutter: 1.5rem;
-	--popup-edge-padding: var(--app-gutter);
+	--kit-popup-edge-padding: var(--app-gutter);
 
 	@media (max-width: breakpoint.$mobile) {
 		--app-gutter: 1rem;

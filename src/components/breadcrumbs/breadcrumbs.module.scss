@@ -25,11 +25,11 @@
 		min-inline-size: 0;
 		overflow: hidden;
 		border-radius: var(
-			--breadcrumbs-radius,
+			--kit-breadcrumbs-radius,
 			var(--sys-radius-xs)
 		);
 		font: var(
-			--breadcrumbs-font,
+			--kit-breadcrumbs-font,
 			var(--sys-font-label-medium)
 		);
 		text-overflow: ellipsis;
@@ -42,7 +42,7 @@
 		display: flex;
 		align-items: center;
 		padding-inline: var(
-			--breadcrumbs-separator-pad-x,
+			--kit-breadcrumbs-separator-pad-x,
 			var(--sys-unit-4)
 		);
 	}

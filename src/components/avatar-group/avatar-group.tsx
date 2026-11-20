@@ -48,7 +48,7 @@ const Root = ({
 			"aria-label": label,
 			className: clsx(style.group, className),
 			style: {
-				"--_avatar-group-size": `${size}em`,
+				"--_kit-avatar-group-size": `${size}em`,
 				...inlineStyle,
 			},
 		},
