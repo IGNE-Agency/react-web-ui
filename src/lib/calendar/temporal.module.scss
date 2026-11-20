@@ -344,11 +344,7 @@
 		);
 		font: var(
 			--kit-calendar-weekday-font,
-			var(--sys-font-label-small)
-		);
-		font-weight: var(
-			--kit-calendar-weekday-font-weight,
-			normal
+			var(--sys-font-body-small)
 		);
 		text-align: center;
 	}
@@ -421,9 +417,9 @@
 				--kit-calendar-selected-fg,
 				var(--sys-color-on-primary)
 			);
-			font-weight: var(
-				--kit-calendar-selected-font-weight,
-				700
+			font: var(
+				--kit-calendar-selected-font,
+				var(--sys-font-body-medium-strong)
 			);
 		}
 
@@ -441,9 +437,9 @@
 				--kit-calendar-range-fg,
 				var(--sys-color-on-primary-container)
 			);
-			font-weight: var(
-				--kit-calendar-range-font-weight,
-				600
+			font: var(
+				--kit-calendar-range-font,
+				var(--sys-font-body-medium-strong)
 			);
 		}
 
