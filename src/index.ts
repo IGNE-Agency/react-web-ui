@@ -4,6 +4,7 @@ export * from "./components/attachment-tile/index.ts";
 export * from "./components/avatar/index.ts";
 export * from "./components/avatar-group/index.ts";
 export * from "./components/badge/index.ts";
+export * from "./components/banner/index.ts";
 export * from "./components/breadcrumbs/index.ts";
 export * from "./components/button/index.ts";
 export * from "./components/checkbox-field/index.ts";

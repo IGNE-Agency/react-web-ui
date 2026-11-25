@@ -18,6 +18,11 @@
 		"skeleton/skeleton"
 	],
 	"badge": ["badge/badge"],
+	"banner": [
+		"banner/banner",
+		"button/button",
+		"tooltip/tooltip"
+	],
 	"breadcrumbs": [
 		"breadcrumbs/breadcrumbs",
 		"button/button",

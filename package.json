@@ -44,6 +44,10 @@
 			"types": "./dist/components/badge/index.d.ts",
 			"default": "./dist/components/badge/index.js"
 		},
+		"./banner": {
+			"types": "./dist/components/banner/index.d.ts",
+			"default": "./dist/components/banner/index.js"
+		},
 		"./base.css": "./dist/base.css",
 		"./breadcrumbs": {
 			"types": "./dist/components/breadcrumbs/index.d.ts",

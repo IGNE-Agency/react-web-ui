@@ -62,7 +62,7 @@ A product is built from components, but people meet it in moments, and in famili
 ## Applies to
 
 - **Regions of data:** [data tables](?path=/docs/components-data-table--docs), [comment threads](?path=/docs/components-conversation--docs), [stale content](?path=/docs/components-stale--docs), the menus of [selects](?path=/docs/components-select-field--docs) and [comboboxes](?path=/docs/components-combobox-field--docs), and [popovers](?path=/docs/components-popover--docs) that load details.
-- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs) and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
+- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs), [banners](?path=/docs/components-banner--docs), and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
 - **Fields and forms:** [forms](?path=/docs/components-form--docs), [text fields](?path=/docs/components-text-field--docs), [password fields](?path=/docs/components-password-field--docs), [text areas](?path=/docs/components-textarea-field--docs), [number fields](?path=/docs/components-number-field--docs), [selects](?path=/docs/components-select-field--docs), [comboboxes](?path=/docs/components-combobox-field--docs), [date fields](?path=/docs/components-date-field--docs), [date range fields](?path=/docs/components-date-range-field--docs), [time fields](?path=/docs/components-time-field--docs), [checkboxes](?path=/docs/components-checkbox-field--docs), [checkbox groups](?path=/docs/components-checkbox-group-field--docs), [radio groups](?path=/docs/components-radio-group-field--docs), [segmented controls](?path=/docs/components-segmented-control-field--docs), [toggle groups](?path=/docs/components-toggle-group-field--docs), [switches](?path=/docs/components-switch-field--docs), [file fields](?path=/docs/components-file-field--docs), [photo fields](?path=/docs/components-photo-field--docs), [one-time code fields](?path=/docs/components-otp-field--docs) and the preset fields for [email](?path=/docs/components-email-field--docs), [phone numbers](?path=/docs/components-phone-field--docs) and [search](?path=/docs/components-search-field--docs).
 - **Labels pinned to things:** [tags](?path=/docs/components-tag--docs), [tag groups](?path=/docs/components-tag-group--docs), [badges](?path=/docs/components-badge--docs) and the [filter bar](?path=/docs/components-filter-bar--docs).
 - **Navigation:** [the nav](?path=/docs/components-nav--docs), as a rail or a bar, [tabs](?path=/docs/components-tabs--docs) and [breadcrumbs](?path=/docs/components-breadcrumbs--docs).
@@ -213,7 +213,7 @@ News is easiest to take in where the eye already is. Feedback about what is in f
 | A field is invalid | Under the field | "A KvK number has 8 digits." |
 | A form did its job | In place of its introduction | "A recovery link is on its way." |
 | Background work failed | A toast, with the fix | A comment that didn't send |
-| A condition that lasts | A banner across the app | "Storage almost full" |
+| A condition that lasts | [A banner](?path=/docs/components-banner--docs#a-banner-states-something-app-wide) across the app | "Storage almost full" |
 | The session ended | A toast at sign-in | "You were signed out" |
 | A step can't be undone | A dialog | "Delete comment?" |
 
@@ -1246,7 +1246,7 @@ A timeout, a rate limit or a server fault is retried in the background, then off
 
 <Details title="Feedback appears where the user is looking">
 
-In the region, under the field or in place of the form's introduction. A toast is for what happened out of view, a banner for a condition that lasts, and a dialog only for a question. Explained in [Telling people what happened](#telling-people-what-happened).
+In the region, under the field or in place of the form's introduction. A toast is for what happened out of view, [a banner](?path=/docs/components-banner--docs#a-banner-states-something-app-wide) for a condition that lasts, and a dialog only for a question. Explained in [Telling people what happened](#telling-people-what-happened).
 
 </Details>
 
