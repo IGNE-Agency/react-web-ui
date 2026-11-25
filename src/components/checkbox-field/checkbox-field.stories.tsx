@@ -16,6 +16,8 @@ import {
 	CheckboxField,
 	type CheckboxFieldProps,
 } from "./checkbox-field.tsx";
+import { Checkbox } from "./checkbox.tsx";
+import { TSFCheckboxField } from "./tsf-checkbox-field.tsx";
 
 const LABEL = "I agree to the terms";
 const DESCRIPTION =
@@ -51,7 +53,18 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Checkbox.Root": Checkbox.Root,
+			},
+			connector: { TSFCheckboxField },
+		},
 	},
 	component: CheckboxField,
 	render: ControlledCheckboxField,

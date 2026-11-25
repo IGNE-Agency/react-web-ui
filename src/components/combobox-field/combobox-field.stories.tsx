@@ -29,6 +29,7 @@ import {
 	type ComboboxFieldProps,
 } from "./index.ts";
 import { ComboboxItemQueries } from "./react-query.tsx";
+import { TSFComboboxField } from "./tsf-combobox-field.tsx";
 
 const LABEL = "Status";
 const MULTIPLE_LABEL = "Statuses";
@@ -171,8 +172,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Combobox.Root": Combobox.Root,
+			},
+			connector: { TSFComboboxField },
+		},
 	},
 	component: ComboboxField<string>,
 	render: ControlledComboboxField,

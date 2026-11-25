@@ -13,6 +13,7 @@ import {
 	EmailField,
 	type EmailFieldProps,
 } from "./index.ts";
+import { TSFEmailField } from "./tsf-email-field.tsx";
 
 const LABEL = "Email address";
 const ERROR = "This is not a valid email address.";
@@ -44,7 +45,15 @@ const meta = {
 		designSystem: [
 			{ page: "Patterns", section: "Where you type" },
 			{ component: "components/text-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFEmailField },
+		},
 	},
 	component: EmailField,
 	render: ControlledEmailField,

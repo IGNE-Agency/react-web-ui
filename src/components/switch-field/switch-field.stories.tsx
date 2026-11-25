@@ -16,6 +16,8 @@ import {
 	SwitchField,
 	type SwitchFieldProps,
 } from "./switch-field.tsx";
+import { Switch } from "./switch.tsx";
+import { TSFSwitchField } from "./tsf-switch-field.tsx";
 
 const LABEL = "Email me about new messages";
 
@@ -45,8 +47,18 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Switch.Root": Switch.Root,
+			},
+			connector: { TSFSwitchField },
+		},
 	},
 	component: SwitchField,
 	render: ControlledSwitchField,

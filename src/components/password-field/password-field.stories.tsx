@@ -15,6 +15,7 @@ import {
 	type PasswordFieldStrengthProps,
 	PasswordStrength,
 } from "./index.ts";
+import { TSFPasswordField } from "./tsf-password-field.tsx";
 
 const LABEL = "Password";
 const ERROR = "Choose a stronger password.";
@@ -120,7 +121,15 @@ const meta = {
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
 			{ component: "components/text-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFPasswordField },
+		},
 	},
 	component: PasswordField,
 	render: ControlledPasswordField,

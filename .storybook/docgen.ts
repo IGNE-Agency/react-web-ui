@@ -20,7 +20,26 @@ const isComponentName = (
 	name: string | undefined,
 ): boolean => name !== undefined && /^[A-Z]/.test(name);
 
-/** Every component the module declares at its top level, exported or not: a capitalised function, or a capitalised `const` holding one. */
+/** The function type a declarator's id is annotated with, such as `(props: P) => ReactNode`. */
+const annotatedFunctionTypeOf = (
+	declarator: NodePath,
+): NodePath<babelTypes.TSFunctionType> | undefined => {
+	if (!declarator.isVariableDeclarator()) {
+		return undefined;
+	}
+	const id = declarator.get("id");
+	if (!id.isIdentifier()) {
+		return undefined;
+	}
+	const annotation = id.get("typeAnnotation");
+	if (!annotation.isTSTypeAnnotation()) {
+		return undefined;
+	}
+	const type = annotation.get("typeAnnotation");
+	return type.isTSFunctionType() ? type : undefined;
+};
+
+/** Every component the module declares at its top level, exported or not: a capitalised function, a capitalised `const` holding one, or a capitalised `const` a factory call fills under a function type, such as `const TSFEmailField: (props: P) => ReactNode = connectTextPreset(EmailField)`. */
 const topLevelComponents: ResolverFunction = file =>
 	file.path
 		.get("body")
@@ -45,7 +64,10 @@ const topLevelComponents: ResolverFunction = file =>
 					return id.isIdentifier() &&
 						isComponentName(id.node.name) &&
 						(init.isArrowFunctionExpression() ||
-							init.isFunctionExpression())
+							init.isFunctionExpression() ||
+							(init.isCallExpression() &&
+								annotatedFunctionTypeOf(declarator) !==
+									undefined))
 						? [init]
 						: [];
 				});
@@ -164,6 +186,7 @@ const typeArgumentsOf = (
 		: [];
 };
 
+/** The keys an `Omit` or `Pick` names: string literals, unions of them, and `keyof` a props type. */
 const literalKeysOf = (
 	path: NodePath | undefined,
 ): readonly string[] => {
@@ -172,6 +195,14 @@ const literalKeysOf = (
 		return literal.type === "StringLiteral"
 			? [literal.value]
 			: [];
+	}
+	if (
+		path?.isTSTypeOperator() === true &&
+		path.node.operator === "keyof"
+	) {
+		return membersOf(path.get("typeAnnotation")).map(
+			prop => prop.name,
+		);
 	}
 	return path?.isTSUnionType() === true
 		? path.get("types").flatMap(literalKeysOf)
@@ -300,14 +331,32 @@ const membersOf = (
 	}
 };
 
+/** The props type of a component a factory call fills: the first parameter of the function type its `const` is annotated with. */
+const factoryPropsTypeOf = (
+	definition: ComponentPath,
+): readonly NodePath[] => {
+	if (!definition.isCallExpression()) {
+		return [];
+	}
+	const [props] =
+		annotatedFunctionTypeOf(definition.parentPath)?.get(
+			"parameters",
+		) ?? [];
+	const annotation = props?.get("typeAnnotation");
+	return annotation?.isTSTypeAnnotation() === true
+		? [annotation.get("typeAnnotation")]
+		: [];
+};
+
 /** Documents each prop a component's props type declares, with its type, whether it is required, and its doc comment. */
 const typeHandler: Handler = (
 	documentation,
 	definition,
 ) => {
-	const props = utils
-		.getTypeFromReactComponent(definition)
-		.flatMap(type => membersOf(type));
+	const props = [
+		...utils.getTypeFromReactComponent(definition),
+		...factoryPropsTypeOf(definition),
+	].flatMap(type => membersOf(type));
 	const firsts = props.filter(
 		(prop, index) =>
 			props.findIndex(other => other.name === prop.name) ===

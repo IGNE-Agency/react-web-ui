@@ -9,6 +9,7 @@ import {
 	type TimeFieldProps,
 } from "./time-field.tsx";
 import { TimeInput } from "./time-input.tsx";
+import { TSFTimeField } from "./tsf-time-field.tsx";
 
 const TIME = Temporal.PlainTime.from("09:30");
 const LABEL = "Start time";
@@ -101,8 +102,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"TimeInput.Root": TimeInput.Root,
+			},
+			connector: { TSFTimeField },
+		},
 	},
 	component: TimeField,
 	render: ControlledTimeField,

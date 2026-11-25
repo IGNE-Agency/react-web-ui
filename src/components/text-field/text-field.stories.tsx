@@ -21,6 +21,7 @@ import {
 	type TextFieldProps,
 	TextInput,
 } from "./index.ts";
+import { TSFTextField } from "./tsf-text-field.tsx";
 
 const COUNTER_MAX = 40;
 const LABEL = "Name";
@@ -122,8 +123,18 @@ const meta = {
 				section:
 					"Focus returns after a part removes itself",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"TextInput.Root": TextInput.Root,
+			},
+			connector: { TSFTextField },
+		},
 	},
 	component: TextField,
 	render: ControlledTextField,

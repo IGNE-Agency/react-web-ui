@@ -16,6 +16,10 @@ import {
 	targetOf,
 } from "./docs-links/target.ts";
 import { labelOf } from "./label.ts";
+import {
+	PrefabHeading,
+	TierTables,
+} from "./tier-tables.tsx";
 
 const sectionLink = (link: DesignSystemLink) => {
 	const { id, anchor } = targetOf(link);
@@ -63,7 +67,8 @@ const ComponentTitle = () => {
 
 /**
  * A component's docs page: the default autodocs blocks with the stories laid out
- * in a grid, the links its meta names in `parameters.designSystem`, and the
+ * in a grid, the links its meta names in `parameters.designSystem`, a props
+ * table for each tier its meta names in `parameters.tiers`, and the
  * component's own design rules when an attached MDX page passes them in.
  *
  * @example
@@ -84,7 +89,9 @@ export const DocsPage = ({
 		<Description />
 		<DesignSystemLinks />
 		<Primary />
+		<PrefabHeading />
 		<Controls />
+		<TierTables />
 		{children}
 		<div className="story-grid">
 			<Stories />

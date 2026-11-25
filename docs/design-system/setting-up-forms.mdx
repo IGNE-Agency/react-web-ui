@@ -1,0 +1,239 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const guide = { accent: "green" };
+
+<Meta title="Design system/Setting up forms" />
+
+# Setting up forms
+
+How an app builds a form from the kit, end to end: the providers, the form hook the app builds once, a form, fields that share a legend, a form split across components, and a field the prefabs don't cover. It is written for engineers and agents.
+
+The kit's forms run on TanStack Form. Every control comes in [three tiers](?path=/docs/components-field--docs#every-control-comes-in-three-tiers-and-the-primitive-draws-the-field-frame): the primitive, such as `TextInput`, the prefab, such as `TextField`, and the connector, such as `TSFTextField`, which connects the prefab to a TanStack Form field. A form is built from connectors.
+
+## The providers a form needs
+
+The kit has no form provider: `Form.Root` hands the form to everything inside it. The fields read four of the app's own providers, and throw outside them:
+
+- `CopyProvider`, for the words a field says on its own, such as the optional word and a clear button's name.
+- `IconProvider`, for the marks it shows on its own, such as a checkbox's tick and a clear button's cross.
+- `LocaleProvider`, for numbers, dates and file sizes in the reader's format.
+- `TimeZoneProvider`, for dates and times in the app's time zone, such as what a date field calls today.
+
+`Tooltip.Provider` sits once near the app root, for the tooltips on a field's icon-only buttons, such as clear and copy.
+
+```tsx
+<LocaleProvider locale="nl-NL">
+	<TimeZoneProvider timeZone="Europe/Amsterdam">
+		<CopyProvider copy={copy}>
+			<IconProvider icons={icons}>
+				<Tooltip.Provider>{app}</Tooltip.Provider>
+			</IconProvider>
+		</CopyProvider>
+	</TimeZoneProvider>
+</LocaleProvider>
+```
+
+The copy and the icons are one decision per app, and no field takes a prop that overrides them. What differs per field, such as its label, is a prop of that field: [each tier takes the field props nothing else supplies](?path=/docs/components-field--docs#each-tier-takes-the-field-props-nothing-else-supplies).
+
+## One form hook per app
+
+`createAppForm`, from `./forms`, builds the app's form hook from the connectors it registers. Build it once, in a module of the app's own, and register only the connectors the app uses: each comes from its control's own entry point, so the app loads the code and CSS of those controls and no other.
+
+```ts
+// src/form.ts
+import { TSFEmailField } from "@igne-agency/react-web-ui/email-field";
+import { TSFFieldGroup } from "@igne-agency/react-web-ui/fieldset";
+import { createAppForm } from "@igne-agency/react-web-ui/forms";
+import { TSFTextField } from "@igne-agency/react-web-ui/text-field";
+
+export const { useAppForm, withForm, withFieldGroup } =
+	createAppForm(
+		{ EmailField: TSFEmailField, TextField: TSFTextField },
+		{ FieldGroup: TSFFieldGroup },
+	);
+```
+
+The first argument holds the field components: each connector under the key a field reaches it by, which is its prefab's name. The second, which is optional, holds the form components, which read several fields at once, such as `TSFFieldGroup`. The hook it returns behaves like TanStack Form's own, and also [takes the user to the first thing to fix after a failed submit](?path=/docs/components-form--docs#a-failed-submit-takes-the-user-to-the-first-thing-to-fix).
+
+## A form
+
+`useAppForm` takes the form's default values, its validators and its submit. The validators are the app's own: the kit ships none, and takes any Standard Schema, such as a Zod schema. A field shows its issues' messages as they are, so the schema writes the copy.
+
+```tsx
+import { Form } from "@igne-agency/react-web-ui/form";
+import { z } from "zod";
+import { useAppForm } from "./form.ts";
+
+const signUp = z.object({
+	email: z.email(
+		"Enter an email address, such as name@example.com.",
+	),
+	name: z.string(),
+});
+
+export const SignUp = () => {
+	const form = useAppForm({
+		defaultValues: { email: "", name: "" },
+		validators: { onSubmit: signUp },
+		onSubmit: ({ value }) => save(value),
+	});
+	return (
+		<Form.Root form={form}>
+			<form.AppField name="email">
+				{field => (
+					<field.EmailField
+						label="Email"
+						requiredness="required"
+					/>
+				)}
+			</form.AppField>
+			<form.AppField name="name">
+				{field => (
+					<field.TextField
+						label="Name"
+						requiredness="optional"
+					/>
+				)}
+			</form.AppField>
+			<Form.Errors />
+			<Form.Submit busyLabel="Signing up">
+				Sign up
+			</Form.Submit>
+		</Form.Root>
+	);
+};
+```
+
+- `Form.Root` takes the form and renders the `<form>`. [It submits through the form and leaves validation to the validators](?path=/docs/components-form--docs#the-form-submits-through-its-form-instance-and-validates-nothing-natively), and [holds still while a submit is in flight](?path=/docs/components-form--docs#a-busy-form-holds-still).
+- `form.AppField` names the field, and its child reaches the connector registered under that key: `field.EmailField` is `TSFEmailField`. The connector takes the label, the description and the requiredness; the form supplies the value, the errors and the states. [Requiredness is stated, never inferred](?path=/docs/components-field--docs#requiredness-is-stated-never-inferred) from the schema.
+- `Form.Errors` shows the errors that belong to no field, such as a refusal `onSubmitAsync` returns: [errors that belong to no field are the form's](?path=/docs/components-form--docs#errors-that-belong-to-no-field-are-the-forms).
+- `Form.Submit` is the submit button, and `busyLabel` is what it announces while the submit waits: [the submit button announces a wait late, and then holds it](?path=/docs/components-form--docs#the-submit-button-announces-a-wait-late-and-then-holds-it).
+
+An edited form asks before the page is left. Its `leaveGuard` decides when: [an edited form holds a leave until its policy lets go](?path=/docs/components-form--docs#an-edited-form-holds-a-leave-until-its-policy-lets-go).
+
+## Fields that share a legend
+
+Related fields, such as the parts of an address, sit side by side under one legend and show one error between them. Register `TSFFieldGroup` as a form component, as above, and name the fields whose errors it shows. A field it doesn't name keeps its own error.
+
+```tsx
+<form.FieldGroup
+	legend="Address"
+	names={["postalCode", "houseNumber"]}>
+	<form.AppField name="postalCode">
+		{field => (
+			<field.TextField
+				label="Postal code"
+				requiredness="required"
+			/>
+		)}
+	</form.AppField>
+	<form.AppField name="houseNumber">
+		{field => (
+			<field.TextField
+				label="House number"
+				requiredness="required"
+			/>
+		)}
+	</form.AppField>
+</form.FieldGroup>
+```
+
+See [related fields share one legend and one error](?path=/docs/components-fieldset--docs#related-fields-share-one-legend-and-one-error).
+
+## A form across components
+
+A long form splits into components the way TanStack Form splits one, with the two helpers `createAppForm` returns beside the hook. Both reach the same connectors.
+
+`withForm` renders part of one form. It takes the form's default values, for its types, and the props it adds; the parent passes the form.
+
+```tsx
+export const ContactStep = withForm({
+	defaultValues: { email: "", name: "" },
+	props: { title: "" },
+	render: ({ form, title }) => (
+		<>
+			<h2>{title}</h2>
+			<form.AppField name="email">
+				{field => (
+					<field.EmailField
+						label="Email"
+						requiredness="required"
+					/>
+				)}
+			</form.AppField>
+		</>
+	),
+});
+
+<ContactStep form={form} title="Contact" />;
+```
+
+`withFieldGroup` renders a set of fields that can sit in any form whose values hold its shape, such as one address for delivery and another for billing. The parent passes the form and the path of the values it fills.
+
+```tsx
+export const AddressFields = withFieldGroup({
+	defaultValues: { postalCode: "", houseNumber: "" },
+	render: ({ group }) => (
+		<>
+			<group.AppField name="postalCode">
+				{field => (
+					<field.TextField
+						label="Postal code"
+						requiredness="required"
+					/>
+				)}
+			</group.AppField>
+			<group.AppField name="houseNumber">
+				{field => (
+					<field.TextField
+						label="House number"
+						requiredness="required"
+					/>
+				)}
+			</group.AppField>
+		</>
+	),
+});
+
+<AddressFields form={form} fields="delivery" />;
+```
+
+## When the prefab doesn't fit
+
+A prefab is the ordinary field: a label above a full-width control, then the description and the error. A field with another anatomy, such as a control in a toolbar or a label beside its control, is built from the control's primitive and connected with `useConnectedField`, from `./forms`. See [a prefab is for the common case, and a custom layout drops to the primitives](?path=/docs/components-fieldset--docs#a-prefab-is-for-the-common-case-and-a-custom-layout-drops-to-the-primitives).
+
+`useConnectedField` is what every connector is built on. Inside `form.AppField`, it returns the field, and the props the form supplies: the name, the errors, `dirty`, `touched`, `pending` and the blur. The value and its change handler come from the field. Given the field's label, it also tells a field group around it, which names the field by it in the group's error.
+
+```tsx
+const PostalCodeInput = ({
+	label,
+}: Readonly<{ label: string }>) => {
+	const {
+		field,
+		props: { name, onBlur, ...state },
+	} = useConnectedField<string>(label);
+	return (
+		<TextInput.Root
+			{...state}
+			requiredness="required"
+			value={field.state.value}
+			onValueChange={field.handleChange}>
+			<TextInput.Label>
+				{label} <Field.Requiredness />
+			</TextInput.Label>
+			<TextInput.Group>
+				<TextInput.Input name={name} onBlur={onBlur} />
+			</TextInput.Group>
+			<TextInput.Error />
+		</TextInput.Root>
+	);
+};
+```
+
+```tsx
+<form.AppField name="postalCode">
+	{() => <PostalCodeInput label="Postal code" />}
+</form.AppField>
+```
+
+The primitive's root takes the states and draws the field frame, so a hand-composed field is wired like the prefab: [every control comes in three tiers, and the primitive draws the field frame](?path=/docs/components-field--docs#every-control-comes-in-three-tiers-and-the-primitive-draws-the-field-frame). A component that reads the form rather than one field, as `TSFFieldGroup` does, takes it from `useFormContext`, also from `./forms`.

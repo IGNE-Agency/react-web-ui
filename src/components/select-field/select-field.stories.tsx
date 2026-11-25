@@ -25,6 +25,7 @@ import {
 	SelectField,
 	type SelectFieldProps,
 } from "./select-field.tsx";
+import { TSFSelectField } from "./tsf-select-field.tsx";
 
 const LABEL = "Status";
 const OPEN_LABEL = "Open";
@@ -119,8 +120,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Select.Root": Select.Root,
+			},
+			connector: { TSFSelectField },
+		},
 	},
 	component: SelectField,
 	render: ControlledSelectField,

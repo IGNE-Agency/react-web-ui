@@ -11,6 +11,7 @@ import {
 	PhoneField,
 	type PhoneFieldProps,
 } from "./index.ts";
+import { TSFPhoneField } from "./tsf-phone-field.tsx";
 
 const LABEL = "Phone number";
 const FORMAT =
@@ -49,7 +50,15 @@ const meta = {
 				section:
 					"An accessible name is never only a placeholder",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFPhoneField },
+		},
 	},
 	component: PhoneField,
 	render: ControlledPhoneField,

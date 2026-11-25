@@ -18,6 +18,8 @@ import {
 	SegmentedControlField,
 	type SegmentedControlFieldProps,
 } from "./segmented-control-field.tsx";
+import { SegmentedControl } from "./segmented-control.tsx";
+import { TSFSegmentedControlField } from "./tsf-segmented-control-field.tsx";
 
 const LABEL = "Status";
 const OPEN = { value: "open", label: "Open" };
@@ -75,7 +77,18 @@ const meta = {
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
 			{ component: "components/toggle-group-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"SegmentedControl.Root": SegmentedControl.Root,
+			},
+			connector: { TSFSegmentedControlField },
+		},
 	},
 	component: SegmentedControlField,
 	render: ControlledSegmentedControlField,

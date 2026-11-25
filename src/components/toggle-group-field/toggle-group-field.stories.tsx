@@ -17,6 +17,8 @@ import {
 	ToggleGroupField,
 	type ToggleGroupFieldProps,
 } from "./toggle-group-field.tsx";
+import { ToggleGroup } from "./toggle-group.tsx";
+import { TSFToggleGroupField } from "./tsf-toggle-group-field.tsx";
 
 const LABEL = "Statuses";
 const OPEN = { value: "open", label: "Open" };
@@ -60,7 +62,18 @@ const meta = {
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
 			{ component: "components/segmented-control-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"ToggleGroup.Root": ToggleGroup.Root,
+			},
+			connector: { TSFToggleGroupField },
+		},
 	},
 	component: ToggleGroupField,
 	render: ControlledToggleGroupField,

@@ -17,6 +17,8 @@ import {
 	CheckboxGroupField,
 	type CheckboxGroupFieldProps,
 } from "./checkbox-group-field.tsx";
+import { CheckboxGroup } from "./checkbox-group.tsx";
+import { TSFCheckboxGroupField } from "./tsf-checkbox-group-field.tsx";
 
 const LABEL = "Statuses";
 const OPEN_LABEL = "Open";
@@ -63,7 +65,18 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"CheckboxGroup.Root": CheckboxGroup.Root,
+			},
+			connector: { TSFCheckboxGroupField },
+		},
 	},
 	component: CheckboxGroupField,
 	render: ControlledCheckboxGroupField,

@@ -10,6 +10,8 @@ import {
 } from "storybook/test";
 import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { OtpField, type OtpFieldProps } from "./index.ts";
+import { OtpInput } from "./otp-input.tsx";
+import { TSFOtpField } from "./tsf-otp-field.tsx";
 
 const LENGTH = 6;
 const SAMPLE_CODE = "123456";
@@ -58,8 +60,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"OtpInput.Root": OtpInput.Root,
+			},
+			connector: { TSFOtpField },
+		},
 	},
 	component: OtpField,
 	render: ControlledOtpField,

@@ -16,6 +16,8 @@ import {
 	RadioGroupField,
 	type RadioGroupFieldProps,
 } from "./radio-group-field.tsx";
+import { RadioGroup } from "./radio-group.tsx";
+import { TSFRadioGroupField } from "./tsf-radio-group-field.tsx";
 
 const LABEL = "Status";
 const DESCRIPTION = "The status the invoice is in now.";
@@ -55,8 +57,18 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"RadioGroup.Root": RadioGroup.Root,
+			},
+			connector: { TSFRadioGroupField },
+		},
 	},
 	component: RadioGroupField,
 	render: ControlledRadioGroupField,

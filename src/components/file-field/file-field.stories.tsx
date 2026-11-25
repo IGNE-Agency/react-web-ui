@@ -22,6 +22,7 @@ import {
 	type FileFieldProps,
 } from "./file-field.tsx";
 import { FileInput } from "./file-input.tsx";
+import { TSFFileField } from "./tsf-file-field.tsx";
 
 const LABEL = "Attachments";
 const DROP_TARGET = "Drop zone for attachments";
@@ -135,9 +136,19 @@ const meta = {
 				section:
 					"Focus returns after a part removes itself",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 			{ component: "components/attachment-tile" },
 		],
+		tiers: {
+			primitive: {
+				"FileInput.Root": FileInput.Root,
+			},
+			connector: { TSFFileField },
+		},
 	},
 	component: FileField,
 	render: ControlledFileField,

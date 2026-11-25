@@ -10,7 +10,7 @@ import * as FormStories from "./form.stories.tsx";
 
 ### The form submits through its form instance and validates nothing natively
 
-`Form.Root` takes the instance `useAppForm` returns and renders `<form noValidate>`: validation is the app's own, through Standard Schema, and the browser's bubbles never compete with it. A submit, by button or by Enter, goes through `form.handleSubmit()`. `Form.Errors` and `Form.Submit` read the form from the root, so neither takes it as a prop.
+`Form.Root` takes the instance `useAppForm` returns, from the form hook [an app builds once](?path=/docs/design-system-setting-up-forms--docs#one-form-hook-per-app), and renders `<form noValidate>`: validation is the app's own, through Standard Schema, and the browser's bubbles never compete with it. A submit, by button or by Enter, goes through `form.handleSubmit()`. `Form.Errors` and `Form.Submit` read the form from the root, so neither takes it as a prop.
 
 ```tsx
 <Form.Root form={form}>

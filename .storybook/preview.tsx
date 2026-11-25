@@ -14,7 +14,10 @@ import {
 } from "../src/lib/storybook/story-providers.tsx";
 import { STORY_ICONS } from "./story-icons.tsx";
 import { registerContrastChecks } from "./contrast-checks.ts";
-import { docCommentOf } from "./doc-comment.ts";
+import {
+	docCommentOf,
+	withDocComments,
+} from "./doc-comment.ts";
 import { DocsPage } from "./docs-page.tsx";
 import { mdxComponents } from "./mdx-components.tsx";
 import { themeOf } from "./theme-global.ts";
@@ -114,6 +117,7 @@ const preview: Preview = {
 						],
 						"Patterns",
 						"Components",
+						"Setting up forms",
 						"Working on the system",
 						["Contributing", "Writing a rule", "Changelog"],
 					],
@@ -123,34 +127,7 @@ const preview: Preview = {
 		},
 	},
 	argTypesEnhancers: [
-		({ argTypes }) =>
-			Object.fromEntries(
-				Object.entries(argTypes).map(([name, argType]) => {
-					if (argType.description === undefined) {
-						return [name, argType];
-					}
-					const { markdown, defaultValue } = docCommentOf(
-						argType.description,
-					);
-					return [
-						name,
-						{
-							...argType,
-							description: markdown,
-							table:
-								defaultValue === undefined ||
-								argType.table?.defaultValue !== undefined
-									? argType.table
-									: {
-											...argType.table,
-											defaultValue: {
-												summary: defaultValue,
-											},
-										},
-						},
-					];
-				}),
-			),
+		({ argTypes }) => withDocComments(argTypes),
 	],
 	initialGlobals: {
 		theme: "light",

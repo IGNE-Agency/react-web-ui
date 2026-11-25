@@ -14,6 +14,7 @@ import {
 	SearchField,
 	type SearchFieldProps,
 } from "./index.ts";
+import { TSFSearchField } from "./tsf-search-field.tsx";
 
 const LABEL = "Search clients";
 const PLACEHOLDER = "Name or citizen service number";
@@ -53,7 +54,15 @@ const meta = {
 				section:
 					"Focus returns after a part removes itself",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFSearchField },
+		},
 	},
 	component: SearchField,
 	render: ControlledSearchField,

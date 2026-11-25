@@ -9,6 +9,8 @@ import {
 	percentFormat,
 	unitFormat,
 } from "./index.ts";
+import { NumberInput } from "./number-input.tsx";
+import { TSFNumberField } from "./tsf-number-field.tsx";
 
 const SAMPLE_HOURS = 8;
 const SAMPLE_PERCENT = 21;
@@ -54,8 +56,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"NumberInput.Root": NumberInput.Root,
+			},
+			connector: { TSFNumberField },
+		},
 	},
 	component: NumberField,
 	render: ControlledNumberField,

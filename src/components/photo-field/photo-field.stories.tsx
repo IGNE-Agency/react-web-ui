@@ -26,6 +26,7 @@ import {
 	type PhotoFieldProps,
 } from "./photo-field.tsx";
 import { PhotoInput } from "./photo-input.tsx";
+import { TSFPhotoField } from "./tsf-photo-field.tsx";
 
 const LABEL = "Profile photo";
 const DESCRIPTION = "A square photo works best.";
@@ -131,8 +132,18 @@ const meta = {
 				section:
 					"An icon-only control always has a tooltip and an accessible name",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"PhotoInput.Root": PhotoInput.Root,
+			},
+			connector: { TSFPhotoField },
+		},
 	},
 	component: PhotoField,
 	render: ControlledPhotoField,

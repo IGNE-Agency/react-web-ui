@@ -29,6 +29,7 @@ import {
 	DateRangeField,
 	type DateRangeFieldProps,
 } from "./date-range-field.tsx";
+import { TSFDateRangeField } from "./tsf-date-range-field.tsx";
 
 const MONTH_START = Temporal.PlainDate.from("2026-07-01");
 const MONTH_END = MONTH_START.with({
@@ -215,9 +216,19 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 			{ component: "components/date-field" },
 		],
+		tiers: {
+			primitive: {
+				"DateRangeInput.Root": DateRangeInput.Root,
+			},
+			connector: { TSFDateRangeField },
+		},
 		docs: { story: { inline: false, iframeHeight: 480 } },
 	},
 } satisfies Meta<typeof DateRangeField>;

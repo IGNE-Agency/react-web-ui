@@ -28,6 +28,7 @@ import {
 	type DateFieldProps,
 } from "./date-field.tsx";
 import { DateInput } from "./date-input.tsx";
+import { TSFDateField } from "./tsf-date-field.tsx";
 
 const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
@@ -196,8 +197,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"DateInput.Root": DateInput.Root,
+			},
+			connector: { TSFDateField },
+		},
 		docs: { story: { inline: false, iframeHeight: 480 } },
 	},
 } satisfies Meta<typeof DateField>;
