@@ -365,6 +365,51 @@ export const FilterKeyboard: Story = {
 	},
 };
 
+export const RemoveLastChipKeyboard: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: StoredFilterBar,
+	beforeEach: () => {
+		storedFilters.write({ client: ANNE });
+	},
+	play: async ({ canvas }) => {
+		const chip = await canvas.findByRole("row", {
+			name: clientChip(ANNE),
+		});
+		await userEvent.tab();
+		await userEvent.tab();
+		await expect(filterTrigger(canvas)).toHaveFocus();
+		await userEvent.tab();
+		await expect(chip).toHaveFocus();
+		await userEvent.keyboard("{Delete}");
+
+		await isUnfiltered(canvas);
+		await expect(filterTrigger(canvas)).toHaveFocus();
+	},
+};
+
+export const ClearAllKeyboard: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: StoredFilterBar,
+	beforeEach: () => {
+		storedFilters.write({ client: ANNE });
+	},
+	play: async ({ canvas }) => {
+		await canvas.findByRole("row", {
+			name: clientChip(ANNE),
+		});
+		await userEvent.tab();
+		await userEvent.tab();
+		await expect(filterTrigger(canvas)).toHaveFocus();
+		await userEvent.tab();
+		await userEvent.tab();
+		await expect(clearAll(canvas)).toHaveFocus();
+		await userEvent.keyboard("{Enter}");
+
+		await isUnfiltered(canvas);
+		await expect(filterTrigger(canvas)).toHaveFocus();
+	},
+};
+
 export const FilterTouch: Story = {
 	tags: ["!dev", "!autodocs"],
 	play: async ({ canvas }) => {

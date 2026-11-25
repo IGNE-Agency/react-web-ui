@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useRef } from "react";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
+import { Button } from "../button/button.tsx";
 import { useFilterView } from "../filter-bar/use-filter-view.ts";
 import { Tag } from "../tag/tag.tsx";
 import { TagGroup } from "../tag-group/tag-group.tsx";
@@ -18,6 +20,7 @@ const ACTIVE_LABEL = "Active filters";
 const STATUS_CHIP = "Status: Submitted, Paid";
 const YEAR_CHIP = "Year: 2026";
 const ARCHIVED_CHIP = "Archived";
+const EDIT_FILTERS = "Edit filters";
 
 type InvoiceFilters = Readonly<{
 	statuses?: readonly string[];
@@ -33,20 +36,25 @@ const ActiveFiltersExample = () => {
 			archived: true,
 		},
 	});
+	const editFilters = useRef<HTMLButtonElement>(null);
 
 	return (
-		<ActiveFilters
-			filters={filters}
-			describe={{
-				statuses: describeList({
-					label: "Status",
-					tone: "info",
-				}),
-				year: describeValue({ label: "Year" }),
-				archived: describeFlag(ARCHIVED_CHIP),
-			}}
-			label={ACTIVE_LABEL}
-		/>
+		<>
+			<ActiveFilters
+				filters={filters}
+				describe={{
+					statuses: describeList({
+						label: "Status",
+						tone: "info",
+					}),
+					year: describeValue({ label: "Year" }),
+					archived: describeFlag(ARCHIVED_CHIP),
+				}}
+				label={ACTIVE_LABEL}
+				returnFocus={editFilters}
+			/>
+			<Button ref={editFilters}>{EDIT_FILTERS}</Button>
+		</>
 	);
 };
 
@@ -93,13 +101,20 @@ const UnfilteredExample = () => {
 	const filters = useFilterView<InvoiceFilters>({
 		initial: {},
 	});
+	const editFilters = useRef<HTMLButtonElement>(null);
 
 	return (
-		<ActiveFilters
-			filters={filters}
-			describe={{ year: describeValue({ label: "Year" }) }}
-			label={ACTIVE_LABEL}
-		/>
+		<>
+			<ActiveFilters
+				filters={filters}
+				describe={{
+					year: describeValue({ label: "Year" }),
+				}}
+				label={ACTIVE_LABEL}
+				returnFocus={editFilters}
+			/>
+			<Button ref={editFilters}>{EDIT_FILTERS}</Button>
+		</>
 	);
 };
 
@@ -124,6 +139,7 @@ const meta = {
 	argTypes: {
 		filters: { control: false },
 		describe: { control: false },
+		returnFocus: { control: false },
 	},
 } satisfies Meta<typeof ActiveFilters>;
 
@@ -169,6 +185,38 @@ export const RemoveKeyboard: Story = {
 		await expect(
 			canvas.getByRole("row", { name: STATUS_CHIP }),
 		).toBeVisible();
+	},
+};
+
+export const RemoveAllKeyboard: Story = {
+	tags: ["!dev", "!autodocs"],
+	play: async ({ canvas }) => {
+		await userEvent.tab();
+		await expect(
+			canvas.getByRole("row", { name: STATUS_CHIP }),
+		).toHaveFocus();
+		await userEvent.keyboard("{Delete}");
+		await waitFor(() =>
+			expect(
+				canvas.getByRole("row", { name: YEAR_CHIP }),
+			).toHaveFocus(),
+		);
+		await userEvent.keyboard("{Delete}");
+		await waitFor(() =>
+			expect(
+				canvas.getByRole("row", { name: ARCHIVED_CHIP }),
+			).toHaveFocus(),
+		);
+		await userEvent.keyboard("{Delete}");
+
+		await waitFor(() =>
+			expect(
+				canvas.queryByRole("grid"),
+			).not.toBeInTheDocument(),
+		);
+		await expect(
+			canvas.getByRole("button", { name: EDIT_FILTERS }),
+		).toHaveFocus();
 	},
 };
 

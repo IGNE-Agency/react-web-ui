@@ -2,6 +2,7 @@ import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type { ReactElement, ReactNode } from "react";
 import type { Tone } from "../../lib/tone.ts";
+import { useAnnounceOnMount } from "../../lib/use-announce-on-mount.ts";
 import style from "./status-message.module.scss";
 
 /**
@@ -52,16 +53,28 @@ export type StatusMessageActionProps = Readonly<{
 	children: ReactNode;
 }>;
 
-/** The message's frame, and its live region when `live` is set. */
+/**
+ * The message's frame, and its live region when `live` is set. A region that
+ * mounts with its words already in it is still announced.
+ */
 const Root = ({
 	live,
 	className,
 	children,
-}: StatusMessageRootProps): ReactNode => (
-	<div role={live} className={clsx(style.root, className)}>
-		{children}
-	</div>
-);
+}: StatusMessageRootProps): ReactNode => {
+	const ref = useAnnounceOnMount<HTMLDivElement>(
+		live !== undefined,
+	);
+
+	return (
+		<div
+			ref={ref}
+			role={live}
+			className={clsx(style.root, className)}>
+			{children}
+		</div>
+	);
+};
 
 /** The caller's glyph, on a disc tinted in `tone`. */
 const StatusIcon = ({

@@ -16,9 +16,9 @@ A status message takes the place of a region's content, in that region, under it
 
 A message that is news is a live region. A wait and an empty result are a status, read out when the screen reader pauses; a failure is an alert, read out at once. A message the reader came for, such as a welcome, is not news and is not a live region.
 
-### A live region is in place before its words
+### A live region that arrives filled is still announced
 
-A screen reader announces a live region when its text changes, and may say nothing about one that arrives already filled. Keep `Root` mounted and change what is inside it, as `LoadingMessage` does.
+A screen reader announces a live region when its text changes, and may say nothing about one that arrives already filled. So a live `Root` that mounts with its words in it nudges its last line of text once, invisibly, and the screen reader hears a change. Render a preset when the state begins, as `EmptyMessage` and `ErrorMessage` are; nothing has to stay mounted ahead of it. `LoadingMessage` keeps its region empty until the wait is worth announcing, and its words arriving are the change.
 
 ### One picture, then a title, a line and a way on
 

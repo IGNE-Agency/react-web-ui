@@ -5,6 +5,7 @@ import {
 	createContext,
 	type ReactElement,
 	type ReactNode,
+	use,
 	useRef,
 	useState,
 } from "react";
@@ -16,6 +17,7 @@ import {
 	SearchField,
 	type SearchFieldProps,
 } from "../search-field/search-field.tsx";
+import { FilterBarTriggerContext } from "./filter-bar-trigger.ts";
 import type { FilterView } from "./use-filter-view.ts";
 import style from "./filter-bar.module.scss";
 
@@ -64,6 +66,7 @@ const Root = <TFilters extends object>({
 	ref,
 	...props
 }: FilterBarRootProps<TFilters>): ReactNode => {
+	const triggerRef = useRef<HTMLButtonElement>(null);
 	const element = useRender({
 		defaultTagName: "search",
 		render,
@@ -76,7 +79,9 @@ const Root = <TFilters extends object>({
 
 	return (
 		<FilterBarContext value={filters}>
-			{element}
+			<FilterBarTriggerContext value={triggerRef}>
+				{element}
+			</FilterBarTriggerContext>
 		</FilterBarContext>
 	);
 };
@@ -117,10 +122,10 @@ export type FilterBarDrawerProps = Readonly<{
 	/** The trigger and the drawer's content: `FilterBar.Trigger` and `FilterBar.Content`. */
 	children: ReactNode;
 	/**
-	 * Where the drawer comes from: `"right"` for a side panel, `"down"` for a
-	 * bottom sheet, for example from the app's own viewport query.
+	 * Where the drawer comes from: `"right"` or `"left"` for a side panel,
+	 * `"down"` for a bottom sheet, for example from the app's own viewport query.
 	 */
-	swipeDirection: "right" | "down";
+	swipeDirection: "left" | "right" | "down";
 }>;
 
 /**
@@ -175,13 +180,17 @@ export type FilterBarButtonProps = Omit<
 		children: ReactNode;
 	}>;
 
-/** The button that opens the drawer, such as "Filters" with a `FilterBar.Badge`. */
+/**
+ * The button that opens the drawer, such as "Filters" with a `FilterBar.Badge`.
+ * Focus returns to it when an `ActiveFilters` in the bar loses its last chip.
+ */
 const Trigger = ({
 	icon,
 	children,
 	...props
 }: FilterBarButtonProps): ReactNode => (
 	<Drawer.Trigger
+		ref={use(FilterBarTriggerContext) ?? undefined}
 		render={
 			<Button variant="secondary" icon={icon} {...props}>
 				{children}
@@ -353,7 +362,10 @@ const Active = ({
 	});
 };
 
-/** Clears every committed filter and the search. */
+/**
+ * Clears every committed filter and the search, and moves focus to
+ * `FilterBar.Trigger` as the applied-filter row goes.
+ */
 const ClearAll = ({
 	icon,
 	children,
@@ -361,6 +373,7 @@ const ClearAll = ({
 	...props
 }: FilterBarButtonProps): ReactNode => {
 	const { clearAll } = useFilterBar();
+	const triggerRef = use(FilterBarTriggerContext);
 
 	return (
 		<Button
@@ -370,6 +383,7 @@ const ClearAll = ({
 			onClick={event => {
 				onClick?.(event);
 				clearAll();
+				triggerRef?.current?.focus();
 			}}>
 			{children}
 		</Button>
