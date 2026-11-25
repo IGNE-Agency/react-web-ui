@@ -29,7 +29,7 @@ A field group is a fieldset of fields that answer one question together, such as
 </form.FieldGroup>
 ```
 
-### The group's error is its only live region, and each control is described by its own lines
+### The group's error is the only live region for its fields' errors, and each control is described by its own lines
 
 A submit that fails three fields is announced once, by the group's alert, not three times. Every line has its own id, and a collected field's control chains its own description and its own lines into `aria-describedby`, never the whole error; see [a description and an error chain into aria-describedby](?path=/docs/design-system-principles-accessibility--docs#a-description-and-an-error-chain-into-aria-describedby). The fieldset itself is described by its description and, while the group has errors of its own, by its error.
 

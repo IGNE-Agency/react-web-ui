@@ -279,8 +279,8 @@ export type FieldErrorProps = Omit<
 /**
  * The one error part every control renders, after the description. Normalises
  * its errors to lines with `normalizeFieldErrors` and renders nothing when
- * there are none. It is the field's only live region, so a control must not
- * announce the same message a second time. In a field group that collects
+ * there are none. It is the only live region for the field's validity, so a
+ * control must not announce the same message a second time. In a field group that collects
  * the field, the group's error shows the lines instead, and the control is
  * described by them.
  *
@@ -442,7 +442,7 @@ export type FieldParts = Readonly<{
 /**
  * The field frame and its parts, over base-ui's `Field`. A control's primitive
  * renders inside `Root` and names itself through `Label`; `Description` comes
- * before `Error`, the field's only live region.
+ * before `Error`, the only live region for the field's validity.
  *
  * @example
  * <Field.Root name="email" invalid={invalid} requiredness="required">

@@ -105,10 +105,24 @@ export const ReadOnly: Story = {
 
 export const Required: Story = {
 	args: { requiredness: "required" },
+	play: async ({ canvas }) => {
+		await Promise.all(
+			canvas
+				.getAllByRole("textbox")
+				.map(slot => expect(slot).toBeRequired()),
+		);
+	},
 };
 
 export const Optional: Story = {
 	args: { requiredness: "optional" },
+	play: async ({ canvas }) => {
+		await Promise.all(
+			canvas
+				.getAllByRole("textbox")
+				.map(slot => expect(slot).not.toBeRequired()),
+		);
+	},
 };
 
 export const Invalid: Story = {

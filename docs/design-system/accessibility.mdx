@@ -168,22 +168,29 @@ Every rule on this page, one sentence each, for looking up rather than reading. 
 
 <Details title="Every control has a name, from exactly one mechanism">
 
-Where a library wires its own label to its own control, let it. Where the control is not a labelable element, like a segmented date group or a drop target, render the visible label as something else, give it an id, and point the control at it with `aria-labelledby`. Never both mechanisms on one control: the library either drops the label it was going to render or replaces the name we gave it, and which one happens is a version detail. The label is one string, on screen and announced. Explained in [A screen, read aloud](#a-screen-read-aloud).
+Where a library wires its own label to its own control, let it. Where the control is not a labelable element, like a segmented date group or a drop target, render the visible label as something else, give it an id, and point the control at it with `aria-labelledby`. A primitive whose control is not labelable, such as `DateInput`, does this itself: its root points the control at its `Label`, so a caller never passes `aria-labelledby` or an `id`. Never both mechanisms on one control: the library either drops the label it was going to render or replaces the name we gave it, and which one happens is a version detail. The label is one string, on screen and announced. Explained in [A screen, read aloud](#a-screen-read-aloud).
 
 <DoDont>
 <Example kind="do" caption="The visible label is the name, and the control points at it.">
 
 ```tsx
-<DateInput.Label id={labelId}>{label}</DateInput.Label>
-<DateInput.Root aria-labelledby={labelId} />
+<DateInput.Root value={date} onValueChange={setDate}>
+	<DateInput.Label>{label}</DateInput.Label>
+	<DateInput.Group>…</DateInput.Group>
+</DateInput.Root>
 ```
 
 </Example>
 <Example kind="dont" caption="Two strings for one control, and the visible one names nothing.">
 
 ```tsx
-<Field.Label id={labelId}>{label}</Field.Label>
-<DateInput.Root aria-label={label} />
+<p>{label}</p>
+<DateInput.Root
+	aria-label={label}
+	value={date}
+	onValueChange={setDate}>
+	<DateInput.Group>…</DateInput.Group>
+</DateInput.Root>
 ```
 
 </Example>
@@ -193,26 +200,28 @@ Where a library wires its own label to its own control, let it. Where the contro
 
 <Details title="A description and an error chain into aria-describedby">
 
-A field joins the ids of whichever of its description and its error are actually on screen, description first, and hands the control the result. An error that only exists in the DOM [once validation fails](?path=/docs/design-system-patterns--docs#an-invalid-form-says-so-when-it-is-submitted-then-keeps-up) must not leave its id behind when it goes, and must not be missing from the chain when it arrives. Where the primitive owns the frame it does this itself; where the ids come from `Field.useIds`, the joining is ours. Explained in [A screen, read aloud](#a-screen-read-aloud).
+A field joins the ids of whichever of its description and its error are actually on screen, description first, and hands the control the result. An error that only exists in the DOM [once validation fails](?path=/docs/design-system-patterns--docs#an-invalid-form-says-so-when-it-is-submitted-then-keeps-up) must not leave its id behind when it goes, and must not be missing from the chain when it arrives. A primitive's root does this itself, for its `Description` and `Error`; a control wired by hand from `Field.useIds` gets the chain from its `describedBy`. Explained in [A screen, read aloud](#a-screen-read-aloud).
 
 <DoDont>
 <Example kind="do" caption="Only the ids that are rendered.">
 
 ```tsx
-const describedBy =
-	[
-		description === undefined ? undefined : descriptionId,
-		messages.length === 0 ? undefined : errorId,
-	]
-		.filter(id => id !== undefined)
-		.join(" ") || undefined;
+const { describedBy } = Field.useIds();
+<div
+	role="group"
+	aria-describedby={describedBy(
+		description !== undefined,
+		invalid,
+	)}
+/>;
 ```
 
 </Example>
 <Example kind="dont" caption="The error is on screen and absent from the announcement.">
 
 ```tsx
-<DateInput.Root aria-describedby={descriptionId} />
+const { descriptionId } = Field.useIds();
+<div role="group" aria-describedby={descriptionId} />;
 ```
 
 </Example>
@@ -280,7 +289,7 @@ Every control takes a visible label; where the layout genuinely cannot carry one
 
 </Details>
 
-<Details title="A field's error is its only live region">
+<Details title="A field's error is the only live region for its validity">
 
 `Field.Error` carries `role="alert"`, so a message that appears while someone is in the field interrupts rather than waiting for focus to land there again. That is one announcement per message: the alert when it arrives, the described-by chain when focus arrives. A second `role="status"` or `aria-live` over the same text reads it twice. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
 
@@ -307,7 +316,7 @@ Every control takes a visible label; where the layout genuinely cannot carry one
 
 <Details title="A counter and a pending state do not announce per keystroke">
 
-A character counter is `aria-live="off"`, and the limit it counts against is in the field's description. A pending indicator is a status region that mounts only once the wait has outlasted the delay, so it announces late, once; `useBusyPhase` is its one implementation, shared by the stale treatment and the pending inlay. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
+A character counter is `aria-live="off"`, and the limit it counts against is in the field's description. A field's pending inlay mounts only once the wait has outlasted the delay, and is decoration: the wait reaches assistive tech as the field's `aria-busy`, never as an announcement. `useBusyPhase` is the one timing, shared by the stale treatment, the pending inlay and the submit button that announces a form's wait. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
 
 <DoDont>
 <Example kind="do" caption="The counter exists for the eye, so it is never announced.">

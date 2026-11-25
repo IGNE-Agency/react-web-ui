@@ -81,7 +81,7 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
 
 ### A select is labelled through the field's label prop
 
-Label it with the field's own `label` prop rather than a `for` attribute: [the field ties its label to the trigger itself](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism), and an `id` given to the field never reaches the trigger, so a `for` pointed at it names nothing.
+Label it with the field's own `label` prop rather than a `for` attribute: [the field ties its label to the trigger itself](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism), so a `<label>` of your own pointed at the trigger is a second mechanism on one control, beside a field label left empty.
 
 <DoDont>
 <Example kind="do" caption="The component ties its label to its own trigger.">
@@ -96,7 +96,7 @@ Label it with the field's own `label` prop rather than a `for` attribute: [the f
 ```
 
 </Example>
-<Example kind="dont" caption="A label pointed at an id that stops at the field.">
+<Example kind="dont" caption="Two labels for one trigger, and the field's own is empty.">
 
 ```tsx
 <label htmlFor={id}>Status</label>

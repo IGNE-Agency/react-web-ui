@@ -28,7 +28,7 @@ While a submit is in flight, or while `busy` says the form waits on other work, 
 
 ### A failed submit takes the user to the first thing to fix
 
-After a submit the validators refuse, focus moves to the first invalid control in document order, once the form is enabled again, and the control is scrolled to the middle of the view, instantly under reduced motion. A field hands focus to its invalid control, else to its selected option, else to the first control Tab would reach.
+After a submit the validators refuse, the form hook `createAppForm` builds asks the `Form.Root` the form renders in to move focus to its first invalid control in document order, once the form is enabled again, and the control is scrolled to the middle of the view, instantly under reduced motion. A field hands focus to its invalid control, else to its selected option, else to the first control Tab would reach.
 
 ### The submit button announces a wait late, and then holds it
 

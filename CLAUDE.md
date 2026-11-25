@@ -199,18 +199,28 @@ tools/            build- and lint-time scripts
 
 A form control family is named after its prefab and lives in `src/components/<control>-field/`:
 
-1. **The primitive**, a compound exported as `<Primitive>` (`TextInput`, `Select`, `Checkbox`). Text-like primitives are named `*Input`.
+1. **The primitive**, a compound exported as `<Primitive>` (`TextInput`, `Select`, `Checkbox`). Text-like primitives are named `*Input`; `Textarea` is not one but a control part placed in `TextInput.Group`, so `TextareaField`'s primitive is `TextInput`.
 2. **The prefab**, `<Control>Field` (`TextField`, `SelectField`), which composes the primitive's parts with `Field`.
 3. **The connector**, `TSF<Control>Field`, which connects the prefab to TanStack Form. An app registers the connectors it uses through `createAppForm(fieldComponents, formComponents?)` from `./forms`: field connectors as field components, and form-level connectors that read several fields, such as `TSFFieldGroup`, as form components. It returns `useAppForm`, `withForm` and `withFieldGroup`; `./forms` also exports `useFieldContext` and `useFormContext`. Stories and tests use the full registry in `src/lib/storybook/app-form.tsx`.
 
 Presets (`EmailField`, `PhoneField`, `SearchField`, `PasswordField`) get a prefab and a connector only, and reuse another control's primitive.
 
-Every field takes the same props on every tier: `label`, `description`, `errors?: unknown`, `requiredness?: "required" | "optional"`, `dirty`, `touched` and `pending`. The connectors pass them at the top level.
+Each tier takes the field's props it does not get from elsewhere:
+
+- The prefab takes them all, at the top level: `label`, `description`, `errors?: unknown`, `requiredness?: "required" | "optional"`, `dirty`, `touched` and `pending`.
+- The connector takes `label`, `description` and `requiredness`. The form supplies `errors`, `dirty`, `touched` and `pending`, with the name, the value and the blur, through `useConnectedField` (`src/lib/forms/use-connected-field.ts`), so a connector takes none of them.
+- The primitive's `Root` takes the states, `requiredness` included, but not `label` or `description`: those are parts placed inside it, with `Field.Requiredness` in the label.
+
+Every primitive's `Root` keeps one contract, so a hand-composed field is wired like the prefab:
+
+- It takes the field states and draws the field frame (`Field.Root`, or `Fieldset` for a group of controls), projecting the states through `useFieldState` and `fieldStateAttributes`.
+- It owns the ids that tie the control to its `Label`, `Description` and `Error`; the requiredness, as the control's `required` or `aria-required`; and, where focus moves among several elements (a popup, segments, slots), the blur, called once focus has left the whole field.
+- It shares its state with its parts through context, so no part takes a state the root already has.
 
 - `requiredness` left out shows neither mark. Nothing is inferred from a schema and there is no default.
-- `errors` is normalised by `normalizeFieldErrors` (strings, and anything with a string `message`, which covers Standard Schema issues). A field's only live region is `Field.Error`, which renders `ErrorText`, after the description.
+- `errors` is normalised by `normalizeFieldErrors` (strings, and anything with a string `message`, which covers Standard Schema issues). `Field.Error`, which renders `ErrorText` after the description, is the only live region for the field's validity; a control's other announcements (a copy's outcome, an options list's load state) never repeat an error.
 - Validators are the app's own, through Standard Schema. The kit ships none.
-- `Form.Root` renders `<form noValidate>`, disables its fields while busy, and focuses the first invalid control after a failed submit. `Form.Errors` shows form-level errors. `Form.Submit` shows its busy state through `useBusyPhase`.
+- `Form.Root` renders `<form noValidate>` and disables its fields while busy. The form hook `createAppForm` builds focuses the first invalid control after a failed submit, for a form rendered in a `Form.Root` (`src/lib/forms/failed-submit.tsx`). `Form.Errors` shows form-level errors. `Form.Submit` shows its busy state through `useBusyPhase`.
 
 ---
 
@@ -233,7 +243,7 @@ Every component has a colocated `*.stories.tsx` next to it. Each story is also a
 - A play function that closes a popup waits for it to unmount before the next step. Await every async assertion.
 - A story never shows a design-system "don't". Do, don't and caution examples live only on the design-system pages, as `Example` cards: `DoDont` lays a pair side by side, `Beside` sets a lone card next to its text; a component's API can't express the mistake, by design.
 - A component's own design rules live on its docs page: a `.mdx` beside the stories, named after them, that attaches with `<Meta of={XStories} />` and puts the rules inside `<DocsPage>` under `## Rules` (see `src/components/button/button.mdx`). A rule shared by components with no single owner stays on a design-system page.
-- The meta names the design-system sections and component pages the component follows: `parameters: { designSystem: [{ page: "Components", section: "Form fields" }, { page: "Principles/Interaction", section: "Everything you can reach with the keyboard shows the focus ring" }, { component: "components/button" }] }`, where `page` is the page's title under "Design system", folder included, and `component` is the other component's story title. Its docs page links back to them.
+- The meta names the design-system sections and component pages the component follows: `parameters: { designSystem: [{ page: "Patterns", section: "Where you type" }, { page: "Principles/Interaction", section: "Everything you can reach with the keyboard shows the focus ring" }, { component: "components/button" }] }`, where `page` is the page's title under "Design system", folder included, and `component` is the other component's story title. Its docs page links back to them.
 - Colour contrast is judged by APCA (`apca-check`), not WCAG 2: body text at bronze, and muted text (the `text-muted` role) at APCA's minimum for content text that is not body text, Lc 60 (`.storybook/contrast-checks.ts`). Fix a contrast failure by pointing the role at the nearest step of its ramp that passes, in `tokens/sys.tokens.json`, or `tokens/dark.tokens.json` for the dark theme. One shade per role; the ramps themselves never change.
 - An a11y waiver is a per-rule `parameters.a11y.config.rules` entry on the one story that needs it, with its reason in `parameters.docs.description.story`. Never turn the a11y test off.
 

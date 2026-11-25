@@ -8,17 +8,17 @@ import * as FieldStories from "./field.stories.tsx";
 
 ## Rules
 
-### Every control comes in three tiers, and the field frame belongs to the middle one
+### Every control comes in three tiers, and the primitive draws the field frame
 
 A control family is named after its prefab: `TextInput` → `TextField` → `TSFTextField`. Pick the lowest tier that does the job.
 
-1. **The primitive**, such as `TextInput` or `Select`, owns the control and its field frame. Its root takes the field's states and hands them to every part, and the label, description and error are parts the caller places inside it. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control, and its `Description` and `Error` still describe it.
+1. **The primitive**, such as `TextInput` or `Select`, owns the control and its field frame. Its root takes the field's states, draws the frame, owns the ids, the requiredness and the blur, and hands its state to every part; the label, description and error are parts the caller places inside it. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control, and its `Description` and `Error` still describe it.
 2. **The prefab**, such as `TextField`, assembles the primitive's parts with `Field` into the ordinary case: a label above a full-width control, then the description, then the error. It is built from the parts, never a second implementation of them, and it takes no prop that switches it to another anatomy. A control that should not be a stacked field drops to the primitive.
 3. **The connector**, such as `TSFTextField`, connects the prefab to TanStack Form. It is registered in the form hook an app builds with `createAppForm` and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix.
 
-### Every field takes the same props on every tier
+### Each tier takes the field props nothing else supplies
 
-`label`, `description`, `errors`, `requiredness`, `dirty`, `touched` and `pending`, with the same meaning on the prefab and the connector. A connector passes them at the top level. The primitive's root takes the states among them, `requiredness` included; the label, the description and the requiredness suffix are parts placed inside it.
+The prefab takes them all at the top level: `label`, `description`, `errors`, `requiredness`, `dirty`, `touched` and `pending`. The connector takes `label`, `description` and `requiredness`, with the same meaning; the form supplies `errors`, `dirty`, `touched` and `pending`, so the connector takes none of them. The primitive's root takes the states, `requiredness` included; the label, the description and the requiredness suffix are parts placed inside it.
 
 ```tsx
 <form.AppField name="email">
@@ -34,7 +34,7 @@ A control family is named after its prefab: `TextInput` → `TextField` → `TSF
 
 ### Requiredness is stated, never inferred
 
-`requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails the `CopyProvider`'s `optional`, which is part of the control's name.
+`requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A field in a form states one or the other; only a field outside a form, which asks nothing of anyone, leaves it out. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails the `CopyProvider`'s `optional`, which is part of the control's name.
 
 ### A label renders its children, and the suffix is a part
 
@@ -66,9 +66,9 @@ A label beside its control, such as a lone checkbox's, keeps the required mark w
 </Checkbox.Root>
 ```
 
-### The error is the field's only live region, after the description
+### The error is the only live region for the field's validity, after the description
 
-`Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time, and any line of error makes the field invalid.
+`Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time: what else it announces, such as a copy's outcome or an options list's load state, is never an error. Any line of error makes the field invalid.
 
 ### A wait inside a field is a spinner inlay, and the field says it is busy
 

@@ -59,8 +59,9 @@ export type FormRootProps = Omit<
 
 /**
  * The `<form>`: it submits through the form instance, disables its fields while
- * busy, focuses the first invalid control after a failed submit, and reports
- * unsaved changes to the page's leave guards while `leaveGuard` holds.
+ * busy, focuses the first invalid control when a form from `createAppForm`'s
+ * hook fails a submit, and reports unsaved changes to the page's leave guards
+ * while `leaveGuard` holds.
  *
  * @example
  * <Form.Root form={form}>…</Form.Root>

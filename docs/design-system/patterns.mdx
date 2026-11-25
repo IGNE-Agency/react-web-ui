@@ -372,7 +372,7 @@ Invalid is the whole field turning: error ink on an error fill, inside an error 
 	/>
 </DoDont>
 
-Every field says when it is optional, always. <Pull>Silence is not the signal for either state: a field that says nothing is a field nobody can tell is optional.</Pull> The marker goes on the field's own label, which is also why a group of boxes or radios has a label of its own: the marker belongs to the field, not to the third option down.
+Every field in a form says whether it is required or optional, always. <Pull>Silence is not the signal for either state: a field that says nothing is a field nobody can tell is optional.</Pull> A field outside a form, such as a filter in a toolbar, asks nothing of anyone and leaves `requiredness` out. The marker goes on the field's own label, which is also why a group of boxes or radios has a label of its own: the marker belongs to the field, not to the third option down.
 
 <DoDont>
 	<Example
@@ -1413,9 +1413,9 @@ The format goes in the field's `description`, and the separators and case are no
 
 </Details>
 
-<Details title="Every field says when it is optional, on its own label">
+<Details title="Every field in a form says when it is optional, on its own label">
 
-A group of checkboxes or radios takes a `label` of its own, so the marker has a label to sit on. Explained in [What a field says about itself](#what-a-field-says-about-itself).
+A field in a form always passes `requiredness`, `"required"` or `"optional"`; left out, it shows neither mark, which only a field outside a form may do. A group of checkboxes or radios takes a `label` of its own, so the marker has a label to sit on. Explained in [What a field says about itself](#what-a-field-says-about-itself).
 
 <DoDont>
 <Example kind="do" caption="The group is named, so the marker has somewhere to live.">

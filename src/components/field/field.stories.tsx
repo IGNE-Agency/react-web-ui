@@ -120,7 +120,7 @@ const meta = {
 			{
 				page: "Patterns",
 				section:
-					"Every field says when it is optional, on its own label",
+					"Every field in a form says when it is optional, on its own label",
 			},
 			{
 				page: "Principles/Accessibility",
@@ -129,7 +129,8 @@ const meta = {
 			},
 			{
 				page: "Principles/Accessibility",
-				section: "A field's error is its only live region",
+				section:
+					"A field's error is the only live region for its validity",
 			},
 			{ component: "components/error-text" },
 		],

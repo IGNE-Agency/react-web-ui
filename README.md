@@ -260,7 +260,7 @@ export const { useAppForm, withForm, withFieldGroup } =
 </form.FieldGroup>
 ```
 
-Every field takes `requiredness` (`"required"`, `"optional"`, or left out to show neither mark) and `errors`, which accepts strings and anything with a string `message`, such as Standard Schema issues. Validation is the app's own, through Standard Schema; the kit ships no validators.
+Every field takes `requiredness` (`"required"`, `"optional"`, or left out to show neither mark). A prefab or a primitive's root also takes `errors`, which accepts strings and anything with a string `message`, such as Standard Schema issues; a connector reads them, with `dirty`, `touched` and `pending`, from its form field. Validation is the app's own, through Standard Schema; the kit ships no validators.
 
 `Form.Root` reports unsaved changes to the page's leave guards (`useLeaveGuard`, or `useRouterLeaveGuard` from `./unsaved-changes/tanstack-router`) while its `leaveGuard` policy returns true for the form's live state. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. Pass `never` for a form whose edits need not survive leaving, or any `(state) => boolean`:
 

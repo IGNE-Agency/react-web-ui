@@ -137,6 +137,7 @@ const OtpInputGroup = ({
 	return (
 		<BaseOTPField.Root
 			{...base}
+			required={state.requiredness === "required"}
 			className={clsx(style.group, className)}
 			{...fieldStateAttributes(state)}
 			{...props}
