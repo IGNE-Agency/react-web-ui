@@ -57,10 +57,13 @@ export type ItemQuery<
  */
 export type ComboboxItems<TItem> =
 	| Readonly<{
+			/** The items, filtered on the client. */
 			items: readonly TItem[];
 			/** How far `items` have loaded, when they come from a query. */
 			load?: OptionsLoad;
+			/** The paged query, searched on the server; not with `items`. */
 			query?: never;
+			/** Hands the debounced search text on to `query`; not with `items`. */
 			onSearchChange?: never;
 	  }>
 	| Readonly<{
@@ -68,7 +71,9 @@ export type ComboboxItems<TItem> =
 			query: PagedQuery<TItem>;
 			/** Hands the debounced search text on to the query. */
 			onSearchChange: (search: string) => void;
+			/** The items, filtered on the client; not with `query`. */
 			items?: never;
+			/** How far `items` have loaded; not with `query`. */
 			load?: never;
 	  }>;
 

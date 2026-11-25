@@ -20,6 +20,7 @@ export type SwitchFieldProps = FieldProps &
 		| "readOnly"
 	> &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;

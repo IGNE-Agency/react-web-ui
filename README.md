@@ -15,9 +15,10 @@ Some entry points need an optional peer as well:
 
 | Import | Needs |
 | --- | --- |
+| `@igne-agency/react-web-ui/combobox-field/react-query` | `@tanstack/react-query` |
 | `@igne-agency/react-web-ui/composer` | `lexical`, `@lexical/react`, `@lexical/history`, `@lexical/plain-text` |
 | `@igne-agency/react-web-ui/data-table` | `@tanstack/react-table` |
-| `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query` |
+| `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query`, `@tanstack/react-table` |
 | `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
 | `@igne-agency/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css` |
 | `@igne-agency/react-web-ui/terrazzo/vite` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css`, `vite` |

@@ -19,6 +19,7 @@ export type OtpInputBaseProps = Pick<
 	| "id"
 > &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 	}>;
 

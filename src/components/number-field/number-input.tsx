@@ -38,20 +38,31 @@ export type NumberInputRootProps = Omit<
 	"label" | "description"
 > &
 	Readonly<{
+		/** The current value, or `null` while the control is empty. */
 		value: number | null;
+		/** Called with the new value. */
 		onValueChange: (value: number | null) => void;
 		/** How the amount is rendered and parsed inside the control. */
 		format?: Intl.NumberFormatOptions;
+		/** The smallest value allowed. */
 		min?: number;
+		/** The largest value allowed. */
 		max?: number;
+		/** How far the steppers and arrow keys move the value. */
 		step?: number;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
+		/** Submits the value under this name. */
 		name?: string;
+		/** The control's id. */
 		id?: string;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 

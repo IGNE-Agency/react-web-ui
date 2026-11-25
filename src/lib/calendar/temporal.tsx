@@ -36,6 +36,7 @@ import {
 } from "../../components/field/input-parts.tsx";
 import { focusControlOnRim } from "../../components/field/rim-focus.ts";
 import { withFieldFocus } from "../../components/field/use-field-focus.ts";
+import { usePopupEdgePadding } from "../popup-edge-padding.ts";
 import style from "./temporal.module.scss";
 
 export type TemporalStateProps = Readonly<{
@@ -73,12 +74,15 @@ export type TemporalRootBaseProps = Omit<
 	Readonly<{
 		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
 		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 
@@ -391,13 +395,14 @@ export const TemporalTrigger = ({
 
 export type TemporalPopoverProps = Omit<
 	ComponentProps<typeof AriaPopover>,
-	"className"
+	"className" | "ref"
 > &
 	Readonly<{ className?: string }>;
 
 /**
  * The floating surface the calendar lands on, aligned to whatever `triggerRef`
- * names: the calendar button, rather than the whole field.
+ * names: the calendar button, rather than the whole field. It keeps clear of the
+ * viewport's edges.
  *
  * @example
  * <DateInput.Popover triggerRef={triggerRef}><DateInput.Dialog>…</DateInput.Dialog></DateInput.Popover>
@@ -406,13 +411,19 @@ export const TemporalPopover = ({
 	className,
 	placement = "bottom end",
 	...props
-}: TemporalPopoverProps): ReactNode => (
-	<AriaPopover
-		className={clsx(style.popover, className)}
-		placement={placement}
-		{...props}
-	/>
-);
+}: TemporalPopoverProps): ReactNode => {
+	const { ref, collisionPadding } = usePopupEdgePadding();
+
+	return (
+		<AriaPopover
+			ref={ref}
+			containerPadding={collisionPadding}
+			className={clsx(style.popover, className)}
+			placement={placement}
+			{...props}
+		/>
+	);
+};
 
 export type TemporalDialogProps = Omit<
 	ComponentProps<typeof AriaDialog>,

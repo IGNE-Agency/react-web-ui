@@ -34,7 +34,7 @@ The kit ships built JavaScript, one module per source file, and one plain `.css`
 - Every `dependencies` and `peerDependencies` package is external. `sideEffects` is `["**/*.css"]`.
 - Declarations come from `tsc -p tsconfig.build.json`. `isolatedDeclarations` is on: every exported value carries a type the declaration emitter can read without inference. Annotate component return types, and type namespace objects explicitly.
 - `types` comes first in every `exports` entry. `bun run check:exports` asserts it, that every component folder has an export, that the root barrel imports no optional peer, that nothing under `docs/` or `.storybook/`, no `*.stories.*`, `*.mdx` or `.svg` and no `vendor/` folder is packed, that every packed stylesheet opens with the layer order, and that every custom property in the package is `--kit-*`, `--_kit-*`, `--sys-*`, `--ref-*` or one a headless library publishes. It then packs the kit into the consumer app in `tools/fixtures/consumer/`, typechecks and builds it, and asserts that importing one component brings only its own CSS; extend its entry table to prove a new packaging claim. It also asserts that every subpath brings exactly the stylesheets `tools/fixtures/consumer/stylesheets.json` lists for it, built and in the dev server. Last, it asserts that the packed `./terrazzo/vite` plugin in the fixture's Vite config builds the fixture's tokens, in a build and when a dev server starts.
-- The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`, `lexical`). Those have their own entry: `./composer`, `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`.
+- The root `.` re-exports every component folder except those that need an optional peer (`@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-router`, `lexical`). Those have their own entry: `./composer`, `./data-table`, `./data-view`, `./unsaved-changes/tanstack-router`. So does `./combobox-field/react-query`, the one combobox module that needs `@tanstack/react-query`.
 - The public lib modules have subpaths of their own too: `./forms`, `./hooks`, `./storage`, `./table-storage`, `./tone` and `./unsaved-changes`.
 - `./terrazzo` is the token preset and `./terrazzo/vite` the Vite plugin that builds an app's tokens with it, both built for Node with `tsconfig.terrazzo.json`. The plugin reads `terrazzo.config.*` from the working directory, which Terrazzo resolves the config's paths from, and builds the tokens before `vite build` and when the dev server starts, then again on every change to the config or a token file the resolver reads. It never goes through `tz build`, which loads the app's `vite.config.ts` a second time. The kit's own Vite configs, the library's and Storybook's, use it too. `./base.css` and `./tokens.css` are the reset and the default theme. `./tokens/*` are the DTCG files an app's resolver layers.
 - Relative imports only, with their `.ts` / `.tsx` extension. There is no `@/` alias.
@@ -181,6 +181,8 @@ Find a rule without reading whole pages. Every rule a design-system page makes i
 
 ```
 src/components/   one flat folder per component, each with an index.ts barrel
+src/data-table/   the DataTable compound, the ./data-table entry
+src/data-view/    useDataView, the ./data-view entry
 src/lib/          non-component internals: forms, hooks, calendar, storybook wrappers, tone, storage
 src/style/        the SCSS mixins, layers.scss and base.scss
 src/terrazzo/     the token preset, built to dist/terrazzo/ for Node
@@ -193,7 +195,7 @@ tools/            build- and lint-time scripts
 - A component folder is `src/components/<kebab-name>/` and becomes the `./<kebab-name>` export. When you add one, add its line to `src/index.ts` (`export * from "./components/<name>/index.ts"`, unless it needs an optional peer) and its entry to `package.json` `exports`, `types` first. Keep both lists sorted.
 - A compound component is one namespace object of parts. Parts are the API: every part takes `className` and spreads its props (`useRender` / `render` where the part is one element), so callers own the markup. Parts that are pure wiring (Portal + Positioner + Popup) may be bundled into one part, with the unbundled parts still exported.
 - A compound gets a prefab (the namespace is the prefab function with the parts hanging off it, like `AvatarGroup`) only when it saves real work: logic the parts don't run (overflow math, page ranges, a promise flow), or accessibility wiring a caller would repeat and could get wrong (the `*Field` prefabs, `Tooltip`). A prefab is never the parts re-expressed as props or an `items` array.
-- Hooks live in `src/lib/hooks/` and are re-exported from the root barrel and from `./hooks`.
+- A hook no single component or module owns lives in `src/lib/hooks/` and is re-exported from the root barrel and from `./hooks`. A hook that belongs to one component, entry or lib module (its context hook, `useLocale`, `useFilterView`, `useDataView`, `useLeaveGuard`) lives beside it and is exported from its barrel.
 
 ### Form controls: three tiers
 

@@ -1,6 +1,11 @@
 @use "../../style/layers.scss";
+@use "../../style/popup.scss" as popup;
 
 @layer kit.components {
+	.positioner {
+		@include popup.edge-padding;
+	}
+
 	.popup {
 		max-inline-size: var(
 			--kit-tooltip-max-inline-size,

@@ -49,7 +49,9 @@ export type ComboboxFieldChrome = FieldProps &
 	Readonly<{
 		/** Shown in the control while nothing is chosen. */
 		placeholder?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** The form field's name. */
 		name?: string;
@@ -82,8 +84,12 @@ export type ComboboxItemLookup<
 	TData = TItem,
 	TKey extends QueryKey = QueryKey,
 > =
-	| Readonly<{ itemQuery?: never }>
 	| Readonly<{
+			/** Looks up the chosen items the loaded list does not hold. */
+			itemQuery?: never;
+	  }>
+	| Readonly<{
+			/** Looks up the chosen items the loaded list does not hold. */
 			itemQuery: ItemQuery<TItem, TData, TKey>;
 	  }>;
 

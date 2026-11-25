@@ -18,10 +18,14 @@ export type TimeFieldProps = FieldProps &
 		/** Called with the `"HH:mm"` typed, or `null` once cleared. */
 		onValueChange?: (value: string | null) => void;
 
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 
+		/** Submits the time under this name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 
 		/** Applied to the field wrapper, so callers can size the control. */

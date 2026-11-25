@@ -92,6 +92,7 @@
 	}
 
 	.popover {
+		@include popup.edge-padding;
 		@include popup.surface;
 
 		inline-size: max-content;

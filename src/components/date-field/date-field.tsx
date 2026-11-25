@@ -25,6 +25,7 @@ export type DateFieldProps = FieldProps &
 		/** Called with the ISO plain date picked or typed, or `null` once cleared. */
 		onValueChange?: (value: string | null) => void;
 
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 
 		/** Earliest selectable ISO plain date. */
@@ -33,8 +34,11 @@ export type DateFieldProps = FieldProps &
 		/** Latest selectable ISO plain date. */
 		maxValue?: string;
 
+		/** Submits the date under this name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 
 		/** Applied to the field wrapper, so callers can size the control. */

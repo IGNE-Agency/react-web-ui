@@ -15,12 +15,17 @@ export type ToggleGroupFieldProps = FieldProps &
 		options: readonly ChoiceOption[];
 		/** The chosen values. */
 		value: readonly string[];
+		/** Called with the new value. */
 		onValueChange: (value: readonly string[]) => void;
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
+		/** Lays the options out in a row or a column. @default "horizontal" */
 		orientation?: BaseToggleGroup.Props["orientation"];
 		/** Applied to the field wrapper, so callers can place the group. */
 		className?: string;

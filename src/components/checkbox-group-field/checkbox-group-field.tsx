@@ -23,9 +23,11 @@ export type CheckboxGroupFieldProps = FieldProps &
 	Readonly<{
 		/** The boxes, in the order they read. */
 		items: readonly CheckboxGroupItem[];
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** Prefixes each box's id, so ids stay stable across renders. */
 		name?: string;
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** Applied to the fieldset, so callers can place the group. */
 		className?: string;

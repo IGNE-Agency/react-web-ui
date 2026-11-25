@@ -24,6 +24,7 @@ export type SwitchRootProps = FieldRootProps &
 	Readonly<{
 		/** The switch is on. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 	}>;
 

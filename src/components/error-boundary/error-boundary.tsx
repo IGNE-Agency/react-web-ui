@@ -30,7 +30,7 @@ type DefaultFallbackProps = SharedProps &
 		description?: string;
 		/** A glyph on the fallback's error disc. */
 		icon?: ErrorMessageProps["icon"];
-		/** Offers a retry button in the fallback. */
+		/** Offers a retry button in the fallback. @default false */
 		retryable?: boolean;
 		fallbackRender?: never;
 	}>;

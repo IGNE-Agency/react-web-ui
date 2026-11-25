@@ -35,8 +35,15 @@ export type TSFComboboxFieldProps<
 	TKey extends QueryKey = QueryKey,
 > = Connected<TItem, TData, TKey> &
 	(
-		| Readonly<{ multiple?: false }>
-		| (Readonly<{ multiple: true }> & SelectedLabel<TItem>)
+		| Readonly<{
+				/** Allows more than one item to be chosen. @default false */
+				multiple?: false;
+		  }>
+		| (Readonly<{
+				/** Allows more than one item to be chosen. @default false */
+				multiple: true;
+		  }> &
+				SelectedLabel<TItem>)
 	);
 
 const SingleField = <TItem, TData, TKey extends QueryKey>({

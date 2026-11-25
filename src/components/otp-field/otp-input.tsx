@@ -37,13 +37,17 @@ export type OtpInputRootProps = Omit<
 > &
 	OtpInputBaseProps &
 	Readonly<{
+		/** The current value. */
 		value: string;
+		/** Called with the new value. */
 		onValueChange: (value: string) => void;
 		/** Number of character slots. @default 6 */
 		length?: number;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 

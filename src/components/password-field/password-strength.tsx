@@ -47,6 +47,7 @@ const useBand = (): string =>
 export type PasswordStrengthRootProps =
 	useRender.ComponentProps<"div"> &
 		Readonly<{
+			/** The password whose strength is measured. */
 			password: string;
 			/**
 			 * zxcvbn language packs beside the kit's English and Dutch ones, by lowercase
@@ -292,6 +293,7 @@ const Suggestion = ({
 	});
 
 export type PasswordStrengthProps = Readonly<{
+	/** The password whose strength is measured. */
 	password: string;
 	/**
 	 * zxcvbn language packs beside the kit's English and Dutch ones, by lowercase

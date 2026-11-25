@@ -7,15 +7,23 @@
  */
 export type ComboboxMode<TItem> =
 	| Readonly<{
+			/** Allows more than one item to be chosen. @default false */
 			multiple?: false;
+			/** The chosen item, or `null` while nothing is chosen. */
 			value?: TItem | null;
+			/** The same, for an uncontrolled control. */
 			defaultValue?: TItem | null;
+			/** Called with the new value. */
 			onValueChange?: (value: TItem | null) => void;
 	  }>
 	| Readonly<{
+			/** Allows more than one item to be chosen. @default false */
 			multiple: true;
+			/** The chosen items. */
 			value?: readonly TItem[];
+			/** The same, for an uncontrolled control. */
 			defaultValue?: readonly TItem[];
+			/** Called with the new value. */
 			onValueChange?: (value: readonly TItem[]) => void;
 			/** Names the group of tags, such as "Selected statuses". */
 			selectedLabel: string;

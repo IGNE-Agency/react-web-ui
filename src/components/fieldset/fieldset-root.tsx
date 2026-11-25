@@ -86,6 +86,7 @@ export type FieldsetRootProps = FieldRootProps &
 	Readonly<{
 		/** A choice is made. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** The fields whose errors the group shows in its own error instead of under each field. */
 		members?: readonly FieldsetMember[];

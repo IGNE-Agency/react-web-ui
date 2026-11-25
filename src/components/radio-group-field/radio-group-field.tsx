@@ -21,6 +21,7 @@ export type RadioGroupFieldProps = FieldProps &
 	Readonly<{
 		/** The mutually exclusive choices, in the order they read. */
 		options: readonly ChoiceOption[];
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;

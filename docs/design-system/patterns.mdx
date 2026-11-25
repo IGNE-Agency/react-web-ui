@@ -62,7 +62,7 @@ A product is built from components, but people meet it in moments, and in famili
 ## Applies to
 
 - **Regions of data:** [data tables](?path=/docs/components-data-table--docs), [comment threads](?path=/docs/components-conversation--docs), [stale content](?path=/docs/components-stale--docs), the menus of [selects](?path=/docs/components-select-field--docs) and [comboboxes](?path=/docs/components-combobox-field--docs), and [popovers](?path=/docs/components-popover--docs) that load details.
-- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs), banners, and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
+- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs) and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
 - **Fields and forms:** [forms](?path=/docs/components-form--docs), [text fields](?path=/docs/components-text-field--docs), [password fields](?path=/docs/components-password-field--docs), [text areas](?path=/docs/components-textarea-field--docs), [number fields](?path=/docs/components-number-field--docs), [selects](?path=/docs/components-select-field--docs), [comboboxes](?path=/docs/components-combobox-field--docs), [date fields](?path=/docs/components-date-field--docs), [date range fields](?path=/docs/components-date-range-field--docs), [time fields](?path=/docs/components-time-field--docs), [checkboxes](?path=/docs/components-checkbox-field--docs), [checkbox groups](?path=/docs/components-checkbox-group-field--docs), [radio groups](?path=/docs/components-radio-group-field--docs), [segmented controls](?path=/docs/components-segmented-control-field--docs), [toggle groups](?path=/docs/components-toggle-group-field--docs), [switches](?path=/docs/components-switch-field--docs), [file fields](?path=/docs/components-file-field--docs), [photo fields](?path=/docs/components-photo-field--docs), [one-time code fields](?path=/docs/components-otp-field--docs) and the preset fields for [email](?path=/docs/components-email-field--docs), [phone numbers](?path=/docs/components-phone-field--docs) and [search](?path=/docs/components-search-field--docs).
 - **Labels pinned to things:** [tags](?path=/docs/components-tag--docs), [tag groups](?path=/docs/components-tag-group--docs), [badges](?path=/docs/components-badge--docs) and the [filter bar](?path=/docs/components-filter-bar--docs).
 - **Navigation:** [the nav](?path=/docs/components-nav--docs), as a rail or a bar, [tabs](?path=/docs/components-tabs--docs) and [breadcrumbs](?path=/docs/components-breadcrumbs--docs).
@@ -1178,10 +1178,13 @@ The message replaces the rows and keeps the headers and filters. Explained in [T
 <Example kind="do" caption="The table's own empty state, under its headers.">
 
 ```tsx
-<DataTable
-	table={table}
-	emptyState={m.data_table_empty()}
-/>
+<DataTable.Root table={table} status={query.status}>
+	<DataTable.Content
+		emptyState={m.data_table_empty()}
+		errorLabel={m.data_table_error()}
+		loadingLabel={m.data_table_loading()}
+	/>
+</DataTable.Root>
 ```
 
 </Example>
@@ -1192,7 +1195,9 @@ The message replaces the rows and keeps the headers and filters. Explained in [T
 	rows.length === 0 ? (
 		<EmptyMessage title={m.data_table_empty()} />
 	) : (
-		<DataTable table={table} />
+		<DataTable.Root table={table} status={query.status}>
+			<DataTable.Content … />
+		</DataTable.Root>
 	);
 }
 ```
@@ -2093,7 +2098,7 @@ The title is a question that names the action, and the body says what will happe
 	description={m.comment_delete_description()}
 	confirmLabel={m.comment_delete_confirm()}
 	cancelLabel={m.comment_delete_cancel()}
-	onConfirm={() => void deleteComment(id)}
+	onConfirm={() => deleteComment(id)}
 	tone="danger"
 />
 ```
@@ -2108,7 +2113,7 @@ The title is a question that names the action, and the body says what will happe
 	title="Are you sure?"
 	confirmLabel="Yes"
 	cancelLabel="No"
-	onConfirm={() => void deleteComment(id)}
+	onConfirm={() => deleteComment(id)}
 />
 ```
 

@@ -162,6 +162,7 @@ const InlineLabelText = ({
 
 export type FieldRootProps = BaseField.Root.Props &
 	Readonly<{
+		/** Applied to the field frame. */
 		className?: string;
 		/** What the field asserts about being required, which the requiredness parts inside it read. */
 		requiredness?: Requiredness;
@@ -200,6 +201,7 @@ export type FieldLabelProps = Omit<
 	"className"
 > &
 	Readonly<{
+		/** Applied to the label. */
 		className?: string;
 	}>;
 

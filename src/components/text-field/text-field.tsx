@@ -44,6 +44,7 @@ export type TextFieldBaseProps = FieldProps &
 		| "onFocus"
 	> &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** Keeps the label in the accessibility tree but out of view. */
 		labelHidden?: boolean;

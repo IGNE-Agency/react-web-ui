@@ -17,6 +17,7 @@ export type CheckboxFieldBaseProps = FieldProps &
 		"className" | "onBlur" | "children" | "indeterminate"
 	> &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** Applied to the field wrapper, so callers can place the row. */
 		className?: string;

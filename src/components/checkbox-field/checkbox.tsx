@@ -25,6 +25,7 @@ export type CheckboxRootProps = FieldRootProps &
 	Readonly<{
 		/** The box is checked. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 	}>;
 

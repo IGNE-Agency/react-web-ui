@@ -32,6 +32,7 @@ export type FileFieldProps = FieldProps &
 		/** The staged files. A rejected file stays here until it is removed. */
 		value: readonly File[];
 
+		/** Called with the new value. */
 		onValueChange: (files: readonly File[]) => void;
 
 		/** Called when focus leaves the whole field, not when it moves within it. */
@@ -46,7 +47,9 @@ export type FileFieldProps = FieldProps &
 		/** Allows more than one file; a single-file field replaces its value. */
 		multiple?: boolean;
 
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 
 		/** Accessible name of the drop target, such as "Drop zone for attachments". */
@@ -55,6 +58,7 @@ export type FileFieldProps = FieldProps &
 		/** Accessible name of the staged files, such as "Files for attachments". */
 		filesLabel: string;
 
+		/** Applied to the fieldset, so callers can place the field. */
 		className?: string;
 	}>;
 

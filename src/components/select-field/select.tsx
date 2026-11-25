@@ -60,14 +60,19 @@ export type SelectRootProps<T extends string> = Omit<
 	Readonly<{
 		/** The selectable options; `label` is what the trigger and list display. */
 		options: readonly SelectOption<T>[];
+		/** Called with the new value. */
 		onValueChange?: (value: T) => void;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
 		/** Called once focus has left the field, its popup included. */
 		onBlur?: FieldBlurHandler;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 

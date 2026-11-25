@@ -27,6 +27,7 @@ export type DateRangeFieldProps = FieldProps &
 		/** Called with the inclusive ISO plain dates picked or typed, or `null` once cleared. */
 		onValueChange?: (value: IsoDateRange | null) => void;
 
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 
 		/** Earliest selectable ISO plain date. */
@@ -47,7 +48,9 @@ export type DateRangeFieldProps = FieldProps &
 		/** Form field name for the end date. */
 		endName?: string;
 
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 
 		/** Applied to the field wrapper, so callers can size the control. */

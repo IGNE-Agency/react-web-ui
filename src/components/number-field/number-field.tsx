@@ -27,6 +27,7 @@ export type NumberFieldProps = FieldProps &
 		| "onFocus"
 	> &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** Static leading text, such as a currency sign. */
 		prefix?: ReactNode;

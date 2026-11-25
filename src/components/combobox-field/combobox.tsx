@@ -68,6 +68,7 @@ export type ComboboxRootProps<
 	Readonly<{
 		/** `"always"` highlights the first item whenever the list changes. @default "always" */
 		autoHighlight?: boolean | "always";
+		/** Whether the field is disabled. */
 		disabled?: boolean;
 		/** Keeps the value and the popup closed. */
 		readOnly?: boolean;
@@ -75,7 +76,9 @@ export type ComboboxRootProps<
 		state?: FieldState;
 		/** Called when focus leaves the control. */
 		onBlur?: FieldBlurHandler;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 

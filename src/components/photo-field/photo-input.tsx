@@ -97,6 +97,7 @@ export type PhotoInputRootProps = Omit<
 		/** Submits the picked file under this name. */
 		name?: string;
 
+		/** Whether the field is disabled. */
 		disabled?: boolean;
 
 		/** Shows the photo without letting it be changed. */
@@ -111,6 +112,7 @@ export type PhotoInputRootProps = Omit<
 		/** Applied to the field frame, where a caller lays it out itself. */
 		className?: string;
 
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 
