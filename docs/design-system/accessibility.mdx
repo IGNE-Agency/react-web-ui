@@ -70,7 +70,7 @@ A few of these rules are about what you can see as well as hear, and live with [
 
 Some things change while nobody is looking: an error appears, a wait drags on, a counter ticks. A screen reader can be told to announce those changes as they happen, and that is a tool to use sparingly. <Pull>Something that speaks on every keystroke talks over the very typing it describes.</Pull>
 
-So each change is announced once, at the moment it matters. An error is read when it appears and again when someone returns to its field, and never twice in a row. A character counter is there for the eye and stays quiet; the limit it counts against is part of the field's description, read once on the way in. And a wait is only announced once it has lasted long enough to be worth a sentence, the same bargain as [a wait that announces itself late](?path=/docs/design-system-foundation-motion--docs#a-wait-announces-itself-late-and-then-stays-a-moment).
+So each change is announced once, at the moment it matters. An error is read when it appears and again when someone returns to its field, and never twice in a row. A character counter is there for the eye and stays quiet; the limit it counts against is part of the field's description, read once on the way in. And a wait is only announced once it has lasted long enough to be worth a sentence, the same bargain as [a wait that announces itself late](?path=/docs/design-system-foundation-motion--docs#a-wait-announces-itself-late-and-then-stays-a-moment). A field checking its value says so once, when its spinner appears, and falls quiet when the check ends; what the check found is its error's to say.
 
 <Illustration caption="Typing stays quiet. It speaks once, right after the last key, when there is something worth saying.">
 	<SpeakDrawing />
@@ -316,7 +316,7 @@ Every control takes a visible label; where the layout genuinely cannot carry one
 
 <Details title="A counter and a pending state do not announce per keystroke">
 
-A character counter is `aria-live="off"`, and the limit it counts against is in the field's description. A field's pending inlay mounts only once the wait has outlasted the delay, and is decoration: the wait reaches assistive tech as the field's `aria-busy`, never as an announcement. `useBusyPhase` is the one timing, shared by the stale treatment, the pending inlay and the submit button that announces a form's wait. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
+A character counter is `aria-live="off"`, and the limit it counts against is in the field's description. A field's pending inlay mounts only once the wait has outlasted the delay, and is decoration. At that moment the field frame's own polite `role="status"` region, always mounted and empty otherwise, says the `CopyProvider`'s `field.checking` (a photo field's upload says `photo.uploading`), and it empties when the wait ends: a quick check says nothing, a long one is said once. `aria-busy` alone is not a status message. Only the field's own `pending` fills it: a select's or combobox's options load is said by its popup, and a form's wait by `Form.Submit`. `useBusyPhase` is the one timing, shared by the stale treatment, the pending inlay, the field's status and the submit button that announces a form's wait. Explained in [Speaking at the right moment](#speaking-at-the-right-moment).
 
 <DoDont>
 <Example kind="do" caption="The counter exists for the eye, so it is never announced.">

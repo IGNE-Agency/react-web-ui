@@ -11,6 +11,7 @@ import {
 	useId,
 } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
+import type { BusyPhase } from "../../lib/hooks/use-busy-phase.ts";
 import { useCopy } from "../copy-provider/index.ts";
 import { ErrorText } from "../error-text/index.ts";
 import {
@@ -18,6 +19,7 @@ import {
 	useFieldGroupLineIds,
 } from "./field-group-context.ts";
 import type { Requiredness } from "./field-state.ts";
+import { PendingSpokenContext } from "./pending-spoken.ts";
 import { RequiredSpokenContext } from "./required-spoken.ts";
 import style from "./field.module.scss";
 
@@ -166,11 +168,32 @@ export type FieldRootProps = BaseField.Root.Props &
 		className?: string;
 		/** What the field asserts about being required, which the requiredness parts inside it read. */
 		requiredness?: Requiredness;
+		/** How long the field's own wait has lasted. Past `fresh`, the frame's status region announces it. */
+		phase?: BusyPhase;
 	}>;
+
+/** The frame's polite status region, which says the field's wait while it shows and is empty otherwise. */
+const PendingStatus = ({
+	phase,
+}: Readonly<{ phase: BusyPhase }>): ReactNode => {
+	const spoken = useContext(PendingSpokenContext);
+	const copy = useCopy();
+	return (
+		<span
+			role="status"
+			aria-live="polite"
+			className={style.spoken}>
+			{phase === "fresh"
+				? null
+				: (spoken ?? copy.field.checking)}
+		</span>
+	);
+};
 
 /**
  * The field frame: label, control, description and error stacked full width.
  * In a field group's row its parts share the row's tracks with its neighbours.
+ * Its status region announces the wait `phase` reports, once it shows.
  *
  * @example
  * <Field.Root name="email" invalid={invalid}>…</Field.Root>
@@ -178,6 +201,7 @@ export type FieldRootProps = BaseField.Root.Props &
 const FieldRoot = ({
 	className,
 	requiredness,
+	phase = "fresh",
 	children,
 	...props
 }: FieldRootProps): ReactNode => {
@@ -189,7 +213,10 @@ const FieldRoot = ({
 			{...props}>
 			<FieldRowContext value={false}>
 				<RequirednessContext value={requiredness}>
-					{children}
+					<PendingSpokenContext value={undefined}>
+						{children}
+					</PendingSpokenContext>
+					<PendingStatus phase={phase} />
 				</RequirednessContext>
 			</FieldRowContext>
 		</BaseField.Root>
@@ -331,8 +358,8 @@ export type FieldPendingProps =
 /**
  * The box beside the control that a field's wait shows in, holding what it is
  * given, such as a spinner. The control decides when it is mounted, once the
- * wait is worth showing. It is decoration: the wait reaches assistive tech as
- * the `aria-busy` that `fieldStateAttributes` projects.
+ * wait is worth showing. It is decoration: the frame's status region says the
+ * wait, from the `phase` its `Root` is given.
  *
  * @example
  * {phase !== "fresh" && <Field.Pending><Spinner size={1} /></Field.Pending>}

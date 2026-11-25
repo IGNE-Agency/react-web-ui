@@ -31,6 +31,7 @@ export const STORY_COPY: KitCopy = {
 	close: "Close",
 	retry: "Try again",
 	loading: "Loading",
+	field: { checking: "Checking…" },
 	clipboard: {
 		copy: "Copy",
 		copied: "Copied",
@@ -111,6 +112,7 @@ export const STORY_COPY: KitCopy = {
 		set: "Photo set",
 		none: "No photo",
 		remove: "Remove photo",
+		uploading: "Uploading…",
 	},
 	files: {
 		choose: "Choose files",

@@ -74,7 +74,10 @@ export const useFieldsetContext =
 		);
 
 /** What the root of a fieldset takes, for a group of choices or a group of fields. */
-export type FieldsetRootProps = FieldRootProps &
+export type FieldsetRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -209,6 +212,7 @@ export const FieldsetRoot = ({
 					requiredness={requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					{...fieldStateAttributes(field.state)}
 					{...props}>
 					{children}

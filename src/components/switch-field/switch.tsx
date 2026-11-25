@@ -12,7 +12,10 @@ import {
 } from "../field/index.ts";
 import style from "./switch.module.scss";
 
-export type SwitchRootProps = FieldRootProps &
+export type SwitchRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -58,6 +61,7 @@ const SwitchRoot = ({
 			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
+			phase={field.phase}
 			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>

@@ -156,6 +156,7 @@ const SelectRoot = <T extends string>({
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					className={className}
 					{...fieldStateAttributes(field.state)}>
 					<BaseSelect.Root<T>

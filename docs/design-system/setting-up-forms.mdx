@@ -57,7 +57,7 @@ The first argument holds the field components: each connector under the key a fi
 
 ## A form
 
-`useAppForm` takes the form's default values, its validators and its submit. The validators are the app's own: the kit ships none, and takes any Standard Schema, such as a Zod schema. A field shows its issues' messages as they are, so the schema writes the copy.
+`useAppForm` takes the form's default values, its validators and its submit. The validators are the app's own: the kit ships none, and takes any Standard Schema, such as a Zod schema. A field shows its issues' messages as they are, so the schema writes the copy. Run an async validator, such as a check that a username is free, on blur or submit (`onBlurAsync`, `onSubmitAsync`), never on every keystroke: the field says it is checking while one runs.
 
 ```tsx
 import { Form } from "@igne-agency/react-web-ui/form";

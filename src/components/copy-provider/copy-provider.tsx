@@ -20,6 +20,11 @@ export type KitCopy = Readonly<{
 	retry: string;
 	/** Announced while a popup's content loads, such as "Loading". */
 	loading: string;
+	/** Every form field. */
+	field: Readonly<{
+		/** Announced while a field waits on background work, such as an async validator. */
+		checking: string;
+	}>;
 	/** The copy-to-clipboard button. */
 	clipboard: Readonly<{
 		/** Its name and tooltip, such as "Copy". */
@@ -147,6 +152,8 @@ export type KitCopy = Readonly<{
 		none: string;
 		/** The button that removes a picked photo, such as "Remove photo". */
 		remove: string;
+		/** Announced while a photo field's picked photo uploads. */
+		uploading: string;
 	}>;
 	/** The file field's and the composer's files. */
 	files: Readonly<{

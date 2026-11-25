@@ -72,7 +72,7 @@ A label beside its control, such as a lone checkbox's, keeps the required mark w
 
 ### A wait inside a field is a spinner inlay, and the field says it is busy
 
-A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A primitive's `Pending` mounts itself once its root's wait is worth showing.
+A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A primitive's `Pending` mounts itself once its root's wait is worth showing. At the same moment `Field.Root`'s polite status region, given the wait through `phase`, says the `CopyProvider`'s `field.checking` (`photo.uploading` in a photo field), and it empties when the wait ends; `Field.Error` still says the outcome. Every primitive's root passes its `phase`; a field built on `Field.Root` itself passes the one `useFieldState` returns.
 
 ```tsx
 <TextInput.Pending>

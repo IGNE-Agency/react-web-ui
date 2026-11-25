@@ -33,6 +33,7 @@ const DESCRIPTION = "A square photo works best.";
 const JPEG_ERROR = "Use a JPEG photo.";
 
 const PORTRAIT = pngFile("portrait.png");
+const UPLOAD_TIME = 500;
 
 const STORED = <Icon svg={PersonIcon} label="" />;
 
@@ -62,6 +63,27 @@ const StatefulPhotoField = (args: PhotoFieldProps) => {
 			{...args}
 			value={value}
 			onValueChange={next => setValue(next)}
+		/>
+	);
+};
+
+const UploadingPhotoField = (args: PhotoFieldProps) => {
+	const [value, setValue] = useState<File | undefined>();
+	const [uploading, setUploading] = useState(false);
+
+	return (
+		<PhotoField
+			{...args}
+			value={value}
+			pending={uploading}
+			onValueChange={async next => {
+				setValue(next);
+				setUploading(true);
+				await new Promise(resolve => {
+					setTimeout(resolve, UPLOAD_TIME);
+				});
+				setUploading(false);
+			}}
 		/>
 	);
 };
@@ -200,6 +222,29 @@ export const Invalid: Story = {
 
 export const Pending: Story = {
 	args: { value: PORTRAIT, pending: true },
+};
+
+export const Uploading: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: UploadingPhotoField,
+	play: async ({ canvas, canvasElement }) => {
+		const status = canvas.getByRole("status");
+		await expect(status).toBeEmptyDOMElement();
+
+		await userEvent.upload(
+			fileInput(canvasElement),
+			PORTRAIT,
+		);
+
+		await waitFor(() =>
+			expect(status).toHaveTextContent(
+				STORY_COPY.photo.uploading,
+			),
+		);
+		await waitFor(() =>
+			expect(status).toBeEmptyDOMElement(),
+		);
+	},
 };
 
 export const WithDescription: Story = {

@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../button/index.ts";
 import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
+import { useAppForm } from "../../lib/storybook/app-form.tsx";
 import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -33,6 +34,8 @@ const SUFFIX = ".nl";
 const SEARCH_LABEL = "Search orders";
 const SEARCH_ACTION_LABEL = "Search";
 const COPYABLE: TextFieldCopyProps = { copyable: true };
+const CHECK_TIME = 500;
+const COPY_STATUS = "[role=status]";
 
 const ControlledTextField = (
 	args: TextFieldProps,
@@ -103,6 +106,24 @@ const LabelRowTextInput = (
 const PlainTextField = (
 	args: TextFieldProps,
 ): ReactElement => <TextField {...args} />;
+
+const SlowCheckedTextField = ({
+	label,
+}: TextFieldProps): ReactElement => {
+	const form = useAppForm({ defaultValues: { name: "" } });
+	return (
+		<form.AppField
+			name="name"
+			validators={{
+				onBlurAsync: () =>
+					new Promise<undefined>(resolve => {
+						setTimeout(resolve, CHECK_TIME);
+					}),
+			}}>
+			{field => <field.TextField label={label} />}
+		</form.AppField>
+	);
+};
 
 const meta = {
 	parameters: {
@@ -196,6 +217,27 @@ export const Pending: Story = {
 	args: {
 		value: VALUE,
 		pending: true,
+	},
+};
+
+export const SlowCheck: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: SlowCheckedTextField,
+	play: async ({ canvas }) => {
+		const status = canvas.getByRole("status");
+		await expect(status).toBeEmptyDOMElement();
+
+		await userEvent.type(textbox(canvas), VALUE);
+		await userEvent.tab();
+
+		await waitFor(() =>
+			expect(status).toHaveTextContent(
+				STORY_COPY.field.checking,
+			),
+		);
+		await waitFor(() =>
+			expect(status).toBeEmptyDOMElement(),
+		);
 	},
 };
 
@@ -455,8 +497,10 @@ export const Copy: Story = {
 			).toBeInTheDocument(),
 		);
 		await expect(
-			canvas.getByRole("status"),
-		).toHaveTextContent(STORY_COPY.clipboard.copied);
+			canvas.getByText(STORY_COPY.clipboard.copied, {
+				selector: COPY_STATUS,
+			}),
+		).toBeInTheDocument();
 	},
 };
 
@@ -470,8 +514,10 @@ const expectSelectedByHand = async (canvas: Canvas) => {
 		).toBeInTheDocument(),
 	);
 	await expect(
-		canvas.getByRole("status"),
-	).toHaveTextContent(STORY_COPY.clipboard.failed);
+		canvas.getByText(STORY_COPY.clipboard.failed, {
+			selector: COPY_STATUS,
+		}),
+	).toBeInTheDocument();
 	await expect(input).toHaveFocus();
 	await expect(input).toHaveProperty("selectionStart", 0);
 	await expect(input).toHaveProperty(

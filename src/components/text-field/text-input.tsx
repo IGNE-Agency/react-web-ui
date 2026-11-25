@@ -128,6 +128,7 @@ const TextInputRoot = ({
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					className={clsx(style.root, className)}
 					{...fieldStateAttributes(field.state)}>
 					{children}

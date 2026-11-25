@@ -35,6 +35,7 @@ import {
 	InputPartsContext,
 	useInputPartsContext,
 } from "../field/input-parts.tsx";
+import { PendingSpokenContext } from "../field/pending-spoken.ts";
 import { RequiredSpokenContext } from "../field/required-spoken.ts";
 import {
 	PhotoInputContext,
@@ -160,6 +161,7 @@ const PhotoInputRoot = ({
 	});
 	const wiring = useFieldWiring(field.invalid);
 	const locked = field.state.readonly === true;
+	const copy = useCopy();
 
 	const pick = async (file: File) => {
 		await onValueChange?.(file);
@@ -189,36 +191,40 @@ const PhotoInputRoot = ({
 						remove,
 						onBlur,
 					}}>
-					<Field.Root
-						disabled={field.disabled}
-						invalid={field.invalid}
-						requiredness={field.state.requiredness}
-						dirty={dirty}
-						touched={touched}
-						className={className}
-						{...fieldStateAttributes(field.state)}>
-						<RequiredSpokenContext value={true}>
-							{children}
-						</RequiredSpokenContext>
-						{locked ? null : (
-							<input
-								ref={picker}
-								type="file"
-								name={name}
-								accept={accept.join(",")}
-								tabIndex={-1}
-								aria-hidden="true"
-								className={style.picker}
-								onChange={async event => {
-									const file = event.target.files?.[0];
-									event.target.value = "";
-									if (file !== undefined) {
-										await pick(file);
-									}
-								}}
-							/>
-						)}
-					</Field.Root>
+					<PendingSpokenContext
+						value={copy.photo.uploading}>
+						<Field.Root
+							disabled={field.disabled}
+							invalid={field.invalid}
+							requiredness={field.state.requiredness}
+							dirty={dirty}
+							touched={touched}
+							phase={field.phase}
+							className={className}
+							{...fieldStateAttributes(field.state)}>
+							<RequiredSpokenContext value={true}>
+								{children}
+							</RequiredSpokenContext>
+							{locked ? null : (
+								<input
+									ref={picker}
+									type="file"
+									name={name}
+									accept={accept.join(",")}
+									tabIndex={-1}
+									aria-hidden="true"
+									className={style.picker}
+									onChange={async event => {
+										const file = event.target.files?.[0];
+										event.target.value = "";
+										if (file !== undefined) {
+											await pick(file);
+										}
+									}}
+								/>
+							)}
+						</Field.Root>
+					</PendingSpokenContext>
 				</PhotoInputContext>
 			</FieldWiringContext>
 		</InputPartsContext>

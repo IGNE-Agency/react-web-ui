@@ -681,7 +681,11 @@ const pageCheckbox = (canvas: Canvas) =>
 	});
 
 const selectionBarStatus = (canvas: Canvas) => {
-	const [status] = canvas.getAllByRole("status");
+	const status = canvas
+		.getAllByRole("status")
+		.find(
+			(region: HTMLElement) => region.textContent !== "",
+		);
 	if (status === undefined) {
 		throw new Error("The table renders no selection bar.");
 	}

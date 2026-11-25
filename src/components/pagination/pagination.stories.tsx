@@ -189,8 +189,10 @@ const available = (element: HTMLElement) =>
 export const Default: Story = {
 	play: async ({ canvas }) => {
 		await expect(
-			canvas.getByRole("status"),
-		).toHaveTextContent(THIRD_OF_TWELVE);
+			canvas.getByText(THIRD_OF_TWELVE, {
+				selector: "[role=status]",
+			}),
+		).toBeInTheDocument();
 		await expect(pageSizeControl(canvas)).toHaveTextContent(
 			"20",
 		);

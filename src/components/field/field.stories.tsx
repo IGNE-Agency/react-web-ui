@@ -57,7 +57,10 @@ const textFieldOf =
 	);
 
 const PendingField = (args: FieldRootProps) => (
-	<Field.Root {...args} className={style.field}>
+	<Field.Root
+		{...args}
+		phase="busy"
+		className={style.field}>
 		<Field.Label>{LABEL}</Field.Label>
 		<div
 			className={style.group}

@@ -391,6 +391,9 @@ const textbox = (canvas: Canvas, name: string) =>
 		name: startsWith(name),
 	});
 
+const formStatus = (canvas: Canvas) =>
+	canvas.getAllByRole("status").at(-1);
+
 const submitButton = (canvas: Canvas) =>
 	canvas.getByRole("button", { name: SUBMIT_LABEL });
 
@@ -580,7 +583,7 @@ export const Submitted: Story = {
 			textbox(canvas, EMAIL_LABEL),
 			"jan@example.com",
 		);
-		const status = canvas.getByRole("status");
+		const status = formStatus(canvas);
 		await expect(status).toBeEmptyDOMElement();
 
 		await userEvent.click(submitButton(canvas));

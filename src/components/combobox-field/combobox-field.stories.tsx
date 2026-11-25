@@ -843,11 +843,12 @@ export const ValueUnavailable: Story = {
 	tags: ["!autodocs"],
 	render: () => <LookedUpPeople />,
 	play: async ({ canvas }) => {
-		await waitFor(() =>
-			expect(canvas.getByRole("status")).toHaveTextContent(
+		await expect(
+			await canvas.findByText(
 				STORY_COPY.options.unavailableCount(1),
+				{ selector: "[role=status]" },
 			),
-		);
+		).toBeInTheDocument();
 		await expect(
 			canvas.getByRole("combobox", { name: PEOPLE_LABEL }),
 		).toHaveTextContent(

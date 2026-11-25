@@ -161,6 +161,7 @@ export const TemporalFrame = ({
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					className={className}
 					{...fieldStateAttributes(field.state)}>
 					{render(

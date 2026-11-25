@@ -145,6 +145,7 @@ const ComboboxRoot = <
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					className={className}
 					{...fieldStateAttributes(field.state)}>
 					<BaseCombobox.Root<TItem, TMultiple>

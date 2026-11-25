@@ -160,6 +160,8 @@ type Story = StoryObj<typeof meta>;
 
 type Canvas = ReturnType<typeof within>;
 
+const STATUS = "[role=status]";
+
 const trigger = (canvas: Canvas) =>
 	canvas.getByRole("combobox", { name: LABEL });
 
@@ -258,8 +260,10 @@ export const Loading: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(STORY_COPY.options.loading);
+			await screen.findByText(STORY_COPY.options.loading, {
+				selector: STATUS,
+			}),
+		).toBeInTheDocument();
 	},
 };
 
@@ -270,8 +274,10 @@ export const Empty: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(STORY_COPY.options.empty);
+			await screen.findByText(STORY_COPY.options.empty, {
+				selector: STATUS,
+			}),
+		).toBeInTheDocument();
 	},
 };
 
@@ -285,8 +291,13 @@ export const Failed: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(STORY_COPY.options.loadFailed);
+			await screen.findByText(
+				STORY_COPY.options.loadFailed,
+				{
+					selector: STATUS,
+				},
+			),
+		).toBeInTheDocument();
 	},
 };
 
@@ -320,8 +331,13 @@ export const Broken: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(STORY_COPY.options.loadBroken);
+			await screen.findByText(
+				STORY_COPY.options.loadBroken,
+				{
+					selector: STATUS,
+				},
+			),
+		).toBeInTheDocument();
 		await expect(
 			screen.queryByRole("button", {
 				name: STORY_COPY.retry,

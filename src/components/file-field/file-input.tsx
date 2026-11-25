@@ -105,6 +105,7 @@ const FileInputRoot = ({
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					onBlur={event => {
 						if (
 							!(

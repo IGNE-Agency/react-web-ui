@@ -13,7 +13,10 @@ import {
 import { useFormDisabled } from "../form/form-context.ts";
 import style from "./checkbox.module.scss";
 
-export type CheckboxRootProps = FieldRootProps &
+export type CheckboxRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -60,6 +63,7 @@ const CheckboxRoot = ({
 			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
+			phase={field.phase}
 			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>
