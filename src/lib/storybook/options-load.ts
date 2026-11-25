@@ -1,5 +1,4 @@
 import { fn } from "storybook/test";
-import { type OptionsLoadLabels } from "../../components/field/index.ts";
 import { OPTIONS_LOADED } from "../../components/field/options-load.ts";
 
 /**
@@ -18,18 +17,3 @@ export const OPTIONS_LOADS = {
 	},
 	broken: { status: "error" },
 } as const;
-
-/**
- * The copy a select or combobox story passes about how its options load.
- *
- * @example
- * args: { ...OPTIONS_LOAD_LABELS }
- */
-export const OPTIONS_LOAD_LABELS: OptionsLoadLabels = {
-	loadingLabel: "Loading options…",
-	loadFailedLabel: "Options could not be loaded.",
-	loadBrokenLabel:
-		"Options could not be loaded, and trying again won't help.",
-	retryLabel: "Try again",
-	noOptionsLabel: "No options available.",
-};

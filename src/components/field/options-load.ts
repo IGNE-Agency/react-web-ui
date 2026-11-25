@@ -1,3 +1,5 @@
+import type { KitCopy } from "../copy-provider/index.ts";
+
 /**
  * How far the options of a select or combobox have loaded. A failure that
  * trying again can clear carries a `retry`.
@@ -6,38 +8,24 @@ export type OptionsLoad =
 	| Readonly<{ status: "pending" | "success" }>
 	| Readonly<{ status: "error"; retry?: () => void }>;
 
-/** The copy a select's or combobox's popup shows about its options. */
-export type OptionsLoadLabels = Readonly<{
-	/** Said while the options load, such as "Loading options…". */
-	loadingLabel: string;
-	/** Said when the options failed to load and a retry can help. */
-	loadFailedLabel: string;
-	/** Said when the options failed to load and trying again won't help. */
-	loadBrokenLabel: string;
-	/** The retry button's text, such as "Try again". */
-	retryLabel: string;
-	/** Said when there are no options at all. */
-	noOptionsLabel: string;
-}>;
-
 /**
  * What a popup says about a load that is pending or failed; nothing once the
  * options are there.
  *
  * @example
- * optionsLoadMessage({ status: "pending" }, labels); // labels.loadingLabel
+ * optionsLoadMessage({ status: "pending" }, useCopy().options); // "Loading options…"
  */
 export const optionsLoadMessage = (
 	load: OptionsLoad,
-	labels: OptionsLoadLabels,
+	copy: KitCopy["options"],
 ): string | undefined => {
 	if (load.status === "pending") {
-		return labels.loadingLabel;
+		return copy.loading;
 	}
 	if (load.status === "error") {
 		return load.retry === undefined
-			? labels.loadBrokenLabel
-			: labels.loadFailedLabel;
+			? copy.loadBroken
+			: copy.loadFailed;
 	}
 	return undefined;
 };

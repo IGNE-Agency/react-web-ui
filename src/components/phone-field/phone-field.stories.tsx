@@ -1,6 +1,4 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -15,8 +13,6 @@ import {
 } from "./index.ts";
 
 const LABEL = "Phone number";
-const OPTIONAL_LABEL = "optional";
-const CLEAR_LABEL = "Clear";
 const FORMAT =
 	"For example 06 12 34 56 78 or +31 6 12 34 56 78";
 const ERROR = "This is not a valid phone number.";
@@ -59,7 +55,6 @@ const meta = {
 	render: ControlledPhoneField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		description: FORMAT,
 		value: "",
 		onValueChange: fn(),
@@ -116,8 +111,6 @@ export const Clearable: Story = {
 	args: {
 		value: VALID,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 

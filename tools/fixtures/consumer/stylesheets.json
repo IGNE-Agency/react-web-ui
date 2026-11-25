@@ -66,6 +66,7 @@
 		"avatar/avatar",
 		"conversation/conversation"
 	],
+	"copy-provider": [],
 	"data-table": [
 		"button/button",
 		"checkbox-field/checkbox",
@@ -157,6 +158,7 @@
 	"forms": [],
 	"hooks": [],
 	"icon": ["icon/icon"],
+	"icon-provider": [],
 	"link": ["link/link"],
 	"link-button": ["button/button"],
 	"loading-message": [

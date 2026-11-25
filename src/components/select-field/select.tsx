@@ -9,13 +9,14 @@ import {
 } from "react";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { Button } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	Field,
 	type FieldPendingProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
-	type OptionsLoadLabels,
 	useFieldFocus,
 } from "../field/index.ts";
 import {
@@ -235,19 +236,13 @@ const SelectItemIndicator = ({
 	/>
 );
 
-export type SelectItemsProps = Readonly<{
-	/** The mark beside the chosen option, such as a tick. */
-	checkIcon: ReactNode;
-}>;
-
 /**
  * Every option of the enclosing `Select.Root`, in the order it was given them.
  * Compose the parts directly instead where a row is more than its label.
  */
-const SelectItems = ({
-	checkIcon,
-}: SelectItemsProps): ReactNode => {
+const SelectItems = (): ReactNode => {
 	const { options } = useSelectContext();
+	const icons = useIcons();
 	return options.map(option => (
 		<SelectItem key={option.value} value={option.value}>
 			<SelectItemText>
@@ -258,23 +253,24 @@ const SelectItems = ({
 					</span>
 				)}
 			</SelectItemText>
-			<SelectItemIndicator>{checkIcon}</SelectItemIndicator>
+			<SelectItemIndicator>
+				{icons.check}
+			</SelectItemIndicator>
 		</SelectItem>
 	));
 };
 
-type SelectStatusProps = OptionsLoadLabels &
-	Readonly<{
-		load: OptionsLoad;
-		onRetry: (retry: () => void) => void;
-	}>;
+type SelectStatusProps = Readonly<{
+	load: OptionsLoad;
+	onRetry: (retry: () => void) => void;
+}>;
 
 const SelectStatus = ({
 	load,
 	onRetry,
-	...labels
 }: SelectStatusProps): ReactNode => {
 	const { options } = useSelectContext();
+	const copy = useCopy();
 	const retry =
 		load.status === "error" ? load.retry : undefined;
 	return (
@@ -285,9 +281,9 @@ const SelectStatus = ({
 				aria-atomic="true"
 				className={style.status}>
 				{load.status === "pending" && <Spinner size={1} />}
-				{optionsLoadMessage(load, labels) ??
+				{optionsLoadMessage(load, copy.options) ??
 					(options.length === 0
-						? labels.noOptionsLabel
+						? copy.options.empty
 						: undefined)}
 			</div>
 			{retry !== undefined && (
@@ -297,7 +293,7 @@ const SelectStatus = ({
 					onClick={() => {
 						onRetry(retry);
 					}}>
-					{labels.retryLabel}
+					{copy.retry}
 				</Button>
 			)}
 		</div>
@@ -308,13 +304,9 @@ export type SelectControlProps = Omit<
 	SelectTriggerProps,
 	"children"
 > &
-	OptionsLoadLabels &
-	SelectItemsProps &
 	Readonly<{
 		/** Shown while nothing is selected. */
 		placeholder?: string;
-		/** The chevron after the value, such as an expand icon. */
-		icon?: ReactNode;
 		/** How far the options have loaded, when they come from a query. */
 		load?: OptionsLoad;
 	}>;
@@ -325,16 +317,10 @@ export type SelectControlProps = Omit<
  */
 const SelectControl = ({
 	placeholder,
-	icon,
 	load = OPTIONS_LOADED,
-	loadingLabel,
-	loadFailedLabel,
-	loadBrokenLabel,
-	retryLabel,
-	noOptionsLabel,
-	checkIcon,
 	...props
 }: SelectControlProps): ReactNode => {
+	const icons = useIcons();
 	const popupRef = useRef<HTMLDivElement>(null);
 	return (
 		<>
@@ -343,25 +329,20 @@ const SelectControl = ({
 				<SelectPending>
 					<Spinner size={1} />
 				</SelectPending>
-				<SelectIcon>{icon}</SelectIcon>
+				<SelectIcon>{icons.expand}</SelectIcon>
 			</SelectTrigger>
 			<BaseSelect.Portal>
 				<SelectPositioner>
 					<SelectPopup ref={popupRef}>
 						<SelectStatus
 							load={load}
-							loadingLabel={loadingLabel}
-							loadFailedLabel={loadFailedLabel}
-							loadBrokenLabel={loadBrokenLabel}
-							retryLabel={retryLabel}
-							noOptionsLabel={noOptionsLabel}
 							onRetry={retry => {
 								retry();
 								popupRef.current?.focus();
 							}}
 						/>
 						<BaseSelect.List>
-							<SelectItems checkIcon={checkIcon} />
+							<SelectItems />
 						</BaseSelect.List>
 					</SelectPopup>
 				</SelectPositioner>
@@ -404,15 +385,7 @@ export type SelectParts = Readonly<{
  * @example
  * <Select.Root options={options} value={value} onValueChange={setValue}>
  * 	<Select.Label>Status</Select.Label>
- * 	<Select.Control
- * 		icon={<ExpandMoreIcon />}
- * 		checkIcon={<CheckIcon />}
- * 		loadingLabel="Loading options…"
- * 		loadFailedLabel="Options could not be loaded."
- * 		loadBrokenLabel="Options could not be loaded, and trying again won't help."
- * 		retryLabel="Try again"
- * 		noOptionsLabel="No options available."
- * 	/>
+ * 	<Select.Control placeholder="Pick a status" />
  * </Select.Root>
  */
 export const Select: SelectParts = {

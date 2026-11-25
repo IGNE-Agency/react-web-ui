@@ -10,6 +10,8 @@ import {
 	useEffect,
 } from "react";
 import { Button, IconButton } from "../button/button.tsx";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	flushBufferedToasts,
 	type ToastData,
@@ -43,7 +45,7 @@ export type ToastProviderPartProps = Readonly<{
  * <Toast.Provider>
  * 	<App />
  * 	<Toast.Portal>
- * 		<Toast.Viewport aria-label="Notifications">…</Toast.Viewport>
+ * 		<Toast.Viewport>…</Toast.Viewport>
  * 	</Toast.Portal>
  * </Toast.Provider>
  */
@@ -64,26 +66,29 @@ export type ToastViewportProps = Omit<
 	"className" | "aria-label"
 > &
 	Readonly<{
-		/** The region's name, reached with F6, such as "Notifications". */
-		"aria-label": string;
 		className?: string;
 	}>;
 
 /**
- * The region the toasts stack in, at the corner of the screen.
+ * The region the toasts stack in, at the corner of the screen, named by the
+ * `CopyProvider`'s `toast.viewport` and reached with F6.
  *
  * @example
- * <Toast.Viewport aria-label="Notifications">{toasts}</Toast.Viewport>
+ * <Toast.Viewport>{toasts}</Toast.Viewport>
  */
 const Viewport = ({
 	className,
 	...props
-}: ToastViewportProps): ReactNode => (
-	<BaseToast.Viewport
-		{...props}
-		className={clsx(styles.viewport, className)}
-	/>
-);
+}: ToastViewportProps): ReactNode => {
+	const copy = useCopy();
+	return (
+		<BaseToast.Viewport
+			{...props}
+			aria-label={copy.toast.viewport}
+			className={clsx(styles.viewport, className)}
+		/>
+	);
+};
 
 /**
  * A toast's frame, in its tone: a dialog that holds the other parts.
@@ -308,12 +313,6 @@ const ToastList = ({
 };
 
 export type ToastProviderProps = Readonly<{
-	/** Accessible name of each toast's close button, also its tooltip. */
-	closeLabel: string;
-	/** The close button's glyph. */
-	closeIcon: ReactNode;
-	/** Accessible name of the region the toasts appear in, reached with F6. */
-	viewportLabel: string;
 	/** Draws each toast from the `Toast` parts, in place of the default. */
 	renderToast?: (toast: ToastObject) => ReactNode;
 	/** The app, which the viewport renders beside. */
@@ -323,36 +322,39 @@ export type ToastProviderProps = Readonly<{
 /**
  * Mounts the toast system once at the app root: the `Toast.Provider`, and the
  * `Toast.Viewport` in its `Toast.Portal` alongside the app, drawing each toast.
+ * It sits inside the `CopyProvider` and the `IconProvider`.
  *
  * @example
- * <ToastProvider closeLabel="Close" closeIcon={<CloseIcon />} viewportLabel="Notifications">
+ * <ToastProvider>
  *   <App />
  * </ToastProvider>
  */
 export const ToastProvider = ({
-	closeLabel,
-	closeIcon,
-	viewportLabel,
 	renderToast,
 	children,
-}: ToastProviderProps): ReactNode => (
-	<Provider>
-		{children}
-		<BaseToast.Portal>
-			<Viewport aria-label={viewportLabel}>
-				<ToastList
-					renderToast={
-						renderToast ??
-						(toast => (
-							<DefaultToast
-								toast={toast}
-								closeLabel={closeLabel}
-								closeIcon={closeIcon}
-							/>
-						))
-					}
-				/>
-			</Viewport>
-		</BaseToast.Portal>
-	</Provider>
-);
+}: ToastProviderProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
+
+	return (
+		<Provider>
+			{children}
+			<BaseToast.Portal>
+				<Viewport>
+					<ToastList
+						renderToast={
+							renderToast ??
+							(toast => (
+								<DefaultToast
+									toast={toast}
+									closeLabel={copy.close}
+									closeIcon={icons.close}
+								/>
+							))
+						}
+					/>
+				</Viewport>
+			</BaseToast.Portal>
+		</Provider>
+	);
+};

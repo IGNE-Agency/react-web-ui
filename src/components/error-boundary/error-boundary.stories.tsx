@@ -1,4 +1,3 @@
-import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactElement, ReactNode } from "react";
 import {
@@ -8,14 +7,14 @@ import {
 	waitFor,
 } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import { Icon } from "../icon/icon.tsx";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { ErrorBoundary } from "./error-boundary.tsx";
 
 const CONTENT = "The invoice has loaded.";
 const TITLE = "This part could not be shown";
 const DESCRIPTION =
 	"The rest of the page still works. Try again in a moment.";
-const RETRY = "Try again";
+const RETRY = STORY_COPY.retry;
 const CUSTOM = "Something went wrong here.";
 
 const reset = fn();
@@ -59,14 +58,12 @@ const meta = {
 	args: {
 		title: TITLE,
 		description: DESCRIPTION,
-		retryLabel: RETRY,
-		retryIcon: <Icon svg={RestartIcon} label="" />,
+		retryable: true,
 		onReset: reset,
 		onError: caught,
 		children: mappedArg(CHILDREN, "healthy"),
 	},
 	argTypes: {
-		retryIcon: { control: false },
 		children: {
 			options: Object.keys(CHILDREN),
 			mapping: CHILDREN,
@@ -106,7 +103,7 @@ export const Caught: Story = {
 export const WithoutRetry: Story = {
 	args: {
 		children: mappedArg(CHILDREN, "throwing"),
-		retryLabel: undefined,
+		retryable: false,
 	},
 	play: async ({ canvas }) => {
 		await expect(

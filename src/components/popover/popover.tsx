@@ -12,6 +12,7 @@ import {
 import { useBusyPhase } from "../../lib/hooks/use-busy-phase.ts";
 import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { useIntent } from "../../lib/use-intent.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import { Skeleton } from "../skeleton/skeleton.tsx";
 import styles from "./popover.module.scss";
 
@@ -126,23 +127,25 @@ const Popup = ({
 	);
 };
 
-export type PopoverStatusProps =
-	useRender.ComponentProps<"span">;
+export type PopoverStatusProps = Omit<
+	useRender.ComponentProps<"span">,
+	"children"
+>;
 
 /**
- * A hidden live region that announces its children once while the popup is
- * loading, such as "Loading the rate".
+ * A hidden live region that announces the `CopyProvider`'s `loading` once
+ * while the popup is loading.
  *
  * @example
- * <Popover.Status>Loading the rate</Popover.Status>
+ * <Popover.Status />
  */
 const Status = ({
 	render,
 	className,
 	ref,
-	children,
 	...props
 }: PopoverStatusProps): ReactElement => {
+	const copy = useCopy();
 	const loading = useContext(LoadingContext);
 
 	return useRender({
@@ -153,7 +156,7 @@ const Status = ({
 			role: "status",
 			...props,
 			className: clsx(styles.visuallyHidden, className),
-			children: loading ? children : null,
+			children: loading ? copy.loading : null,
 		},
 	});
 };
@@ -311,23 +314,15 @@ export type PopoverContentProps = Omit<
 			container?: BasePopover.Portal.Props["container"];
 		}
 	> &
-	(
-		| Readonly<{
-				/** Whether the content the popup describes is still in flight, for its `Skeleton`s. */
-				loading: boolean;
-				/** Announced once while loading, through a `Status`. */
-				loadingLabel: string;
-		  }>
-		| Readonly<{
-				loading?: undefined;
-				loadingLabel?: undefined;
-		  }>
-	);
+	Readonly<{
+		/** Whether the content the popup describes is still in flight, for its `Status` and `Skeleton`s. */
+		loading?: boolean;
+	}>;
 
 /**
  * `Portal`, `Positioner` and `Popup` in one: the popover's surface, placed
- * against its trigger. With a `loadingLabel` it holds the `Status` that
- * announces it.
+ * against its trigger. Given `loading`, it holds the `Status` that announces
+ * it.
  */
 const Content = ({
 	container,
@@ -335,7 +330,7 @@ const Content = ({
 	sideOffset,
 	align,
 	alignOffset,
-	loadingLabel,
+	loading,
 	children,
 	...props
 }: PopoverContentProps): ReactNode => (
@@ -345,10 +340,8 @@ const Content = ({
 			sideOffset={sideOffset}
 			align={align}
 			alignOffset={alignOffset}>
-			<Popup {...props}>
-				{loadingLabel === undefined ? null : (
-					<Status>{loadingLabel}</Status>
-				)}
+			<Popup loading={loading} {...props}>
+				{loading === undefined ? null : <Status />}
 				{children}
 			</Popup>
 		</Positioner>
@@ -378,7 +371,7 @@ type PopoverParts = Readonly<{
 /**
  * A rich popover over base-ui's `Popover`, with a `Title` and rows of labelled
  * values. `Content` bundles the portal, positioner and popup, and the `Status`
- * for a `loadingLabel`; the unbundled parts stay. While loading, text wrapped in
+ * while given `loading`; the unbundled parts stay. While loading, text wrapped in
  * a `Skeleton` draws as a placeholder.
  *
  * @example
@@ -386,7 +379,7 @@ type PopoverParts = Readonly<{
  *   <Popover.Trigger openOnHover onIntent={() => prefetchRate(id)}>
  *     € 1.234,56
  *   </Popover.Trigger>
- *   <Popover.Content loading={rate.isPending} loadingLabel="Loading the rate">
+ *   <Popover.Content loading={rate.isPending}>
  *     <Popover.Arrow />
  *     <Popover.Title>Rate breakdown</Popover.Title>
  *     <Popover.Rows>

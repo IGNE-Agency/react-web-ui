@@ -16,12 +16,12 @@ export type TSFPasswordFieldProps = Omit<
 	PasswordFieldStrengthProps;
 
 /**
- * `PasswordField` bound to the TanStack Form field it renders in. Registered as
+ * `PasswordField` connected to the TanStack Form field it renders in. Registered as
  * `field.PasswordField`.
  *
  * @example
  * <form.AppField name="password">
- * 	{field => <field.PasswordField label="Password" optionalLabel="optional" showPasswordLabel="Show password" hidePasswordLabel="Hide password" showPasswordIcon={<VisibilityIcon />} hidePasswordIcon={<VisibilityOffIcon />} />}
+ * 	{field => <field.PasswordField label="Password" strengthMeter />}
  * </form.AppField>
  */
 export const TSFPasswordField = (

@@ -35,7 +35,6 @@ export type RadioGroupFieldProps = FieldProps &
  * @example
  * <RadioGroupField
  * 	label="Kind"
- * 	optionalLabel="optional"
  * 	options={[{ label: "Direct", value: "direct" }]}
  * 	value={kind}
  * 	onValueChange={setKind}
@@ -46,7 +45,6 @@ export const RadioGroupField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -79,8 +77,7 @@ export const RadioGroupField = ({
 				value !== ""
 			}>
 			<RadioGroup.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</RadioGroup.Legend>
 
 			<RadioGroup.Group<string | null>

@@ -19,7 +19,6 @@ import {
 } from "./toggle-group-field.tsx";
 
 const LABEL = "Statuses";
-const OPTIONAL_LABEL = "optional";
 const OPEN = { value: "open", label: "Open" };
 const SENT = { value: "sent", label: "Sent" };
 const PAID = { value: "paid", label: "Paid" };
@@ -67,7 +66,6 @@ const meta = {
 	render: ControlledToggleGroupField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		options: STATUS_OPTIONS,
 		value: [],
 		onValueChange: valueChange,

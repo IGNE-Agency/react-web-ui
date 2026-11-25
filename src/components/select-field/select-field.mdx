@@ -1,11 +1,8 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { DocsPage } from "../../../.storybook/docs-page";
 import styles from "../../../docs/design-system/components.module.scss";
 import { DoDont } from "../../../docs/design-system/do-dont";
 import { Example } from "../../../docs/design-system/example";
-import { Icon } from "../icon/index.ts";
 import { SelectField } from "./select-field.tsx";
 import * as SelectFieldStories from "./select-field.stories.tsx";
 
@@ -28,20 +25,12 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
       <div className={styles.card}>
         <SelectField
           label="Status"
-          optionalLabel="optional"
           options={[
             { label: "Draft", value: "draft" },
             { label: "Submitted", value: "submitted" },
             { label: "Paid", value: "paid" },
           ]}
           defaultValue="submitted"
-          icon={<Icon svg={ExpandMoreIcon} label="" />}
-          checkIcon={<Icon svg={CheckIcon} label="" />}
-          loadingLabel="Loading options…"
-          loadFailedLabel="Options could not be loaded."
-          loadBrokenLabel="Options could not be loaded, and trying again won't help."
-          retryLabel="Try again"
-          noOptionsLabel="No options available."
         />
       </div>
     </div>
@@ -50,13 +39,9 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
 ```tsx
 <SelectField
 	label="Status"
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 
@@ -104,13 +89,9 @@ Label it with the field's own `label` prop rather than a `for` attribute: [the f
 ```tsx
 <SelectField
 	label="Status"
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 
@@ -122,13 +103,9 @@ Label it with the field's own `label` prop rather than a `for` attribute: [the f
 <SelectField
 	id={id}
 	label=""
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 

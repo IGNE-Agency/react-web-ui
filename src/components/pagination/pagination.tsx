@@ -7,6 +7,8 @@ import type {
 	ReactNode,
 } from "react";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { Select } from "../select-field/select.tsx";
 import {
@@ -124,20 +126,16 @@ const PaginationPageSize = ({
 export type PaginationIndexProps = Omit<
 	useRender.ComponentProps<"span">,
 	"children"
-> &
-	Readonly<{
-		/** What the index says, such as `Page 3 of 12`, from where the list stands. */
-		label: (page: PaginationPage) => string;
-	}>;
+>;
 
-/** Which page is on screen, as a polite live region. */
+/** Which page is on screen, as a polite live region saying the `CopyProvider`'s `pagination.index`. */
 const PaginationIndex = ({
-	label,
 	render,
 	className,
 	ref,
 	...props
 }: PaginationIndexProps): ReactElement => {
+	const copy = useCopy();
 	const { pageIndex, pageCount, pageSize } =
 		usePagination();
 
@@ -149,7 +147,11 @@ const PaginationIndex = ({
 			role: "status",
 			...props,
 			className: clsx(style.index, className),
-			children: label({ pageIndex, pageCount, pageSize }),
+			children: copy.pagination.index({
+				pageIndex,
+				pageCount,
+				pageSize,
+			}),
 		},
 	});
 };
@@ -268,26 +270,6 @@ const PaginationLast = (
 	props: PaginationStepProps,
 ): ReactNode => <PageStep step="last" {...props} />;
 
-/** The step buttons' names and glyphs. */
-export type PaginationStepLabels = Readonly<{
-	/** The first-page button's name, such as "First page". */
-	firstLabel: string;
-	/** The previous-page button's name, such as "Previous page". */
-	previousLabel: string;
-	/** The next-page button's name, such as "Next page". */
-	nextLabel: string;
-	/** The last-page button's name, such as "Last page". */
-	lastLabel: string;
-	/** The first-page button's glyph. */
-	firstIcon: ReactNode;
-	/** The previous-page button's glyph. */
-	previousIcon: ReactNode;
-	/** The next-page button's glyph. */
-	nextIcon: ReactNode;
-	/** The last-page button's glyph. */
-	lastIcon: ReactNode;
-}>;
-
 export type PaginationControlsProps =
 	useRender.ComponentProps<"div">;
 
@@ -316,123 +298,82 @@ const PaginationControls = ({
 		},
 	});
 
-/** What the ready-made pager says and shows, besides where the list stands. */
-export type PaginationContentProps = PaginationStepLabels &
-	Readonly<{
-		/** The page-size field's label, such as "Rows per page". */
-		pageSizeLabel: string;
-		/** What the index says, such as `Page 3 of 12`, from where the list stands. */
-		indexLabel: (page: PaginationPage) => string;
-		/** The mark beside the page size in effect, in the open list. */
-		checkIcon: ReactNode;
-		/** The chevron after the page size. Left out, none shows. */
-		expandIcon?: ReactNode;
-	}>;
+const PaginationContent = (): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 
-const PaginationContent = ({
-	pageSizeLabel,
-	indexLabel,
-	checkIcon,
-	expandIcon,
-	firstLabel,
-	previousLabel,
-	nextLabel,
-	lastLabel,
-	firstIcon,
-	previousIcon,
-	nextIcon,
-	lastIcon,
-}: PaginationContentProps): ReactNode => (
-	<>
-		<PaginationPageSize>
-			<Select.Label>{pageSizeLabel}</Select.Label>
-			<Select.Trigger>
-				<Select.Value />
-				<Select.Icon>{expandIcon}</Select.Icon>
-			</Select.Trigger>
-			<Select.Portal>
-				<Select.Positioner>
-					<Select.Popup>
-						<Select.List>
-							<Select.Items checkIcon={checkIcon} />
-						</Select.List>
-					</Select.Popup>
-				</Select.Positioner>
-			</Select.Portal>
-		</PaginationPageSize>
-		<PaginationIndex label={indexLabel} />
-		<PaginationControls>
-			<PaginationFirst
-				render={
-					<IconButton variant="tertiary" label={firstLabel}>
-						{firstIcon}
-					</IconButton>
-				}
-			/>
-			<PaginationPrevious
-				render={
-					<IconButton
-						variant="tertiary"
-						label={previousLabel}>
-						{previousIcon}
-					</IconButton>
-				}
-			/>
-			<PaginationNext
-				render={
-					<IconButton variant="tertiary" label={nextLabel}>
-						{nextIcon}
-					</IconButton>
-				}
-			/>
-			<PaginationLast
-				render={
-					<IconButton variant="tertiary" label={lastLabel}>
-						{lastIcon}
-					</IconButton>
-				}
-			/>
-		</PaginationControls>
-	</>
-);
+	return (
+		<>
+			<PaginationPageSize>
+				<Select.Label>
+					{copy.pagination.pageSize}
+				</Select.Label>
+				<Select.Trigger>
+					<Select.Value />
+					<Select.Icon>{icons.expand}</Select.Icon>
+				</Select.Trigger>
+				<Select.Portal>
+					<Select.Positioner>
+						<Select.Popup>
+							<Select.List>
+								<Select.Items />
+							</Select.List>
+						</Select.Popup>
+					</Select.Positioner>
+				</Select.Portal>
+			</PaginationPageSize>
+			<PaginationIndex />
+			<PaginationControls>
+				<PaginationFirst
+					render={
+						<IconButton
+							variant="tertiary"
+							label={copy.pagination.first}>
+							{icons.first}
+						</IconButton>
+					}
+				/>
+				<PaginationPrevious
+					render={
+						<IconButton
+							variant="tertiary"
+							label={copy.pagination.previous}>
+							{icons.previous}
+						</IconButton>
+					}
+				/>
+				<PaginationNext
+					render={
+						<IconButton
+							variant="tertiary"
+							label={copy.pagination.next}>
+							{icons.next}
+						</IconButton>
+					}
+				/>
+				<PaginationLast
+					render={
+						<IconButton
+							variant="tertiary"
+							label={copy.pagination.last}>
+							{icons.last}
+						</IconButton>
+					}
+				/>
+			</PaginationControls>
+		</>
+	);
+};
 
 export type PaginationProps = Omit<
 	PaginationRootProps,
 	"children"
-> &
-	PaginationContentProps;
+>;
 
 /** The page size, the index and the four step buttons, in a `Root`. */
-const Prefab = ({
-	pageSizeLabel,
-	indexLabel,
-	checkIcon,
-	expandIcon,
-	firstLabel,
-	previousLabel,
-	nextLabel,
-	lastLabel,
-	firstIcon,
-	previousIcon,
-	nextIcon,
-	lastIcon,
-	...props
-}: PaginationProps): ReactNode => (
+const Prefab = (props: PaginationProps): ReactNode => (
 	<PaginationRoot {...props}>
-		<PaginationContent
-			pageSizeLabel={pageSizeLabel}
-			indexLabel={indexLabel}
-			checkIcon={checkIcon}
-			expandIcon={expandIcon}
-			firstLabel={firstLabel}
-			previousLabel={previousLabel}
-			nextLabel={nextLabel}
-			lastLabel={lastLabel}
-			firstIcon={firstIcon}
-			previousIcon={previousIcon}
-			nextIcon={nextIcon}
-			lastIcon={lastIcon}
-		/>
+		<PaginationContent />
 	</PaginationRoot>
 );
 
@@ -465,17 +406,6 @@ export type PaginationParts = typeof Prefab &
  * 	pageSizes={[10, 20, 50]}
  * 	onPageIndexChange={setPageIndex}
  * 	onPageSizeChange={setPageSize}
- * 	pageSizeLabel="Rows per page"
- * 	indexLabel={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`}
- * 	firstLabel="First page"
- * 	previousLabel="Previous page"
- * 	nextLabel="Next page"
- * 	lastLabel="Last page"
- * 	firstIcon={<FirstPageIcon />}
- * 	previousIcon={<ChevronLeftIcon />}
- * 	nextIcon={<ChevronRightIcon />}
- * 	lastIcon={<LastPageIcon />}
- * 	checkIcon={<CheckIcon />}
  * />
  */
 export const Pagination: PaginationParts = Object.assign(

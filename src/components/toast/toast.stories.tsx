@@ -1,5 +1,4 @@
 import CheckCircleIcon from "@material-design-icons/svg/outlined/check_circle.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import ErrorIcon from "@material-design-icons/svg/outlined/error.svg?react";
 import InfoIcon from "@material-design-icons/svg/outlined/info.svg?react";
 import WarningIcon from "@material-design-icons/svg/outlined/warning_amber.svg?react";
@@ -15,10 +14,7 @@ import {
 } from "storybook/test";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { withOverlayFrame } from "../../lib/storybook/overlay-frame.tsx";
-import {
-	STORY_TOAST_CLOSE_LABEL,
-	STORY_TOAST_VIEWPORT_LABEL,
-} from "../../lib/storybook/story-providers.tsx";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { Button } from "../button/button.tsx";
 import {
 	type ToastAction,
@@ -170,14 +166,10 @@ const meta = {
 	render: SuccessToast,
 	decorators: [withOverlayFrame("medium")],
 	args: {
-		closeLabel: STORY_TOAST_CLOSE_LABEL,
-		closeIcon: <Icon svg={CloseIcon} label="" />,
-		viewportLabel: STORY_TOAST_VIEWPORT_LABEL,
 		children: undefined,
 	},
 	argTypes: {
 		children: { control: false },
-		closeIcon: { control: false },
 		renderToast: { control: false },
 	},
 	parameters: {
@@ -356,7 +348,7 @@ export const Keyboard: Story = {
 		await userEvent.keyboard("{F6}");
 		await expect(
 			screen.getByRole("region", {
-				name: STORY_TOAST_VIEWPORT_LABEL,
+				name: STORY_COPY.toast.viewport,
 			}),
 		).toHaveFocus();
 		await userEvent.tab();
@@ -373,7 +365,7 @@ export const Keyboard: Story = {
 		await userEvent.tab();
 		await expect(
 			within(second).getByRole("button", {
-				name: STORY_TOAST_CLOSE_LABEL,
+				name: STORY_COPY.close,
 			}),
 		).toHaveFocus();
 		await userEvent.keyboard("{Enter}");
@@ -388,7 +380,7 @@ export const Mouse: Story = {
 
 		await userEvent.click(
 			within(await findToast(SENT)).getByRole("button", {
-				name: STORY_TOAST_CLOSE_LABEL,
+				name: STORY_COPY.close,
 			}),
 		);
 		await toastClosed(SENT);
@@ -407,7 +399,7 @@ export const Touch: Story = {
 			keys: "[TouchA]",
 			target: within(await findToast(SENT)).getByRole(
 				"button",
-				{ name: STORY_TOAST_CLOSE_LABEL },
+				{ name: STORY_COPY.close },
 			),
 		});
 		await toastClosed(SENT);

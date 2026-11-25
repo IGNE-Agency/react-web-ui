@@ -2,6 +2,8 @@ import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import type { ReactElement, ReactNode, Ref } from "react";
 import { IconButton } from "../button/button.tsx";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	Menu,
 	type MenuContentProps,
@@ -177,20 +179,23 @@ const Page = ({
 		},
 	});
 
-export type BreadcrumbsSeparatorProps =
-	useRender.ComponentProps<"li">;
+export type BreadcrumbsSeparatorProps = Omit<
+	useRender.ComponentProps<"li">,
+	"children"
+>;
 
 /**
- * The decorative space between two crumbs, holding the app's mark, such as a
- * chevron, given as `children`. Without one it is spacing alone.
+ * The decorative space between two crumbs, holding the `IconProvider`'s
+ * `separator`, such as a chevron.
  */
 const Separator = ({
 	render,
 	className,
 	ref,
 	...props
-}: BreadcrumbsSeparatorProps): ReactElement =>
-	useRender({
+}: BreadcrumbsSeparatorProps): ReactElement => {
+	const icons = useIcons();
+	return useRender({
 		defaultTagName: "li",
 		render,
 		ref,
@@ -198,8 +203,10 @@ const Separator = ({
 			...props,
 			"aria-hidden": true,
 			className: clsx(style.separator, className),
+			children: icons.separator,
 		},
 	});
+};
 
 export type BreadcrumbsOverflowProps = MenuRootProps;
 
@@ -262,8 +269,6 @@ export type BreadcrumbsGaugeProps = Readonly<{
 	labels: readonly ReactNode[];
 	/** The button `OverflowTrigger` renders, so the copy measures the same. */
 	overflow: ReactElement;
-	/** The mark between crumbs, so the copy measures the same. */
-	separator?: ReactNode;
 	ref: Ref<HTMLOListElement>;
 }>;
 
@@ -272,12 +277,11 @@ export type BreadcrumbsGaugeProps = Readonly<{
  * the overflow button, for `useFold` to measure.
  *
  * @example
- * <Breadcrumbs.Gauge ref={gauge} labels={labels} overflow={moreButton} separator={<ChevronIcon />} />
+ * <Breadcrumbs.Gauge ref={gauge} labels={labels} overflow={moreButton} />
  */
 const Gauge = ({
 	labels,
 	overflow,
-	separator,
 	ref,
 }: BreadcrumbsGaugeProps): ReactNode => (
 	<div className={style.gauge} aria-hidden inert>
@@ -291,9 +295,7 @@ const Gauge = ({
 					<span className={style.crumb}>{label}</span>
 				</li>
 			))}
-			<Separator render={<li data-gauge="separator" />}>
-				{separator}
-			</Separator>
+			<Separator render={<li data-gauge="separator" />} />
 			<li data-gauge="overflow" className={style.item}>
 				{overflow}
 			</li>
@@ -315,12 +317,6 @@ export type Crumb = Readonly<{
 export type BreadcrumbsProps = Readonly<{
 	/** The landmark's name, such as "Breadcrumbs". */
 	label: string;
-	/** The overflow button's name, such as "Show more". */
-	overflowLabel: string;
-	/** The overflow button's glyph, such as the app's ellipsis. */
-	overflowIcon: ReactNode;
-	/** The mark between crumbs, such as the app's chevron; without one, crumbs are kept apart by spacing alone. */
-	separator?: ReactNode;
 	/** The trail, outermost first; the last crumb is the current page. */
 	crumbs: readonly Crumb[];
 	className?: string;
@@ -328,10 +324,8 @@ export type BreadcrumbsProps = Readonly<{
 
 const Ancestor = ({
 	crumb,
-	separator,
 }: Readonly<{
 	crumb: Crumb;
-	separator: ReactNode;
 }>): ReactNode => (
 	<>
 		<Item>
@@ -344,7 +338,7 @@ const Ancestor = ({
 				</ClippedHint>
 			)}
 		</Item>
-		<Separator>{separator}</Separator>
+		<Separator />
 	</>
 );
 
@@ -355,12 +349,11 @@ const Ancestor = ({
  */
 const Trail = ({
 	label,
-	overflowLabel,
-	overflowIcon,
-	separator,
 	crumbs,
 	className,
 }: BreadcrumbsProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { root, gauge, folded } = useFold();
 	const current = crumbs.at(-1);
 
@@ -371,8 +364,10 @@ const Trail = ({
 	const ancestors = crumbs.slice(0, -1);
 	const hidden = ancestors.slice(1, 1 + folded);
 	const overflowButton = (
-		<IconButton variant="tertiary" label={overflowLabel}>
-			{overflowIcon}
+		<IconButton
+			variant="tertiary"
+			label={copy.breadcrumbs.overflow}>
+			{icons.overflow}
 		</IconButton>
 	);
 
@@ -383,11 +378,7 @@ const Trail = ({
 			className={className}>
 			<List>
 				{ancestors.slice(0, 1).map(crumb => (
-					<Ancestor
-						key={crumb.id}
-						crumb={crumb}
-						separator={separator}
-					/>
+					<Ancestor key={crumb.id} crumb={crumb} />
 				))}
 				{hidden.length > 0 ? (
 					<>
@@ -416,15 +407,11 @@ const Trail = ({
 								</OverflowContent>
 							</Overflow>
 						</Item>
-						<Separator>{separator}</Separator>
+						<Separator />
 					</>
 				) : null}
 				{ancestors.slice(1 + hidden.length).map(crumb => (
-					<Ancestor
-						key={crumb.id}
-						crumb={crumb}
-						separator={separator}
-					/>
+					<Ancestor key={crumb.id} crumb={crumb} />
 				))}
 				<Item>
 					<ClippedHint render={<Page />}>
@@ -436,7 +423,6 @@ const Trail = ({
 				ref={gauge}
 				labels={crumbs.map(crumb => crumb.label)}
 				overflow={overflowButton}
-				separator={separator}
 			/>
 		</Root>
 	);
@@ -465,9 +451,6 @@ type BreadcrumbsParts = typeof Trail &
  * @example
  * <Breadcrumbs
  * 	label="Breadcrumbs"
- * 	overflowLabel="Show more"
- * 	overflowIcon={<MoreIcon />}
- * 	separator={<ChevronIcon />}
  * 	crumbs={[
  * 		{ id: "home", label: "Home", render: <Link to="/" /> },
  * 		{ id: "invoices", label: "Invoices", render: <Link to="/invoices" /> },

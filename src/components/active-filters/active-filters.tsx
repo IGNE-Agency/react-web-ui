@@ -97,10 +97,6 @@ export type ActiveFiltersProps<TFilters extends object> =
 		describe: ActiveFilterDescribers<TFilters>;
 		/** What the chips are, such as "Active filters". */
 		label: string;
-		/** Each chip's remove button's name and tooltip, such as "Remove". */
-		removeLabel: string;
-		/** The glyph on each chip's remove button, such as a cross. */
-		removeIcon: ReactNode;
 		className?: string;
 	}>;
 
@@ -115,16 +111,12 @@ export type ActiveFiltersProps<TFilters extends object> =
  * 	filters={filters}
  * 	describe={{ status: describeValue({ label: "Status" }) }}
  * 	label="Active filters"
- * 	removeLabel="Remove"
- * 	removeIcon={<CloseIcon />}
  * />
  */
 export const ActiveFilters = <TFilters extends object>({
 	filters,
 	describe,
 	label,
-	removeLabel,
-	removeIcon,
 	className,
 }: ActiveFiltersProps<TFilters>): ReactNode => {
 	const { chips, onRemove } = useActiveFilterChips(
@@ -149,9 +141,7 @@ export const ActiveFilters = <TFilters extends object>({
 						tone={chip.tone}
 						variant={chip.variant}>
 						{chip.content}
-						<TagGroup.Remove label={removeLabel}>
-							{removeIcon}
-						</TagGroup.Remove>
+						<TagGroup.Remove />
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>

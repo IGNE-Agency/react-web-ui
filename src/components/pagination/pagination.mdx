@@ -20,20 +20,6 @@ import * as PaginationStories from "./pagination.stories.tsx";
 	pageSizes={[10, 20, 50]}
 	onPageIndexChange={setPageIndex}
 	onPageSizeChange={setPageSize}
-	pageSizeLabel="Rows per page"
-	indexLabel={({ pageIndex, pageCount }) =>
-		`Page ${pageIndex + 1} of ${pageCount}`
-	}
-	firstLabel="First page"
-	previousLabel="Previous page"
-	nextLabel="Next page"
-	lastLabel="Last page"
-	firstIcon={<FirstPageIcon />}
-	previousIcon={<ChevronLeftIcon />}
-	nextIcon={<ChevronRightIcon />}
-	lastIcon={<LastPageIcon />}
-	checkIcon={<CheckIcon />}
-	expandIcon={<ExpandMoreIcon />}
 />
 ```
 
@@ -49,7 +35,7 @@ import * as PaginationStories from "./pagination.stories.tsx";
 		</IconButton>
 	}
 />
-<Pagination.Index label={indexLabel} />
+<Pagination.Index />
 <Pagination.Next
 	render={
 		<IconButton label="Next page" variant="tertiary">
@@ -69,6 +55,6 @@ At the first page, first and previous do nothing; at the last, next and last do 
 
 ### The index is announced when the page changes
 
-`Pagination.Index` is a polite live region. After next or previous, a screen reader hears the new index without focus moving. Its text is the app's own, from `label`, which receives the root's numbers.
+`Pagination.Index` is a polite live region. After next or previous, a screen reader hears the new index without focus moving. Its text is the app's own, from the `CopyProvider`'s `pagination.index`, which receives the root's numbers.
 
 </DocsPage>

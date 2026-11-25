@@ -12,12 +12,12 @@ export type TSFPhoneFieldProps =
 	TSFTextPresetProps<PhoneFieldExtraProps>;
 
 /**
- * `PhoneField` bound to the TanStack Form field it renders in. Registered as
+ * `PhoneField` connected to the TanStack Form field it renders in. Registered as
  * `field.PhoneField`.
  *
  * @example
  * <form.AppField name="phone">
- * 	{field => <field.PhoneField label="Phone number" optionalLabel="optional" autoComplete="tel" />}
+ * 	{field => <field.PhoneField label="Phone number" autoComplete="tel" />}
  * </form.AppField>
  */
 export const TSFPhoneField: (

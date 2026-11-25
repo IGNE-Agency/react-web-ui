@@ -13,6 +13,7 @@ import {
 	useState,
 } from "react";
 import { lengthTone } from "../../lib/text-length.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -43,7 +44,7 @@ const COPIED_FEEDBACK_MS = 2000;
 
 export type TextInputRootProps = Omit<
 	FieldProps,
-	"label" | "description" | "optionalLabel"
+	"label" | "description"
 > &
 	Readonly<{
 		value: string;
@@ -333,10 +334,6 @@ export type TextInputCopyState = Readonly<{
 
 export type TextInputCopyProps = InlayButtonProps &
 	Readonly<{
-		/** Announced once the value is on the clipboard, such as "Copied". */
-		copiedLabel: string;
-		/** Announced once copying failed and the text is selected instead. */
-		failedLabel: string;
 		/** The button to render, or a function of the copy's state that returns one. */
 		render: useRender.RenderProp<TextInputCopyState>;
 	}>;
@@ -353,13 +350,12 @@ const writeClipboard = async (text: string) =>
 
 /**
  * The button that copies the value to the clipboard, shown once it holds one,
- * and announces whether the copy landed. It renders whichever button it is
+ * and announces whether the copy landed, in the `CopyProvider`'s
+ * `clipboard.copied` or `clipboard.failed`. It renders whichever button it is
  * given, and a render function can follow the outcome.
  *
  * @example
  * <TextInput.Copy
- * 	copiedLabel="Copied"
- * 	failedLabel="Copy failed, text selected"
  * 	render={(props, { outcome }) => (
  * 		<IconButton {...props} label="Copy" variant="tertiary" size="sm">
  * 			{outcome === "copied" ? <CheckIcon /> : <CopyIcon />}
@@ -368,14 +364,13 @@ const writeClipboard = async (text: string) =>
  * />
  */
 const TextInputCopy = ({
-	copiedLabel,
-	failedLabel,
 	render,
 	className,
 	...props
 }: TextInputCopyProps): ReactNode => {
 	const { value, state, selectControl } =
 		useTextInputContext();
+	const { clipboard } = useCopy();
 	const [outcome, setOutcome] =
 		useState<TextInputCopyOutcome>("idle");
 	const shown = value !== "" && state.disabled !== true;
@@ -412,8 +407,8 @@ const TextInputCopy = ({
 		Record<TextInputCopyOutcome, string>
 	> = {
 		idle: "",
-		copied: copiedLabel,
-		failed: failedLabel,
+		copied: clipboard.copied,
+		failed: clipboard.failed,
 	};
 	return (
 		<>
@@ -528,13 +523,13 @@ export type TextInputParts = Readonly<{
  * its inlays, and the bare control inside it. A `Bar` is a strip of inlays along
  * the bottom edge of the group, for a control the inlays cannot sit beside, and
  * an `Action` is any button placed in the group. For
- * the ordinary case, use the `TextField` shorthand, which is assembled from
+ * the ordinary case, use the `TextField` prefab, which is assembled from
  * exactly these parts. An `Affix` is decoration, so its meaning belongs in the
  * label or description too. `Error` renders the errors `Root` was given.
  *
  * @example
  * <TextInput.Root value={value} onValueChange={setValue} errors={errors} requiredness="optional">
- * 	<TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
+ * 	<TextInput.Label>Email <Field.Requiredness /></TextInput.Label>
  * 	<TextInput.Group>
  * 		<TextInput.Input type="email" />
  * 		<TextInput.Clear

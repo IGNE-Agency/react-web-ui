@@ -10,7 +10,6 @@ import {
 const COUNTER_MAX = 200;
 const MAX_ROWS = 8;
 const LABEL = "Note";
-const OPTIONAL_LABEL = "optional";
 const VALUE =
 	"The client asked to move the next session to the afternoon.";
 
@@ -55,7 +54,6 @@ const meta = {
 	render: ControlledTextareaField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		value: "",
 		maxRows: MAX_ROWS,
 		onValueChange: fn(),

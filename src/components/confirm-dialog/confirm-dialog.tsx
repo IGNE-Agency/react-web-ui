@@ -224,6 +224,7 @@ const ConfirmDialogFooter = ({
 );
 
 export type ConfirmDialogCancelProps = Readonly<{
+	/** The button's text, saying what backing out does, such as "Keep editing". */
 	children: ReactNode;
 }>;
 
@@ -315,11 +316,11 @@ export type ConfirmDialogProps = Omit<
 		description?: ReactNode;
 		/** Label for the confirming action button. */
 		confirmLabel: string;
-		/** Label for the cancelling action button. */
+		/** Label for the cancelling action button, such as "Keep editing". */
 		cancelLabel: string;
 	}>;
 
-const ConfirmDialogShorthand = ({
+const ConfirmDialogPrefab = ({
 	open,
 	onOpenChange,
 	title,
@@ -352,7 +353,7 @@ const ConfirmDialogShorthand = ({
 	</ConfirmDialogRoot>
 );
 
-type ConfirmDialogParts = typeof ConfirmDialogShorthand &
+type ConfirmDialogParts = typeof ConfirmDialogPrefab &
 	Readonly<{
 		Root: typeof ConfirmDialogRoot;
 		Portal: typeof AlertDialog.Portal;
@@ -380,13 +381,13 @@ type ConfirmDialogParts = typeof ConfirmDialogShorthand &
  * 	title="Delete this invoice?"
  * 	description="This cannot be undone."
  * 	confirmLabel="Delete"
- * 	cancelLabel="Cancel"
+ * 	cancelLabel="Keep invoice"
  * 	onConfirm={() => deleteInvoice(id)}
  * 	tone="danger"
  * />
  */
 export const ConfirmDialog: ConfirmDialogParts =
-	Object.assign(ConfirmDialogShorthand, {
+	Object.assign(ConfirmDialogPrefab, {
 		Root: ConfirmDialogRoot,
 		Portal: AlertDialog.Portal,
 		Backdrop: ConfirmDialogBackdrop,

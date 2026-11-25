@@ -4,6 +4,7 @@ import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { Checkbox } from "../checkbox-field/index.ts";
 import { Field } from "../field/index.ts";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
 import {
 	FieldsetLegend,
 	FieldsetRoot,
@@ -12,6 +13,18 @@ import {
 import style from "./checkbox-group.module.scss";
 
 export type CheckboxGroupRootProps = FieldsetRootProps;
+
+/** The fieldset around the boxes, named by its `Legend`, whose required mark says "required" in words. */
+const CheckboxGroupRoot = ({
+	children,
+	...props
+}: CheckboxGroupRootProps): ReactNode => (
+	<FieldsetRoot {...props}>
+		<RequiredSpokenContext value={true}>
+			{children}
+		</RequiredSpokenContext>
+	</FieldsetRoot>
+);
 
 /** The group of boxes, which holds the array of ticked values. */
 const CheckboxGroupGroup = ({
@@ -42,7 +55,7 @@ const CheckboxGroupItem = ({
 
 /** The parts of a checkbox group. */
 export type CheckboxGroupParts = Readonly<{
-	Root: typeof FieldsetRoot;
+	Root: typeof CheckboxGroupRoot;
 	Legend: typeof FieldsetLegend;
 	Group: typeof CheckboxGroupGroup;
 	Item: typeof CheckboxGroupItem;
@@ -60,7 +73,7 @@ export type CheckboxGroupParts = Readonly<{
  *
  * @example
  * <CheckboxGroup.Root filled={values.length > 0} requiredness="optional">
- * 	<CheckboxGroup.Legend>Statuses <Field.Requiredness optionalLabel="optional" /></CheckboxGroup.Legend>
+ * 	<CheckboxGroup.Legend>Statuses <Field.Requiredness /></CheckboxGroup.Legend>
  * 	<CheckboxGroup.Group value={values} onValueChange={setValues}>
  * 		<CheckboxGroup.Item>
  * 			<CheckboxGroup.Control value="open">
@@ -72,7 +85,7 @@ export type CheckboxGroupParts = Readonly<{
  * </CheckboxGroup.Root>
  */
 export const CheckboxGroup: CheckboxGroupParts = {
-	Root: FieldsetRoot,
+	Root: CheckboxGroupRoot,
 	Legend: FieldsetLegend,
 	Group: CheckboxGroupGroup,
 	Item: CheckboxGroupItem,

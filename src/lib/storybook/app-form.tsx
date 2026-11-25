@@ -152,7 +152,7 @@ const appForm: AppForm<FieldComponents, FormComponents> =
 	createAppForm(fieldComponents, formComponents);
 
 /**
- * The form hook of the kit's stories and tests, with every field's bridge
+ * The form hook of the kit's stories and tests, with every field's connector
  * registered under its plain name, and `TSFFieldGroup` as `form.FieldGroup`.
  *
  * @example

@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { expect } from "storybook/test";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { Link } from "../link/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import {
 	Field,
 	type FieldRootProps,
-	type RequirednessProps,
+	type RequiredMarkProps,
 } from "./field.tsx";
 import { fieldStateAttributes } from "./field-state.ts";
 import style from "./field.stories.module.scss";
 
 const LABEL = "Email";
-const OPTIONAL_LABEL = "optional";
 const DESCRIPTION = "We send the receipt here.";
 const ERRORS = [
 	"Enter an email address.",
@@ -24,19 +24,14 @@ const CAPTION_VALUE = "Follows the system";
 const PASSWORD_LABEL = "Password";
 const FORGOT_LABEL = "Forgot password?";
 
-type ExampleParts = Partial<RequirednessProps> &
+type ExampleParts = RequiredMarkProps &
 	Readonly<{
 		description?: ReactNode;
 		errors?: unknown;
 	}>;
 
 const textFieldOf =
-	({
-		requiredness,
-		optionalLabel = OPTIONAL_LABEL,
-		description,
-		errors,
-	}: ExampleParts) =>
+	({ requiredness, description, errors }: ExampleParts) =>
 	(args: FieldRootProps) => (
 		<Field.Root
 			{...args}
@@ -44,8 +39,7 @@ const textFieldOf =
 			invalid={errors !== undefined}
 			className={style.field}>
 			<Field.Label>
-				{LABEL}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{LABEL} <Field.Requiredness />
 			</Field.Label>
 			<Field.Control
 				className={style.input}
@@ -95,8 +89,7 @@ const CaptionField = (args: FieldRootProps) => (
 		requiredness="optional"
 		className={style.field}>
 		<Field.Caption>
-			{CAPTION}{" "}
-			<Field.Requiredness optionalLabel={OPTIONAL_LABEL} />
+			{CAPTION} <Field.Requiredness />
 		</Field.Caption>
 		<p>{CAPTION_VALUE}</p>
 	</Field.Root>
@@ -115,9 +108,7 @@ const InlineField = (args: FieldRootProps) => (
 			<Field.InlineLabelText>
 				{CHECKBOX_LABEL} <Field.RequiredMark />
 			</Field.InlineLabelText>
-			<Field.InlineOptional
-				optionalLabel={OPTIONAL_LABEL}
-			/>
+			<Field.InlineOptional />
 		</Field.Label>
 	</Field.Root>
 );
@@ -158,7 +149,7 @@ export const Unstated: Story = {
 			canvas.getByRole("textbox", { name: LABEL }),
 		).not.toBeRequired();
 		await expect(
-			canvas.queryByText(OPTIONAL_LABEL),
+			canvas.queryByText(STORY_COPY.optional),
 		).not.toBeInTheDocument();
 	},
 };
@@ -177,7 +168,7 @@ export const Optional: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("textbox", {
-				name: `${LABEL} ${OPTIONAL_LABEL}`,
+				name: `${LABEL} ${STORY_COPY.optional}`,
 			}),
 		).not.toBeRequired();
 	},
@@ -250,7 +241,7 @@ export const InlineLabel: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("checkbox", {
-				name: `${CHECKBOX_LABEL} ${OPTIONAL_LABEL}`,
+				name: `${CHECKBOX_LABEL} ${STORY_COPY.optional}`,
 			}),
 		).toBeVisible();
 	},

@@ -1,17 +1,3 @@
-import type { ReactNode } from "react";
-
-/** The copy and the remove icon a combobox shows only when it holds several values. */
-export type ComboboxMultipleLabels = Readonly<{
-	/** Names the group of tags, such as "Selected statuses". */
-	selectedLabel: string;
-	/** The remove control's own name, which the tag's name completes, such as "Remove". */
-	removeLabel: string;
-	/** The remove control's tooltip for a value, such as "Remove Jan Jansen". */
-	removeHint: (itemLabel: string) => string;
-	/** The remove control's icon, such as a cross. */
-	removeIcon: ReactNode;
-}>;
-
 /**
  * One value or several. The shape of `value`, `defaultValue` and
  * `onValueChange` follows `multiple`.
@@ -26,13 +12,14 @@ export type ComboboxMode<TItem> =
 			defaultValue?: TItem | null;
 			onValueChange?: (value: TItem | null) => void;
 	  }>
-	| (Readonly<{
+	| Readonly<{
 			multiple: true;
 			value?: readonly TItem[];
 			defaultValue?: readonly TItem[];
 			onValueChange?: (value: readonly TItem[]) => void;
-	  }> &
-			ComboboxMultipleLabels);
+			/** Names the group of tags, such as "Selected statuses". */
+			selectedLabel: string;
+	  }>;
 
 /**
  * A field's controlled value as a list, or `undefined` while it is

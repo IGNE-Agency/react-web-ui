@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	Field,
 	type FieldBlurHandler,
@@ -17,24 +18,15 @@ export type CheckboxFieldBaseProps = FieldProps &
 	> &
 	Readonly<{
 		onBlur?: FieldBlurHandler;
-		/** The mark the box shows while checked, such as a tick. */
-		checkIcon: ReactNode;
 		/** Applied to the field wrapper, so callers can place the row. */
 		className?: string;
 	}>;
 
-/** The indeterminate state, with the mark it needs only when it is used. */
-export type CheckboxFieldIndeterminateProps =
-	| Readonly<{
-			/** The box shows neither checked nor unchecked, for a parent over a mixed set. */
-			indeterminate: boolean;
-			/** The mark the box shows while indeterminate, such as a dash. */
-			indeterminateIcon: ReactNode;
-	  }>
-	| Readonly<{
-			indeterminate?: undefined;
-			indeterminateIcon?: undefined;
-	  }>;
+/** The indeterminate state. */
+export type CheckboxFieldIndeterminateProps = Readonly<{
+	/** The box shows neither checked nor unchecked, for a parent over a mixed set. */
+	indeterminate?: boolean;
+}>;
 
 export type CheckboxFieldProps = CheckboxFieldBaseProps &
 	CheckboxFieldIndeterminateProps;
@@ -46,8 +38,6 @@ export type CheckboxFieldProps = CheckboxFieldBaseProps &
  * @example
  * <CheckboxField
  * 	label="I agree to the terms"
- * 	optionalLabel="optional"
- * 	checkIcon={<CheckIcon />}
  * 	checked={agreed}
  * 	onCheckedChange={setAgreed}
  * />
@@ -57,16 +47,14 @@ export const CheckboxField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
 	name,
 	className,
-	checkIcon,
-	indeterminateIcon,
 	...props
 }: CheckboxFieldProps): ReactNode => {
+	const icons = useIcons();
 	const ids = Field.useIds();
 
 	return (
@@ -89,16 +77,14 @@ export const CheckboxField = ({
 					{...props}>
 					<Checkbox.Indicator>
 						{props.indeterminate === true
-							? indeterminateIcon
-							: checkIcon}
+							? icons.indeterminate
+							: icons.check}
 					</Checkbox.Indicator>
 				</Checkbox.Control>
 				<Field.InlineLabelText>
 					{label} <Field.RequiredMark />
 				</Field.InlineLabelText>
-				<Field.InlineOptional
-					optionalLabel={optionalLabel}
-				/>
+				<Field.InlineOptional />
 			</Checkbox.Label>
 			<Checkbox.Description>
 				{description}

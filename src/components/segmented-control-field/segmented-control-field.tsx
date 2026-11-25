@@ -33,7 +33,6 @@ export type SegmentedControlFieldProps = FieldProps &
  * @example
  * <SegmentedControlField
  * 	label="View"
- * 	optionalLabel="optional"
  * 	options={[{ label: "List", value: "list" }, { label: "Board", value: "board" }]}
  * 	value={view}
  * 	onValueChange={setView}
@@ -44,7 +43,6 @@ export const SegmentedControlField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -75,8 +73,7 @@ export const SegmentedControlField = ({
 			pending={pending}
 			filled={value !== null}>
 			<SegmentedControl.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</SegmentedControl.Legend>
 
 			<SegmentedControl.Group

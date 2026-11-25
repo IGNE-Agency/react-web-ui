@@ -5,12 +5,6 @@ export type {
 	ItemQuery,
 	PagedQuery,
 } from "./combobox-items.ts";
-export type {
-	ComboboxMode,
-	ComboboxMultipleLabels,
-} from "./selection.ts";
+export type { ComboboxMode } from "./selection.ts";
 export * from "./tsf-combobox-field.tsx";
-export type {
-	ItemLookup,
-	ValueStateLabels,
-} from "./value-state.ts";
+export type { ItemLookup } from "./value-state.ts";

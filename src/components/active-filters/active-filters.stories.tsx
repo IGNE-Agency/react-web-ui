@@ -1,8 +1,7 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { useFilterView } from "../filter-bar/use-filter-view.ts";
-import { Icon } from "../icon/icon.tsx";
 import { Tag } from "../tag/tag.tsx";
 import { TagGroup } from "../tag-group/tag-group.tsx";
 import {
@@ -16,12 +15,9 @@ import {
 } from "./active-filters.tsx";
 
 const ACTIVE_LABEL = "Active filters";
-const REMOVE_LABEL = "Remove";
 const STATUS_CHIP = "Status: Submitted, Paid";
 const YEAR_CHIP = "Year: 2026";
 const ARCHIVED_CHIP = "Archived";
-
-const removeIcon = <Icon svg={CloseIcon} label="" />;
 
 type InvoiceFilters = Readonly<{
 	statuses?: readonly string[];
@@ -50,8 +46,6 @@ const ActiveFiltersExample = () => {
 				archived: describeFlag(ARCHIVED_CHIP),
 			}}
 			label={ACTIVE_LABEL}
-			removeLabel={REMOVE_LABEL}
-			removeIcon={removeIcon}
 		/>
 	);
 };
@@ -87,9 +81,7 @@ const ComposedExample = () => {
 						variant={chip.variant}>
 						<Tag.Dot />
 						{chip.content}
-						<TagGroup.Remove label={REMOVE_LABEL}>
-							{removeIcon}
-						</TagGroup.Remove>
+						<TagGroup.Remove />
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>
@@ -107,8 +99,6 @@ const UnfilteredExample = () => {
 			filters={filters}
 			describe={{ year: describeValue({ label: "Year" }) }}
 			label={ACTIVE_LABEL}
-			removeLabel={REMOVE_LABEL}
-			removeIcon={removeIcon}
 		/>
 	);
 };
@@ -130,13 +120,10 @@ const meta = {
 		filters: undefined,
 		describe: {},
 		label: ACTIVE_LABEL,
-		removeLabel: REMOVE_LABEL,
-		removeIcon,
 	},
 	argTypes: {
 		filters: { control: false },
 		describe: { control: false },
-		removeIcon: { control: false },
 	},
 } satisfies Meta<typeof ActiveFilters>;
 
@@ -190,7 +177,7 @@ export const RemoveMouse: Story = {
 	play: async ({ canvas }) => {
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: `${REMOVE_LABEL} ${ARCHIVED_CHIP}`,
+				name: `${STORY_COPY.remove} ${ARCHIVED_CHIP}`,
 			}),
 		);
 
@@ -208,7 +195,7 @@ export const RemoveTouch: Story = {
 		await userEvent.pointer({
 			keys: "[TouchA]",
 			target: canvas.getByRole("button", {
-				name: `${REMOVE_LABEL} ${STATUS_CHIP}`,
+				name: `${STORY_COPY.remove} ${STATUS_CHIP}`,
 			}),
 		});
 
@@ -238,7 +225,7 @@ export const ComposedRemoveMouse: Story = {
 	play: async ({ canvas }) => {
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: `${REMOVE_LABEL} ${YEAR_CHIP}`,
+				name: `${STORY_COPY.remove} ${YEAR_CHIP}`,
 			}),
 		);
 

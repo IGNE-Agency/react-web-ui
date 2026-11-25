@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import axe from "axe-core";
@@ -9,11 +8,11 @@ import {
 import { addons } from "storybook/preview-api";
 import { configure, spyOn } from "storybook/test";
 import { z } from "zod";
-import { Icon } from "../src/components/icon/index.ts";
 import {
 	STORY_LOCALE,
 	StoryProviders,
 } from "../src/lib/storybook/story-providers.tsx";
+import { STORY_ICONS } from "./story-icons.tsx";
 import { registerContrastChecks } from "./contrast-checks.ts";
 import { docCommentOf } from "./doc-comment.ts";
 import { DocsPage } from "./docs-page.tsx";
@@ -163,8 +162,7 @@ const preview: Preview = {
 			attributeName: "data-theme",
 		}),
 		Story => (
-			<StoryProviders
-				toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
+			<StoryProviders icons={STORY_ICONS}>
 				<Story />
 			</StoryProviders>
 		),

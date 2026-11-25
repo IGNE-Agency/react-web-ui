@@ -5,7 +5,6 @@ import {
 	type FieldProps,
 	type FieldState,
 	type OptionsLoad,
-	type OptionsLoadLabels,
 	useFieldState,
 } from "../field/index.ts";
 import { detachHiddenInput } from "../field/hidden-input.ts";
@@ -15,15 +14,10 @@ import style from "./select.module.scss";
 
 export type SelectFieldProps<T extends string> =
 	FieldProps &
-		OptionsLoadLabels &
 		Omit<SelectRootProps<T>, "children" | "required"> &
 		Readonly<{
 			/** Shown on the trigger while nothing is selected. */
 			placeholder?: string;
-			/** The chevron after the trigger's value, such as an expand icon. */
-			icon?: ReactNode;
-			/** The mark beside the chosen option, such as a tick. */
-			checkIcon: ReactNode;
 			/** How far the options have loaded, when they come from a query. */
 			load?: OptionsLoad;
 			/** Called once focus has left the field, its popup included. */
@@ -39,17 +33,9 @@ export type SelectFieldProps<T extends string> =
  * @example
  * <SelectField
  * 	label="Status"
- * 	optionalLabel="optional"
  * 	options={statusOptions}
- * 	icon={<ExpandMoreIcon />}
- * 	checkIcon={<CheckIcon />}
  * 	value={status}
  * 	onValueChange={setStatus}
- * 	loadingLabel="Loading options…"
- * 	loadFailedLabel="Options could not be loaded."
- * 	loadBrokenLabel="Options could not be loaded, and trying again won't help."
- * 	retryLabel="Try again"
- * 	noOptionsLabel="No options available."
  * />
  */
 export const SelectField = <T extends string>({
@@ -57,19 +43,11 @@ export const SelectField = <T extends string>({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending = false,
 	placeholder,
-	icon,
-	checkIcon,
 	load = OPTIONS_LOADED,
-	loadingLabel,
-	loadFailedLabel,
-	loadBrokenLabel,
-	retryLabel,
-	noOptionsLabel,
 	onBlur,
 	className,
 	onOpenChange,
@@ -141,21 +119,11 @@ export const SelectField = <T extends string>({
 				}}>
 				<Select.Label>
 					{label}{" "}
-					<Field.Requiredness
-						requiredness={requiredness}
-						optionalLabel={optionalLabel}
-					/>
+					<Field.Requiredness requiredness={requiredness} />
 				</Select.Label>
 				<Select.Control
 					placeholder={placeholder}
-					icon={icon}
-					checkIcon={checkIcon}
 					load={load}
-					loadingLabel={loadingLabel}
-					loadFailedLabel={loadFailedLabel}
-					loadBrokenLabel={loadBrokenLabel}
-					retryLabel={retryLabel}
-					noOptionsLabel={noOptionsLabel}
 					state={fieldState}
 					className={className}
 					aria-describedby={describedBy}

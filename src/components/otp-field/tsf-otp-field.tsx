@@ -14,12 +14,12 @@ export type TSFOtpFieldProps = Omit<
 >;
 
 /**
- * `OtpField` bound to the TanStack Form field it renders in. Registered as
+ * `OtpField` connected to the TanStack Form field it renders in. Registered as
  * `field.OtpField`.
  *
  * @example
  * <form.AppField name="code">
- * 	{field => <field.OtpField label="Verification code" optionalLabel="optional" slotLabel={(index, total) => `character ${index} of ${total}`} />}
+ * 	{field => <field.OtpField label="Verification code" />}
  * </form.AppField>
  */
 export const TSFOtpField = (

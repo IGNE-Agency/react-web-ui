@@ -10,12 +10,7 @@ const Name = () => {
 	const form = useAppForm({ defaultValues: { name: "" } });
 	return (
 		<form.AppField name="name">
-			{field => (
-				<field.TextField
-					label="Name"
-					optionalLabel="optional"
-				/>
-			)}
+			{field => <field.TextField label="Name" />}
 		</form.AppField>
 	);
 };

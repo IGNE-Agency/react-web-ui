@@ -3,7 +3,7 @@ import type { FieldBlurHandler } from "../../components/field/field.tsx";
 import { FieldGroupContext } from "../../components/field/field-group-context.ts";
 import { useFieldContext } from "./context.tsx";
 
-/** The field props a bridge passes at the top level, read off its field. */
+/** The field props a connector passes at the top level, read off its field. */
 export type ConnectedFieldProps = Readonly<{
 	name: string;
 	errors: unknown;

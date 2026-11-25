@@ -33,7 +33,6 @@ export type ToggleGroupFieldProps = FieldProps &
  * @example
  * <ToggleGroupField
  * 	label="Days"
- * 	optionalLabel="optional"
  * 	options={[{ label: "Monday", value: "mon" }, { label: "Tuesday", value: "tue" }]}
  * 	value={days}
  * 	onValueChange={setDays}
@@ -44,7 +43,6 @@ export const ToggleGroupField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -75,8 +73,7 @@ export const ToggleGroupField = ({
 			pending={pending}
 			filled={value.length > 0}>
 			<ToggleGroup.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</ToggleGroup.Legend>
 
 			<ToggleGroup.Group

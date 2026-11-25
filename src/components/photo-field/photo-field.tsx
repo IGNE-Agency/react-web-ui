@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	Field,
 	type FieldProps,
 	useFieldState,
 } from "../field/index.ts";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	PhotoInput,
 	type PhotoInputPreviewProps,
@@ -23,21 +26,6 @@ export type PhotoFieldProps = Pick<
 	PhotoInputPreviewProps &
 	FieldProps &
 	Readonly<{
-		/** The picked photo's alternative text, such as "Preview". */
-		previewLabel: string;
-
-		/** What the control announces while a photo is set, such as "Photo set". */
-		photoSetLabel: string;
-
-		/** What the control announces while no photo is set, such as "No photo". */
-		noPhotoLabel: string;
-
-		/** Accessible name of the button that removes a picked photo, such as "Remove photo". */
-		removeLabel: string;
-
-		/** The remove button's icon, such as a cross. */
-		removeIcon: ReactNode;
-
 		/** The badge on the circle's rim, such as a camera icon. */
 		icon?: ReactNode;
 
@@ -54,18 +42,12 @@ export type PhotoFieldProps = Pick<
  * @example
  * <PhotoField
  * 	label="Profile photo"
- * 	optionalLabel="optional"
  * 	value={file}
  * 	onValueChange={setFile}
  * 	hasStoredImage={user.photo !== null}
  * 	defaultPreview={<Avatar name={user.name} />}
  * 	accept={["image/png", "image/jpeg"]}
  * 	icon={<PhotoCameraIcon />}
- * 	previewLabel="Preview"
- * 	photoSetLabel="Photo set"
- * 	noPhotoLabel="No photo"
- * 	removeLabel="Remove photo"
- * 	removeIcon={<CloseIcon />}
  * />
  */
 export const PhotoField = ({
@@ -73,7 +55,6 @@ export const PhotoField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -81,14 +62,11 @@ export const PhotoField = ({
 	className,
 	defaultPreview,
 	hasStoredImage,
-	previewLabel,
-	photoSetLabel,
-	noPhotoLabel,
-	removeLabel,
-	removeIcon,
 	icon,
 	...controlProps
 }: PhotoFieldProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const ids = Field.useIds();
 	const { labelId, descriptionId, errorId } = ids;
 	const field = useFieldState({
@@ -113,10 +91,9 @@ export const PhotoField = ({
 				nativeLabel={false}
 				render={<span />}>
 				{label}{" "}
-				<Field.Requiredness
-					requiredness={requiredness}
-					optionalLabel={optionalLabel}
-				/>
+				<RequiredSpokenContext value={true}>
+					<Field.Requiredness requiredness={requiredness} />
+				</RequiredSpokenContext>
 			</Field.Label>
 			<PhotoInput.Root
 				{...controlProps}
@@ -131,7 +108,7 @@ export const PhotoField = ({
 				pending={field.state.pending}>
 				<PhotoInput.Well>
 					<PhotoInput.Face>
-						<PhotoInput.Image alt={previewLabel} />
+						<PhotoInput.Image alt={copy.photo.preview} />
 						<PhotoInput.Fallback>
 							{defaultPreview}
 						</PhotoInput.Fallback>
@@ -141,16 +118,13 @@ export const PhotoField = ({
 				<PhotoInput.Remove
 					render={
 						<IconButton
-							label={removeLabel}
+							label={copy.photo.remove}
 							variant="secondary">
-							{removeIcon}
+							{icons.remove}
 						</IconButton>
 					}
 				/>
-				<PhotoInput.ValueText
-					photoSetLabel={photoSetLabel}
-					noPhotoLabel={noPhotoLabel}
-				/>
+				<PhotoInput.ValueText />
 			</PhotoInput.Root>
 			<Field.Description id={descriptionId}>
 				{description}

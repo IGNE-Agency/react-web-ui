@@ -21,15 +21,20 @@ import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { useInfiniteScroll } from "../../lib/use-infinite-scroll.ts";
 import { Button } from "../button/index.ts";
 import {
+	type KitCopy,
+	useCopy,
+} from "../copy-provider/index.ts";
+import {
 	Field,
 	type FieldPendingProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
-	type OptionsLoadLabels,
 	useFieldFocus,
 } from "../field/index.ts";
+import { optionsLoadMessage } from "../field/options-load.ts";
 import { withFieldFocus } from "../field/use-field-focus.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import {
 	type PagedQuery,
@@ -407,8 +412,6 @@ export type ComboboxChipRemoveProps = Omit<
 	"className" | "slot" | "aria-label"
 > &
 	Readonly<{
-		/** The button's own name, which the chip's name completes, such as "Remove". */
-		"aria-label": string;
 		className?: string;
 	}>;
 
@@ -418,21 +421,25 @@ export type ComboboxChipRemoveProps = Omit<
  *
  * @example
  * <Tooltip content="Remove Open">
- * 	<Combobox.ChipRemove aria-label="Remove"><CloseIcon /></Combobox.ChipRemove>
+ * 	<Combobox.ChipRemove><CloseIcon /></Combobox.ChipRemove>
  * </Tooltip>
  */
 const ComboboxChipRemove = ({
 	className,
 	...props
-}: ComboboxChipRemoveProps): ReactNode => (
-	<RemoveButton
-		slot="remove"
-		excludeFromTabOrder
-		isDisabled={useContext(ChipsLockedContext)}
-		className={clsx(style.tagRemove, className)}
-		{...props}
-	/>
-);
+}: ComboboxChipRemoveProps): ReactNode => {
+	const copy = useCopy();
+	return (
+		<RemoveButton
+			slot="remove"
+			excludeFromTabOrder
+			isDisabled={useContext(ChipsLockedContext)}
+			aria-label={copy.remove}
+			className={clsx(style.tagRemove, className)}
+			{...props}
+		/>
+	);
+};
 
 /** Places the popup against the control, given as its `anchor`. */
 const ComboboxPositioner = ({
@@ -462,11 +469,7 @@ const ComboboxPopup = ({
 export type ComboboxSearchProps = Omit<
 	BaseCombobox.Input.Props,
 	"aria-label" | "aria-labelledby"
-> &
-	Readonly<{
-		/** The search box's accessible name. */
-		"aria-label": string;
-	}>;
+>;
 
 /**
  * The search box inside the popup. It names itself, clearing the field label
@@ -476,13 +479,17 @@ export type ComboboxSearchProps = Omit<
 const ComboboxSearch = ({
 	className,
 	...props
-}: ComboboxSearchProps): ReactNode => (
-	<BaseCombobox.Input
-		aria-labelledby={undefined}
-		className={clsx(style.search, className)}
-		{...props}
-	/>
-);
+}: ComboboxSearchProps): ReactNode => {
+	const { options } = useCopy();
+	return (
+		<BaseCombobox.Input
+			aria-labelledby={undefined}
+			aria-label={options.search}
+			className={clsx(style.search, className)}
+			{...props}
+		/>
+	);
+};
 
 export type ComboboxListProps = Omit<
 	BaseCombobox.List.Props,
@@ -632,68 +639,37 @@ const ComboboxStatusArea = ({
 	/>
 );
 
-/** The copy a combobox's popup shows about its options. */
-export type ComboboxPopupLabels = OptionsLoadLabels &
-	Readonly<{
-		/** Shown when the search matches nothing. */
-		noResultsLabel: string;
-		/** The search box's accessible name, such as "Search". */
-		searchLabel: string;
-		/** Read while a paged query fetches its next page. */
-		loadingMoreLabel: string;
-		/** The match count of a paged query, such as "40 results". */
-		resultsLabel: (count: number) => string;
-	}>;
-
-/** The copy `LoadStatus` shows. */
-export type ComboboxLoadStatusLabels = Pick<
-	ComboboxPopupLabels,
-	| "loadingLabel"
-	| "loadFailedLabel"
-	| "loadBrokenLabel"
-	| "retryLabel"
-	| "loadingMoreLabel"
-	| "resultsLabel"
->;
-
-export type ComboboxLoadStatusProps =
-	ComboboxLoadStatusLabels &
-		Readonly<{
-			/** How far the items have loaded. */
-			load: OptionsLoad;
-			/** A paged query, whose match count and next page it reports. */
-			query?: Pick<
-				PagedQuery<unknown>,
-				"data" | "isFetchingNextPage"
-			>;
-			/** Runs a retry, such as to move focus back afterwards. @default retry() */
-			onRetry?: (retry: () => void) => void;
-			className?: string;
-		}>;
+export type ComboboxLoadStatusProps = Readonly<{
+	/** How far the items have loaded. */
+	load: OptionsLoad;
+	/** A paged query, whose match count and next page it reports. */
+	query?: Pick<
+		PagedQuery<unknown>,
+		"data" | "isFetchingNextPage"
+	>;
+	/** Runs a retry, such as to move focus back afterwards. @default retry() */
+	onRetry?: (retry: () => void) => void;
+	className?: string;
+}>;
 
 const loadMessage = (
-	labels: ComboboxLoadStatusLabels,
+	copy: KitCopy["options"],
 	load: OptionsLoad,
 	query: ComboboxLoadStatusProps["query"],
 ): string | undefined => {
-	if (load.status === "pending") {
-		return labels.loadingLabel;
-	}
-	if (load.status === "error") {
-		return load.retry === undefined
-			? labels.loadBrokenLabel
-			: labels.loadFailedLabel;
+	if (load.status !== "success") {
+		return optionsLoadMessage(load, copy);
 	}
 	const paged = pagedProgress(query);
 	if (paged === undefined) {
 		return undefined;
 	}
 	if (paged.isFetchingNextPage) {
-		return labels.loadingMoreLabel;
+		return copy.loadingMore;
 	}
 	return paged.totalCount === undefined
 		? undefined
-		: labels.resultsLabel(paged.totalCount);
+		: copy.results(paged.totalCount);
 };
 
 const runRetry = (retry: () => void): void => {
@@ -706,8 +682,8 @@ const ComboboxLoadStatus = ({
 	query,
 	onRetry = runRetry,
 	className,
-	...labels
 }: ComboboxLoadStatusProps): ReactNode => {
+	const copy = useCopy();
 	const retry =
 		load.status === "error" ? load.retry : undefined;
 	return (
@@ -717,7 +693,7 @@ const ComboboxLoadStatus = ({
 					query?.isFetchingNextPage === true) && (
 					<Spinner size={1} />
 				)}
-				{loadMessage(labels, load, query)}
+				{loadMessage(copy.options, load, query)}
 			</ComboboxStatus>
 			{retry !== undefined && (
 				<Button
@@ -726,30 +702,27 @@ const ComboboxLoadStatus = ({
 					onClick={() => {
 						onRetry(retry);
 					}}>
-					{labels.retryLabel}
+					{copy.retry}
 				</Button>
 			)}
 		</ComboboxStatusArea>
 	);
 };
 
-export type ComboboxBodyProps<TItem> = ComboboxPopupLabels &
-	Readonly<{
-		/** How far the items have loaded. */
-		load: OptionsLoad;
-		/** A paged query, searched on the server and loaded page by page. */
-		query?: PagedQuery<TItem>;
-		/** There are no items at all, rather than none matching the search. */
-		noOptions: boolean;
-		/** Draws each option's mark inside an `OptionCheckbox`. */
-		multiple?: boolean;
-		/** A stable identity per item. */
-		itemKey: (item: TItem) => string;
-		/** The mark beside a chosen option, such as a tick. */
-		checkIcon: ReactNode;
-		/** Renders one item's row. */
-		children: (item: TItem) => ReactNode;
-	}>;
+export type ComboboxBodyProps<TItem> = Readonly<{
+	/** How far the items have loaded. */
+	load: OptionsLoad;
+	/** A paged query, searched on the server and loaded page by page. */
+	query?: PagedQuery<TItem>;
+	/** There are no items at all, rather than none matching the search. */
+	noOptions: boolean;
+	/** Draws each option's mark inside an `OptionCheckbox`. */
+	multiple?: boolean;
+	/** A stable identity per item. */
+	itemKey: (item: TItem) => string;
+	/** Renders one item's row. */
+	children: (item: TItem) => ReactNode;
+}>;
 
 /**
  * What a combobox's popup holds: the search box, the load status with a retry
@@ -762,27 +735,18 @@ const ComboboxBody = <TItem,>({
 	noOptions,
 	multiple = false,
 	itemKey,
-	checkIcon,
 	children,
-	...labels
 }: ComboboxBodyProps<TItem>): ReactNode => {
+	const { options } = useCopy();
+	const { check } = useIcons();
 	const searchRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<>
-			<ComboboxSearch
-				ref={searchRef}
-				aria-label={labels.searchLabel}
-			/>
+			<ComboboxSearch ref={searchRef} />
 			<ComboboxLoadStatus
 				load={load}
 				query={query}
-				loadingLabel={labels.loadingLabel}
-				loadFailedLabel={labels.loadFailedLabel}
-				loadBrokenLabel={labels.loadBrokenLabel}
-				retryLabel={labels.retryLabel}
-				loadingMoreLabel={labels.loadingMoreLabel}
-				resultsLabel={labels.resultsLabel}
 				onRetry={retry => {
 					retry();
 					searchRef.current?.focus();
@@ -791,8 +755,8 @@ const ComboboxBody = <TItem,>({
 			<ComboboxEmpty>
 				{load.status === "success"
 					? noOptions
-						? labels.noOptionsLabel
-						: labels.noResultsLabel
+						? options.empty
+						: options.noResults
 					: null}
 			</ComboboxEmpty>
 			<ComboboxList query={query}>
@@ -801,12 +765,12 @@ const ComboboxBody = <TItem,>({
 						{multiple ? (
 							<ComboboxOptionCheckbox>
 								<ComboboxOptionIndicator>
-									{checkIcon}
+									{check}
 								</ComboboxOptionIndicator>
 							</ComboboxOptionCheckbox>
 						) : (
 							<ComboboxOptionIndicator>
-								{checkIcon}
+								{check}
 							</ComboboxOptionIndicator>
 						)}
 						<ComboboxOptionText>
@@ -883,7 +847,7 @@ export type ComboboxParts = Omit<
  * 	<Combobox.Portal>
  * 		<Combobox.Positioner anchor={anchorRef}>
  * 			<Combobox.Popup>
- * 				<Combobox.Search aria-label="Search" />
+ * 				<Combobox.Search />
  * 				<Combobox.List>
  * 					{(status: string) => (
  * 						<Combobox.Option key={status} value={status}>

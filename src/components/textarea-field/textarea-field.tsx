@@ -31,7 +31,6 @@ export type TextareaFieldProps = Omit<
  * @example
  * <TextareaField
  * 	label="Note"
- * 	optionalLabel="optional"
  * 	value={note}
  * 	onValueChange={setNote}
  * 	maxLength={2000}
@@ -42,7 +41,6 @@ export const TextareaField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	rows,
 	maxRows,
 	value,
@@ -71,8 +69,7 @@ export const TextareaField = ({
 		state={state}
 		className={className}>
 		<TextInput.Label>
-			{label}{" "}
-			<Field.Requiredness optionalLabel={optionalLabel} />
+			{label} <Field.Requiredness />
 		</TextInput.Label>
 		<TextInput.Group className={style.group}>
 			<Textarea

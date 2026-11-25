@@ -399,7 +399,7 @@ type FilterBarParts = Readonly<{
  *
  * @example
  * <FilterBar.Root filters={filters}>
- * 	<FilterBar.Search label="Search clients" clearLabel="Clear search" clearIcon={<CloseIcon />} icon={<SearchIcon />} optionalLabel="optional" />
+ * 	<FilterBar.Search label="Search clients" icon={<SearchIcon />} />
  * 	<FilterBar.Drawer swipeDirection={narrow ? "down" : "right"}>
  * 		<FilterBar.Trigger icon={<FilterIcon />}>Filters<FilterBar.Badge /></FilterBar.Trigger>
  * 		<FilterBar.Content>
@@ -415,7 +415,7 @@ type FilterBarParts = Readonly<{
  * 		</FilterBar.Content>
  * 	</FilterBar.Drawer>
  * 	<FilterBar.Active>
- * 		<ActiveFilters filters={filters} describe={describers} label="Active filters" removeLabel="Remove" removeIcon={<CloseIcon />} />
+ * 		<ActiveFilters filters={filters} describe={describers} label="Active filters" />
  * 		<FilterBar.ClearAll>Clear filters</FilterBar.ClearAll>
  * 	</FilterBar.Active>
  * </FilterBar.Root>

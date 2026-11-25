@@ -14,6 +14,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	type FieldBlurHandler,
 	fieldStateAttributes,
@@ -413,28 +414,21 @@ const PhotoInputRemove = ({
 export type PhotoInputValueTextProps = Omit<
 	ComponentProps<"span">,
 	"children" | "id"
-> &
-	Readonly<{
-		/** What the well announces while a photo is set, such as "Photo set". */
-		photoSetLabel: string;
-		/** What the well announces while no photo is set, such as "No photo". */
-		noPhotoLabel: string;
-	}>;
+>;
 
-/** The hidden text that describes the well, saying whether a photo is set. */
+/** The hidden text that describes the well, saying the `CopyProvider`'s `photo.set` or `photo.none`. */
 const PhotoInputValueText = ({
-	photoSetLabel,
-	noPhotoLabel,
 	className,
 	...props
 }: PhotoInputValueTextProps): ReactNode => {
+	const copy = useCopy();
 	const { filled, valueId } = usePhotoInput();
 	return (
 		<span
 			id={valueId}
 			className={clsx(style.valueText, className)}
 			{...props}>
-			{filled ? photoSetLabel : noPhotoLabel}
+			{filled ? copy.photo.set : copy.photo.none}
 		</span>
 	);
 };
@@ -473,7 +467,7 @@ export type PhotoInputParts = Readonly<{
  * 			</IconButton>
  * 		}
  * 	/>
- * 	<PhotoInput.ValueText photoSetLabel="Photo set" noPhotoLabel="No photo" />
+ * 	<PhotoInput.ValueText />
  * </PhotoInput.Root>
  */
 export const PhotoInput: PhotoInputParts = {

@@ -39,14 +39,13 @@ export type TimeFieldProps = FieldProps &
  * `"HH:mm"` string.
  *
  * @example
- * <TimeField label="Start time" optionalLabel="optional" value={startTime} onValueChange={setStartTime} />
+ * <TimeField label="Start time" value={startTime} onValueChange={setStartTime} />
  */
 export const TimeField = ({
 	label,
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -84,8 +83,7 @@ export const TimeField = ({
 			dirty={dirty}
 			touched={touched}>
 			<TimeInput.Label id={ids.labelId}>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</TimeInput.Label>
 			<TimeInput.Root
 				state={fieldState}

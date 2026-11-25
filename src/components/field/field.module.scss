@@ -1,5 +1,6 @@
 @use "../../style/layers.scss";
 @use "../../style/form.scss" as form;
+@use "../../style/visually-hidden.scss" as a11y;
 
 @layer kit.components {
 	.field {
@@ -65,6 +66,10 @@
 
 	.inlineOptional {
 		grid-area: optional;
+	}
+
+	.spoken {
+		@include a11y.visually-hidden;
 	}
 
 	.required {

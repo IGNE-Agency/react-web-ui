@@ -17,13 +17,13 @@ export type TSFSelectFieldProps<T extends string> = Omit<
 >;
 
 /**
- * `SelectField` bound to the TanStack Form field it renders in, whose value is
+ * `SelectField` connected to the TanStack Form field it renders in, whose value is
  * the selected option's value. Leaving the field, popup included, blurs it.
  * Reach it as `field.SelectField` inside `form.AppField`.
  *
  * @example
  * <form.AppField name="status">
- * 	{field => <field.SelectField label="Status" optionalLabel="optional" options={statusOptions} {...selectLabels} />}
+ * 	{field => <field.SelectField label="Status" options={statusOptions} />}
  * </form.AppField>
  */
 export const TSFSelectField = <T extends string>(

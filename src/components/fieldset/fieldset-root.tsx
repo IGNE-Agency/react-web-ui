@@ -221,7 +221,7 @@ export const FieldsetRoot = ({
  * The legend that names a {@link FieldsetRoot}.
  *
  * @example
- * <FieldsetLegend>Kind <Field.Requiredness optionalLabel="optional" /></FieldsetLegend>
+ * <FieldsetLegend>Kind <Field.Requiredness /></FieldsetLegend>
  */
 export const FieldsetLegend = (
 	props: FieldLabelProps,

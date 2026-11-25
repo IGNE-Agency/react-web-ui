@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -17,6 +16,7 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { Icon } from "../icon/index.ts";
 import {
 	PhotoField,
@@ -24,10 +24,6 @@ import {
 } from "./photo-field.tsx";
 
 const LABEL = "Profile photo";
-const REMOVE = "Remove photo";
-const PHOTO_SET = "Photo set";
-const NO_PHOTO = "No photo";
-const PREVIEW = "Preview";
 
 const PORTRAIT = pngFile("portrait.png");
 
@@ -89,12 +85,6 @@ const meta = {
 	render: ControlledPhotoField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
-		previewLabel: PREVIEW,
-		photoSetLabel: PHOTO_SET,
-		noPhotoLabel: NO_PHOTO,
-		removeLabel: REMOVE,
-		removeIcon: <Icon svg={CloseIcon} label="" />,
 		icon: <Icon svg={PhotoCameraIcon} label="" />,
 		accept: ["image/png", "image/jpeg"],
 		value: undefined,
@@ -125,7 +115,7 @@ export const ReadOnly: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("img", { name: LABEL }),
-		).toHaveAccessibleDescription(PHOTO_SET);
+		).toHaveAccessibleDescription(STORY_COPY.photo.set);
 		await expect(
 			canvas.queryByRole("button"),
 		).not.toBeInTheDocument();
@@ -167,7 +157,7 @@ export const Keyboard: Story = {
 		await userEvent.tab();
 		await expect(well).toHaveFocus();
 		await expect(well).toHaveAccessibleDescription(
-			PHOTO_SET,
+			STORY_COPY.photo.set,
 		);
 		await userEvent.keyboard("{Enter}");
 		await expect(picker).toHaveBeenCalledOnce();
@@ -207,7 +197,9 @@ export const MouseRemove: Story = {
 	render: PlainPhotoField,
 	play: async ({ args, canvas }) => {
 		await userEvent.click(
-			canvas.getByRole("button", { name: REMOVE }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.photo.remove,
+			}),
 		);
 
 		await expect(args.onValueChange).toHaveBeenCalledWith(
@@ -233,7 +225,7 @@ export const PreviewUrl: Story = {
 			PORTRAIT,
 		);
 		const preview = await canvas.findByRole("img", {
-			name: PREVIEW,
+			name: STORY_COPY.photo.preview,
 		});
 		const url = preview.getAttribute("src");
 		await expect(created).toHaveBeenCalledOnce();
@@ -248,7 +240,9 @@ export const PreviewUrl: Story = {
 		await expect(revoked).not.toHaveBeenCalled();
 
 		await userEvent.click(
-			canvas.getByRole("button", { name: REMOVE }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.photo.remove,
+			}),
 		);
 		await waitFor(() =>
 			expect(revoked).toHaveBeenCalledWith(url),

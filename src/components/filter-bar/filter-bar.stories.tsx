@@ -14,6 +14,7 @@ import {
 } from "storybook/test";
 import { z } from "zod";
 import { memoryStorage } from "../../lib/storybook/memory-storage.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	optionFocused,
 	optionHighlighted,
@@ -38,7 +39,6 @@ import {
 const CLIENT_LABEL = "Client";
 const ALL_CLIENTS = "All clients";
 const SEARCH_LABEL = "Search by client";
-const CLEAR_SEARCH_LABEL = "Clear search";
 const FILTERS_LABEL = "Filters";
 const FILTERS_TITLE = "Filter clients";
 const CLOSE_LABEL = "Close";
@@ -46,7 +46,6 @@ const RESET_LABEL = "Reset";
 const APPLY_LABEL = "Apply";
 const CLEAR_ALL_LABEL = "Clear filters";
 const ACTIVE_LABEL = "Active filters";
-const REMOVE_LABEL = "Remove";
 
 const CLIENTS = [
 	"Chris Bakker",
@@ -84,15 +83,8 @@ type ClientFieldProps = Readonly<{
 const ClientField = ({ filters }: ClientFieldProps) => (
 	<SelectField
 		label={CLIENT_LABEL}
-		optionalLabel="optional"
 		options={CLIENT_OPTIONS}
 		value={filters.draft.client ?? ""}
-		loadingLabel="Loading clients…"
-		loadFailedLabel="Clients could not be loaded."
-		loadBrokenLabel="Clients could not be loaded, and trying again won't help."
-		retryLabel="Try again"
-		noOptionsLabel="No clients."
-		checkIcon={<Icon svg={CheckIcon} label="" />}
 		onValueChange={next => {
 			filters.setDraft(
 				"client",
@@ -118,10 +110,7 @@ const ClientFilterBar = ({
 		<FilterBar.Root filters={filters}>
 			<FilterBar.Search
 				label={SEARCH_LABEL}
-				clearLabel={CLEAR_SEARCH_LABEL}
-				clearIcon={<Icon svg={CloseIcon} label="" />}
 				icon={<Icon svg={SearchIcon} label="" />}
-				optionalLabel="optional"
 			/>
 			<FilterBar.Drawer swipeDirection="right">
 				<FilterBar.Trigger
@@ -166,8 +155,6 @@ const ClientFilterBar = ({
 						}),
 					}}
 					label={ACTIVE_LABEL}
-					removeLabel={REMOVE_LABEL}
-					removeIcon={<Icon svg={CloseIcon} label="" />}
 				/>
 				<FilterBar.ClearAll
 					icon={<Icon svg={FilterOffIcon} label="" />}>
@@ -190,7 +177,7 @@ const clientChip = (client: string) =>
 	`${CLIENT_LABEL}: ${client}`;
 
 const chipRemover = (name: string) =>
-	name.startsWith(REMOVE_LABEL);
+	name.startsWith(STORY_COPY.remove);
 
 const activeFilters = (canvas: Canvas) =>
 	canvas.queryByRole("grid", {

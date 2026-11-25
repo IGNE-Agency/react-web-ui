@@ -1,8 +1,6 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactElement } from "react";
@@ -15,27 +13,29 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
 import {
 	Pagination,
-	type PaginationPage,
 	type PaginationProps,
 	type PaginationRootProps,
 } from "./pagination.tsx";
 
-const PAGE_SIZE_LABEL = "Rows per page";
-const FIRST_LABEL = "First page";
-const PREVIOUS_LABEL = "Previous page";
-const NEXT_LABEL = "Next page";
-const LAST_LABEL = "Last page";
+const {
+	pageSize: PAGE_SIZE_LABEL,
+	first: FIRST_LABEL,
+	previous: PREVIOUS_LABEL,
+	next: NEXT_LABEL,
+	last: LAST_LABEL,
+} = STORY_COPY.pagination;
 
-const pageLabel = ({
-	pageIndex,
-	pageCount,
-}: PaginationPage) =>
-	`Page ${pageIndex + 1} of ${pageCount}`;
+const THIRD_OF_TWELVE = STORY_COPY.pagination.index({
+	pageIndex: 2,
+	pageCount: 12,
+	pageSize: 20,
+});
 
 const pageIndexChange = fn<
 	(pageIndex: number) => void
@@ -121,7 +121,7 @@ const ControlsOnly = (
 	args: PaginationProps,
 ): ReactElement => (
 	<Pagination.Root {...rootOf(args)}>
-		<Pagination.Index label={pageLabel} />
+		<Pagination.Index />
 		<Controls />
 	</Pagination.Root>
 );
@@ -131,7 +131,7 @@ const PreviousAndNext = (
 ): ReactElement => (
 	<Pagination.Root {...rootOf(args)}>
 		<Pagination.Previous render={PREVIOUS_BUTTON} />
-		<Pagination.Index label={pageLabel} />
+		<Pagination.Index />
 		<Pagination.Next render={NEXT_BUTTON} />
 	</Pagination.Root>
 );
@@ -165,18 +165,6 @@ const meta = {
 		pageSizes: [10, 20, 50, 100],
 		onPageIndexChange: pageIndexChange,
 		onPageSizeChange: pageSizeChange,
-		pageSizeLabel: PAGE_SIZE_LABEL,
-		indexLabel: pageLabel,
-		firstLabel: FIRST_LABEL,
-		previousLabel: PREVIOUS_LABEL,
-		nextLabel: NEXT_LABEL,
-		lastLabel: LAST_LABEL,
-		firstIcon: <Icon svg={FirstPageIcon} label="" />,
-		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-		lastIcon: <Icon svg={LastPageIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
-		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
 	},
 } satisfies Meta<typeof Pagination>;
 
@@ -202,7 +190,7 @@ export const Default: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("status"),
-		).toHaveTextContent("Page 3 of 12");
+		).toHaveTextContent(THIRD_OF_TWELVE);
 		await expect(pageSizeControl(canvas)).toHaveTextContent(
 			"20",
 		);
@@ -266,7 +254,7 @@ export const StepButtons: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("status"),
-		).toHaveTextContent("Page 3 of 12");
+		).toHaveTextContent(THIRD_OF_TWELVE);
 		await available(button(canvas, PREVIOUS_LABEL));
 		await available(button(canvas, NEXT_LABEL));
 		await expect(

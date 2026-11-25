@@ -18,7 +18,6 @@ import {
 } from "./radio-group-field.tsx";
 
 const LABEL = "Status";
-const OPTIONAL_LABEL = "optional";
 const DESCRIPTION = "The status the invoice is in now.";
 const ERROR = "Choose a status.";
 
@@ -63,7 +62,6 @@ const meta = {
 	render: ControlledRadioGroupField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		options: STATUS_OPTIONS,
 		value: null,
 		onValueChange: valueChange,

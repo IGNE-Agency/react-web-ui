@@ -17,12 +17,12 @@ export type TSFSwitchFieldProps = Omit<
 >;
 
 /**
- * `SwitchField` bound to the TanStack Form field it renders in, whose value is
+ * `SwitchField` connected to the TanStack Form field it renders in, whose value is
  * a boolean. Reach it as `field.SwitchField` inside `form.AppField`.
  *
  * @example
  * <form.AppField name="notify">
- * 	{field => <field.SwitchField label="Email me about new messages" optionalLabel="optional" />}
+ * 	{field => <field.SwitchField label="Email me about new messages" />}
  * </form.AppField>
  */
 export const TSFSwitchField = (

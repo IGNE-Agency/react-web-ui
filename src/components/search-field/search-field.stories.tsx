@@ -1,6 +1,6 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { Icon } from "../icon/index.ts";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -16,8 +16,6 @@ import {
 } from "./index.ts";
 
 const LABEL = "Search clients";
-const OPTIONAL_LABEL = "optional";
-const CLEAR_LABEL = "Clear search";
 const PLACEHOLDER = "Name or citizen service number";
 const QUERY = "de Vries";
 
@@ -61,9 +59,6 @@ const meta = {
 	render: ControlledSearchField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 		icon: <Icon svg={SearchIcon} label="" />,
 		value: "",
 		onValueChange: fn(),
@@ -80,7 +75,7 @@ const searchbox = (canvas: Canvas) =>
 	canvas.getByRole("searchbox", { name: LABEL });
 
 const clearButton = (canvas: Canvas) =>
-	canvas.getByRole("button", { name: CLEAR_LABEL });
+	canvas.getByRole("button", { name: STORY_COPY.clear });
 
 export const Empty: Story = {};
 

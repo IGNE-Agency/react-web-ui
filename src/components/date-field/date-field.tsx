@@ -1,34 +1,24 @@
 import { type ReactNode, useRef } from "react";
-import {
-	type CalendarIcons,
-	type CalendarLabels,
-	TemporalCalendar,
-} from "../../lib/calendar/calendar-prefab.tsx";
+import { TemporalCalendar } from "../../lib/calendar/calendar-prefab.tsx";
 import {
 	dayToIso,
 	isoToDay,
 } from "../../lib/calendar/temporal-value.ts";
 import { Spinner } from "../spinner/index.ts";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	useFieldState,
 } from "../field/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import { DateInput } from "./date-input.tsx";
 
 export type DateFieldProps = FieldProps &
-	CalendarLabels &
-	CalendarIcons &
 	Readonly<{
-		/** Accessible name of the button that opens the calendar, such as "Open calendar". */
-		openCalendarLabel: string;
-
-		/** The icon of the button that opens the calendar. */
-		openCalendarIcon: ReactNode;
-
 		/**
 		 * An ISO plain date, such as `"2026-07-24"`. A date-time or an instant is
 		 * read as the day it falls on in the `TimeZoneProvider`'s zone.
@@ -64,17 +54,6 @@ export type DateFieldProps = FieldProps &
  * @example
  * <DateField
  * 	label="Service date"
- * 	optionalLabel="optional"
- * 	openCalendarLabel="Open calendar"
- * 	previousMonthLabel="Previous month"
- * 	nextMonthLabel="Next month"
- * 	monthLabel="Month"
- * 	yearLabel="Year"
- * 	noMatchingYearLabel="No matching year."
- * 	openCalendarIcon={<CalendarTodayIcon />}
- * 	previousIcon={<ChevronLeftIcon />}
- * 	nextIcon={<ChevronRightIcon />}
- * 	checkIcon={<CheckIcon />}
  * 	value={date}
  * 	onValueChange={setDate}
  * />
@@ -84,21 +63,9 @@ export const DateField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
-	openCalendarLabel,
-	previousMonthLabel,
-	nextMonthLabel,
-	monthLabel,
-	yearLabel,
-	noMatchingYearLabel,
-	openCalendarIcon,
-	previousIcon,
-	nextIcon,
-	checkIcon,
-	expandIcon,
 	value,
 	defaultValue,
 	onValueChange,
@@ -110,6 +77,8 @@ export const DateField = ({
 	readOnly,
 	className,
 }: DateFieldProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const timeZone = useTimeZone();
 	const day = isoToDay(value, timeZone);
@@ -137,8 +106,7 @@ export const DateField = ({
 			dirty={dirty}
 			touched={touched}>
 			<DateInput.Label id={ids.labelId}>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</DateInput.Label>
 			<DateInput.Root
 				state={fieldState}
@@ -181,26 +149,16 @@ export const DateField = ({
 								ref={triggerRef}
 								render={
 									<IconButton
-										label={openCalendarLabel}
+										label={copy.calendar.open}
 										variant="tertiary"
 										size="sm">
-										{openCalendarIcon}
+										{icons.calendar}
 									</IconButton>
 								}
 							/>
 						</DateInput.Group>
 						<DateInput.Popup triggerRef={triggerRef}>
-							<TemporalCalendar
-								previousMonthLabel={previousMonthLabel}
-								nextMonthLabel={nextMonthLabel}
-								monthLabel={monthLabel}
-								yearLabel={yearLabel}
-								noMatchingYearLabel={noMatchingYearLabel}
-								previousIcon={previousIcon}
-								nextIcon={nextIcon}
-								checkIcon={checkIcon}
-								expandIcon={expandIcon}
-							/>
+							<TemporalCalendar />
 						</DateInput.Popup>
 					</>
 				)}

@@ -65,7 +65,6 @@ const meta = {
 	render: ControlledTimeField,
 	args: {
 		label: "Start time",
-		optionalLabel: "optional",
 		value: null,
 		onValueChange: fn(),
 	},

@@ -15,7 +15,10 @@ import {
 } from "storybook/test";
 import { Temporal } from "temporal-polyfill";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import { STORY_TIME_ZONE } from "../../lib/storybook/story-providers.tsx";
+import {
+	STORY_COPY,
+	STORY_TIME_ZONE,
+} from "../../lib/storybook/story-providers.tsx";
 import { SentAttachmentTile } from "../attachment-tile/index.ts";
 import { IconButton } from "../button/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
@@ -35,10 +38,6 @@ const OWN = "Sanne de Vries";
 const OTHER = "Mark Jansen";
 const COLLEAGUE = "Fatima El Amrani";
 
-const TODAY = "Today";
-const YESTERDAY = "Yesterday";
-const READ = "Read";
-const UNREAD = "Unread";
 const DOWNLOAD_ALL = "Download all files";
 const SCROLL_TO_LATEST = "Scroll to latest";
 
@@ -235,8 +234,7 @@ const Burst = ({
 				/>
 				{last.status === undefined ? null : (
 					<Conversation.MessageReadIndicator
-						status={last.status}
-						label={last.status === "read" ? READ : UNREAD}>
+						status={last.status}>
 						<Conversation.MessageReadDot />
 					</Conversation.MessageReadIndicator>
 				)}
@@ -262,11 +260,7 @@ const HandBuilt = (): ReactElement => (
 			useTimeZone(),
 		).map(day => (
 			<Conversation.Group key={day.key}>
-				<Conversation.DateSeparator
-					date={day.date}
-					todayLabel={TODAY}
-					yesterdayLabel={YESTERDAY}
-				/>
+				<Conversation.DateSeparator date={day.date} />
 				{groupByBurst(day.items, item => item.authorId).map(
 					burst => (
 						<Burst key={burst.key} messages={burst.items} />
@@ -299,10 +293,6 @@ const meta = {
 	decorators: [inFrame],
 	args: {
 		messages: mappedArg(MESSAGES, "thread"),
-		todayLabel: TODAY,
-		yesterdayLabel: YESTERDAY,
-		readLabel: READ,
-		unreadLabel: UNREAD,
 		empty: (
 			<>
 				<p>{EMPTY_TITLE}</p>
@@ -340,7 +330,7 @@ export const Thread: Story = {
 			within(log).getAllByText(OWN),
 		).toHaveLength(2);
 		await expect(
-			within(log).getByText(UNREAD),
+			within(log).getByText(STORY_COPY.conversation.unread),
 		).toBeInTheDocument();
 	},
 };
@@ -348,8 +338,12 @@ export const Thread: Story = {
 export const Recent: Story = {
 	args: { messages: mappedArg(MESSAGES, "recent") },
 	play: async ({ canvas }) => {
-		await expect(canvas.getByText(YESTERDAY)).toBeVisible();
-		await expect(canvas.getByText(TODAY)).toBeVisible();
+		await expect(
+			canvas.getByText(STORY_COPY.conversation.yesterday),
+		).toBeVisible();
+		await expect(
+			canvas.getByText(STORY_COPY.conversation.today),
+		).toBeVisible();
 	},
 };
 

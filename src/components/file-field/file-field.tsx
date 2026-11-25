@@ -11,6 +11,8 @@ import {
 	Field,
 	useFieldState,
 } from "../field/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import {
 	AttachmentTile,
@@ -51,41 +53,8 @@ export type FileFieldProps = FieldProps &
 		/** Accessible name of the drop target, such as "Drop zone for attachments". */
 		dropTargetLabel: string;
 
-		/** The prompt inside the drop target, such as "Drag files here". */
-		dropHint: string;
-
-		/** Drawn above `dropHint`, such as an upload icon. */
-		dropIcon?: ReactNode;
-
-		/** The picker button's text, such as "Choose files". */
-		chooseLabel: string;
-
-		/** Drawn before `chooseLabel`, such as an attach icon. */
-		chooseIcon?: ReactNode;
-
 		/** Accessible name of the staged files, such as "Files for attachments". */
 		filesLabel: string;
-
-		/** Accessible name of a tile's remove button, such as "Remove". */
-		removeLabel: string;
-
-		/** A tile's remove button icon, such as a cross. */
-		removeIcon: ReactNode;
-
-		/** Drawn on a tile that has no image preview, such as a file icon. */
-		fileIcon?: ReactNode;
-
-		/** A tile's tooltip, such as `` (name, size) => `${name} (${size})` ``. */
-		fileHint: (name: string, size: string) => string;
-
-		/** The error for a file over `maxFileSize`, given its name and the limit. */
-		tooLargeError: (
-			name: string,
-			maxSize: string,
-		) => string;
-
-		/** The error for a file outside `accept`, given its name. */
-		wrongTypeError: (name: string) => string;
 
 		className?: string;
 	}>;
@@ -96,9 +65,7 @@ type StagedFileProps = Readonly<{
 	hint: string;
 	invalid: boolean;
 	disabled: boolean | undefined;
-	icon: ReactNode;
-	removeLabel: string | undefined;
-	removeIcon: ReactNode;
+	removable: boolean;
 }>;
 
 const StagedFile = ({
@@ -107,10 +74,10 @@ const StagedFile = ({
 	hint,
 	invalid,
 	disabled,
-	icon,
-	removeLabel,
-	removeIcon,
+	removable,
 }: StagedFileProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const preview = useAttachmentPreview(file);
 	return (
 		<FileInput.Item
@@ -124,26 +91,28 @@ const StagedFile = ({
 					src={preview.src}
 					pending={preview.pending}>
 					<AttachmentTile.Image />
-					<AttachmentTile.Icon>{icon}</AttachmentTile.Icon>
+					<AttachmentTile.Icon>
+						{icons.file}
+					</AttachmentTile.Icon>
 					<AttachmentTile.Extension />
 					<AttachmentTile.Skeleton />
 					<AttachmentTile.Name />
 				</AttachmentTile.Preview>
 			</Tooltip>
-			{removeLabel === undefined ? null : (
+			{removable ? (
 				<AttachmentTile.Corner>
 					<AttachmentTile.Remove
 						render={
 							<IconButton
 								variant="tertiary"
 								size="sm"
-								label={removeLabel}>
-								{removeIcon}
+								label={copy.remove}>
+								{icons.remove}
 							</IconButton>
 						}
 					/>
 				</AttachmentTile.Corner>
-			)}
+			) : null}
 		</FileInput.Item>
 	);
 };
@@ -152,25 +121,17 @@ const StagedFile = ({
  * A labelled drop target holding the staged files as removable tiles, with a
  * file picker button. Files over `maxFileSize` or of a type outside `accept`
  * stay in the target, marked invalid, and are reported through the field's
- * error text.
+ * error text, in the `CopyProvider`'s `files` copy.
  *
  * @example
  * <FileField
  * 	label="Attachments"
- * 	optionalLabel="optional"
  * 	value={files}
  * 	onValueChange={setFiles}
  * 	maxFileSize={10 * 1024 ** 2}
  * 	multiple
  * 	dropTargetLabel="Drop zone for attachments"
- * 	dropHint="Drag files here"
- * 	chooseLabel="Choose files"
  * 	filesLabel="Files for attachments"
- * 	removeLabel="Remove"
- * 	removeIcon={<CloseIcon />}
- * 	fileHint={(name, size) => `${name} (${size})`}
- * 	tooLargeError={(name, maxSize) => `${name} is larger than ${maxSize}.`}
- * 	wrongTypeError={name => `${name} is not an accepted file type.`}
  * />
  */
 export const FileField = ({
@@ -178,7 +139,6 @@ export const FileField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -191,19 +151,11 @@ export const FileField = ({
 	disabled,
 	readOnly,
 	dropTargetLabel,
-	dropHint,
-	dropIcon,
-	chooseLabel,
-	chooseIcon,
 	filesLabel,
-	removeLabel,
-	removeIcon,
-	fileIcon,
-	fileHint,
-	tooLargeError,
-	wrongTypeError,
 	className,
 }: FileFieldProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const locale = useLocale();
 	const ids = Field.useIds();
 	const triggerRef = useRef<HTMLButtonElement>(null);
@@ -212,10 +164,10 @@ export const FileField = ({
 	const messages = [
 		...normalizeFieldErrors(errors),
 		...oversizedFiles(value, maxFileSize).map(file =>
-			tooLargeError(file.name, maxSize),
+			copy.files.tooLargeFile(file.name, maxSize),
 		),
 		...wrongTypeFiles(value, accept ?? []).map(file =>
-			wrongTypeError(file.name),
+			copy.files.wrongType(file.name),
 		),
 	];
 
@@ -270,7 +222,7 @@ export const FileField = ({
 						key={keyOf(file, index)}
 						id={keyOf(file, index)}
 						file={file}
-						hint={fileHint(
+						hint={copy.files.fileHint(
 							file.name,
 							formatBytes(file.size, locale),
 						)}
@@ -279,11 +231,7 @@ export const FileField = ({
 							!isAccepted(file, accept ?? [])
 						}
 						disabled={fieldState.disabled}
-						icon={fileIcon}
-						removeLabel={
-							readOnly === true ? undefined : removeLabel
-						}
-						removeIcon={removeIcon}
+						removable={readOnly !== true}
 					/>
 				))}
 			</FileInput.List>
@@ -307,8 +255,7 @@ export const FileField = ({
 				}
 			}}>
 			<FileInput.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</FileInput.Legend>
 
 			<FileInput.DropTarget
@@ -331,17 +278,17 @@ export const FileField = ({
 					<>
 						<FileInput.Hint>
 							<FileInput.HintIcon>
-								{dropIcon}
+								{icons.drop}
 							</FileInput.HintIcon>
-							{dropHint}
+							{copy.files.dropHint}
 						</FileInput.Hint>
 						<FileInput.Trigger
 							render={
 								<Button
 									variant="secondary"
 									size="sm"
-									icon={chooseIcon}>
-									{chooseLabel}
+									icon={icons.choose}>
+									{copy.files.choose}
 								</Button>
 							}
 							disabled={field.disabled}

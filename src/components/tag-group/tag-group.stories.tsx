@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactElement, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -9,9 +8,9 @@ import {
 	userEvent,
 	waitFor,
 } from "storybook/test";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import type { Tone } from "../../lib/tone.ts";
-import { Icon } from "../icon/icon.tsx";
 import { Tag } from "../tag/tag.tsx";
 import {
 	TagGroup,
@@ -35,9 +34,8 @@ const FILTERS: readonly Filter[] = [
 	{ id: "processed", label: PROCESSED, tone: "success" },
 ];
 
-const REMOVE = "Remove";
-
-const removeName = (label: string) => `${REMOVE} ${label}`;
+const removeName = (label: string) =>
+	`${STORY_COPY.remove} ${label}`;
 
 const removed = fn().mockName("onRemove");
 
@@ -63,9 +61,7 @@ const RemovableTags = ({
 						tone={filter.tone}>
 						<Tag.Dot />
 						{filter.label}
-						<TagGroup.Remove label={REMOVE}>
-							<Icon svg={CloseIcon} label="" />
-						</TagGroup.Remove>
+						<TagGroup.Remove />
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>
@@ -156,7 +152,9 @@ export const RemoveMouse: Story = {
 
 		await userEvent.hover(remove);
 		await waitFor(() =>
-			expect(screen.getByText(REMOVE)).toBeVisible(),
+			expect(
+				screen.getByText(STORY_COPY.remove),
+			).toBeVisible(),
 		);
 
 		await userEvent.click(remove);

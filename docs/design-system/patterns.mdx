@@ -1,10 +1,6 @@
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
 import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import {
@@ -21,7 +17,7 @@ import { SwitchField } from "../../src/components/switch-field/index.ts";
 import { DateField } from "../../src/components/date-field/index.ts";
 import { TextField } from "../../src/components/text-field/index.ts";
 import { Icon } from "../../src/components/icon/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import { Beside } from "./beside";
 import componentStyles from "./components.module.scss";
 import { Details, DetailsList } from "./details";
@@ -38,43 +34,18 @@ import {
 import styles from "./patterns.module.scss";
 
 export const Live = ({ children }) => (
-	<StoryProviders>{children}</StoryProviders>
+	<DocsProviders>{children}</DocsProviders>
 );
 
 export const ignore = () => undefined;
 
-export const checkMarks = {
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
-};
-
 export const Box = props => (
 	<Checkbox.Control {...props}>
 		<Checkbox.Indicator>
-			{checkMarks.checkIcon}
+			<Icon svg={CheckIcon} label="" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 );
-
-export const dateLabels = {
-	optionalLabel: "optional",
-	openCalendarLabel: "Open calendar",
-	previousMonthLabel: "Previous month",
-	nextMonthLabel: "Next month",
-	monthLabel: "Month",
-	yearLabel: "Year",
-	noMatchingYearLabel: "No matching year.",
-};
-
-export const dateIcons = {
-	openCalendarIcon: (
-		<Icon svg={CalendarTodayIcon} label="" />
-	),
-	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-};
 
 export const guide = { accent: "blue" };
 
@@ -270,8 +241,6 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 				<Live>
 					<div className={componentStyles.card}>
 						<DateField
-							{...dateLabels}
-							{...dateIcons}
 							label="Service date"
 							defaultValue="2026-10-02"
 						/>
@@ -315,7 +284,6 @@ The reason is not taste. Every masking engine either rejects a character or cuts
 				<div
 					className={`${componentStyles.card} ${componentStyles.cardWide}`}>
 					<TextField
-						optionalLabel="optional"
 						label="IBAN"
 						description="For example NL91 ABNA 0417 1643 00"
 						value="NL91 ABNA 0417"
@@ -366,7 +334,6 @@ Invalid is the whole field turning: error ink on an error fill, inside an error 
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Amount"
 							prefix="€"
 							value="-5"
@@ -416,7 +383,6 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<CheckboxGroupField
-						optionalLabel="optional"
 						label="Status"
 						requiredness="optional"
 						items={[
@@ -425,7 +391,6 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 							{ label: "Paid", value: "paid" },
 						]}
 						defaultValue={["submitted"]}
-						checkIcon={checkMarks.checkIcon}
 					/>
 				</div>
 			</div>
@@ -465,13 +430,10 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 				<Live>
 					<div className={componentStyles.card}>
 						<CheckboxField
-							optionalLabel="optional"
 							label="Send me a copy by email"
 							requiredness="optional"
-							{...checkMarks}
 						/>
 						<SwitchField
-							optionalLabel="optional"
 							label="Notify the client contact"
 							requiredness="optional"
 						/>
@@ -488,11 +450,7 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<Live>
 					<div className={componentStyles.card}>
-						<CheckboxField
-							optionalLabel="optional"
-							label="Send me a copy by email (optional)"
-							{...checkMarks}
-						/>
+						<CheckboxField label="Send me a copy by email (optional)" />
 					</div>
 				</Live>
 			</div>
@@ -516,15 +474,12 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Consultant"
 							value="Anna de Vries"
 							onValueChange={ignore}
 							readOnly
 						/>
 						<DateField
-							{...dateLabels}
-							{...dateIcons}
 							label="Service date"
 							defaultValue="2026-10-02"
 							readOnly
@@ -580,13 +535,10 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<Live>
 					<div className={componentStyles.card}>
 						<CheckboxField
-							optionalLabel="optional"
 							label="Work completed"
 							readOnly
-							{...checkMarks}
 						/>
 						<SwitchField
-							optionalLabel="optional"
 							label="Notify the client contact"
 							readOnly
 						/>
@@ -631,7 +583,6 @@ Anything inside a group is bare. The control drops its border, background and pa
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -681,22 +632,16 @@ A field's height comes from the field, never from its parts. The group has a flo
 					<div
 						className={`${componentStyles.card} ${componentStyles.rowTop}`}>
 						<TextField
-							optionalLabel="optional"
 							label="Reference"
 							value=""
 							onValueChange={ignore}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 						<TextField
-							optionalLabel="optional"
 							label="Reference"
 							value="INV-0412"
 							onValueChange={ignore}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -746,7 +691,6 @@ Text on the field's line hugs the font, not the line height. A native entry lays
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -796,7 +740,6 @@ A field's static text, like a currency sign, a unit or a fixed prefix, is [decor
 				<div
 					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount in euros"
 						prefix="€"
 						value="19,28"
@@ -821,7 +764,6 @@ A field's static text, like a currency sign, a unit or a fixed prefix, is [decor
 				<div
 					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -855,15 +797,12 @@ Invalid reaches the field's ink, not its buttons. The field's ink is set once, a
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Amount"
 							prefix="€"
 							value="-5"
 							onValueChange={ignore}
 							errors={["An amount can't be negative."]}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -909,7 +848,7 @@ Nobody likes being corrected mid-sentence. A form says nothing about errors whil
     	kind="do"
     	caption="After a submit, the field says what is wrong in a sentence that also says what is right."
     	visual={
-    		<TextField optionalLabel="optional"
+    		<TextField
     			className={styles.field}
     			label="KvK number"
     			value="1234"
@@ -1485,7 +1424,6 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 <CheckboxGroupField
 	label={m.invoices_status_label()}
 	items={items}
-	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1514,7 +1452,7 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 
 <Details title="A lone checkbox or switch puts its optional marker on a row under the text">
 
-Its label is a two-column grid: the marker takes a second row, and the control stays centred in its own column. Pass `requiredness` rather than writing the marker into the label; on the raw tier, the marker is `Field.InlineOptional`, after the label's text. Shown in [What a field says about itself](#what-a-field-says-about-itself).
+Its label is a two-column grid: the marker takes a second row, and the control stays centred in its own column. Pass `requiredness` rather than writing the marker into the label; on the primitive, the marker is `Field.InlineOptional`, after the label's text. Shown in [What a field says about itself](#what-a-field-says-about-itself).
 
 <DoDont>
 <Example kind="do" caption="A lone checkbox puts the marker on a row of its own, under the text.">
@@ -1523,7 +1461,6 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 <CheckboxField
 	label={m.invoice_send_copy()}
 	requiredness="optional"
-	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1533,7 +1470,6 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 ```tsx
 <CheckboxField
 	label={`${m.invoice_send_copy()} (${m.forms_optional()})`}
-	checkIcon={<CheckIcon />}
 />
 ```
 

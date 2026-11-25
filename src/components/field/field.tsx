@@ -11,17 +11,19 @@ import {
 	useId,
 } from "react";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import { ErrorText } from "../error-text/index.ts";
 import {
 	FieldRowContext,
 	useFieldGroupLineIds,
 } from "./field-group-context.ts";
 import type { Requiredness } from "./field-state.ts";
+import { RequiredSpokenContext } from "./required-spoken.ts";
 import style from "./field.module.scss";
 
 /**
- * The props every field takes, on every tier: the raw compound's root, the
- * `<Control>Field` shorthand and the `TSF<Control>Field` bridge.
+ * The props every field takes, on every tier: the primitive's root, the
+ * `<Control>Field` prefab and the `TSF<Control>Field` connector.
  */
 export type FieldProps = Readonly<{
 	/** The visible label; never only a placeholder. */
@@ -32,8 +34,6 @@ export type FieldProps = Readonly<{
 	errors?: unknown;
 	/** What the label asserts. Left out, it shows neither mark. */
 	requiredness?: Requiredness;
-	/** The word an optional field's label trails, such as "optional". */
-	optionalLabel: string;
 	/** The value differs from the one the form started with. */
 	dirty?: boolean;
 	/** The user has left the control at least once. */
@@ -44,7 +44,7 @@ export type FieldProps = Readonly<{
 
 /**
  * What a field calls once focus has left it, such as a form library's blur
- * handler. Every `<Control>Field` and its bridge take this one type.
+ * handler. Every `<Control>Field` and its connector take this one type.
  */
 export type FieldBlurHandler = () => void;
 
@@ -64,16 +64,10 @@ export type RequiredMarkProps = Readonly<{
 	requiredness?: Requiredness;
 }>;
 
-/** The copy and assertion a label carries about requiredness. */
-export type RequirednessProps = RequiredMarkProps &
-	Readonly<{
-		/** The word an optional field's label trails, such as "optional". */
-		optionalLabel: string;
-	}>;
-
 /**
- * The mark a label carries when its field is required. Decoration only: the
- * control's own `required` tells assistive tech.
+ * The mark a label carries when its field is required. The control's own
+ * `required` tells assistive tech; in a group whose control cannot, the mark
+ * says the `CopyProvider`'s `required` itself.
  *
  * @example
  * <Field.Label>Email <Field.RequiredMark /></Field.Label>
@@ -82,26 +76,35 @@ const RequiredMark = ({
 	requiredness,
 }: RequiredMarkProps): ReactNode => {
 	const fieldRequiredness = useContext(RequirednessContext);
-	return (requiredness ?? fieldRequiredness) ===
-		"required" ? (
-		<span className={style.required} aria-hidden="true" />
-	) : null;
+	const spoken = useContext(RequiredSpokenContext);
+	const { required } = useCopy();
+	if ((requiredness ?? fieldRequiredness) !== "required") {
+		return null;
+	}
+	return (
+		<>
+			<span className={style.required} aria-hidden="true" />
+			{spoken ? (
+				<span className={style.spoken}>{required}</span>
+			) : null}
+		</>
+	);
 };
 
 /**
  * The suffix a label trails: the required mark, or the optional word.
  *
  * @example
- * <Field.Label>Notes <Field.Requiredness optionalLabel="optional" /></Field.Label>
+ * <Field.Label>Notes <Field.Requiredness /></Field.Label>
  */
 const FieldRequiredness = ({
 	requiredness,
-	optionalLabel,
-}: RequirednessProps): ReactNode => {
+}: RequiredMarkProps): ReactNode => {
 	const fieldRequiredness = useContext(RequirednessContext);
+	const { optional } = useCopy();
 	const asserted = requiredness ?? fieldRequiredness;
 	return asserted === "optional" ? (
-		<span className={style.optional}>{optionalLabel}</span>
+		<span className={style.optional}>{optional}</span>
 	) : (
 		<RequiredMark requiredness={asserted} />
 	);
@@ -115,14 +118,14 @@ const FieldRequiredness = ({
  * <Checkbox.Label>
  * 	<Checkbox.Control>…</Checkbox.Control>
  * 	<Field.InlineLabelText>Send me a copy <Field.RequiredMark /></Field.InlineLabelText>
- * 	<Field.InlineOptional optionalLabel="optional" />
+ * 	<Field.InlineOptional />
  * </Checkbox.Label>
  */
 const InlineOptional = ({
 	requiredness,
-	optionalLabel,
-}: RequirednessProps): ReactNode => {
+}: RequiredMarkProps): ReactNode => {
 	const fieldRequiredness = useContext(RequirednessContext);
+	const { optional } = useCopy();
 	return (requiredness ?? fieldRequiredness) ===
 		"optional" ? (
 		<span
@@ -131,7 +134,7 @@ const InlineOptional = ({
 				style.optional,
 				style.inlineOptional,
 			)}>
-			{optionalLabel}
+			{optional}
 		</span>
 	) : null;
 };
@@ -204,7 +207,7 @@ export type FieldLabelProps = Omit<
  * The label above a control. Renders nothing without children.
  *
  * @example
- * <Field.Label>Notes <Field.Requiredness optionalLabel="optional" /></Field.Label>
+ * <Field.Label>Notes <Field.Requiredness /></Field.Label>
  */
 const FieldLabel = ({
 	children,
@@ -227,7 +230,7 @@ export type FieldCaptionProps = ComponentProps<"p">;
  * a control that already carries its own name. To name something, use `Label`.
  *
  * @example
- * <Field.Caption>Theme <Field.Requiredness requiredness="optional" optionalLabel="optional" /></Field.Caption>
+ * <Field.Caption>Theme <Field.Requiredness requiredness="optional" /></Field.Caption>
  */
 const FieldCaption = ({
 	children,
@@ -434,13 +437,13 @@ export type FieldParts = Readonly<{
 }>;
 
 /**
- * The field frame and its parts, over base-ui's `Field`. A control's raw tier
+ * The field frame and its parts, over base-ui's `Field`. A control's primitive
  * renders inside `Root` and names itself through `Label`; `Description` comes
  * before `Error`, the field's only live region.
  *
  * @example
  * <Field.Root name="email" invalid={invalid} requiredness="required">
- * 	<Field.Label>Email <Field.Requiredness optionalLabel="optional" /></Field.Label>
+ * 	<Field.Label>Email <Field.Requiredness /></Field.Label>
  * 	<Field.Control />
  * 	<Field.Description>We send the receipt here.</Field.Description>
  * 	<Field.Error>{errors}</Field.Error>

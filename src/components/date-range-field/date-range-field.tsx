@@ -1,9 +1,5 @@
 import { type ReactNode, useRef } from "react";
-import {
-	type CalendarIcons,
-	type CalendarLabels,
-	TemporalRangeCalendar,
-} from "../../lib/calendar/calendar-prefab.tsx";
+import { TemporalRangeCalendar } from "../../lib/calendar/calendar-prefab.tsx";
 import {
 	dayRangeToIso,
 	type IsoDateRange,
@@ -12,25 +8,19 @@ import {
 } from "../../lib/calendar/temporal-value.ts";
 import { Spinner } from "../spinner/index.ts";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
 	useFieldState,
 } from "../field/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import { DateRangeInput } from "./date-range-input.tsx";
 
 export type DateRangeFieldProps = FieldProps &
-	CalendarLabels &
-	CalendarIcons &
 	Readonly<{
-		/** Accessible name of the button that opens the calendar, such as "Open calendar". */
-		openCalendarLabel: string;
-
-		/** The icon of the button that opens the calendar. */
-		openCalendarIcon: ReactNode;
-
 		/**
 		 * Inclusive ISO plain dates, such as `{ start: "2026-07-01", end: "2026-07-31" }`.
 		 * A date-time or an instant is read as the day it falls on in the
@@ -79,11 +69,6 @@ export type DateRangeFieldProps = FieldProps &
  * @example
  * <DateRangeField
  * 	label="Invoice period"
- * 	optionalLabel="optional"
- * 	openCalendarLabel="Open calendar"
- * 	openCalendarIcon={<DateRangeIcon />}
- * 	{...calendarLabels}
- * 	{...calendarIcons}
  * 	visibleMonths={narrow ? 1 : 2}
  * 	value={period}
  * 	onValueChange={setPeriod}
@@ -94,21 +79,9 @@ export const DateRangeField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
-	openCalendarLabel,
-	previousMonthLabel,
-	nextMonthLabel,
-	monthLabel,
-	yearLabel,
-	noMatchingYearLabel,
-	openCalendarIcon,
-	previousIcon,
-	nextIcon,
-	checkIcon,
-	expandIcon,
 	value,
 	defaultValue,
 	onValueChange,
@@ -122,6 +95,8 @@ export const DateRangeField = ({
 	readOnly,
 	className,
 }: DateRangeFieldProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const timeZone = useTimeZone();
 	const range = isoToDayRange(value, timeZone);
@@ -149,8 +124,7 @@ export const DateRangeField = ({
 			dirty={dirty}
 			touched={touched}>
 			<DateRangeInput.Label id={ids.labelId}>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</DateRangeInput.Label>
 			<DateRangeInput.Root
 				state={fieldState}
@@ -209,10 +183,10 @@ export const DateRangeField = ({
 								ref={triggerRef}
 								render={
 									<IconButton
-										label={openCalendarLabel}
+										label={copy.calendar.open}
 										variant="tertiary"
 										size="sm">
-										{openCalendarIcon}
+										{icons.dateRange}
 									</IconButton>
 								}
 							/>
@@ -220,15 +194,6 @@ export const DateRangeField = ({
 						<DateRangeInput.Popup triggerRef={triggerRef}>
 							<TemporalRangeCalendar
 								visibleMonths={visibleMonths}
-								previousMonthLabel={previousMonthLabel}
-								nextMonthLabel={nextMonthLabel}
-								monthLabel={monthLabel}
-								yearLabel={yearLabel}
-								noMatchingYearLabel={noMatchingYearLabel}
-								previousIcon={previousIcon}
-								nextIcon={nextIcon}
-								checkIcon={checkIcon}
-								expandIcon={expandIcon}
 							/>
 						</DateRangeInput.Popup>
 					</>

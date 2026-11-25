@@ -155,7 +155,7 @@ export type CheckboxParts = Readonly<{
  * 			<Checkbox.Indicator><CheckIcon /></Checkbox.Indicator>
  * 		</Checkbox.Control>
  * 		<Field.InlineLabelText>I agree to the terms <Field.RequiredMark /></Field.InlineLabelText>
- * 		<Field.InlineOptional optionalLabel="optional" />
+ * 		<Field.InlineOptional />
  * 	</Checkbox.Label>
  * </Checkbox.Root>
  */

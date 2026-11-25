@@ -23,7 +23,7 @@ const OPEN_LABEL = "Delete invoice";
 const TITLE = "Delete this invoice?";
 const DESCRIPTION = "This cannot be undone.";
 const CONFIRM_LABEL = "Delete";
-const CANCEL_LABEL = "Cancel";
+const CANCEL_LABEL = "Keep invoice";
 const SEND_TITLE = "Send this invoice?";
 const SEND_CONFIRM_LABEL = "Send";
 

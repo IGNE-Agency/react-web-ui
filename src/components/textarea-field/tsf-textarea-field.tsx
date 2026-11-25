@@ -14,12 +14,12 @@ export type TSFTextareaFieldProps = Omit<
 >;
 
 /**
- * `TextareaField` bound to the TanStack Form field it renders in. Registered as
+ * `TextareaField` connected to the TanStack Form field it renders in. Registered as
  * `field.TextareaField`.
  *
  * @example
  * <form.AppField name="note">
- * 	{field => <field.TextareaField label="Note" optionalLabel="optional" maxLength={2000} />}
+ * 	{field => <field.TextareaField label="Note" maxLength={2000} />}
  * </form.AppField>
  */
 export const TSFTextareaField = (

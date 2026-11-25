@@ -20,7 +20,6 @@ import {
 } from "./segmented-control-field.tsx";
 
 const LABEL = "Status";
-const OPTIONAL_LABEL = "optional";
 const OPEN = { value: "open", label: "Open" };
 const SENT = { value: "sent", label: "Sent" };
 const PAID = { value: "paid", label: "Paid" };
@@ -86,7 +85,6 @@ const meta = {
 	render: ControlledSegmentedControlField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		options: STATUS_OPTIONS,
 		value: null,
 		onValueChange: valueChange,

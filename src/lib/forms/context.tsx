@@ -8,7 +8,7 @@ const contexts: FormHookContexts = createFormHookContexts();
 
 /**
  * The field context the form hook is built on, kept apart from the hook so a
- * bridge can read its field without importing every other bridge.
+ * connector can read its field without importing every other connector.
  *
  * @example
  * <fieldContext.Provider value={field}>{children}</fieldContext.Provider>
@@ -26,7 +26,7 @@ export const formContext: FormHookContexts["formContext"] =
 	contexts.formContext;
 
 /**
- * The field a bridge is rendered for, inside `form.AppField`.
+ * The field a connector is rendered for, inside `form.AppField`.
  *
  * @example
  * const field = useFieldContext<string>();

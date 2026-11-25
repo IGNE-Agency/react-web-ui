@@ -1,6 +1,3 @@
-import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -15,7 +12,7 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
-import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	FileField,
 	type FileFieldProps,
@@ -23,12 +20,7 @@ import {
 
 const LABEL = "Attachments";
 const DROP_TARGET = "Drop zone for attachments";
-const CHOOSE = "Choose files";
-const REMOVE = "Remove";
-const tooLarge = (name: string, maxSize: string) =>
-	`${name} is larger than the maximum size of ${maxSize} and must be removed.`;
-const wrongType = (name: string) =>
-	`${name} is not an accepted file type and must be removed.`;
+const CHOOSE = STORY_COPY.files.choose;
 const SCAN_NAME = "signed-timesheet.png";
 
 const KILOBYTE = 1024;
@@ -89,18 +81,8 @@ const meta = {
 	render: ControlledFileField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
 		dropTargetLabel: DROP_TARGET,
-		dropHint: "Drag files here",
-		dropIcon: <Icon svg={UploadFileIcon} label="" />,
-		chooseLabel: CHOOSE,
-		chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 		filesLabel: "Files for attachments",
-		removeLabel: REMOVE,
-		removeIcon: <Icon svg={CloseIcon} label="" />,
-		fileHint: (name, size) => `${name} (${size})`,
-		tooLargeError: tooLarge,
-		wrongTypeError: wrongType,
 		value: [],
 		onValueChange: fn(),
 		multiple: true,
@@ -124,7 +106,12 @@ export const TooLarge: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert").textContent,
-		).toBe(tooLarge(OVERSIZED_SCAN.name, "1 kB"));
+		).toBe(
+			STORY_COPY.files.tooLargeFile(
+				OVERSIZED_SCAN.name,
+				"1 kB",
+			),
+		);
 	},
 };
 
@@ -133,7 +120,7 @@ export const WrongType: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert").textContent,
-		).toBe(wrongType(PROGRAM.name));
+		).toBe(STORY_COPY.files.wrongType(PROGRAM.name));
 	},
 };
 
@@ -155,7 +142,7 @@ export const ReadOnly: Story = {
 		).not.toBeInTheDocument();
 		await expect(
 			canvas.queryByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		).not.toBeInTheDocument();
 	},
@@ -241,7 +228,7 @@ export const Mouse: Story = {
 			within(
 				canvas.getByRole("row", { name: INVOICE.name }),
 			).getByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		);
 		await expect(

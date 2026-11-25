@@ -17,12 +17,12 @@ export type TSFTimeFieldProps = Omit<
 >;
 
 /**
- * `TimeField` bound to the TanStack Form field it renders in, reached as
+ * `TimeField` connected to the TanStack Form field it renders in, reached as
  * `field.TimeField`. The field's value is a `"HH:mm"` string, or `null`.
  *
  * @example
  * <form.AppField name="startTime">
- * 	{field => <field.TimeField label="Start time" optionalLabel="optional" />}
+ * 	{field => <field.TimeField label="Start time" />}
  * </form.AppField>
  */
 export const TSFTimeField = (

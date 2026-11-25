@@ -1,10 +1,4 @@
-import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../icon/index.ts";
 import {
 	expect,
 	fn,
@@ -13,23 +7,22 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { DateField } from "./date-field.tsx";
-
-const OPEN_CALENDAR = "Open calendar";
-const NEXT_MONTH = "Next month";
-const YEAR = "Year";
-const NO_MATCHING_YEAR = "No matching year.";
 
 type Canvas = ReturnType<typeof within>;
 
 const calendarTrigger = (canvas: Canvas) =>
 	canvas.getByRole("button", {
-		name: (name: string) => name.startsWith(OPEN_CALENDAR),
+		name: (name: string) =>
+			name.startsWith(STORY_COPY.calendar.open),
 	});
 
 const yearInput = () =>
-	screen.findByRole("combobox", { name: YEAR });
+	screen.findByRole("combobox", {
+		name: STORY_COPY.calendar.year,
+	});
 
 const openCalendar = async (canvas: Canvas) => {
 	await userEvent.click(calendarTrigger(canvas));
@@ -61,20 +54,6 @@ const meta = {
 	component: DateField,
 	args: {
 		label: "Due date",
-		optionalLabel: "optional",
-		openCalendarLabel: OPEN_CALENDAR,
-		openCalendarIcon: (
-			<Icon svg={CalendarTodayIcon} label="" />
-		),
-		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
-		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-		previousMonthLabel: "Previous month",
-		nextMonthLabel: NEXT_MONTH,
-		monthLabel: "Month",
-		yearLabel: YEAR,
-		noMatchingYearLabel: NO_MATCHING_YEAR,
 		defaultValue: "2026-07-24",
 		onValueChange: fn(),
 	},
@@ -141,7 +120,9 @@ export const NoMatch: Story = {
 		await userEvent.click(await openCalendar(canvas));
 		await userEvent.keyboard("0000");
 
-		const empty = await screen.findByText(NO_MATCHING_YEAR);
+		const empty = await screen.findByText(
+			STORY_COPY.calendar.noMatchingYear,
+		);
 		await waitFor(() => expect(empty).toBeVisible());
 		await expect(
 			screen.queryByRole("option"),
@@ -161,7 +142,9 @@ export const Keyboard: Story = {
 		const input = await yearInput();
 		await waitFor(() =>
 			expect(
-				screen.getByRole("button", { name: NEXT_MONTH }),
+				screen.getByRole("button", {
+					name: STORY_COPY.calendar.nextMonth,
+				}),
 			).toBeVisible(),
 		);
 

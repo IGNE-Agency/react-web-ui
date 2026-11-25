@@ -1,4 +1,3 @@
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import MoreHorizIcon from "@material-design-icons/svg/outlined/more_horiz.svg?react";
 import type {
 	Decorator,
@@ -15,6 +14,7 @@ import {
 	waitFor,
 } from "storybook/test";
 import { createStoryRouter } from "../../lib/storybook/story-router.tsx";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { IconButton } from "../button/button.tsx";
 import { Icon } from "../icon/icon.tsx";
@@ -22,7 +22,7 @@ import { Menu } from "../menu/menu.tsx";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs.tsx";
 
 const TRAIL_LABEL = "Breadcrumbs";
-const MORE = "Show more";
+const MORE = STORY_COPY.breadcrumbs.overflow;
 const HOME = "Home";
 const REGION = "Region Heerenveen and surroundings";
 const INVOICES = "Invoices";
@@ -36,7 +36,6 @@ const OUTSTANDING_PATH = "/region/invoices/outstanding";
 
 const CURRENT = { selector: '[aria-current="page"]' };
 
-const SEPARATOR = <Icon svg={ChevronRightIcon} label="" />;
 const MORE_ICON = <Icon svg={MoreHorizIcon} label="" />;
 
 const { history, decorator, reset } =
@@ -88,7 +87,7 @@ const ByHand = (): ReactElement => (
 					{HOME}
 				</BreadcrumbLink>
 			</Breadcrumbs.Item>
-			<Breadcrumbs.Separator>/</Breadcrumbs.Separator>
+			<Breadcrumbs.Separator />
 			<Breadcrumbs.Item>
 				<Breadcrumbs.Overflow>
 					<Breadcrumbs.OverflowTrigger
@@ -105,7 +104,7 @@ const ByHand = (): ReactElement => (
 					</Breadcrumbs.OverflowContent>
 				</Breadcrumbs.Overflow>
 			</Breadcrumbs.Item>
-			<Breadcrumbs.Separator>/</Breadcrumbs.Separator>
+			<Breadcrumbs.Separator />
 			<Breadcrumbs.Item>
 				<Breadcrumbs.ClippedHint
 					render={<Breadcrumbs.Page />}>
@@ -145,15 +144,10 @@ const meta = {
 	beforeEach: reset,
 	args: {
 		label: TRAIL_LABEL,
-		overflowLabel: MORE,
-		overflowIcon: MORE_ICON,
-		separator: SEPARATOR,
 		crumbs: CRUMBS,
 	},
 	argTypes: {
 		crumbs: { control: false },
-		overflowIcon: { control: false },
-		separator: { control: false },
 	},
 } satisfies Meta<typeof Breadcrumbs>;
 

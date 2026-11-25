@@ -11,6 +11,8 @@ import {
 } from "react";
 import { Button } from "../components/button/button.tsx";
 import { Checkbox } from "../components/checkbox-field/checkbox.tsx";
+import { useCopy } from "../components/copy-provider/index.ts";
+import { useIcons } from "../components/icon-provider/index.ts";
 import { usePresence } from "../lib/hooks/use-presence.ts";
 import type { RowSelectionView } from "../lib/hooks/use-row-selection.ts";
 import { useRequiredContext } from "../lib/use-required-context.ts";
@@ -31,16 +33,9 @@ const useSelection = (): RowSelectionView => {
 	return selection;
 };
 
-type SelectionMarks = Readonly<{
-	checkIcon: ReactNode;
-	indeterminateIcon: ReactNode;
-}>;
-
-const PageCheckbox = ({
-	label,
-	checkIcon,
-	indeterminateIcon,
-}: SelectionMarks & Readonly<{ label: string }>) => {
+const PageCheckbox = () => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { table } = useDataTable();
 	const selection = useSelection();
 	const pageIds = table
@@ -58,7 +53,7 @@ const PageCheckbox = ({
 
 	return (
 		<Checkbox.Control
-			aria-label={label}
+			aria-label={copy.table.selectPage}
 			checked={allOnPage}
 			indeterminate={indeterminate}
 			onCheckedChange={checked => {
@@ -71,26 +66,32 @@ const PageCheckbox = ({
 				}
 			}}>
 			<Checkbox.Indicator>
-				{indeterminate ? indeterminateIcon : checkIcon}
+				{indeterminate ? icons.indeterminate : icons.check}
 			</Checkbox.Indicator>
+		</Checkbox.Control>
+	);
+};
+
+const PlaceholderCheckbox = () => {
+	const copy = useCopy();
+	const icons = useIcons();
+	return (
+		<Checkbox.Control aria-label={copy.table.selectRow}>
+			<Checkbox.Indicator>{icons.check}</Checkbox.Indicator>
 		</Checkbox.Control>
 	);
 };
 
 const RowCheckbox = ({
 	rowId,
-	label,
-	checkIcon,
-}: Readonly<{
-	rowId: string;
-	label: string;
-	checkIcon: ReactNode;
-}>) => {
+}: Readonly<{ rowId: string }>) => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { table } = useDataTable();
 	const selection = useSelection();
 	return (
 		<Checkbox.Control
-			aria-label={label}
+			aria-label={copy.table.selectRow}
 			checked={selection.isRowSelected(rowId)}
 			onCheckedChange={checked => {
 				selection.toggleRow(
@@ -99,21 +100,13 @@ const RowCheckbox = ({
 					table.getRowCount(),
 				);
 			}}>
-			<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
+			<Checkbox.Indicator>{icons.check}</Checkbox.Indicator>
 		</Checkbox.Control>
 	);
 };
 
 export type SelectionColumnOptions = Readonly<{
 	sticky?: DataTableColumnMeta["sticky"];
-	/** The header checkbox's name, such as "Select page". */
-	selectPageLabel: string;
-	/** Each row checkbox's name, such as "Select row". */
-	selectRowLabel: string;
-	/** The mark a checked box shows, such as a tick. */
-	checkIcon: ReactNode;
-	/** The mark the page checkbox shows while only some rows on the page are selected, such as a dash. */
-	indeterminateIcon: ReactNode;
 }>;
 
 /**
@@ -123,19 +116,13 @@ export type SelectionColumnOptions = Readonly<{
  *
  * @example
  * const columns = [
- * 	selectionColumn<Invoice>({ sticky: "start", selectPageLabel: "Select page", selectRowLabel: "Select row", checkIcon: <CheckIcon />, indeterminateIcon: <RemoveIcon /> }),
+ * 	selectionColumn<Invoice>({ sticky: "start" }),
  * 	...dataColumns,
  * ];
  */
 export const selectionColumn = <
 	TRow extends Record<string, unknown>,
->({
-	sticky,
-	selectPageLabel,
-	selectRowLabel,
-	checkIcon,
-	indeterminateIcon,
-}: SelectionColumnOptions): ColumnDef<
+>({ sticky }: SelectionColumnOptions = {}): ColumnDef<
 	DataTableFeatures,
 	TRow
 > => ({
@@ -143,26 +130,10 @@ export const selectionColumn = <
 	meta: {
 		fit: true,
 		sticky,
-		placeholderCell: () => (
-			<Checkbox.Control aria-label={selectRowLabel}>
-				<Checkbox.Indicator>{checkIcon}</Checkbox.Indicator>
-			</Checkbox.Control>
-		),
+		placeholderCell: () => <PlaceholderCheckbox />,
 	},
-	header: () => (
-		<PageCheckbox
-			label={selectPageLabel}
-			checkIcon={checkIcon}
-			indeterminateIcon={indeterminateIcon}
-		/>
-	),
-	cell: ({ row }) => (
-		<RowCheckbox
-			rowId={row.id}
-			label={selectRowLabel}
-			checkIcon={checkIcon}
-		/>
-	),
+	header: () => <PageCheckbox />,
+	cell: ({ row }) => <RowCheckbox rowId={row.id} />,
 });
 
 type SelectionBarState = Readonly<{
@@ -243,8 +214,6 @@ export type DataTableSelectionBarSummaryProps = Omit<
 	Readonly<{
 		/** What the bar says while nothing is selected, such as "30 invoices". */
 		total?: ReactNode;
-		/** How many of the matching rows are selected, such as "3 of 30 selected". */
-		countLabel: (selected: number, total: number) => string;
 	}>;
 
 /**
@@ -253,16 +222,17 @@ export type DataTableSelectionBarSummaryProps = Omit<
  * count.
  *
  * @example
- * <DataTable.SelectionBar.Summary total="30 invoices" countLabel={(n, total) => `${n} of ${total} selected`} />
+ * <DataTable.SelectionBar.Summary total="30 invoices" />
  */
 const SelectionBarSummary = ({
 	total,
-	countLabel,
 	render,
 	className,
 	ref,
 	...props
 }: DataTableSelectionBarSummaryProps): ReactElement => {
+	const copy = useCopy();
+	const count = copy.table.selected;
 	const { totalRows, selected } = useSelectionBar();
 	return useRender({
 		defaultTagName: "span",
@@ -280,10 +250,10 @@ const SelectionBarSummary = ({
 					{totalRows > 0 && (
 						<>
 							<span className={style.selectionCount}>
-								{countLabel(selected, totalRows)}
+								{count(selected, totalRows)}
 							</span>
 							<span className={style.selectionMeasure}>
-								{countLabel(totalRows, totalRows)}
+								{count(totalRows, totalRows)}
 							</span>
 						</>
 					)}
@@ -301,16 +271,17 @@ export type DataTableSelectionBarStatusProps =
  * and the selected count once something is.
  *
  * @example
- * <DataTable.SelectionBar.Status total="30 invoices" countLabel={(n, total) => `${n} of ${total} selected`} />
+ * <DataTable.SelectionBar.Status total="30 invoices" />
  */
 const SelectionBarStatus = ({
 	total,
-	countLabel,
 	render,
 	className,
 	ref,
 	...props
 }: DataTableSelectionBarStatusProps): ReactElement => {
+	const copy = useCopy();
+	const count = copy.table.selected;
 	const { totalRows, selected } = useSelectionBar();
 	return useRender({
 		defaultTagName: "span",
@@ -321,9 +292,7 @@ const SelectionBarStatus = ({
 			...props,
 			className: clsx(style.selectionStatus, className),
 			children:
-				selected === 0
-					? total
-					: countLabel(selected, totalRows),
+				selected === 0 ? total : count(selected, totalRows),
 		},
 	});
 };
@@ -472,12 +441,6 @@ export type DataTableSelectionBarProps = Readonly<{
 	/** What the bar says while nothing is selected, such as "30 invoices". */
 	total?: ReactNode;
 	totalRows: number;
-	/** How many of the matching rows are selected, such as "3 of 30 selected". */
-	countLabel: (selected: number, total: number) => string;
-	/** The button that clears the selection, such as "Clear selection". */
-	clearLabel: string;
-	/** The button that selects every matching row, such as "Select all 30". */
-	selectAllLabel: (total: number) => string;
 	/** Bulk actions to offer for the current selection. */
 	children?: ReactNode;
 	className?: string;
@@ -486,40 +449,37 @@ export type DataTableSelectionBarProps = Readonly<{
 const SelectionBarPrefab = ({
 	total,
 	totalRows,
-	countLabel,
-	clearLabel,
-	selectAllLabel,
 	children,
 	className,
-}: DataTableSelectionBarProps): ReactNode => (
-	<SelectionBarRoot
-		totalRows={totalRows}
-		className={className}>
-		<SelectionBarSummary
-			total={total}
-			countLabel={countLabel}
-		/>
-		<SelectionBarStatus
-			total={total}
-			countLabel={countLabel}
-		/>
-		<SelectionBarActions>
-			<SelectionBarClear
-				render={
-					<Button variant="tertiary">{clearLabel}</Button>
-				}
-			/>
-			<SelectionBarSelectAll
-				render={
-					<Button variant="tertiary">
-						{selectAllLabel(totalRows)}
-					</Button>
-				}
-			/>
-			<SelectionBarBulk>{children}</SelectionBarBulk>
-		</SelectionBarActions>
-	</SelectionBarRoot>
-);
+}: DataTableSelectionBarProps): ReactNode => {
+	const copy = useCopy();
+
+	return (
+		<SelectionBarRoot
+			totalRows={totalRows}
+			className={className}>
+			<SelectionBarSummary total={total} />
+			<SelectionBarStatus total={total} />
+			<SelectionBarActions>
+				<SelectionBarClear
+					render={
+						<Button variant="tertiary">
+							{copy.table.clearSelection}
+						</Button>
+					}
+				/>
+				<SelectionBarSelectAll
+					render={
+						<Button variant="tertiary">
+							{copy.table.selectAll(totalRows)}
+						</Button>
+					}
+				/>
+				<SelectionBarBulk>{children}</SelectionBarBulk>
+			</SelectionBarActions>
+		</SelectionBarRoot>
+	);
+};
 
 /** The parts of a selection bar, hanging off its prefab. */
 export type DataTableSelectionBarParts =
@@ -543,9 +503,6 @@ export type DataTableSelectionBarParts =
  * <DataTable.SelectionBar
  * 	totalRows={30}
  * 	total="30 invoices"
- * 	countLabel={(n, total) => `${n} of ${total} selected`}
- * 	clearLabel="Clear selection"
- * 	selectAllLabel={total => `Select all ${total}`}
  * />
  */
 export const DataTableSelectionBar: DataTableSelectionBarParts =

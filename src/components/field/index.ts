@@ -3,7 +3,6 @@ export * from "./field.tsx";
 export * from "./field-state.ts";
 export {
 	type OptionsLoad,
-	type OptionsLoadLabels,
 	type OptionsQuery,
 	optionsLoad,
 } from "./options-load.ts";

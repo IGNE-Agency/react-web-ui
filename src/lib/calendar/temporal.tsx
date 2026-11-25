@@ -37,7 +37,7 @@ export type TemporalLabelProps = FieldLabelProps;
  * itself by through `aria-labelledby`. Renders nothing without children.
  *
  * @example
- * <DateInput.Label id={labelId}>Service date <Field.Requiredness optionalLabel="optional" /></DateInput.Label>
+ * <DateInput.Label id={labelId}>Service date <Field.Requiredness /></DateInput.Label>
  */
 export const TemporalLabel = (
 	props: TemporalLabelProps,

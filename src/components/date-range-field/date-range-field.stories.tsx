@@ -1,8 +1,6 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
 import { useArgs } from "storybook/preview-api";
@@ -18,6 +16,7 @@ import {
 	focusedDay,
 	focusReturnsTo,
 } from "../../lib/storybook/calendar.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { useRef } from "react";
 import { Temporal } from "temporal-polyfill";
@@ -43,10 +42,7 @@ const RANGE = {
 	end: MONTH_END.toString(),
 };
 const LABEL = "Invoice period";
-const OPEN_CALENDAR = "Open calendar";
-const PREVIOUS_MONTH = "Previous month";
-const NEXT_MONTH = "Next month";
-const TRIGGER_NAME = `${OPEN_CALENDAR} ${LABEL}`;
+const TRIGGER_NAME = `${STORY_COPY.calendar.open} ${LABEL}`;
 
 const FAR_ZONE = "Pacific/Kiritimati";
 const INSTANTS = {
@@ -115,7 +111,7 @@ const ComposedDateRangeInput = () => {
 								ref={triggerRef}
 								render={
 									<IconButton
-										label={OPEN_CALENDAR}
+										label={STORY_COPY.calendar.open}
 										variant="tertiary"
 										size="sm">
 										<Icon svg={DateRangeIcon} label="" />
@@ -130,7 +126,9 @@ const ComposedDateRangeInput = () => {
 									<DateRangeInput.Previous
 										render={
 											<IconButton
-												label={PREVIOUS_MONTH}
+												label={
+													STORY_COPY.calendar.previousMonth
+												}
 												variant="tertiary">
 												<Icon
 													svg={ChevronLeftIcon}
@@ -143,7 +141,9 @@ const ComposedDateRangeInput = () => {
 									<DateRangeInput.Next
 										render={
 											<IconButton
-												label={NEXT_MONTH}
+												label={
+													STORY_COPY.calendar.nextMonth
+												}
 												variant="tertiary">
 												<Icon
 													svg={ChevronRightIcon}
@@ -197,18 +197,6 @@ const meta = {
 	render: ControlledDateRangeField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
-		openCalendarLabel: OPEN_CALENDAR,
-		openCalendarIcon: <Icon svg={DateRangeIcon} label="" />,
-		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
-		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-		previousMonthLabel: PREVIOUS_MONTH,
-		nextMonthLabel: NEXT_MONTH,
-		monthLabel: "Month",
-		yearLabel: "Year",
-		noMatchingYearLabel: "No matching year.",
 		value: null,
 		onValueChange: fn(),
 	},
@@ -294,7 +282,7 @@ export const Composed: Story = {
 		docs: {
 			description: {
 				story:
-					"The raw parts, composed by hand: a word between the ends, and a heading between the month steppers over two months.",
+					"The primitive's parts, composed by hand: a word between the ends, and a heading between the month steppers over two months.",
 			},
 		},
 	},
@@ -336,12 +324,12 @@ export const Constrained: Story = {
 
 		await expect(
 			within(popup).getByRole("button", {
-				name: PREVIOUS_MONTH,
+				name: STORY_COPY.calendar.previousMonth,
 			}),
 		).toBeDisabled();
 		await expect(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		).toBeDisabled();
 	},
@@ -468,7 +456,7 @@ export const PickerMouse: Story = {
 		await userEvent.click(dayButton(popup, start));
 		await userEvent.click(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		);
 		await userEvent.click(dayButton(popup, end));

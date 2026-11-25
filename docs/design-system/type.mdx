@@ -6,7 +6,7 @@ import {
 	Button,
 	IconButton,
 } from "../../src/components/button/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import { Beside } from "./beside";
 import { Details, DetailsList } from "./details";
 import { DoDont } from "./do-dont";
@@ -24,7 +24,7 @@ import { TypeRoleSpecimen } from "./type-role-specimen";
 import { Icon } from "../../src/components/icon/index.ts";
 
 export const Live = ({ children }) => (
-	<StoryProviders>{children}</StoryProviders>
+	<DocsProviders>{children}</DocsProviders>
 );
 
 <Meta title="Design system/Foundation/Type" />

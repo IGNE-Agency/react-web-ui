@@ -1,13 +1,10 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import CopyIcon from "@material-design-icons/svg/outlined/content_copy.svg?react";
-import ErrorIcon from "@material-design-icons/svg/outlined/error_outline.svg?react";
 import LanguageIcon from "@material-design-icons/svg/outlined/language.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../button/index.ts";
 import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -27,29 +24,14 @@ import {
 
 const COUNTER_MAX = 40;
 const LABEL = "Name";
-const OPTIONAL_LABEL = "optional";
 const VALUE = "Anna de Vries";
 const WEBSITE_LABEL = "Website";
 const WEBSITE_VALUE = "example";
 const PREFIX = "https://";
 const SUFFIX = ".nl";
-const CLEAR_LABEL = "Clear";
-const COPY_LABEL = "Copy";
-const COPIED_LABEL = "Copied";
 const SEARCH_LABEL = "Search orders";
 const SEARCH_ACTION_LABEL = "Search";
-const COPY_FAILED_LABEL =
-	"Couldn't copy automatically. Text selected, copy it manually.";
-
-const COPY_LABELS: TextFieldCopyProps = {
-	copyable: true,
-	copyLabel: COPY_LABEL,
-	copiedLabel: COPIED_LABEL,
-	copyFailedLabel: COPY_FAILED_LABEL,
-	copyIcon: <Icon svg={CopyIcon} label="" />,
-	copiedIcon: <Icon svg={CheckIcon} label="" />,
-	copyFailedIcon: <Icon svg={ErrorIcon} label="" />,
-};
+const COPYABLE: TextFieldCopyProps = { copyable: true };
 
 const ControlledTextField = (
 	args: TextFieldProps,
@@ -147,7 +129,6 @@ const meta = {
 	render: ControlledTextField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		value: "",
 		onValueChange: fn(),
 	},
@@ -255,15 +236,13 @@ export const Clearable: Story = {
 	args: {
 		value: VALUE,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 
 export const Copyable: Story = {
 	args: {
 		value: VALUE,
-		...COPY_LABELS,
+		...COPYABLE,
 	},
 };
 
@@ -276,9 +255,7 @@ export const AllInlays: Story = {
 		suffix: SUFFIX,
 		maxLength: COUNTER_MAX,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
-		...COPY_LABELS,
+		...COPYABLE,
 	},
 };
 
@@ -376,15 +353,13 @@ export const Touch: Story = {
 };
 
 const clearButton = (canvas: Canvas) =>
-	canvas.getByRole("button", { name: CLEAR_LABEL });
+	canvas.getByRole("button", { name: STORY_COPY.clear });
 
 export const ClearKeyboard: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: {
 		value: VALUE,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {
@@ -410,8 +385,6 @@ export const ClearMouse: Story = {
 	args: {
 		value: VALUE,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {
@@ -429,8 +402,6 @@ export const ClearTouch: Story = {
 	args: {
 		value: VALUE,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 	render: PlainTextField,
 	play: async ({ args, canvas }) => {
@@ -450,7 +421,7 @@ export const Copy: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: {
 		value: VALUE,
-		...COPY_LABELS,
+		...COPYABLE,
 	},
 	play: async ({ canvas }) => {
 		const writeText = spyOn(
@@ -459,18 +430,22 @@ export const Copy: Story = {
 		).mockResolvedValue();
 
 		await userEvent.click(
-			canvas.getByRole("button", { name: COPY_LABEL }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.clipboard.copy,
+			}),
 		);
 
 		await expect(writeText).toHaveBeenCalledWith(VALUE);
 		await waitFor(() =>
 			expect(
-				canvas.getByRole("button", { name: COPIED_LABEL }),
+				canvas.getByRole("button", {
+					name: STORY_COPY.clipboard.copied,
+				}),
 			).toBeInTheDocument(),
 		);
 		await expect(
 			canvas.getByRole("status"),
-		).toHaveTextContent(COPIED_LABEL);
+		).toHaveTextContent(STORY_COPY.clipboard.copied);
 	},
 };
 
@@ -479,13 +454,13 @@ const expectSelectedByHand = async (canvas: Canvas) => {
 	await waitFor(() =>
 		expect(
 			canvas.getByRole("button", {
-				name: COPY_FAILED_LABEL,
+				name: STORY_COPY.clipboard.failed,
 			}),
 		).toBeInTheDocument(),
 	);
 	await expect(
 		canvas.getByRole("status"),
-	).toHaveTextContent(COPY_FAILED_LABEL);
+	).toHaveTextContent(STORY_COPY.clipboard.failed);
 	await expect(input).toHaveFocus();
 	await expect(input).toHaveProperty("selectionStart", 0);
 	await expect(input).toHaveProperty(
@@ -498,7 +473,7 @@ export const CopyRefused: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: {
 		value: VALUE,
-		...COPY_LABELS,
+		...COPYABLE,
 	},
 	play: async ({ canvas }) => {
 		spyOn(
@@ -512,7 +487,9 @@ export const CopyRefused: Story = {
 		);
 
 		await userEvent.click(
-			canvas.getByRole("button", { name: COPY_LABEL }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.clipboard.copy,
+			}),
 		);
 
 		await expectSelectedByHand(canvas);
@@ -523,7 +500,7 @@ export const CopyUnavailable: Story = {
 	tags: ["!dev", "!autodocs"],
 	args: {
 		value: VALUE,
-		...COPY_LABELS,
+		...COPYABLE,
 	},
 	beforeEach: () => {
 		Object.defineProperty(navigator, "clipboard", {
@@ -536,7 +513,9 @@ export const CopyUnavailable: Story = {
 	},
 	play: async ({ canvas }) => {
 		await userEvent.click(
-			canvas.getByRole("button", { name: COPY_LABEL }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.clipboard.copy,
+			}),
 		);
 
 		await expectSelectedByHand(canvas);

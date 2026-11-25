@@ -25,6 +25,7 @@ import {
 	type FieldState,
 	fieldStateAttributes,
 } from "../field/index.ts";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
 import style from "./file-field.module.scss";
 
 export type FileInputRootProps = Omit<
@@ -36,10 +37,11 @@ export type FileInputRootProps = Omit<
 		state?: FieldState;
 	}>;
 
-/** The fieldset around the file input, which projects its state as `data-*` attributes. */
+/** The fieldset around the file input, which projects its state as `data-*` attributes and whose required mark says "required" in words. */
 const FileInputRoot = ({
 	state,
 	disabled,
+	children,
 	...props
 }: FileInputRootProps): ReactNode => (
 	<Field.Root
@@ -47,8 +49,11 @@ const FileInputRoot = ({
 		disabled={disabled}
 		requiredness={state?.requiredness}
 		{...fieldStateAttributes(state ?? {})}
-		{...props}
-	/>
+		{...props}>
+		<RequiredSpokenContext value={true}>
+			{children}
+		</RequiredSpokenContext>
+	</Field.Root>
 );
 
 /** The legend that names the fieldset. */
@@ -265,7 +270,7 @@ export type FileInputParts = Readonly<{
  *
  * @example
  * <FileInput.Root state={{ requiredness: "optional" }}>
- * 	<FileInput.Legend>Attachments <Field.Requiredness optionalLabel="optional" /></FileInput.Legend>
+ * 	<FileInput.Legend>Attachments <Field.Requiredness /></FileInput.Legend>
  * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
  * 		<FileInput.Hint>
  * 			<FileInput.HintIcon><UploadFileIcon /></FileInput.HintIcon>

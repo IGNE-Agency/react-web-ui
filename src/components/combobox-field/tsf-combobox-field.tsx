@@ -11,7 +11,7 @@ import {
 	type ComboboxItemLookup,
 } from "./combobox-field.tsx";
 import type { ComboboxItems } from "./combobox-items.ts";
-import type { ComboboxMultipleLabels } from "./selection.ts";
+import type { ComboboxMode } from "./selection.ts";
 
 type Connected<TItem, TData, TKey extends QueryKey> = Omit<
 	ComboboxFieldChrome,
@@ -21,6 +21,14 @@ type Connected<TItem, TData, TKey extends QueryKey> = Omit<
 	ComboboxDerivations<TItem> &
 	ComboboxItemLookup<TItem, TData, TKey>;
 
+type SelectedLabel<TItem> = Pick<
+	Extract<
+		ComboboxMode<TItem>,
+		Readonly<{ multiple: true }>
+	>,
+	"selectedLabel"
+>;
+
 export type TSFComboboxFieldProps<
 	TItem,
 	TData = TItem,
@@ -28,8 +36,7 @@ export type TSFComboboxFieldProps<
 > = Connected<TItem, TData, TKey> &
 	(
 		| Readonly<{ multiple?: false }>
-		| (Readonly<{ multiple: true }> &
-				ComboboxMultipleLabels)
+		| (Readonly<{ multiple: true }> & SelectedLabel<TItem>)
 	);
 
 const SingleField = <TItem, TData, TKey extends QueryKey>({
@@ -57,7 +64,7 @@ const MultipleField = <
 	props,
 }: Readonly<{
 	props: Connected<TItem, TData, TKey> &
-		ComboboxMultipleLabels;
+		SelectedLabel<TItem>;
 }>): ReactNode => {
 	const { field, props: connected } = useConnectedField<
 		readonly TItem[]
@@ -74,7 +81,7 @@ const MultipleField = <
 };
 
 /**
- * `ComboboxField` bound to the TanStack Form field it renders in: the form
+ * `ComboboxField` connected to the TanStack Form field it renders in: the form
  * value is the item or `null`, or under `multiple` the list of items. Reach it
  * as `field.ComboboxField` inside `form.AppField`.
  *
@@ -83,10 +90,8 @@ const MultipleField = <
  * 	{field => (
  * 		<field.ComboboxField
  * 			label="Reviewer"
- * 			optionalLabel="optional"
  * 			items={reviewers}
- * 			itemKey={user => user.id}
- * 			{...comboboxCopy}>
+ * 			itemKey={user => user.id}>
  * 			{user => user.name}
  * 		</field.ComboboxField>
  * 	)}

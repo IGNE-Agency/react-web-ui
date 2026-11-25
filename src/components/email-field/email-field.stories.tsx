@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
@@ -16,8 +15,6 @@ import {
 } from "./index.ts";
 
 const LABEL = "Email address";
-const OPTIONAL_LABEL = "optional";
-const CLEAR_LABEL = "Clear";
 const ERROR = "This is not a valid email address.";
 const VALID = "anna@voorbeeld.nl";
 const INVALID = "anna.voorbeeld.nl";
@@ -53,7 +50,6 @@ const meta = {
 	render: ControlledEmailField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		icon: <Icon svg={MailIcon} label="" />,
 		value: "",
 		onValueChange: fn(),
@@ -112,8 +108,6 @@ export const Clearable: Story = {
 	args: {
 		value: VALID,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 

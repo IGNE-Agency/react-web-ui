@@ -1,5 +1,3 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -11,33 +9,22 @@ import {
 	within,
 } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import {
-	OPTIONS_LOAD_LABELS,
-	OPTIONS_LOADS,
-} from "../../lib/storybook/options-load.ts";
+import { OPTIONS_LOADS } from "../../lib/storybook/options-load.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	optionFocused,
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
-import { Icon } from "../icon/index.ts";
 import {
 	SelectField,
 	type SelectFieldProps,
 } from "./select-field.tsx";
 
 const LABEL = "Status";
-const OPTIONAL_LABEL = "optional";
 const OPEN_LABEL = "Open";
 const SENT_LABEL = "Sent";
 const PAID_LABEL = "Paid";
-const {
-	loadingLabel: LOADING_LABEL,
-	loadFailedLabel: LOAD_FAILED_LABEL,
-	loadBrokenLabel: LOAD_BROKEN_LABEL,
-	retryLabel: RETRY_LABEL,
-	noOptionsLabel: NO_OPTIONS_LABEL,
-} = OPTIONS_LOAD_LABELS;
 
 const STATUS_OPTIONS = [
 	{ value: "open", label: OPEN_LABEL },
@@ -97,14 +84,10 @@ const meta = {
 	render: ControlledSelectField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		placeholder: "Choose a status",
 		options: STATUS_OPTIONS,
-		icon: <Icon svg={ExpandMoreIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
 		value: null,
 		load: mappedArg(OPTIONS_LOADS, "loaded"),
-		...OPTIONS_LOAD_LABELS,
 		onValueChange: valueChange,
 		onBlur: blurred,
 	},
@@ -192,7 +175,7 @@ export const Loading: Story = {
 
 		await expect(
 			await screen.findByRole("status"),
-		).toHaveTextContent(LOADING_LABEL);
+		).toHaveTextContent(STORY_COPY.options.loading);
 	},
 };
 
@@ -204,7 +187,7 @@ export const Empty: Story = {
 
 		await expect(
 			await screen.findByRole("status"),
-		).toHaveTextContent(NO_OPTIONS_LABEL);
+		).toHaveTextContent(STORY_COPY.options.empty);
 	},
 };
 
@@ -219,7 +202,7 @@ export const Failed: Story = {
 
 		await expect(
 			await screen.findByRole("status"),
-		).toHaveTextContent(LOAD_FAILED_LABEL);
+		).toHaveTextContent(STORY_COPY.options.loadFailed);
 	},
 };
 
@@ -233,7 +216,7 @@ export const Retry: Story = {
 		await userEvent.click(trigger(canvas));
 		await userEvent.click(
 			await screen.findByRole("button", {
-				name: RETRY_LABEL,
+				name: STORY_COPY.retry,
 			}),
 		);
 
@@ -254,9 +237,11 @@ export const Broken: Story = {
 
 		await expect(
 			await screen.findByRole("status"),
-		).toHaveTextContent(LOAD_BROKEN_LABEL);
+		).toHaveTextContent(STORY_COPY.options.loadBroken);
 		await expect(
-			screen.queryByRole("button", { name: RETRY_LABEL }),
+			screen.queryByRole("button", {
+				name: STORY_COPY.retry,
+			}),
 		).not.toBeInTheDocument();
 	},
 };

@@ -81,7 +81,7 @@ export type FieldsetParts = Readonly<{
  *
  * @example
  * <Fieldset.Root members={members} requiredness="optional" aria-describedby={descriptionId}>
- * 	<Fieldset.Legend>Address <Field.Requiredness optionalLabel="optional" /></Fieldset.Legend>
+ * 	<Fieldset.Legend>Address <Field.Requiredness /></Fieldset.Legend>
  * 	<Fieldset.Description id={descriptionId}>We send the invoice here.</Fieldset.Description>
  * 	<Fieldset.Fields>…</Fieldset.Fields>
  * 	<Fieldset.Error />

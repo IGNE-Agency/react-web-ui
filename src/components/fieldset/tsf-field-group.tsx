@@ -20,16 +20,16 @@ export type TSFFieldGroupProps = Omit<
 	}>;
 
 /**
- * `FieldGroup` bound to the TanStack Form it renders in: it shows the errors
+ * `FieldGroup` connected to the TanStack Form it renders in: it shows the errors
  * of the fields it `names`. Registered as `form.FieldGroup`.
  *
  * @example
- * <form.FieldGroup legend="Address" optionalLabel="optional" names={["postalCode", "houseNumber"]}>
+ * <form.FieldGroup legend="Address" names={["postalCode", "houseNumber"]}>
  * 	<form.AppField name="postalCode">
- * 		{field => <field.TextField label="Postal code" optionalLabel="optional" />}
+ * 		{field => <field.TextField label="Postal code" />}
  * 	</form.AppField>
  * 	<form.AppField name="houseNumber">
- * 		{field => <field.TextField label="House number" optionalLabel="optional" />}
+ * 		{field => <field.TextField label="House number" />}
  * 	</form.AppField>
  * </form.FieldGroup>
  */

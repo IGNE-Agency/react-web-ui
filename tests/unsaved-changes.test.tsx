@@ -11,6 +11,7 @@ import { type ReactNode, useState } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { CopyProvider } from "../src/components/copy-provider/index.ts";
 import { Form } from "../src/components/form/index.ts";
 import { useAppForm } from "../src/lib/storybook/app-form.tsx";
 import {
@@ -22,6 +23,17 @@ import {
 	whenDirty,
 } from "../src/lib/unsaved-changes/index.ts";
 import { createUnsavedChangesRegistry } from "../src/lib/unsaved-changes/registry.ts";
+import { STORY_COPY } from "../src/lib/storybook/story-providers.tsx";
+
+const withCopy = {
+	wrapper: ({
+		children,
+	}: Readonly<{ children: ReactNode }>) => (
+		<CopyProvider copy={STORY_COPY}>
+			{children}
+		</CopyProvider>
+	),
+};
 import { useRouterLeaveGuard } from "../src/lib/unsaved-changes/tanstack-router.ts";
 
 const NAME_LABEL = "Name";
@@ -274,7 +286,10 @@ describe("Form.Root", () => {
 
 describe("useLeaveGuard", () => {
 	test("holds a reload only while there are unsaved changes", async () => {
-		await render(<GuardedPage onLeave={vi.fn()} />);
+		await render(
+			<GuardedPage onLeave={vi.fn()} />,
+			withCopy,
+		);
 		expect(unloadHeld()).toBe(false);
 
 		await nameInput().fill("Ada");
@@ -288,7 +303,10 @@ describe("useLeaveGuard", () => {
 
 	test("lets a leave through at once while there is nothing unsaved", async () => {
 		const onLeave = vi.fn();
-		await render(<GuardedPage onLeave={onLeave} />);
+		await render(
+			<GuardedPage onLeave={onLeave} />,
+			withCopy,
+		);
 
 		await page
 			.getByRole("button", { name: LEAVE_LABEL })
@@ -302,7 +320,10 @@ describe("useLeaveGuard", () => {
 
 	test("asks before a held leave, and goes through on discard", async () => {
 		const onLeave = vi.fn();
-		await render(<GuardedPage onLeave={onLeave} />);
+		await render(
+			<GuardedPage onLeave={onLeave} />,
+			withCopy,
+		);
 		await nameInput().fill("Ada");
 
 		await page
@@ -323,7 +344,10 @@ describe("useLeaveGuard", () => {
 
 	test("stays when the question is answered with keep editing", async () => {
 		const onLeave = vi.fn();
-		await render(<GuardedPage onLeave={onLeave} />);
+		await render(
+			<GuardedPage onLeave={onLeave} />,
+			withCopy,
+		);
 		await nameInput().fill("Ada");
 
 		await page
@@ -386,7 +410,10 @@ const routedApp = () => {
 describe("useRouterLeaveGuard", () => {
 	test("lets a navigation through while there is nothing unsaved", async () => {
 		const { router, history } = routedApp();
-		await render(<RouterProvider router={router} />);
+		await render(
+			<RouterProvider router={router} />,
+			withCopy,
+		);
 
 		await page
 			.getByRole("link", { name: LEAVE_LABEL })
@@ -402,7 +429,10 @@ describe("useRouterLeaveGuard", () => {
 
 	test("holds a navigation away from unsaved changes, and goes through on discard", async () => {
 		const { router, history } = routedApp();
-		await render(<RouterProvider router={router} />);
+		await render(
+			<RouterProvider router={router} />,
+			withCopy,
+		);
 		await nameInput().fill("Ada");
 
 		await page
@@ -428,7 +458,10 @@ describe("useRouterLeaveGuard", () => {
 
 	test("keeps the route when the question is answered with keep editing", async () => {
 		const { router, history } = routedApp();
-		await render(<RouterProvider router={router} />);
+		await render(
+			<RouterProvider router={router} />,
+			withCopy,
+		);
 		await nameInput().fill("Ada");
 
 		await page
@@ -447,7 +480,10 @@ describe("useRouterLeaveGuard", () => {
 
 	test("asks the router to hold a reload only while there are unsaved changes", async () => {
 		const { router, history } = routedApp();
-		await render(<RouterProvider router={router} />);
+		await render(
+			<RouterProvider router={router} />,
+			withCopy,
+		);
 		const reloadHeld = () =>
 			history
 				// oxlint-disable-next-line no-underscore-dangle -- memory history installs no beforeunload listener; its blockers say what a browser history would hold

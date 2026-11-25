@@ -1,7 +1,3 @@
-import BlockIcon from "@material-design-icons/svg/outlined/block.svg?react";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	queryOptions,
@@ -17,15 +13,12 @@ import {
 	waitFor,
 } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import {
-	OPTIONS_LOAD_LABELS,
-	OPTIONS_LOADS,
-} from "../../lib/storybook/options-load.ts";
+import { OPTIONS_LOADS } from "../../lib/storybook/options-load.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
-import { Icon } from "../icon/index.ts";
 import {
 	ComboboxField,
 	type ComboboxFieldProps,
@@ -34,36 +27,11 @@ import { ComboboxItemQueries } from "./react-query.tsx";
 
 const LABEL = "Status";
 const MULTIPLE_LABEL = "Statuses";
-const SEARCH_LABEL = "Search";
-const {
-	loadingLabel: LOADING_LABEL,
-	loadFailedLabel: LOAD_FAILED_LABEL,
-	loadBrokenLabel: LOAD_BROKEN_LABEL,
-	retryLabel: RETRY_LABEL,
-	noOptionsLabel: NO_OPTIONS_LABEL,
-} = OPTIONS_LOAD_LABELS;
-const NO_RESULTS_LABEL = "No results.";
 const SELECTED_LABEL = "Selected statuses";
 const PLACEHOLDER = "Choose…";
 
-const COPY = {
-	optionalLabel: "optional",
-	...OPTIONS_LOAD_LABELS,
-	noResultsLabel: NO_RESULTS_LABEL,
-	searchLabel: SEARCH_LABEL,
-	loadingMoreLabel: "Loading more options…",
-	resultsLabel: (count: number) => `${count} results`,
-	icon: <Icon svg={ExpandMoreIcon} label="" />,
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-} as const;
-
 const MULTIPLE_COPY = {
 	selectedLabel: SELECTED_LABEL,
-	removeLabel: "Remove",
-	removeHint: (itemLabel: string) => `Remove ${itemLabel}`,
-	removeIcon: (
-		<Icon svg={CloseIcon} label="" size={0.875} />
-	),
 } as const;
 
 const STATUS_LABEL: Readonly<Record<string, string>> = {
@@ -107,12 +75,16 @@ const tag = (name: string) =>
 	screen.getByRole("row", { name });
 
 const searchBox = () =>
-	screen.findByRole("combobox", { name: SEARCH_LABEL });
+	screen.findByRole("combobox", {
+		name: STORY_COPY.options.search,
+	});
 
 const searchFocused = () =>
 	waitFor(() =>
 		expect(
-			screen.getByRole("combobox", { name: SEARCH_LABEL }),
+			screen.getByRole("combobox", {
+				name: STORY_COPY.options.search,
+			}),
 		).toHaveFocus(),
 	);
 
@@ -137,7 +109,6 @@ const meta = {
 	component: ComboboxField<string>,
 	render: ControlledComboboxField,
 	args: {
-		...COPY,
 		label: LABEL,
 		placeholder: PLACEHOLDER,
 		items: STATUSES,
@@ -250,7 +221,9 @@ export const Loading: Story = {
 		);
 
 		await waitFor(() =>
-			expect(screen.getByText(LOADING_LABEL)).toBeVisible(),
+			expect(
+				screen.getByText(STORY_COPY.options.loading),
+			).toBeVisible(),
 		);
 	},
 };
@@ -265,7 +238,7 @@ export const Empty: Story = {
 
 		await waitFor(() =>
 			expect(
-				screen.getByText(NO_OPTIONS_LABEL),
+				screen.getByText(STORY_COPY.options.empty),
 			).toBeVisible(),
 		);
 	},
@@ -281,7 +254,7 @@ export const NoResults: Story = {
 
 		await waitFor(() =>
 			expect(
-				screen.getByText(NO_RESULTS_LABEL),
+				screen.getByText(STORY_COPY.options.noResults),
 			).toBeVisible(),
 		);
 		await expect(
@@ -302,12 +275,14 @@ export const Failed: Story = {
 		);
 		await waitFor(() =>
 			expect(
-				screen.getByText(LOAD_FAILED_LABEL),
+				screen.getByText(STORY_COPY.options.loadFailed),
 			).toBeVisible(),
 		);
 
 		await userEvent.click(
-			screen.getByRole("button", { name: RETRY_LABEL }),
+			screen.getByRole("button", {
+				name: STORY_COPY.retry,
+			}),
 		);
 
 		await expect(
@@ -330,11 +305,13 @@ export const Broken: Story = {
 
 		await waitFor(() =>
 			expect(
-				screen.getByText(LOAD_BROKEN_LABEL),
+				screen.getByText(STORY_COPY.options.loadBroken),
 			).toBeVisible(),
 		);
 		await expect(
-			screen.queryByRole("button", { name: RETRY_LABEL }),
+			screen.queryByRole("button", {
+				name: STORY_COPY.retry,
+			}),
 		).not.toBeInTheDocument();
 	},
 };
@@ -541,7 +518,7 @@ export const MultipleMouse: Story = {
 	play: async ({ canvas }) => {
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: `Remove ${statusLabel("sent")}`,
+				name: `${STORY_COPY.remove} ${statusLabel("sent")}`,
 			}),
 		);
 
@@ -663,7 +640,6 @@ const PagedPeople = (): ReactElement => {
 
 	return (
 		<ComboboxField
-			{...COPY}
 			label={PEOPLE_LABEL}
 			query={query}
 			onSearchChange={setSearch}
@@ -686,7 +662,9 @@ export const ServerPaging: Story = {
 		await userEvent.type(await searchBox(), "Ada");
 
 		await waitFor(() =>
-			expect(screen.getByText("30 results")).toBeVisible(),
+			expect(
+				screen.getByText(STORY_COPY.options.results(30)),
+			).toBeVisible(),
 		);
 		await expect(
 			screen.queryByRole("option", { name: "Bo 01" }),
@@ -715,7 +693,6 @@ export const ServerPaging: Story = {
 };
 
 const GONE: Person = { id: "gone", name: "Cy 01" };
-const UNAVAILABLE_LABEL = "unavailable";
 
 class GoneError extends Error {}
 
@@ -736,7 +713,6 @@ const personQuery = (id: string) =>
 const LookedUpPeople = (): ReactElement => (
 	<ComboboxItemQueries>
 		<ComboboxField
-			{...COPY}
 			{...MULTIPLE_COPY}
 			multiple
 			label={PEOPLE_LABEL}
@@ -744,14 +720,6 @@ const LookedUpPeople = (): ReactElement => (
 			defaultValue={[GONE]}
 			retryable={error => !(error instanceof GoneError)}
 			itemQuery={personQuery}
-			valueUnavailableLabel={UNAVAILABLE_LABEL}
-			unavailableIcon={<Icon svg={BlockIcon} label="" />}
-			valueUnavailableName={itemLabel =>
-				`${itemLabel}, ${UNAVAILABLE_LABEL}`
-			}
-			valuesUnavailableLabel={count =>
-				`${count} selected value is no longer available.`
-			}
 			itemKey={person => person.id}
 			itemToStringLabel={person => person.name}>
 			{person => person.name}
@@ -765,11 +733,13 @@ export const ValueUnavailable: Story = {
 	play: async ({ canvas }) => {
 		await waitFor(() =>
 			expect(canvas.getByRole("status")).toHaveTextContent(
-				"1 selected value is no longer available.",
+				STORY_COPY.options.unavailableCount(1),
 			),
 		);
 		await expect(
 			canvas.getByRole("combobox", { name: PEOPLE_LABEL }),
-		).toHaveTextContent(`Cy 01, ${UNAVAILABLE_LABEL}`);
+		).toHaveTextContent(
+			STORY_COPY.options.unavailableName("Cy 01"),
+		);
 	},
 };

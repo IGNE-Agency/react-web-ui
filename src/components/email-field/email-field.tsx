@@ -21,7 +21,7 @@ export type EmailFieldProps = TextPresetProps &
  * platform's own address autofill.
  *
  * @example
- * <EmailField label="Email address" optionalLabel="optional" icon={<MailIcon />} value={email} onValueChange={setEmail} />
+ * <EmailField label="Email address" icon={<MailIcon />} value={email} onValueChange={setEmail} />
  */
 export const EmailField = ({
 	enterKeyHint = "next",

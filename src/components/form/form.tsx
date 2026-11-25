@@ -246,7 +246,7 @@ export type FormParts = Readonly<{
  *
  * @example
  * <Form.Root form={form}>
- * 	<form.AppField name="email">{field => <field.EmailField label="Email" optionalLabel="optional" />}</form.AppField>
+ * 	<form.AppField name="email">{field => <field.EmailField label="Email" />}</form.AppField>
  * 	<Form.Errors />
  * 	<Form.Submit busyLabel="Signing in">Sign in</Form.Submit>
  * </Form.Root>

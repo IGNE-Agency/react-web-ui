@@ -7,7 +7,7 @@ import {
 import { FieldPlaceholder } from "../../components/field-placeholder/index.ts";
 
 /**
- * A bridge loaded on first render, with a `FieldPlaceholder` until it arrives,
+ * A connector loaded on first render, with a `FieldPlaceholder` until it arrives,
  * so a form that never renders it never downloads it. Register it in
  * `app-form.tsx` with its type spelled out.
  *

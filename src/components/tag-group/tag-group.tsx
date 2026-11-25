@@ -11,6 +11,8 @@ import {
 	type TagProps as AriaTagProps,
 } from "react-aria-components";
 import type { Tone, ToneVariant } from "../../lib/tone.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { Tooltip } from "../tooltip/tooltip.tsx";
 import style from "./tag-group.module.scss";
 
@@ -84,31 +86,30 @@ export type TagGroupRemoveProps = Omit<
 	"slot" | "children" | "className"
 > &
 	Readonly<{
-		/** The action's name, such as "Remove", surfaced as the tooltip hint; the button is named by it followed by its tag. */
-		label: string;
-		/** The glyph, such as a cross. */
-		children: ReactNode;
 		className?: string;
 	}>;
 
-/** The tag's icon-only remove button, named by `label` and its tag, and left out of the tab order. */
+/** The tag's icon-only remove button, named by the `CopyProvider`'s `remove` and its tag, and left out of the tab order. */
 const Remove = ({
-	label,
 	className,
-	children,
 	...props
-}: TagGroupRemoveProps): ReactNode => (
-	<Tooltip content={label}>
-		<AriaButton
-			slot="remove"
-			excludeFromTabOrder
-			aria-label={label}
-			className={clsx(style.remove, className)}
-			{...props}>
-			{children}
-		</AriaButton>
-	</Tooltip>
-);
+}: TagGroupRemoveProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
+
+	return (
+		<Tooltip content={copy.remove}>
+			<AriaButton
+				slot="remove"
+				excludeFromTabOrder
+				aria-label={copy.remove}
+				className={clsx(style.remove, className)}
+				{...props}>
+				{icons.remove}
+			</AriaButton>
+		</Tooltip>
+	);
+};
 
 type TagGroupParts = Readonly<{
 	Root: typeof Root;
@@ -129,7 +130,7 @@ type TagGroupParts = Readonly<{
  * 		{filter => (
  * 			<TagGroup.Tag id={filter.id} textValue={filter.label}>
  * 				{filter.label}
- * 				<TagGroup.Remove label="Remove"><CloseIcon /></TagGroup.Remove>
+ * 				<TagGroup.Remove />
  * 			</TagGroup.Tag>
  * 		)}
  * 	</TagGroup.List>

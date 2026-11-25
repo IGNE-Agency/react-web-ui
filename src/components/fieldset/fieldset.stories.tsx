@@ -26,7 +26,6 @@ import style from "./fieldset.stories.module.scss";
 
 const LEGEND = "Address";
 const DESCRIPTION = "We send the invoice to this address.";
-const OPTIONAL_LABEL = "optional";
 const POSTAL_CODE_LABEL = "Postal code";
 const POSTAL_CODE_DESCRIPTION = "For example 1234 AB.";
 const HOUSE_NUMBER_LABEL = "House number";
@@ -133,7 +132,6 @@ const AddressForm = ({
 							label={POSTAL_CODE_LABEL}
 							description={POSTAL_CODE_DESCRIPTION}
 							requiredness="required"
-							optionalLabel={OPTIONAL_LABEL}
 							autoComplete="postal-code"
 						/>
 					)}
@@ -143,7 +141,6 @@ const AddressForm = ({
 						<field.TextField
 							label={houseNumberLabel}
 							requiredness="required"
-							optionalLabel={OPTIONAL_LABEL}
 						/>
 					)}
 				</form.AppField>
@@ -154,7 +151,6 @@ const AddressForm = ({
 							labelHidden={additionLabelHidden}
 							maxLength={additionMaxLength}
 							requiredness="optional"
-							optionalLabel={OPTIONAL_LABEL}
 						/>
 					)}
 				</form.AppField>
@@ -201,7 +197,6 @@ const meta = {
 	args: {
 		legend: LEGEND,
 		description: DESCRIPTION,
-		optionalLabel: OPTIONAL_LABEL,
 		children: null,
 	},
 } satisfies Meta<typeof FieldGroup>;
@@ -424,10 +419,7 @@ const RawAddressField = ({
 			onValueChange={field.handleChange}
 			className={style.customField}>
 			<TextInput.Label className={style.customLabel}>
-				{label}{" "}
-				<Field.Requiredness
-					optionalLabel={OPTIONAL_LABEL}
-				/>
+				{label} <Field.Requiredness />
 			</TextInput.Label>
 			<TextInput.Group className={style.customControl}>
 				<TextInput.Input name={name} onBlur={onBlur} />
@@ -440,7 +432,6 @@ const RawAddressField = ({
 const CustomLayoutForm = ({
 	legend,
 	requiredness,
-	optionalLabel,
 }: FieldGroupProps): ReactElement => {
 	const form = useAppForm({
 		defaultValues: EMPTY,
@@ -460,10 +451,7 @@ const CustomLayoutForm = ({
 				members={members}
 				requiredness={requiredness}>
 				<Fieldset.Legend>
-					{legend}{" "}
-					<Field.Requiredness
-						optionalLabel={optionalLabel}
-					/>
+					{legend} <Field.Requiredness />
 				</Fieldset.Legend>
 				<div className={style.customRow}>
 					<form.AppField name="postalCode">
@@ -496,7 +484,7 @@ export const CustomLayout: Story = {
 		docs: {
 			description: {
 				story:
-					"`FieldGroup`, `TextField` and the other shorthands are for the common case. A custom layout drops to the raw tier: `Fieldset` and each control's raw parts, bound with `useConnectedField`, placed by the app's own CSS. Here the row is a grid whose rows the CSS names (`label`, `control`), each field a `minmax(0, 1fr)` column on a subgrid, and each part placed on its named row.",
+					"`FieldGroup`, `TextField` and the other prefabs are for the common case. A custom layout drops to the primitives: `Fieldset` and each control's primitive, connected with `useConnectedField`, placed by the app's own CSS. Here the row is a grid whose rows the CSS names (`label`, `control`), each field a `minmax(0, 1fr)` column on a subgrid, and each part placed on its named row.",
 			},
 		},
 	},

@@ -15,12 +15,7 @@ import * as FormStories from "./form.stories.tsx";
 ```tsx
 <Form.Root form={form}>
 	<form.AppField name="email">
-		{field => (
-			<field.EmailField
-				label="Email"
-				optionalLabel="optional"
-			/>
-		)}
+		{field => <field.EmailField label="Email" />}
 	</form.AppField>
 	<Form.Errors />
 	<Form.Submit busyLabel="Signing in">Sign in</Form.Submit>

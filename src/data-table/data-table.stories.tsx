@@ -9,10 +9,8 @@ import FilterIcon from "@material-design-icons/svg/outlined/filter_alt.svg?react
 import FilterOffIcon from "@material-design-icons/svg/outlined/filter_alt_off.svg?react";
 import FirstPageIcon from "@material-design-icons/svg/outlined/first_page.svg?react";
 import LastPageIcon from "@material-design-icons/svg/outlined/last_page.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import RestoreIcon from "@material-design-icons/svg/outlined/restore.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
-import UnfoldMoreIcon from "@material-design-icons/svg/outlined/unfold_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	QueryClient,
@@ -43,10 +41,7 @@ import { Drawer } from "../components/drawer/drawer.tsx";
 import { FilterBar } from "../components/filter-bar/filter-bar.tsx";
 import { Icon } from "../components/icon/icon.tsx";
 import { useLocale } from "../components/locale-provider/index.ts";
-import {
-	Pagination,
-	type PaginationPage,
-} from "../components/pagination/pagination.tsx";
+import { Pagination } from "../components/pagination/pagination.tsx";
 import { Select } from "../components/select-field/select.tsx";
 import { SelectField } from "../components/select-field/select-field.tsx";
 import { Stale } from "../components/stale/stale.tsx";
@@ -56,6 +51,7 @@ import {
 } from "../data-view/use-data-view.ts";
 import { useRowSelection } from "../lib/hooks/use-row-selection.ts";
 import { memoryStorage } from "../lib/storybook/memory-storage.ts";
+import { STORY_COPY } from "../lib/storybook/story-providers.tsx";
 import { roleGone } from "../lib/storybook/waits.ts";
 import { withQueryClient } from "../lib/storybook/with-query-client.tsx";
 import {
@@ -92,34 +88,33 @@ const REOPEN_LABEL = "Reopen the table";
 const EMPTY_STATE = "No invoices yet.";
 const ERROR_LABEL = "The invoices could not be loaded.";
 const LOADING_LABEL = "Loading invoices";
-const SLOW_LABEL = "This is taking longer than usual.";
-const RETRY_LABEL = "Try again";
-const PAGE_SIZE_LABEL = "Rows per page";
-const FIRST_LABEL = "First page";
-const PREVIOUS_LABEL = "Previous page";
-const NEXT_LABEL = "Next page";
-const LAST_LABEL = "Last page";
-const SELECT_PAGE_LABEL = "Select page";
-const SELECT_ROW_LABEL = "Select row";
-const CLEAR_SELECTION_LABEL = "Clear selection";
+const SLOW_LABEL = STORY_COPY.table.slow;
+const RETRY_LABEL = STORY_COPY.retry;
+const {
+	pageSize: PAGE_SIZE_LABEL,
+	first: FIRST_LABEL,
+	previous: PREVIOUS_LABEL,
+	next: NEXT_LABEL,
+	last: LAST_LABEL,
+} = STORY_COPY.pagination;
+const {
+	selectPage: SELECT_PAGE_LABEL,
+	selectRow: SELECT_ROW_LABEL,
+	clearSelection: CLEAR_SELECTION_LABEL,
+	selected: selectedLabel,
+	selectAll: selectAllLabel,
+} = STORY_COPY.table;
 const FILTERS_LABEL = "Filters";
 const FILTERS_TITLE = "Filter invoices";
 const APPLY_LABEL = "Apply";
 const CLEAR_ALL_LABEL = "Clear filters";
 
 const pageText = (page: number, pageCount: number) =>
-	`Page ${page} of ${pageCount}`;
-
-const indexLabel = ({
-	pageIndex,
-	pageCount,
-}: PaginationPage) => pageText(pageIndex + 1, pageCount);
-
-const selectedLabel = (selected: number, total: number) =>
-	`${selected} of ${total} selected`;
-
-const selectAllLabel = (total: number) =>
-	`Select all ${total}`;
+	STORY_COPY.pagination.index({
+		pageIndex: page - 1,
+		pageCount,
+		pageSize: PAGE_SIZE,
+	});
 
 const invoicesTotal = (count: number) =>
 	`${count} invoices`;
@@ -200,10 +195,6 @@ const dataColumns: Array<
 
 const selectColumn = selectionColumn<Invoice>({
 	sticky: "start",
-	selectPageLabel: SELECT_PAGE_LABEL,
-	selectRowLabel: SELECT_ROW_LABEL,
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
 });
 
 const selectableColumns = [selectColumn, ...dataColumns];
@@ -221,18 +212,12 @@ const sortAscendingIcon = (
 const sortDescendingIcon = (
 	<Icon svg={ArrowDownwardIcon} label="" />
 );
-const unsortedIcon = <Icon svg={UnfoldMoreIcon} label="" />;
 
 const TableContent = () => (
 	<DataTable.Content
 		emptyState={EMPTY_STATE}
 		errorLabel={ERROR_LABEL}
 		loadingLabel={LOADING_LABEL}
-		slowLabel={SLOW_LABEL}
-		retryLabel={RETRY_LABEL}
-		sortAscendingIcon={sortAscendingIcon}
-		sortDescendingIcon={sortDescendingIcon}
-		unsortedIcon={unsortedIcon}
 	/>
 );
 
@@ -327,17 +312,13 @@ const TablePagination = () => (
 				<Select.Positioner>
 					<Select.Popup>
 						<Select.List>
-							<Select.Items
-								checkIcon={
-									<Icon svg={CheckIcon} label="" />
-								}
-							/>
+							<Select.Items />
 						</Select.List>
 					</Select.Popup>
 				</Select.Positioner>
 			</Select.Portal>
 		</Pagination.PageSize>
-		<Pagination.Index label={indexLabel} />
+		<Pagination.Index />
 		<Pagination.Controls>
 			<Pagination.First
 				render={
@@ -381,9 +362,6 @@ const SelectionBar = ({ totalRows }: SelectionBarProps) => (
 	<DataTable.SelectionBar
 		totalRows={totalRows}
 		total={invoicesTotal(totalRows)}
-		countLabel={selectedLabel}
-		clearLabel={CLEAR_SELECTION_LABEL}
-		selectAllLabel={selectAllLabel}
 	/>
 );
 
@@ -581,10 +559,7 @@ const DataViewTable = ({
 			<FilterBar.Root filters={filters}>
 				<FilterBar.Search
 					label="Search by client"
-					clearLabel="Clear search"
-					clearIcon={<Icon svg={CloseIcon} label="" />}
 					icon={<Icon svg={SearchIcon} label="" />}
-					optionalLabel="optional"
 				/>
 				<FilterBar.Drawer swipeDirection="right">
 					<FilterBar.Trigger
@@ -608,17 +583,8 @@ const DataViewTable = ({
 						<FilterBar.Fields>
 							<SelectField
 								label={CLIENT_FILTER_LABEL}
-								optionalLabel="optional"
 								options={CLIENT_OPTIONS}
 								value={filters.draft.client ?? ""}
-								loadingLabel="Loading clients…"
-								loadFailedLabel="Clients could not be loaded."
-								loadBrokenLabel="Clients could not be loaded, and trying again won't help."
-								retryLabel={RETRY_LABEL}
-								noOptionsLabel="No clients."
-								checkIcon={
-									<Icon svg={CheckIcon} label="" />
-								}
 								onValueChange={next => {
 									filters.setDraft(
 										"client",
@@ -648,8 +614,6 @@ const DataViewTable = ({
 							}),
 						}}
 						label="Active filters"
-						removeLabel="Remove"
-						removeIcon={<Icon svg={CloseIcon} label="" />}
 					/>
 					<FilterBar.ClearAll
 						icon={<Icon svg={FilterOffIcon} label="" />}>

@@ -5,7 +5,7 @@ import {
 } from "../../lib/forms/use-connected-field.ts";
 import type { TextPresetProps } from "./text-preset.ts";
 
-/** The props a text preset's bridge takes: the preset's own, less what the form supplies. */
+/** The props a text preset's connector takes: the preset's own, less what the form supplies. */
 export type TSFTextPresetProps<TExtra extends object> =
 	Omit<
 		TextPresetProps,
@@ -14,7 +14,7 @@ export type TSFTextPresetProps<TExtra extends object> =
 		TExtra;
 
 /**
- * Wraps a text preset as a TanStack Form bridge. The format is the preset's;
+ * Wraps a text preset as a TanStack Form connector. The format is the preset's;
  * the rule behind it belongs to the form's schema.
  *
  * @example

@@ -1,6 +1,6 @@
 # @igne-agency/react-web-ui
 
-IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control in three tiers with a TanStack Form bridge, and DTCG design tokens that each app themes. It is the web counterpart of `@igne-agency/react-native-ui`, with the same names and semantics where both have the concept.
+IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control as a primitive, a prefab and a TanStack Form connector, and DTCG design tokens that each app themes. It is the web counterpart of `@igne-agency/react-native-ui`, with the same names and semantics where both have the concept.
 
 The package ships built ESM, one module per source file, each importing only its own CSS. An app needs no Vite, Sass or React Compiler configuration for it.
 
@@ -135,16 +135,7 @@ The kit owns no breakpoints and no gutters; those are the app's layout.
 
 ## Icons
 
-The kit renders no icons and depends on no icon set. Wherever a component shows one, it leaves a slot the app fills from its own set: a part's children, or, on a ready-made component, a prop named for the icon's job (`icon`, `closeIcon`, `expandIcon`). The slot sizes the glyph to its text and colours it, so an SVG drawn at `1em` in `currentColor` fits as is. A slot is required only where the icon is all the control shows, such as a close button's cross; anywhere else, left out, nothing renders.
-
-```tsx
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
-import { Select } from "@igne-agency/react-web-ui/select-field";
-
-<Select.Icon>
-	<ExpandMoreIcon />
-</Select.Icon>;
-```
+The kit renders no icons and depends on no icon set. The icons its components show on their own, such as a checkbox's tick or a clear button's cross, the app hands it once through `IconProvider` (below). Any other icon goes in a part's children or a ready-made component's `icon` prop. A glyph drawn at `1em` in `currentColor` fits as is.
 
 `Icon`, from `./icon`, sizes and labels any SVG component: `label=""` hides a glyph that stands beside its word, and a label names one that stands alone.
 
@@ -153,43 +144,47 @@ import { Select } from "@igne-agency/react-web-ui/select-field";
 The kit has no catch-all provider. Wrap the app in the ones it uses:
 
 ```tsx
+import { CopyProvider } from "@igne-agency/react-web-ui/copy-provider";
+import { IconProvider } from "@igne-agency/react-web-ui/icon-provider";
 import { LocaleProvider } from "@igne-agency/react-web-ui/locale-provider";
 import { TimeZoneProvider } from "@igne-agency/react-web-ui/time-zone-provider";
 import { ToastProvider } from "@igne-agency/react-web-ui/toast";
 import { Tooltip } from "@igne-agency/react-web-ui/tooltip";
-import CloseIcon from "./icons/close.svg?react";
+import { copy } from "./copy.ts";
+import { icons } from "./icons.tsx";
 
 export const Providers = ({
 	children,
 }: Readonly<{ children: React.ReactNode }>) => (
 	<LocaleProvider locale="nl-NL">
 		<TimeZoneProvider timeZone="Europe/Amsterdam">
-			<Tooltip.Provider>
-				<ToastProvider
-					closeLabel="Close"
-					closeIcon={<CloseIcon />}
-					viewportLabel="Notifications">
-					{children}
-				</ToastProvider>
-			</Tooltip.Provider>
+			<CopyProvider copy={copy}>
+				<IconProvider icons={icons}>
+					<Tooltip.Provider>
+						<ToastProvider>{children}</ToastProvider>
+					</Tooltip.Provider>
+				</IconProvider>
+			</CopyProvider>
 		</TimeZoneProvider>
 	</LocaleProvider>
 );
 ```
 
-`LocaleProvider` takes a BCP 47 locale and `TimeZoneProvider` an IANA time zone. Both are required: `useLocale()` and `useTimeZone()` throw outside them, and nothing falls back to the device.
+- `LocaleProvider` takes a BCP 47 locale, and `TimeZoneProvider` an IANA time zone.
+- `CopyProvider` takes a `KitCopy`: every string the kit's components say on their own, in the app's language. The kit ships no copy.
+- `IconProvider` takes a `KitIcons`: every icon the kit's components show on their own.
 
-The kit has no copy of its own. Every string a component shows or announces is a prop named for what it says, such as `clearLabel` or `retryLabel`, so the app passes its own translations.
+All four are required. Their hooks throw outside them, and nothing falls back to the device or to English. `ToastProvider` sits inside the copy and icon providers. The providers are the only source of that vocabulary: no component takes a prop that overrides it for one instance. Copy that differs per instance, such as a field's label or a confirm dialog's buttons, is a required prop of its own.
 
 ## Forms
 
 Every control comes in three tiers:
 
-- the raw compound, such as `TextInput` or `Select`
-- the field shorthand with label, description and errors, such as `TextField` or `SelectField`
-- the TanStack Form bridge, such as `TSFTextField`, which the app registers on its form hook
+- the primitive, such as `TextInput` or `Select`
+- the prefab with label, description and errors, such as `TextField` or `SelectField`
+- the TanStack Form connector, such as `TSFTextField`, which the app registers on its form hook
 
-`createAppForm` builds the app's form hook from the bridges it registers, once, in a module of the app's own. A form reaches each bridge through `form.AppField` under its key, and loads the code and CSS of those bridges only:
+`createAppForm` builds the app's form hook from the connectors it registers, once, in a module of the app's own. A form reaches each connector through `form.AppField` under its key, and loads the code and CSS of those connectors only:
 
 ```ts
 // src/form.ts
@@ -217,7 +212,6 @@ const SignUp = () => {
 					<field.EmailField
 						label="Email"
 						requiredness="required"
-						optionalLabel="optional"
 					/>
 				)}
 			</form.AppField>
@@ -246,14 +240,12 @@ export const { useAppForm, withForm, withFieldGroup } =
 ```tsx
 <form.FieldGroup
 	legend="Address"
-	optionalLabel="optional"
 	names={["postalCode", "houseNumber"]}>
 	<form.AppField name="postalCode">
 		{field => (
 			<field.TextField
 				label="Postal code"
 				requiredness="required"
-				optionalLabel="optional"
 			/>
 		)}
 	</form.AppField>
@@ -262,7 +254,6 @@ export const { useAppForm, withForm, withFieldGroup } =
 			<field.TextField
 				label="House number"
 				requiredness="required"
-				optionalLabel="optional"
 			/>
 		)}
 	</form.AppField>

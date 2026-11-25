@@ -18,7 +18,6 @@ import {
 } from "./switch-field.tsx";
 
 const LABEL = "Email me about new messages";
-const OPTIONAL_LABEL = "optional";
 
 const checkedChange =
 	fn<NonNullable<SwitchFieldProps["onCheckedChange"]>>();
@@ -53,7 +52,6 @@ const meta = {
 	render: ControlledSwitchField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},

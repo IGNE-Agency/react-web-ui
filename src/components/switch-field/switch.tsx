@@ -132,7 +132,7 @@ export type SwitchParts = Readonly<{
  * 			<Switch.Thumb />
  * 		</Switch.Control>
  * 		<Field.InlineLabelText>Email me about new messages <Field.RequiredMark /></Field.InlineLabelText>
- * 		<Field.InlineOptional optionalLabel="optional" />
+ * 		<Field.InlineOptional />
  * 	</Switch.Label>
  * </Switch.Root>
  */

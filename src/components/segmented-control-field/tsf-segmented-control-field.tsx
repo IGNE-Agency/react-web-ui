@@ -14,13 +14,13 @@ export type TSFSegmentedControlFieldProps = Omit<
 >;
 
 /**
- * `SegmentedControlField` bound to the TanStack Form field it renders in, whose
+ * `SegmentedControlField` connected to the TanStack Form field it renders in, whose
  * value is the chosen option's value or `null`. Reach it as
  * `field.SegmentedControlField` inside `form.AppField`.
  *
  * @example
  * <form.AppField name="view">
- * 	{field => <field.SegmentedControlField label="View" optionalLabel="optional" options={views} />}
+ * 	{field => <field.SegmentedControlField label="View" options={views} />}
  * </form.AppField>
  */
 export const TSFSegmentedControlField = (

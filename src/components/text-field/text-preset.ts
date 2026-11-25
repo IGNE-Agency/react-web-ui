@@ -11,7 +11,6 @@ export type TextPresetProps = Pick<
 	| "description"
 	| "errors"
 	| "requiredness"
-	| "optionalLabel"
 	| "dirty"
 	| "touched"
 	| "pending"

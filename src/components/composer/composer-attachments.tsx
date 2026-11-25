@@ -9,6 +9,8 @@ import {
 } from "react-aria-components";
 import { formatBytes } from "../../lib/format-bytes.ts";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import {
 	type ComposerAttachment,
@@ -23,22 +25,18 @@ const isOversized = (
 	maxFileSize !== undefined && file.size > maxFileSize;
 
 export type ComposerAttachButtonProps = Readonly<{
-	/** The button's accessible name and tooltip, such as "Add attachment". */
-	label: string;
 	/** The MIME types and extensions the file picker offers. */
 	accept?: readonly string[];
-	/** The attach glyph. */
-	children: ReactNode;
 	className?: string;
 }>;
 
-/** An icon button, its children the glyph, that opens the file picker and stages what is picked. */
+/** An icon button that opens the file picker and stages what is picked. */
 export const ComposerAttachButton = ({
-	label,
 	accept,
-	children,
 	className,
 }: ComposerAttachButtonProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { addFiles, disabled } = useComposerContext();
 
 	return (
@@ -55,9 +53,9 @@ export const ComposerAttachButton = ({
 				variant="tertiary"
 				size="md"
 				disabled={disabled}
-				label={label}
+				label={copy.composer.attach}
 				render={<AriaButton isDisabled={disabled} />}>
-				{children}
+				{icons.attach}
 			</IconButton>
 		</AriaFileTrigger>
 	);
@@ -95,8 +93,7 @@ export type ComposerAttachmentsProps = Readonly<{
  * 			id={attachment.id}
  * 			file={attachment.file}
  * 			hint={`${attachment.file.name} (${size})`}
- * 			removeLabel="Remove"
- * 			removeIcon={<CloseIcon />}
+ * 			removable
  * 			invalid={oversized}
  * 			disabled={disabled}
  * 		/>
@@ -153,18 +150,12 @@ export const ComposerAttachments = ({
 	);
 };
 
-export type ComposerAttachmentsErrorProps = Readonly<{
-	/** The alert, from the formatted `maxFileSize`, such as "Files over 5 MB must be removed before sending." */
-	tooLargeError: (maxSize: string) => string;
-}>;
-
 /**
- * An alert while any staged file is over `maxFileSize`. Renders nothing while
- * every file fits.
+ * An alert, the `CopyProvider`'s `files.tooLarge`, while any staged file is
+ * over `maxFileSize`. Renders nothing while every file fits.
  */
-export const ComposerAttachmentsError = ({
-	tooLargeError,
-}: ComposerAttachmentsErrorProps): ReactNode => {
+export const ComposerAttachmentsError = (): ReactNode => {
+	const copy = useCopy();
 	const locale = useLocale();
 	const { attachments, maxFileSize } = useComposerContext();
 
@@ -179,7 +170,9 @@ export const ComposerAttachmentsError = ({
 
 	return (
 		<p role="alert" className={style.attachmentsError}>
-			{tooLargeError(formatBytes(maxFileSize, locale))}
+			{copy.files.tooLarge(
+				formatBytes(maxFileSize, locale),
+			)}
 		</p>
 	);
 };

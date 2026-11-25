@@ -10,10 +10,12 @@ import {
 import { lengthTone } from "../../lib/text-length.ts";
 import { AttachmentTile } from "../attachment-tile/index.ts";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	fieldStateAttributes,
 	useFieldFocus,
 } from "../field/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	type ComposerAttachment,
 	type ComposerContent,
@@ -32,7 +34,6 @@ import {
 	type ComposerAttachButtonProps,
 	ComposerAttachments,
 	ComposerAttachmentsError,
-	type ComposerAttachmentsErrorProps,
 	type ComposerAttachmentsProps,
 } from "./composer-attachments.tsx";
 import {
@@ -282,60 +283,41 @@ const MaxLength = ({
 };
 
 export type ComposerSendButtonProps = Readonly<{
-	/** The button's accessible name and tooltip, such as "Send". */
-	label: string;
 	/** @default "primary" */
 	variant?: "primary" | "secondary";
-	/** The send glyph. */
-	children: ReactNode;
 }> &
 	Omit<ComponentProps<"button">, "children">;
 
-/** The icon button that sends the message, its children the glyph; disabled while it can't be sent. */
+/** The icon button that sends the message; disabled while it can't be sent. */
 const SendButton = ({
-	label,
 	variant = "primary",
-	children,
 	...props
 }: ComposerSendButtonProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { submit, canSend } = useComposerContext();
 
 	return (
 		<IconButton
 			variant={variant}
 			size="md"
-			label={label}
+			label={copy.composer.send}
 			disabled={!canSend}
 			onClick={() => {
 				void submit();
 			}}
 			{...props}>
-			{children}
+			{icons.send}
 		</IconButton>
 	);
 };
 
-/** The attachment controls the `Composer` prefab renders, and what they say. */
+/** The attachment controls the `Composer` prefab renders. */
 export type ComposerAttachmentOptions = Pick<
 	ComposerAttachmentsProps,
 	"label"
 > &
-	ComposerAttachmentsErrorProps &
-	Readonly<{
-		/** Each tile's remove button's accessible name, such as "Remove". */
-		removeLabel: string;
-		/** Each tile's remove glyph. */
-		removeIcon: ReactNode;
-		/** A tile's file-type glyph. Left out, a tile that is not an image shows only the file's extension. */
-		fileIcon?: ReactNode;
-		/** A tile's tooltip, from the file's name and formatted size. */
-		fileHint: (name: string, size: string) => string;
-		/** The attach button's accessible name and tooltip, such as "Add attachment". */
-		attachLabel: string;
-		/** The attach button's glyph. */
-		attachIcon: ReactNode;
-		accept?: ComposerAttachButtonProps["accept"];
-	}>;
+	Pick<ComposerAttachButtonProps, "accept">;
 
 export type ComposerProps = Omit<
 	ComposerRootProps,
@@ -349,10 +331,6 @@ export type ComposerProps = Omit<
 		mentions?: ComposerMentionsProps;
 		/** The staged files and the button that adds them, where the composer takes attachments. */
 		attachments?: ComposerAttachmentOptions;
-		/** The send button's accessible name and tooltip, such as "Send". */
-		sendLabel: string;
-		/** The send button's glyph. */
-		sendIcon: ReactNode;
 	}>;
 
 const Prefab = ({
@@ -362,61 +340,62 @@ const Prefab = ({
 	maxLines,
 	mentions,
 	attachments,
-	sendLabel,
-	sendIcon,
 	...props
-}: ComposerProps): ReactNode => (
-	<Root {...props}>
-		{attachments === undefined ? null : (
-			<>
-				<ComposerAttachments label={attachments.label}>
-					{(attachment, { oversized, size, disabled }) => (
-						<AttachmentTile
-							id={attachment.id}
-							file={attachment.file}
-							hint={attachments.fileHint(
-								attachment.file.name,
-								size,
-							)}
-							removeLabel={attachments.removeLabel}
-							removeIcon={attachments.removeIcon}
-							icon={attachments.fileIcon}
-							invalid={oversized}
-							disabled={disabled}
-						/>
-					)}
-				</ComposerAttachments>
-				<ComposerAttachmentsError
-					tooLargeError={attachments.tooLargeError}
-				/>
-			</>
-		)}
-		<ComposerEditor
-			label={label}
-			minLines={minLines}
-			maxLines={maxLines}>
-			{placeholder === undefined ? null : (
-				<ComposerPlaceholder>
-					{placeholder}
-				</ComposerPlaceholder>
-			)}
-			{mentions === undefined ? null : (
-				<ComposerMentions {...mentions} />
-			)}
-		</ComposerEditor>
-		<Toolbar>
-			<MaxLength />
+}: ComposerProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
+
+	return (
+		<Root {...props}>
 			{attachments === undefined ? null : (
-				<ComposerAttachButton
-					label={attachments.attachLabel}
-					accept={attachments.accept}>
-					{attachments.attachIcon}
-				</ComposerAttachButton>
+				<>
+					<ComposerAttachments label={attachments.label}>
+						{(
+							attachment,
+							{ oversized, size, disabled },
+						) => (
+							<AttachmentTile
+								id={attachment.id}
+								file={attachment.file}
+								hint={copy.files.fileHint(
+									attachment.file.name,
+									size,
+								)}
+								removable
+								icon={icons.file}
+								invalid={oversized}
+								disabled={disabled}
+							/>
+						)}
+					</ComposerAttachments>
+					<ComposerAttachmentsError />
+				</>
 			)}
-			<SendButton label={sendLabel}>{sendIcon}</SendButton>
-		</Toolbar>
-	</Root>
-);
+			<ComposerEditor
+				label={label}
+				minLines={minLines}
+				maxLines={maxLines}>
+				{placeholder === undefined ? null : (
+					<ComposerPlaceholder>
+						{placeholder}
+					</ComposerPlaceholder>
+				)}
+				{mentions === undefined ? null : (
+					<ComposerMentions {...mentions} />
+				)}
+			</ComposerEditor>
+			<Toolbar>
+				<MaxLength />
+				{attachments === undefined ? null : (
+					<ComposerAttachButton
+						accept={attachments.accept}
+					/>
+				)}
+				<SendButton />
+			</Toolbar>
+		</Root>
+	);
+};
 
 /** The parts of a composer, hanging off its prefab. */
 export type ComposerParts = typeof Prefab &
@@ -446,8 +425,6 @@ export type ComposerParts = typeof Prefab &
  * 	onSend={send}
  * 	maxLength={2000}
  * 	mentions={{ label: "People to mention", sources: [people] }}
- * 	sendLabel="Send"
- * 	sendIcon={<SendIcon />}
  * />
  */
 export const Composer: ComposerParts = Object.assign(

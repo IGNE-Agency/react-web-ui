@@ -1,8 +1,6 @@
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
 import { useArgs } from "storybook/preview-api";
@@ -18,6 +16,7 @@ import {
 	focusedDay,
 	focusReturnsTo,
 } from "../../lib/storybook/calendar.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { useRef } from "react";
 import { Temporal } from "temporal-polyfill";
@@ -38,10 +37,7 @@ const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
 const MONTH_END = DAY.with({ day: DAY.daysInMonth });
 const LABEL = "Service date";
-const OPEN_CALENDAR = "Open calendar";
-const PREVIOUS_MONTH = "Previous month";
-const NEXT_MONTH = "Next month";
-const TRIGGER_NAME = `${OPEN_CALENDAR} ${LABEL}`;
+const TRIGGER_NAME = `${STORY_COPY.calendar.open} ${LABEL}`;
 
 const FAR_ZONE = "Pacific/Kiritimati";
 const NOON_UTC = "2026-07-24T12:30:00Z";
@@ -94,7 +90,7 @@ const ComposedDateInput = () => {
 								ref={triggerRef}
 								render={
 									<IconButton
-										label={OPEN_CALENDAR}
+										label={STORY_COPY.calendar.open}
 										variant="tertiary"
 										size="sm">
 										<Icon
@@ -112,7 +108,10 @@ const ComposedDateInput = () => {
 										<DateInput.Previous
 											render={
 												<IconButton
-													label={PREVIOUS_MONTH}
+													label={
+														STORY_COPY.calendar
+															.previousMonth
+													}
 													variant="tertiary">
 													<Icon
 														svg={ChevronLeftIcon}
@@ -125,7 +124,9 @@ const ComposedDateInput = () => {
 										<DateInput.Next
 											render={
 												<IconButton
-													label={NEXT_MONTH}
+													label={
+														STORY_COPY.calendar.nextMonth
+													}
 													variant="tertiary">
 													<Icon
 														svg={ChevronRightIcon}
@@ -181,20 +182,6 @@ const meta = {
 	render: ControlledDateField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
-		openCalendarLabel: OPEN_CALENDAR,
-		openCalendarIcon: (
-			<Icon svg={CalendarTodayIcon} label="" />
-		),
-		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
-		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-		previousMonthLabel: PREVIOUS_MONTH,
-		nextMonthLabel: NEXT_MONTH,
-		monthLabel: "Month",
-		yearLabel: "Year",
-		noMatchingYearLabel: "No matching year.",
 		value: null,
 		onValueChange: fn(),
 	},
@@ -277,7 +264,7 @@ export const Composed: Story = {
 		docs: {
 			description: {
 				story:
-					"The raw parts, composed by hand with a heading between the month steppers in place of the month and year pickers.",
+					"The primitive's parts, composed by hand with a heading between the month steppers in place of the month and year pickers.",
 			},
 		},
 	},
@@ -297,7 +284,7 @@ export const ComposedCalendar: Story = {
 		).toHaveTextContent(String(DAY.year));
 		await userEvent.click(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		);
 		await userEvent.click(
@@ -331,12 +318,12 @@ export const Constrained: Story = {
 
 		await expect(
 			within(popup).getByRole("button", {
-				name: PREVIOUS_MONTH,
+				name: STORY_COPY.calendar.previousMonth,
 			}),
 		).toBeDisabled();
 		await expect(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		).toBeDisabled();
 	},
@@ -466,7 +453,7 @@ export const PickerKeyboard: Story = {
 		await userEvent.tab({ shift: true });
 		await expect(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		).toHaveFocus();
 		await userEvent.keyboard("{Enter}");
@@ -497,7 +484,7 @@ export const PickerMouse: Story = {
 		const popup = await calendar();
 		await userEvent.click(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		);
 		await userEvent.click(
@@ -517,7 +504,7 @@ export const PickerMouse: Story = {
 		const reopened = await calendar();
 		await userEvent.click(
 			within(reopened).getByRole("button", {
-				name: PREVIOUS_MONTH,
+				name: STORY_COPY.calendar.previousMonth,
 			}),
 		);
 		await userEvent.click(dayButton(reopened, DAY));

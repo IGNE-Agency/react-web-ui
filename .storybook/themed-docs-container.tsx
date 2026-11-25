@@ -5,6 +5,7 @@ import {
 } from "react";
 import { brandThemes } from "./brand-theme.ts";
 import { DocsFooter } from "./docs-links/docs-footer.tsx";
+import { DocsProviders } from "./story-icons.tsx";
 import { useSectionScroll } from "./section-scroll.ts";
 
 const subscribe = (onChange: () => void) => {
@@ -23,7 +24,7 @@ const currentTheme = () =>
 
 /**
  * Storybook's docs container in the theme the toolbar has set on the document,
- * scrolled to the section a link named, with the page's links and neighbours
+ * inside the kit providers every story has, scrolled to the section a link named, with the page's links and neighbours
  * at its end.
  *
  * @example
@@ -39,7 +40,7 @@ export const ThemedDocsContainer = (
 	useSectionScroll(window.parent.location.href);
 	return (
 		<DocsContainer {...props} theme={brandThemes[theme]}>
-			{props.children}
+			<DocsProviders>{props.children}</DocsProviders>
 			<DocsFooter />
 		</DocsContainer>
 	);

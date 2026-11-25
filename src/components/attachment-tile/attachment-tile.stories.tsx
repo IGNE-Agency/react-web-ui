@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -16,6 +15,7 @@ import {
 	pngFile,
 } from "../../lib/storybook/files.ts";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	AttachmentTile,
 	type AttachmentTileProps,
@@ -24,7 +24,6 @@ import {
 import { Icon } from "../icon/index.ts";
 
 const TILE_ID = "invoice";
-const REMOVE = "Remove";
 const FILES = "Attachments";
 
 const INVOICE = pdfFile("invoice-july.pdf");
@@ -70,8 +69,7 @@ const meta = {
 		id: TILE_ID,
 		file: INVOICE,
 		hint: "invoice-july.pdf (8 B)",
-		removeLabel: REMOVE,
-		removeIcon: <Icon svg={CloseIcon} label="" />,
+		removable: true,
 		icon: mappedArg(ICONS, "document"),
 		invalid: false,
 		disabled: false,
@@ -82,7 +80,6 @@ const meta = {
 			mapping: ICONS,
 			control: "radio",
 		},
-		removeIcon: { control: false },
 	},
 } satisfies Meta<typeof AttachmentTile>;
 
@@ -119,10 +116,12 @@ export const Disabled: Story = {
 };
 
 export const Fixed: Story = {
-	args: { removeLabel: undefined, removeIcon: undefined },
+	args: { removable: false },
 	play: async ({ canvas }) => {
 		await expect(
-			canvas.queryByRole("button", { name: REMOVE }),
+			canvas.queryByRole("button", {
+				name: STORY_COPY.remove,
+			}),
 		).not.toBeInTheDocument();
 	},
 };
@@ -185,7 +184,7 @@ export const Mouse: Story = {
 		await userEvent.click(
 			within(
 				canvas.getByRole("row", { name: INVOICE.name }),
-			).getByRole("button", { name: REMOVE }),
+			).getByRole("button", { name: STORY_COPY.remove }),
 		);
 
 		await expect(removed).toHaveBeenCalledWith(
@@ -201,7 +200,7 @@ export const Touch: Story = {
 			keys: "[TouchA]",
 			target: within(
 				canvas.getByRole("row", { name: INVOICE.name }),
-			).getByRole("button", { name: REMOVE }),
+			).getByRole("button", { name: STORY_COPY.remove }),
 		});
 
 		await expect(removed).toHaveBeenCalledWith(
