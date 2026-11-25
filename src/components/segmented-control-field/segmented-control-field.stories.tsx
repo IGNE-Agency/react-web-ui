@@ -26,9 +26,9 @@ const PAID = { value: "paid", label: "Paid" };
 const STATUS_OPTIONS = [OPEN, SENT, PAID];
 
 const valueChange =
-	fn<(value: string | null) => void>().mockName(
-		"onValueChange",
-	);
+	fn<
+		SegmentedControlFieldProps["onValueChange"]
+	>().mockName("onValueChange");
 
 const ControlledSegmentedControlField = (
 	args: SegmentedControlFieldProps,
@@ -63,10 +63,6 @@ const StatefulSegmentedControlField = (
 		/>
 	);
 };
-
-const PlainSegmentedControlField = (
-	args: SegmentedControlFieldProps,
-) => <SegmentedControlField {...args} />;
 
 const meta = {
 	parameters: {
@@ -103,7 +99,21 @@ type Canvas = ReturnType<typeof within>;
 const option = (
 	canvas: Canvas,
 	name: string,
-): HTMLElement => canvas.getByRole("button", { name });
+): HTMLElement => canvas.getByRole("radio", { name });
+
+const expectChosen = async (
+	canvas: Canvas,
+	name: string,
+): Promise<void> => {
+	await Promise.all(
+		STATUS_OPTIONS.map(({ label }) =>
+			expect(option(canvas, label)).toHaveAttribute(
+				"aria-checked",
+				String(label === name),
+			),
+		),
+	);
+};
 
 export const Empty: Story = {};
 
@@ -129,9 +139,9 @@ export const InBusyForm: Story = {
 	play: async ({ canvas }) => {
 		await Promise.all(
 			STATUS_OPTIONS.map(({ label }) =>
-				expect(
-					canvas.getByRole("button", { name: label }),
-				).toHaveAttribute("data-disabled"),
+				expect(option(canvas, label)).toHaveAttribute(
+					"data-disabled",
+				),
 			),
 		);
 	},
@@ -179,6 +189,11 @@ export const Vertical: Story = {
 
 export const Required: Story = {
 	args: { requiredness: "required" },
+	play: async ({ canvas }) => {
+		await expect(
+			canvas.getByRole("radiogroup"),
+		).toHaveAttribute("aria-required", "true");
+	},
 };
 
 export const Optional: Story = {
@@ -200,12 +215,10 @@ export const ReadOnly: Story = {
 	args: { value: SENT.value, readOnly: true },
 	play: async ({ canvas }) => {
 		await userEvent.tab();
-		await userEvent.keyboard(" ");
-		await userEvent.keyboard("{ArrowRight}{Enter}");
+		await expect(option(canvas, SENT.label)).toHaveFocus();
+		await userEvent.keyboard("{ArrowRight} ");
 
-		await expect(
-			option(canvas, SENT.label),
-		).toHaveAttribute("aria-pressed", "true");
+		await expectChosen(canvas, SENT.label);
 		await expect(valueChange).not.toHaveBeenCalled();
 	},
 };
@@ -217,7 +230,7 @@ export const IndicatorFollows: Story = {
 		const paid = option(canvas, PAID.label);
 		const indicator =
 			paid.parentElement?.querySelector<HTMLElement>(
-				'[aria-hidden="true"]',
+				':scope > span[aria-hidden="true"]',
 			) ?? null;
 		await expect(indicator).not.toBeNull();
 		if (indicator === null) {
@@ -245,42 +258,60 @@ export const IndicatorFollows: Story = {
 
 export const Keyboard: Story = {
 	tags: ["!dev", "!autodocs"],
-	render: PlainSegmentedControlField,
+	render: StatefulSegmentedControlField,
 	play: async ({ canvas }) => {
 		await userEvent.tab();
 		await expect(option(canvas, OPEN.label)).toHaveFocus();
+		await expectChosen(canvas, "");
+
+		await userEvent.keyboard("{Enter}");
+		await expect(valueChange).not.toHaveBeenCalled();
+
+		await userEvent.keyboard(" ");
+		await expectChosen(canvas, OPEN.label);
+		await expect(valueChange).toHaveBeenLastCalledWith(
+			OPEN.value,
+		);
 
 		await userEvent.keyboard("{ArrowRight}");
 		await expect(option(canvas, SENT.label)).toHaveFocus();
-		await userEvent.keyboard(" ");
-		await expect(valueChange).toHaveBeenLastCalledWith(
-			SENT.value,
-		);
+		await expectChosen(canvas, SENT.label);
 
-		await userEvent.keyboard("{ArrowRight}{Enter}");
+		await userEvent.keyboard("{ArrowRight}");
+		await expectChosen(canvas, PAID.label);
+
+		await userEvent.keyboard("{ArrowRight}");
+		await expect(option(canvas, OPEN.label)).toHaveFocus();
+		await expectChosen(canvas, OPEN.label);
+
+		await userEvent.keyboard("{ArrowLeft}");
+		await expectChosen(canvas, PAID.label);
 		await expect(valueChange).toHaveBeenLastCalledWith(
 			PAID.value,
 		);
 
-		await userEvent.keyboard("{ArrowRight}");
-		await expect(option(canvas, OPEN.label)).toHaveFocus();
-		await userEvent.keyboard("{ArrowLeft}");
-		await expect(option(canvas, PAID.label)).toHaveFocus();
-
 		await userEvent.tab();
 		await expect(
-			option(canvas, PAID.label),
-		).not.toHaveFocus();
-		await expect(valueChange).toHaveBeenCalledTimes(2);
+			canvas.getByRole("radiogroup"),
+		).not.toContainElement(
+			document.activeElement instanceof HTMLElement
+				? document.activeElement
+				: null,
+		);
+
+		await userEvent.tab({ shift: true });
+		await expect(option(canvas, PAID.label)).toHaveFocus();
+		await expect(valueChange).toHaveBeenCalledTimes(5);
 	},
 };
 
 export const Mouse: Story = {
 	tags: ["!dev", "!autodocs"],
-	render: PlainSegmentedControlField,
+	render: StatefulSegmentedControlField,
 	play: async ({ canvas }) => {
 		await userEvent.click(option(canvas, PAID.label));
 
+		await expectChosen(canvas, PAID.label);
 		await expect(valueChange).toHaveBeenCalledWith(
 			PAID.value,
 		);
@@ -289,13 +320,14 @@ export const Mouse: Story = {
 
 export const Touch: Story = {
 	tags: ["!dev", "!autodocs"],
-	render: PlainSegmentedControlField,
+	render: StatefulSegmentedControlField,
 	play: async ({ canvas }) => {
 		await userEvent.pointer({
 			keys: "[TouchA]",
 			target: option(canvas, OPEN.label),
 		});
 
+		await expectChosen(canvas, OPEN.label);
 		await expect(valueChange).toHaveBeenCalledWith(
 			OPEN.value,
 		);

@@ -739,7 +739,7 @@ export const ChoicesSubmitted: Story = {
 		await chooseStatus(canvas, "Paid");
 		await chooseOwner(canvas, "Grace");
 		await userEvent.click(
-			canvas.getByRole("button", { name: "Board" }),
+			canvas.getByRole("radio", { name: "Board" }),
 		);
 		await userEvent.click(
 			canvas.getByRole("button", { name: "Monday" }),

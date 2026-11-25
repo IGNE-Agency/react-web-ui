@@ -124,6 +124,7 @@
 			var(--sys-font-label-medium)
 		);
 		cursor: pointer;
+		user-select: none;
 
 		@include focus.ring-projected;
 		@include state.layer;
@@ -151,7 +152,7 @@
 		background: var(--_kit-segmented-control-indicator-bg);
 	}
 
-	.option[data-pressed][data-focus-visible] ~ .indicator {
+	.option[data-checked][data-focus-visible] ~ .indicator {
 		@include focus.ring-shown;
 	}
 
