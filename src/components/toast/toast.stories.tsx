@@ -324,6 +324,39 @@ export const Deduplicated: Story = {
 	},
 };
 
+export const ReplacedByKey: Story = {
+	tags: ["!dev", "!autodocs"],
+	play: async () => {
+		const first = toast.error(SEND_FAILED, {
+			key: "story-invoice",
+			actions: ACTIONS,
+		});
+		const popup = await findToast(SEND_FAILED);
+
+		const second = toast.success(SENT, {
+			key: "story-invoice",
+			timeout: 0,
+		});
+
+		await expect(second).toBe(first);
+		await waitFor(() =>
+			expect(popup).toHaveAccessibleName(SENT),
+		);
+		await expect(popup).toHaveAttribute(
+			"data-tone",
+			"success",
+		);
+		await expect(
+			within(popup).queryByRole("button", {
+				name: RETRY_LABEL,
+			}),
+		).not.toBeInTheDocument();
+		await expect(
+			screen.getAllByRole("dialog"),
+		).toHaveLength(1);
+	},
+};
+
 export const AutoDismiss: Story = {
 	tags: ["!dev", "!autodocs"],
 	render: AutoDismissToast,

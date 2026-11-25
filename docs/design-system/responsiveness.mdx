@@ -422,7 +422,7 @@ A remove on a staged file, a chip's dismiss, a row's own action: none is reveale
 
 <Details title="A surface against an edge pays the safe-area inset">
 
-Its padding on that edge is the larger of the padding it wants and the inset the device reports, so it costs nothing on hardware without one. Shown in [The edge of the glass](#the-edge-of-the-glass).
+Its padding on that edge, or its offset from it, is the larger of the one it wants and the inset the device reports, so it costs nothing on hardware without one. Shown in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The bar's bottom padding grows to clear the home indicator.">
@@ -487,7 +487,7 @@ Nothing comes closer to the screen's edge than the gutter: the wide one from the
 
 <Details title="Full-height uses svh then dvh">
 
-Declare the small viewport unit first as a floor for browsers without the dynamic one, then the dynamic one. Explained in [The edge of the glass](#the-edge-of-the-glass).
+Declare the small viewport unit first as a floor for browsers without the dynamic one, then the dynamic one. A value inside a knob's fallback takes its floor from `@supports not (block-size: 1dvh)` instead: a declaration that reads `var()` is accepted when it is parsed, so it never falls back to the one before it. Explained in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The small unit is the floor, and the dynamic unit replaces it wherever it is understood.">

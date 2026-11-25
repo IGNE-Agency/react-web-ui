@@ -16,6 +16,13 @@
 			--kit-dialog-max-block-size,
 			calc(100dvh - var(--sys-unit-24))
 		);
+
+		@supports not (block-size: 1dvh) {
+			max-block-size: var(
+				--kit-dialog-max-block-size,
+				calc(100svh - var(--sys-unit-24))
+			);
+		}
 	}
 
 	.header {

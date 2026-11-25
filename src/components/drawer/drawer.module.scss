@@ -39,7 +39,6 @@ $settle: 0.2s;
 		position: fixed;
 		inset: 0;
 		display: flex;
-		justify-content: flex-end;
 		padding: var(--_kit-drawer-viewport-padding);
 
 		@supports (-webkit-touch-callout: none) {
@@ -50,11 +49,20 @@ $settle: 0.2s;
 	.popup {
 		--_kit-drawer-bleed: 3rem;
 		--_kit-drawer-sheet-block-size: auto;
+		--_kit-drawer-inset: var(
+			--kit-drawer-inset,
+			var(--sys-unit-16)
+		);
+		--_kit-drawer-inline-size: 33dvw;
+		--_kit-drawer-sheet-max: 85dvh;
 
 		position: relative;
 		box-sizing: border-box;
 		inline-size: calc(
-			var(--kit-drawer-inline-size, 33dvw) +
+			var(
+					--kit-drawer-inline-size,
+					var(--_kit-drawer-inline-size)
+				) +
 				var(--_kit-drawer-bleed)
 		);
 		min-inline-size: var(
@@ -66,17 +74,34 @@ $settle: 0.2s;
 			--kit-drawer-surface,
 			var(--sys-color-surface)
 		);
-		padding: var(--kit-drawer-inset, var(--sys-unit-16));
+		padding: var(--_kit-drawer-inset);
+		padding-block: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-top)
+			)
+			max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-bottom)
+			);
 		padding-right: calc(
-			var(--kit-drawer-inset, var(--sys-unit-16)) +
+			max(
+					var(--_kit-drawer-inset),
+					env(safe-area-inset-right)
+				) +
 				var(--_kit-drawer-bleed)
 		);
 		margin-right: calc(-1 * var(--_kit-drawer-bleed));
+		margin-left: auto;
 		color: var(--kit-drawer-fg, var(--sys-color-text));
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		touch-action: auto;
 		transform: translateX(var(--drawer-swipe-movement-x));
+
+		@supports not (block-size: 1dvh) {
+			--_kit-drawer-inline-size: 33svw;
+			--_kit-drawer-sheet-max: 85svh;
+		}
 
 		@media not (prefers-reduced-motion) {
 			transition: transform var(--sys-motion-short)
@@ -87,7 +112,7 @@ $settle: 0.2s;
 		&::before {
 			content: "";
 			position: absolute;
-			inset-inline-start: var(--sys-unit-3);
+			left: var(--sys-unit-3);
 			inset-block-start: 50%;
 			inline-size: var(
 				--kit-drawer-handle-thickness,
@@ -131,11 +156,38 @@ $settle: 0.2s;
 		@supports (-webkit-touch-callout: none) {
 			--_kit-drawer-bleed: 0px;
 
-			margin-right: 0;
 			border-radius: var(
 				--kit-drawer-radius,
 				var(--sys-radius-lg)
 			);
+		}
+
+		&[data-swipe-direction="left"] {
+			padding-right: var(--_kit-drawer-inset);
+			padding-left: calc(
+				max(
+						var(--_kit-drawer-inset),
+						env(safe-area-inset-left)
+					) +
+					var(--_kit-drawer-bleed)
+			);
+			margin-right: auto;
+			margin-left: calc(-1 * var(--_kit-drawer-bleed));
+
+			&::before {
+				right: var(--sys-unit-3);
+				left: auto;
+			}
+
+			&[data-starting-style],
+			&[data-ending-style] {
+				transform: translateX(
+					calc(
+						-100% + var(--_kit-drawer-bleed) -
+							var(--_kit-drawer-viewport-padding) - 2px
+					)
+				);
+			}
 		}
 
 		&[data-swipe-direction="down"] {
@@ -146,26 +198,36 @@ $settle: 0.2s;
 				--kit-drawer-sheet-block-size,
 				var(--_kit-drawer-sheet-block-size)
 			);
-			max-block-size: var(--kit-drawer-sheet-max, 85dvh);
+			max-block-size: var(
+				--kit-drawer-sheet-max,
+				var(--_kit-drawer-sheet-max)
+			);
 			border-radius: var(
 					--kit-drawer-sheet-radius,
 					var(--sys-radius-xl)
 				)
 				var(--kit-drawer-sheet-radius, var(--sys-radius-xl))
 				0 0;
-			margin-right: 0;
+			margin-inline: 0;
 			margin-bottom: calc(-1 * var(--_kit-drawer-bleed));
-			padding-top: var(
-				--kit-drawer-handle-space,
-				var(--sys-unit-6)
+			padding-block: var(
+					--kit-drawer-handle-space,
+					var(--sys-unit-6)
+				)
+				calc(
+					max(
+							var(--_kit-drawer-inset) + 1.75rem,
+							env(safe-area-inset-bottom)
+						) +
+						var(--_kit-drawer-bleed)
+				);
+			padding-right: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-right)
 			);
-			padding-right: var(
-				--kit-drawer-inset,
-				var(--sys-unit-16)
-			);
-			padding-bottom: calc(
-				var(--kit-drawer-inset, var(--sys-unit-16)) +
-					var(--_kit-drawer-bleed) + 1.75rem
+			padding-left: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-left)
 			);
 			transform: translateY(var(--drawer-swipe-movement-y));
 
@@ -204,7 +266,7 @@ $settle: 0.2s;
 	.filled {
 		--_kit-drawer-sheet-block-size: var(
 			--kit-drawer-sheet-max,
-			85dvh
+			var(--_kit-drawer-sheet-max)
 		);
 
 		display: flex;

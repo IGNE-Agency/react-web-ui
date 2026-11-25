@@ -33,7 +33,8 @@ export type ToastData = Readonly<{
 export type ToastOptions = Readonly<{
 	/**
 	 * Dedupe key. While a toast pushed with this key is still open, a second
-	 * push with the same key is a no-op and returns the existing id.
+	 * push with the same key replaces its content, tone and timeout in place and
+	 * returns the existing id.
 	 */
 	key?: string;
 	/**
@@ -73,8 +74,16 @@ const buffered: Array<() => void> = [];
  */
 export const flushBufferedToasts = (): void => {
 	viewportReady = true;
-	for (const add of buffered.splice(0)) {
-		add();
+	for (const send of buffered.splice(0)) {
+		send();
+	}
+};
+
+const emit = (send: () => void): void => {
+	if (viewportReady) {
+		send();
+	} else {
+		buffered.push(send);
 	}
 };
 
@@ -85,26 +94,31 @@ const push = (
 ): string => {
 	const { key, title, icon, actions, timeout } = options;
 
-	if (key !== undefined) {
-		const existing = activeKeys.get(key);
-		if (existing !== undefined) {
-			return existing;
-		}
-	}
-
 	const resolvedTimeout =
 		timeout ??
 		(actions && actions.length > 0
 			? 0
 			: DEFAULT_TIMEOUT_MS);
+	const content = {
+		type: tone,
+		timeout: resolvedTimeout,
+		data: { tone, icon, title, body, actions },
+	};
+
+	const existing =
+		key === undefined ? undefined : activeKeys.get(key);
+	if (existing !== undefined) {
+		emit(() => {
+			toastManager.update(existing, content);
+		});
+		return existing;
+	}
 
 	const id = crypto.randomUUID();
-	const add = (): void => {
+	emit(() => {
 		toastManager.add({
+			...content,
 			id,
-			type: tone,
-			timeout: resolvedTimeout,
-			data: { tone, icon, title, body, actions },
 			onClose:
 				key !== undefined
 					? () => {
@@ -114,13 +128,7 @@ const push = (
 						}
 					: undefined,
 		});
-	};
-
-	if (viewportReady) {
-		add();
-	} else {
-		buffered.push(add);
-	}
+	});
 
 	if (key !== undefined) {
 		activeKeys.set(key, id);
@@ -159,7 +167,8 @@ export type ToastHelpers = Readonly<{
 
 /**
  * Pushes toasts from anywhere, components or not, into the viewport
- * `ToastProvider` renders. `key` dedupes, so one failed item raises one toast.
+ * `ToastProvider` renders. `key` dedupes: one failed item raises one toast,
+ * and its latest push replaces that toast's content.
  *
  * @example
  * toast.error("The comment failed to send.", {

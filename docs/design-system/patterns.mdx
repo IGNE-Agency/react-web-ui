@@ -217,7 +217,7 @@ News is easiest to take in where the eye already is. Feedback about what is in f
 | The session ended | A toast at sign-in | "You were signed out" |
 | A step can't be undone | A dialog | "Delete comment?" |
 
-A toast that offers an action waits until it is dismissed, because a fix that disappears before it can be pressed is no fix. Any other toast leaves after a few seconds, and the same toast is never shown twice at once.
+A toast that offers an action waits until it is dismissed, because a fix that disappears before it can be pressed is no fix. Any other toast leaves after a few seconds. The same toast is never shown twice at once: news about something a toast on screen already covers replaces that toast's message where it stands.
 
 ## Where you type
 
@@ -1291,7 +1291,7 @@ toast.error(m.toast_comment_send_failed(), {
 
 <Details title="The same toast is never shown twice at once">
 
-A toast about one thing carries that thing's key, so a second failure replaces it rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
+A toast about one thing carries that thing's key, so a second push with that key replaces the toast's message, tone and actions where it stands, restarts its timer and is announced again, rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
 
 ```ts
 toast.error(m.toast_comment_send_failed(), {

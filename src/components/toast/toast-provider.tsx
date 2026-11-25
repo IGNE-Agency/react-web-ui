@@ -5,8 +5,10 @@ import {
 import { clsx } from "clsx";
 import {
 	type ComponentPropsWithRef,
+	createContext,
 	Fragment,
 	type ReactNode,
+	use,
 	useEffect,
 } from "react";
 import { Button, IconButton } from "../button/button.tsx";
@@ -90,6 +92,8 @@ const Viewport = ({
 	);
 };
 
+const UpdateKeyContext = createContext(0);
+
 /**
  * A toast's frame, in its tone: a dialog that holds the other parts.
  *
@@ -101,12 +105,14 @@ const Root = ({
 	className,
 	...props
 }: ToastRootProps): ReactNode => (
-	<BaseToast.Root
-		toast={toast}
-		data-tone={toast.data?.tone}
-		{...props}
-		className={clsx(styles.toast, className)}
-	/>
+	<UpdateKeyContext value={toast.updateKey ?? 0}>
+		<BaseToast.Root
+			toast={toast}
+			data-tone={toast.data?.tone}
+			{...props}
+			className={clsx(styles.toast, className)}
+		/>
+	</UpdateKeyContext>
 );
 
 export type ToastIconProps = ComponentPropsWithRef<"span">;
@@ -134,12 +140,13 @@ export type ToastTitleProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
-/** The toast's heading, which names its dialog. */
+/** The toast's heading, which names its dialog and is announced again when the toast is updated. */
 const Title = ({
 	className,
 	...props
 }: ToastTitleProps): ReactNode => (
 	<BaseToast.Title
+		key={use(UpdateKeyContext)}
 		{...props}
 		className={clsx(styles.title, className)}
 	/>
@@ -151,12 +158,13 @@ export type ToastDescriptionProps = Omit<
 > &
 	Readonly<{ className?: string }>;
 
-/** The text under the title, which describes its dialog. */
+/** The text under the title, which describes its dialog and is announced again when the toast is updated. */
 const Description = ({
 	className,
 	...props
 }: ToastDescriptionProps): ReactNode => (
 	<BaseToast.Description
+		key={use(UpdateKeyContext)}
 		{...props}
 		className={clsx(styles.description, className)}
 	/>

@@ -5,9 +5,16 @@
 	.viewport {
 		position: fixed;
 		inset-block: auto
-			var(--kit-toast-viewport-inset, var(--sys-unit-16));
+			max(
+				var(--kit-toast-viewport-inset, var(--sys-unit-16)),
+				env(safe-area-inset-bottom)
+			);
 		inset-inline: auto
-			var(--kit-toast-viewport-inset, var(--sys-unit-16));
+			max(
+				var(--kit-toast-viewport-inset, var(--sys-unit-16)),
+				env(safe-area-inset-left),
+				env(safe-area-inset-right)
+			);
 		display: flex;
 		flex-direction: column;
 		gap: var(--kit-toast-viewport-gap, var(--sys-unit-8));

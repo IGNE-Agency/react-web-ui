@@ -21,8 +21,8 @@ export type DrawerRootProps<Payload = unknown> = Omit<
 		onOpenChange?: BaseDrawer.Root.Props<Payload>["onOpenChange"];
 		/** Whether focus stays inside the drawer and the page behind it is inert while it is open. @default true */
 		modal?: BaseDrawer.Root.Props<Payload>["modal"];
-		/** The edge the drawer slides in from, and the way a swipe dismisses it. @default "down" */
-		swipeDirection?: BaseDrawer.Root.Props<Payload>["swipeDirection"];
+		/** The edge the drawer slides in from, and the way a swipe dismisses it: a side panel on the left or right, or a bottom sheet. @default "down" */
+		swipeDirection?: "left" | "right" | "down";
 		/** The trigger and the drawer's content. */
 		children?: BaseDrawer.Root.Props<Payload>["children"];
 	}>;
@@ -69,7 +69,7 @@ export type DrawerPopupProps = ComponentProps<
 		filled?: boolean;
 	}>;
 
-/** The drawer's surface: a side panel, or a bottom sheet when swiped down. */
+/** The drawer's surface: a side panel on the left or right, or a bottom sheet when swiped down. */
 const Popup = ({
 	className,
 	filled,
@@ -150,8 +150,8 @@ type DrawerParts = Readonly<{
 }>;
 
 /**
- * A drawer over base-ui's `Drawer`: `swipeDirection="right"` slides in a side
- * panel, `"down"` raises a bottom sheet. `Sheet` bundles the portal, backdrop,
+ * A drawer over base-ui's `Drawer`: `swipeDirection="right"` or `"left"` slides
+ * in a side panel from that edge, `"down"` raises a bottom sheet. `Sheet` bundles the portal, backdrop,
  * viewport, popup and content; the unbundled parts stay.
  *
  * @example
