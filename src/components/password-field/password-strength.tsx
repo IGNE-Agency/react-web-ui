@@ -14,6 +14,7 @@ import {
 	type ZxcvbnLanguages,
 } from "../../lib/password-strength/password-strength.ts";
 import { useRequiredContext } from "../../lib/use-required-context.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import style from "./password-field.module.scss";
 
@@ -46,6 +47,7 @@ const useBand = (): string =>
 export type PasswordStrengthRootProps =
 	useRender.ComponentProps<"div"> &
 		Readonly<{
+			/** The password whose strength is measured. */
 			password: string;
 			/**
 			 * zxcvbn language packs beside the kit's English and Dutch ones, by lowercase
@@ -94,26 +96,23 @@ const Root = ({
 export type PasswordStrengthMeterProps = Omit<
 	Meter.Root.Props,
 	"value" | "max" | "getAriaValueText"
-> &
-	Readonly<{
-		/** The name of each band, such as "Very weak" for 0. */
-		scoreLabels: PasswordScoreLabels;
-	}>;
+>;
 
 /**
- * The strength band as a meter, read as the band's name. It sets `data-score`,
+ * The strength band as a meter, read as the band's name from the
+ * `CopyProvider`'s `password.scores`. It sets `data-score`,
  * which the `Value` and `Indicator` inside it colour by.
  *
  * @example
- * <PasswordStrength.Meter scoreLabels={SCORE_LABELS}>…</PasswordStrength.Meter>
+ * <PasswordStrength.Meter>…</PasswordStrength.Meter>
  */
 const StrengthMeter = ({
-	scoreLabels,
 	className,
 	...props
 }: PasswordStrengthMeterProps): ReactNode => {
 	const { score } = useStrength();
-	const band = scoreLabels[score];
+	const { password } = useCopy();
+	const band = password.scores[score];
 	return (
 		<BandContext value={band}>
 			<Meter.Root
@@ -150,7 +149,7 @@ export type PasswordStrengthValueProps = Omit<
 >;
 
 /**
- * The band's name, such as "Fair", from the meter's `scoreLabels`.
+ * The band's name, such as "Fair", from the `CopyProvider`'s `password.scores`.
  *
  * @example
  * <PasswordStrength.Value />
@@ -294,11 +293,8 @@ const Suggestion = ({
 	});
 
 export type PasswordStrengthProps = Readonly<{
+	/** The password whose strength is measured. */
 	password: string;
-	/** The meter's label, such as "Password strength". */
-	label: string;
-	/** The name of each band, such as "Very weak" for 0. */
-	scoreLabels: PasswordScoreLabels;
 	/**
 	 * zxcvbn language packs beside the kit's English and Dutch ones, by lowercase
 	 * language tag: `{ de: () => import("@zxcvbn-ts/language-de") }`.
@@ -309,32 +305,33 @@ export type PasswordStrengthProps = Readonly<{
 
 const Prefab = ({
 	password,
-	label,
-	scoreLabels,
 	languages,
 	className,
-}: PasswordStrengthProps): ReactNode => (
-	<Root
-		password={password}
-		languages={languages}
-		className={className}>
-		<StrengthMeter scoreLabels={scoreLabels}>
-			<Label>{label}</Label>
-			<Value />
-			<Track>
-				<Indicator />
-			</Track>
-		</StrengthMeter>
-		<Feedback />
-		<Suggestions>
-			{suggestion => (
-				<Suggestion key={suggestion}>
-					{suggestion}
-				</Suggestion>
-			)}
-		</Suggestions>
-	</Root>
-);
+}: PasswordStrengthProps): ReactNode => {
+	const copy = useCopy();
+	return (
+		<Root
+			password={password}
+			languages={languages}
+			className={className}>
+			<StrengthMeter>
+				<Label>{copy.password.strength}</Label>
+				<Value />
+				<Track>
+					<Indicator />
+				</Track>
+			</StrengthMeter>
+			<Feedback />
+			<Suggestions>
+				{suggestion => (
+					<Suggestion key={suggestion}>
+						{suggestion}
+					</Suggestion>
+				)}
+			</Suggestions>
+		</Root>
+	);
+};
 
 /** The parts of a password strength meter, hanging off its prefab. */
 export type PasswordStrengthParts = typeof Prefab &
@@ -357,7 +354,7 @@ export type PasswordStrengthParts = typeof Prefab &
  * parts hanging off it compose a meter by hand.
  *
  * @example
- * <PasswordStrength password={password} label="Password strength" scoreLabels={SCORE_LABELS} />
+ * <PasswordStrength password={password} />
  */
 export const PasswordStrength: PasswordStrengthParts =
 	Object.assign(Prefab, {

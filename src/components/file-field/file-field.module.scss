@@ -8,17 +8,20 @@
 		& {
 			flex-direction: column;
 			justify-content: center;
-			gap: var(--file-field-gap, var(--sys-unit-8));
+			gap: var(--kit-file-field-gap, var(--sys-unit-8));
 			min-block-size: var(
-				--file-field-min-block-size,
+				--kit-file-field-min-block-size,
 				var(--sys-unit-40)
 			);
 			border-radius: var(
-				--file-field-radius,
-				var(--field-radius, var(--sys-radius-sm))
+				--kit-file-field-radius,
+				var(--kit-field-radius, var(--sys-radius-sm))
 			);
-			padding: var(--file-field-pad-y, var(--sys-unit-12))
-				var(--file-field-pad-x, var(--sys-unit-12));
+			padding: var(
+					--kit-file-field-pad-y,
+					var(--sys-unit-12)
+				)
+				var(--kit-file-field-pad-x, var(--sys-unit-12));
 			text-align: center;
 			cursor: pointer;
 		}
@@ -29,19 +32,19 @@
 
 		&[data-drop-target] {
 			border-style: var(
-				--file-field-drop-border-style,
+				--kit-file-field-drop-border-style,
 				dashed
 			);
 			border-color: var(
-				--file-field-drop-border,
+				--kit-file-field-drop-border,
 				var(--sys-color-primary)
 			);
 			background: var(
-				--file-field-drop-bg,
+				--kit-file-field-drop-bg,
 				var(--sys-color-primary-container)
 			);
 			color: var(
-				--file-field-drop-fg,
+				--kit-file-field-drop-fg,
 				var(--sys-color-on-primary-container)
 			);
 		}
@@ -51,10 +54,10 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: center;
-		gap: var(--file-field-hint-gap, var(--sys-unit-2));
-		color: var(--_field-muted-fg);
+		gap: var(--kit-file-field-hint-gap, var(--sys-unit-2));
+		color: var(--_kit-field-muted-fg);
 		font: var(
-			--file-field-hint-font,
+			--kit-file-field-hint-font,
 			var(--sys-font-body-medium)
 		);
 		overflow-wrap: normal;
@@ -63,7 +66,7 @@
 
 	.hintIcon {
 		display: inline-flex;
-		font-size: var(--file-field-hint-icon-size, 1.5em);
+		font-size: var(--kit-file-field-hint-icon-size, 1.5em);
 	}
 
 	.list {
@@ -72,7 +75,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
-		gap: var(--file-field-gap, var(--sys-unit-8));
+		gap: var(--kit-file-field-gap, var(--sys-unit-8));
 		min-inline-size: 0;
 	}
 }

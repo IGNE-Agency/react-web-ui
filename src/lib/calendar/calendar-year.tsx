@@ -9,9 +9,10 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { useCopy } from "../../components/copy-provider/index.ts";
+import { useIcons } from "../../components/icon-provider/index.ts";
 import { useLocale } from "../../components/locale-provider/index.ts";
 import { usePopupEdgePadding } from "../popup-edge-padding.ts";
-import type { CalendarNavigationIcons } from "./calendar-navigation.tsx";
 import {
 	type CalendarNavigationState,
 	eraYears,
@@ -41,18 +42,13 @@ const useYearRows = (
 	};
 };
 
-export type CalendarYearProps = CalendarNavigationIcons &
-	Readonly<{
-		state: CalendarNavigationState;
-		/** Holds the popup, so it stays inside the calendar's own popover. */
-		container: RefObject<HTMLDivElement | null>;
-		/** Accessible name of the year input, such as "Year". */
-		label: string;
-		/** What the list says when no year matches the typed text. */
-		noMatchLabel: string;
-		/** Applied to the year control. */
-		className?: string;
-	}>;
+export type CalendarYearProps = Readonly<{
+	state: CalendarNavigationState;
+	/** Holds the popup, so it stays inside the calendar's own popover. */
+	container: RefObject<HTMLDivElement | null>;
+	/** Applied to the year control. */
+	className?: string;
+}>;
 
 /**
  * The year control in a calendar header: every year in the focused date's era,
@@ -60,17 +56,16 @@ export type CalendarYearProps = CalendarNavigationIcons &
  * and filtered by typing.
  *
  * @example
- * <CalendarYear state={state} container={containerRef} label="Year" noMatchLabel="No matching year." checkIcon={<CheckIcon />} />
+ * <CalendarYear state={state} container={containerRef} />
  */
 export const CalendarYear = ({
 	state,
 	container,
-	label,
-	noMatchLabel,
-	checkIcon,
-	expandIcon,
 	className,
 }: CalendarYearProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
+	const expand = icons.expand;
 	const locale = useLocale();
 	const { ref, collisionPadding } = usePopupEdgePadding();
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -145,11 +140,11 @@ export const CalendarYear = ({
 				className={clsx(style.navControl, className)}>
 				<BaseCombobox.Input
 					ref={inputRef}
-					aria-label={label}
+					aria-label={copy.calendar.year}
 					className={style.navInput}
 					onFocus={event => event.currentTarget.select()}
 				/>
-				{expandIcon !== undefined && (
+				{expand !== undefined && (
 					<BaseCombobox.Icon
 						className={style.navChevron}
 						onMouseDown={event => {
@@ -158,7 +153,7 @@ export const CalendarYear = ({
 							inputRef.current?.focus();
 							setOpen(!open);
 						}}>
-						{expandIcon}
+						{expand}
 					</BaseCombobox.Icon>
 				)}
 			</BaseCombobox.InputGroup>
@@ -173,7 +168,7 @@ export const CalendarYear = ({
 					collisionPadding={collisionPadding}>
 					<BaseCombobox.Popup className={style.yearPopup}>
 						<BaseCombobox.Empty className={style.yearEmpty}>
-							{noMatchLabel}
+							{copy.calendar.noMatchingYear}
 						</BaseCombobox.Empty>
 						<BaseCombobox.List
 							ref={setList}
@@ -203,7 +198,7 @@ export const CalendarYear = ({
 													className={style.yearIndicator}
 													aria-hidden="true">
 													<BaseCombobox.ItemIndicator>
-														{checkIcon}
+														{icons.check}
 													</BaseCombobox.ItemIndicator>
 												</span>
 												<span className={style.yearValue}>

@@ -1,5 +1,3 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -14,14 +12,14 @@ import {
 	PendingToggle,
 	pendingOnPress,
 } from "../../lib/storybook/pending.tsx";
-import { Icon } from "../icon/index.ts";
 import {
 	CheckboxField,
 	type CheckboxFieldProps,
 } from "./checkbox-field.tsx";
+import { Checkbox } from "./checkbox.tsx";
+import { TSFCheckboxField } from "./tsf-checkbox-field.tsx";
 
 const LABEL = "I agree to the terms";
-const OPTIONAL_LABEL = "optional";
 const DESCRIPTION =
 	"The terms apply to every invoice you submit.";
 const ERROR = "Agree to the terms to continue.";
@@ -55,14 +53,23 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Checkbox.Root": Checkbox.Root,
+			},
+			connector: { TSFCheckboxField },
+		},
 	},
 	component: CheckboxField,
 	render: ControlledCheckboxField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
 		checked: false,
 		onCheckedChange: checkedChange,
 	},
@@ -79,10 +86,7 @@ export const Checked: Story = {
 };
 
 export const Indeterminate: Story = {
-	args: {
-		indeterminate: true,
-		indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
-	},
+	args: { indeterminate: true },
 };
 
 export const Disabled: Story = {

@@ -6,8 +6,8 @@
 /// The nav entry shell: the full-height pill every navigation destination
 /// shares, in the rail, in the overflow sheet and in the compact bottom bar.
 /// The current destination carries `data-active="true"` or
-/// `aria-current="page"`. Reads the `--nav-item-*` knobs, the current one's
-/// under `--nav-item-active-*`.
+/// `aria-current="page"`. Reads the `--kit-nav-item-*` knobs, the current one's
+/// under `--kit-nav-item-active-*`.
 ///
 /// @example
 ///   @use "../../style/nav-item.scss" as nav;
@@ -16,33 +16,38 @@
 ///       @include nav.shell;
 ///   }
 @mixin shell {
-	--_nav-item-gap: var(--sys-unit-6);
-	--_nav-item-pad-y: var(--sys-unit-4);
-	--_nav-item-pad-x: var(--sys-unit-8);
-	--_nav-item-radius: var(--sys-radius-full);
-	--_nav-item-font: var(--sys-font-label-medium);
-	--_nav-item-active-bg: var(--sys-color-primary-container);
-	--_nav-item-active-font: var(
+	--_kit-nav-item-gap: var(--sys-unit-6);
+	--_kit-nav-item-pad-y: var(--sys-unit-4);
+	--_kit-nav-item-pad-x: var(--sys-unit-8);
+	--_kit-nav-item-radius: var(--sys-radius-full);
+	--_kit-nav-item-font: var(--sys-font-label-medium);
+	--_kit-nav-item-active-bg: var(
+		--sys-color-primary-container
+	);
+	--_kit-nav-item-active-font: var(
 		--sys-font-label-medium-strong
 	);
 
 	display: flex;
-	gap: var(--nav-item-gap, var(--_nav-item-gap));
+	gap: var(--kit-nav-item-gap, var(--_kit-nav-item-gap));
 	align-items: center;
 	box-sizing: border-box;
 	inline-size: 100%;
 	min-block-size: var(
-		--nav-item-min-size,
+		--kit-nav-item-min-size,
 		var(--sys-unit-24)
 	);
-	padding: var(--nav-item-pad-y, var(--_nav-item-pad-y))
-		var(--nav-item-pad-x, var(--_nav-item-pad-x));
+	padding: var(
+			--kit-nav-item-pad-y,
+			var(--_kit-nav-item-pad-y)
+		)
+		var(--kit-nav-item-pad-x, var(--_kit-nav-item-pad-x));
 	border-radius: var(
-		--nav-item-radius,
-		var(--_nav-item-radius)
+		--kit-nav-item-radius,
+		var(--_kit-nav-item-radius)
 	);
-	color: var(--nav-item-fg, var(--sys-color-text));
-	font: var(--nav-item-font, var(--_nav-item-font));
+	color: var(--kit-nav-item-fg, var(--sys-color-text));
+	font: var(--kit-nav-item-font, var(--_kit-nav-item-font));
 	text-align: start;
 	text-decoration: none;
 
@@ -60,16 +65,16 @@
 	&[data-active="true"],
 	&[aria-current="page"] {
 		background-color: var(
-			--nav-item-active-bg,
-			var(--_nav-item-active-bg)
+			--kit-nav-item-active-bg,
+			var(--_kit-nav-item-active-bg)
 		);
 		color: var(
-			--nav-item-active-fg,
+			--kit-nav-item-active-fg,
 			var(--sys-color-on-primary-container)
 		);
 		font: var(
-			--nav-item-active-font,
-			var(--_nav-item-active-font)
+			--kit-nav-item-active-font,
+			var(--_kit-nav-item-active-font)
 		);
 	}
 }
@@ -92,7 +97,7 @@
 	grid-auto-columns: minmax(min-content, 1fr);
 	grid-template-rows: auto auto;
 	gap: var(
-		--nav-bar-gap,
+		--kit-nav-bar-gap,
 		var(--sys-unit-2) var(--sys-unit-1)
 	);
 }
@@ -108,13 +113,13 @@
 ///   }
 @mixin compact {
 	& {
-		--_nav-item-gap: var(--sys-unit-2);
-		--_nav-item-pad-y: var(--sys-unit-2);
-		--_nav-item-pad-x: var(--sys-unit-2);
-		--_nav-item-radius: var(--sys-radius-md);
-		--_nav-item-font: var(--sys-font-label-small);
-		--_nav-item-active-bg: transparent;
-		--_nav-item-active-font: var(
+		--_kit-nav-item-gap: var(--sys-unit-2);
+		--_kit-nav-item-pad-y: var(--sys-unit-2);
+		--_kit-nav-item-pad-x: var(--sys-unit-2);
+		--_kit-nav-item-radius: var(--sys-radius-md);
+		--_kit-nav-item-font: var(--sys-font-label-small);
+		--_kit-nav-item-active-bg: transparent;
+		--_kit-nav-item-active-font: var(
 			--sys-font-label-small-strong
 		);
 
@@ -130,7 +135,7 @@
 
 /// A nav entry's label. Folds at a word boundary, or at a hyphenation point when
 /// one word is longer than its box. A container that resizes around its labels
-/// sets `--nav-label-wrap: nowrap` instead.
+/// sets `--kit-nav-label-wrap: nowrap` instead.
 ///
 /// @example
 ///   .label {
@@ -140,7 +145,7 @@
 	min-inline-size: 0;
 	overflow-wrap: normal;
 	hyphens: auto;
-	white-space: var(--nav-label-wrap, normal);
+	white-space: var(--kit-nav-label-wrap, normal);
 }
 
 /// The icon's own box inside a nav entry. Inert in the rail; the compact bar
@@ -168,15 +173,15 @@
 	& {
 		inline-size: 100%;
 		max-inline-size: var(
-			--nav-item-indicator-max-inline-size,
+			--kit-nav-item-indicator-max-inline-size,
 			var(--sys-unit-24)
 		);
 		block-size: var(
-			--nav-item-indicator-block-size,
+			--kit-nav-item-indicator-block-size,
 			var(--sys-unit-16)
 		);
 		border-radius: var(
-			--nav-item-indicator-radius,
+			--kit-nav-item-indicator-radius,
 			var(--sys-radius-full)
 		);
 	}
@@ -198,7 +203,7 @@
 ///   }
 @mixin icon-slot-selected {
 	background-color: var(
-		--nav-item-indicator-bg,
+		--kit-nav-item-indicator-bg,
 		var(--sys-color-primary-container)
 	);
 }

@@ -1,8 +1,6 @@
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
 import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
 import { useArgs } from "storybook/preview-api";
@@ -18,30 +16,32 @@ import {
 	focusedDay,
 	focusReturnsTo,
 } from "../../lib/storybook/calendar.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Temporal } from "temporal-polyfill";
-import { isoToDay } from "../../lib/calendar/temporal-value.ts";
 import { IconButton } from "../button/index.ts";
 import { Field } from "../field/index.ts";
-import {
-	TimeZoneProvider,
-	useTimeZone,
-} from "../time-zone-provider/index.ts";
+import { TimeZoneProvider } from "../time-zone-provider/index.ts";
 import {
 	DateField,
 	type DateFieldProps,
 } from "./date-field.tsx";
 import { DateInput } from "./date-input.tsx";
+import { TSFDateField } from "./tsf-date-field.tsx";
 
 const DAY = Temporal.PlainDate.from("2026-07-24");
 const MONTH_START = DAY.with({ day: 1 });
 const MONTH_END = DAY.with({ day: DAY.daysInMonth });
 const LABEL = "Service date";
-const OPEN_CALENDAR = "Open calendar";
-const PREVIOUS_MONTH = "Previous month";
-const NEXT_MONTH = "Next month";
-const TRIGGER_NAME = `${OPEN_CALENDAR} ${LABEL}`;
+const TRIGGER_NAME = `${STORY_COPY.calendar.open} ${LABEL}`;
+const DESCRIPTION = "The day the work was done.";
+const WEEKEND_ERROR = "Pick a weekday.";
+const SATURDAY = 6;
+
+const onWeekend = (value: string | null) =>
+	value !== null &&
+	Temporal.PlainDate.from(value).dayOfWeek >= SATURDAY;
 
 const FAR_ZONE = "Pacific/Kiritimati";
 const NOON_UTC = "2026-07-24T12:30:00Z";
@@ -69,96 +69,85 @@ const ControlledDateField = (args: DateFieldProps) => {
 
 const ComposedDateInput = () => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
-	const ids = DateInput.useIds();
-	const timeZone = useTimeZone();
+	const [value, setValue] = useState<string | null>(
+		DAY.toString(),
+	);
 
 	return (
-		<Field.Root>
-			<DateInput.Label id={ids.labelId}>
-				{LABEL}
+		<DateInput.Root
+			value={value}
+			onValueChange={setValue}
+			errors={
+				onWeekend(value) ? [WEEKEND_ERROR] : undefined
+			}
+			requiredness="required">
+			<DateInput.Label>
+				{LABEL} <Field.Requiredness />
 			</DateInput.Label>
-			<DateInput.Root
-				aria-labelledby={ids.labelId}
-				aria-describedby={ids.describedBy(true, false)}
-				defaultValue={isoToDay(DAY.toString(), timeZone)}>
-				{({ isFocusWithin }) => (
-					<>
-						<DateInput.Group
-							state={{ focused: isFocusWithin }}>
-							<DateInput.Input>
-								{segment => (
-									<DateInput.Segment segment={segment} />
-								)}
-							</DateInput.Input>
-							<DateInput.Trigger
-								ref={triggerRef}
+			<DateInput.Group>
+				<DateInput.Input>
+					{segment => (
+						<DateInput.Segment segment={segment} />
+					)}
+				</DateInput.Input>
+				<DateInput.Trigger
+					ref={triggerRef}
+					render={
+						<IconButton
+							label={STORY_COPY.calendar.open}
+							variant="tertiary"
+							size="sm">
+							<Icon svg={CalendarTodayIcon} label="" />
+						</IconButton>
+					}
+				/>
+			</DateInput.Group>
+			<DateInput.Popover triggerRef={triggerRef}>
+				<DateInput.Dialog>
+					<DateInput.Calendar>
+						<DateInput.CalendarHeader>
+							<DateInput.Previous
 								render={
 									<IconButton
-										label={OPEN_CALENDAR}
-										variant="tertiary"
-										size="sm">
-										<Icon
-											svg={CalendarTodayIcon}
-											label=""
-										/>
+										label={
+											STORY_COPY.calendar.previousMonth
+										}
+										variant="tertiary">
+										<Icon svg={ChevronLeftIcon} label="" />
 									</IconButton>
 								}
 							/>
-						</DateInput.Group>
-						<DateInput.Popover triggerRef={triggerRef}>
-							<DateInput.Dialog>
-								<DateInput.Calendar>
-									<DateInput.CalendarHeader>
-										<DateInput.Previous
-											render={
-												<IconButton
-													label={PREVIOUS_MONTH}
-													variant="tertiary">
-													<Icon
-														svg={ChevronLeftIcon}
-														label=""
-													/>
-												</IconButton>
-											}
-										/>
-										<DateInput.Heading />
-										<DateInput.Next
-											render={
-												<IconButton
-													label={NEXT_MONTH}
-													variant="tertiary">
-													<Icon
-														svg={ChevronRightIcon}
-														label=""
-													/>
-												</IconButton>
-											}
-										/>
-									</DateInput.CalendarHeader>
-									<DateInput.Grid>
-										<DateInput.GridHeader>
-											{day => (
-												<DateInput.HeaderCell>
-													{day}
-												</DateInput.HeaderCell>
-											)}
-										</DateInput.GridHeader>
-										<DateInput.GridBody>
-											{date => (
-												<DateInput.Cell date={date} />
-											)}
-										</DateInput.GridBody>
-									</DateInput.Grid>
-								</DateInput.Calendar>
-							</DateInput.Dialog>
-						</DateInput.Popover>
-					</>
-				)}
-			</DateInput.Root>
-			<DateInput.Description id={ids.descriptionId}>
-				The day the work was done.
+							<DateInput.Heading />
+							<DateInput.Next
+								render={
+									<IconButton
+										label={STORY_COPY.calendar.nextMonth}
+										variant="tertiary">
+										<Icon svg={ChevronRightIcon} label="" />
+									</IconButton>
+								}
+							/>
+						</DateInput.CalendarHeader>
+						<DateInput.Grid>
+							<DateInput.GridHeader>
+								{day => (
+									<DateInput.HeaderCell>
+										{day}
+									</DateInput.HeaderCell>
+								)}
+							</DateInput.GridHeader>
+							<DateInput.GridBody>
+								{date => <DateInput.Cell date={date} />}
+							</DateInput.GridBody>
+						</DateInput.Grid>
+					</DateInput.Calendar>
+				</DateInput.Dialog>
+			</DateInput.Popover>
+			<DateInput.Description>
+				{DESCRIPTION}
 			</DateInput.Description>
-		</Field.Root>
+			<DateInput.Error />
+		</DateInput.Root>
 	);
 };
 
@@ -181,20 +170,6 @@ const meta = {
 	render: ControlledDateField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
-		openCalendarLabel: OPEN_CALENDAR,
-		openCalendarIcon: (
-			<Icon svg={CalendarTodayIcon} label="" />
-		),
-		previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-		nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
-		expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-		previousMonthLabel: PREVIOUS_MONTH,
-		nextMonthLabel: NEXT_MONTH,
-		monthLabel: "Month",
-		yearLabel: "Year",
-		noMatchingYearLabel: "No matching year.",
 		value: null,
 		onValueChange: fn(),
 	},
@@ -222,8 +197,18 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"DateInput.Root": DateInput.Root,
+			},
+			connector: { TSFDateField },
+		},
 		docs: { story: { inline: false, iframeHeight: 480 } },
 	},
 } satisfies Meta<typeof DateField>;
@@ -272,14 +257,33 @@ export const WithDescription: Story = {
 };
 
 export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
 	render: ComposedDateInput,
-	parameters: {
-		docs: {
-			description: {
-				story:
-					"The raw parts, composed by hand with a heading between the month steppers in place of the month and year pickers.",
-			},
-		},
+	play: async ({ canvas }) => {
+		const group = canvas.getByRole("group", {
+			name: LABEL,
+		});
+		const { day } = segmentsOf(
+			canvas.getAllByRole("spinbutton"),
+		);
+
+		await expect(group).toHaveAccessibleName(LABEL);
+		await expect(group).toHaveAccessibleDescription(
+			expect.stringContaining(DESCRIPTION),
+		);
+		await expect(day).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(day);
+		await userEvent.keyboard("{ArrowUp}");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(WEEKEND_ERROR);
+		await expect(
+			group.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 
@@ -297,7 +301,7 @@ export const ComposedCalendar: Story = {
 		).toHaveTextContent(String(DAY.year));
 		await userEvent.click(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		);
 		await userEvent.click(
@@ -331,12 +335,12 @@ export const Constrained: Story = {
 
 		await expect(
 			within(popup).getByRole("button", {
-				name: PREVIOUS_MONTH,
+				name: STORY_COPY.calendar.previousMonth,
 			}),
 		).toBeDisabled();
 		await expect(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		).toBeDisabled();
 	},
@@ -466,7 +470,7 @@ export const PickerKeyboard: Story = {
 		await userEvent.tab({ shift: true });
 		await expect(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		).toHaveFocus();
 		await userEvent.keyboard("{Enter}");
@@ -497,7 +501,7 @@ export const PickerMouse: Story = {
 		const popup = await calendar();
 		await userEvent.click(
 			within(popup).getByRole("button", {
-				name: NEXT_MONTH,
+				name: STORY_COPY.calendar.nextMonth,
 			}),
 		);
 		await userEvent.click(
@@ -517,7 +521,7 @@ export const PickerMouse: Story = {
 		const reopened = await calendar();
 		await userEvent.click(
 			within(reopened).getByRole("button", {
-				name: PREVIOUS_MONTH,
+				name: STORY_COPY.calendar.previousMonth,
 			}),
 		);
 		await userEvent.click(dayButton(reopened, DAY));

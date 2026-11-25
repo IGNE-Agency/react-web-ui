@@ -8,11 +8,10 @@ import {
 	waitFor,
 	type within,
 } from "storybook/test";
-import {
-	OtpField,
-	type OtpFieldProps,
-	type OtpSlotLabel,
-} from "./index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
+import { OtpField, type OtpFieldProps } from "./index.ts";
+import { OtpInput } from "./otp-input.tsx";
+import { TSFOtpField } from "./tsf-otp-field.tsx";
 
 const LENGTH = 6;
 const SAMPLE_CODE = "123456";
@@ -21,13 +20,11 @@ const PASTED_CODE = "654321";
 const REPLACEMENT = "9";
 const REPLACED_CODE = "193";
 const LABEL = "Verification code";
-const OPTIONAL_LABEL = "optional";
-
-const slotLabel: OtpSlotLabel = (index, total) =>
-	`character ${index} of ${total}`;
 
 const slotName = (index: number) =>
-	index === 0 ? LABEL : slotLabel(index + 1, LENGTH);
+	index === 0
+		? LABEL
+		: STORY_COPY.otp.slot(index + 1, LENGTH);
 
 const ControlledOtpField = (
 	args: OtpFieldProps,
@@ -63,15 +60,23 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"OtpInput.Root": OtpInput.Root,
+			},
+			connector: { TSFOtpField },
+		},
 	},
 	component: OtpField,
 	render: ControlledOtpField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
-		slotLabel,
 		value: "",
 		length: LENGTH,
 		onValueChange: fn(),
@@ -112,10 +117,24 @@ export const ReadOnly: Story = {
 
 export const Required: Story = {
 	args: { requiredness: "required" },
+	play: async ({ canvas }) => {
+		await Promise.all(
+			canvas
+				.getAllByRole("textbox")
+				.map(slot => expect(slot).toBeRequired()),
+		);
+	},
 };
 
 export const Optional: Story = {
 	args: { requiredness: "optional" },
+	play: async ({ canvas }) => {
+		await Promise.all(
+			canvas
+				.getAllByRole("textbox")
+				.map(slot => expect(slot).not.toBeRequired()),
+		);
+	},
 };
 
 export const Invalid: Story = {

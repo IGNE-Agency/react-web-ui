@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { type ReactNode, type RefObject, use } from "react";
 import type { Key } from "react-aria-components";
 import type { Tone, ToneVariant } from "../../lib/tone.ts";
+import { FilterBarTriggerContext } from "../filter-bar/filter-bar-trigger.ts";
 import {
 	type FilterView,
 	isActiveFilterValue,
@@ -97,40 +98,49 @@ export type ActiveFiltersProps<TFilters extends object> =
 		describe: ActiveFilterDescribers<TFilters>;
 		/** What the chips are, such as "Active filters". */
 		label: string;
-		/** Each chip's remove button's name and tooltip, such as "Remove". */
-		removeLabel: string;
-		/** The glyph on each chip's remove button, such as a cross. */
-		removeIcon: ReactNode;
+		/**
+		 * Where focus goes when the last chip is removed, such as the button that
+		 * opens the filters. Inside a `FilterBar.Root` it defaults to
+		 * `FilterBar.Trigger`; outside one it is required.
+		 */
+		returnFocus?: RefObject<HTMLElement | null>;
 		className?: string;
 	}>;
 
 /**
  * A roving-focus row of removable chips for the committed filters, on the
  * kit's `TagGroup`. Renders one or more chips per described, non-empty
- * committed field, and nothing when none are active. Compose `TagGroup` over
- * `useActiveFilterChips` where a chip needs more than this.
+ * committed field, and nothing when none are active, so removing the last chip
+ * moves focus to `returnFocus`. Compose `TagGroup` over `useActiveFilterChips`
+ * where a chip needs more than this.
  *
  * @example
  * <ActiveFilters
  * 	filters={filters}
  * 	describe={{ status: describeValue({ label: "Status" }) }}
  * 	label="Active filters"
- * 	removeLabel="Remove"
- * 	removeIcon={<CloseIcon />}
+ * 	returnFocus={filtersButtonRef}
  * />
  */
 export const ActiveFilters = <TFilters extends object>({
 	filters,
 	describe,
 	label,
-	removeLabel,
-	removeIcon,
+	returnFocus,
 	className,
 }: ActiveFiltersProps<TFilters>): ReactNode => {
 	const { chips, onRemove } = useActiveFilterChips(
 		filters,
 		describe,
 	);
+	const barTrigger = use(FilterBarTriggerContext);
+	const focusTarget = returnFocus ?? barTrigger;
+
+	if (!focusTarget) {
+		throw new Error(
+			"ActiveFilters needs returnFocus outside <FilterBar.Root>.",
+		);
+	}
 
 	if (chips.length === 0) {
 		return null;
@@ -139,7 +149,12 @@ export const ActiveFilters = <TFilters extends object>({
 	return (
 		<TagGroup.Root
 			aria-label={label}
-			onRemove={onRemove}
+			onRemove={removed => {
+				onRemove(removed);
+				if (chips.every(chip => removed.has(chip.id))) {
+					focusTarget.current?.focus();
+				}
+			}}
 			className={className}>
 			<TagGroup.List items={chips}>
 				{chip => (
@@ -149,9 +164,7 @@ export const ActiveFilters = <TFilters extends object>({
 						tone={chip.tone}
 						variant={chip.variant}>
 						{chip.content}
-						<TagGroup.Remove label={removeLabel}>
-							{removeIcon}
-						</TagGroup.Remove>
+						<TagGroup.Remove />
 					</TagGroup.Tag>
 				)}
 			</TagGroup.List>

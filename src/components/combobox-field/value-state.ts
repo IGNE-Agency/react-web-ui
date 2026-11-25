@@ -21,16 +21,6 @@ export type ValueState<TItem> = Readonly<{
 	item: TItem;
 }>;
 
-/** The copy a combobox shows for values its `itemQuery` reports gone. */
-export type ValueStateLabels = Readonly<{
-	/** The word a value no longer available shows beside it, such as "unavailable". */
-	valueUnavailableLabel: string;
-	/** How a value no longer available is read, such as "Jan Jansen, unavailable". */
-	valueUnavailableName: (itemLabel: string) => string;
-	/** The status sentence for such values, such as "2 selected values are no longer available.". */
-	valuesUnavailableLabel: (count: number) => string;
-}>;
-
 type ValueSources<TItem> = Readonly<{
 	key: string;
 	item: TItem;

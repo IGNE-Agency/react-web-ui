@@ -1,7 +1,5 @@
-import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
-import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { type ReactElement, useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -17,26 +15,15 @@ import {
 	type PasswordFieldStrengthProps,
 	PasswordStrength,
 } from "./index.ts";
+import { TSFPasswordField } from "./tsf-password-field.tsx";
 
 const LABEL = "Password";
-const OPTIONAL_LABEL = "optional";
-const SHOW_LABEL = "Show password";
-const HIDE_LABEL = "Hide password";
-const STRENGTH_LABEL = "Password strength";
 const ERROR = "Choose a stronger password.";
 const STRONG_PASSWORD = "Correct-Horse-Battery-9";
 const WEAK_PASSWORD = "password";
 
 const STRENGTH: PasswordFieldStrengthProps = {
-	strength: true,
-	strengthLabel: STRENGTH_LABEL,
-	scoreLabels: {
-		0: "Very weak",
-		1: "Weak",
-		2: "Fair",
-		3: "Strong",
-		4: "Very strong",
-	},
+	strengthMeter: true,
 };
 
 const ControlledPasswordField = (
@@ -76,10 +63,9 @@ const MeterOnly = (
 	args: PasswordFieldProps,
 ): ReactElement => (
 	<PasswordStrength.Root password={args.value}>
-		<PasswordStrength.Meter
-			scoreLabels={STRENGTH.scoreLabels}>
+		<PasswordStrength.Meter>
 			<PasswordStrength.Label>
-				{STRENGTH_LABEL}
+				{STORY_COPY.password.strength}
 			</PasswordStrength.Label>
 			<PasswordStrength.Value />
 			<PasswordStrength.Track>
@@ -102,17 +88,23 @@ const loadedInput = (canvas: Canvas) =>
 	});
 
 const strengthMeter = (canvas: Canvas) =>
-	canvas.findByRole("meter", { name: STRENGTH_LABEL });
+	canvas.findByRole("meter", {
+		name: STORY_COPY.password.strength,
+	});
 
 const score = (canvas: Canvas) =>
 	Number(
 		canvas
-			.getByRole("meter", { name: STRENGTH_LABEL })
+			.getByRole("meter", {
+				name: STORY_COPY.password.strength,
+			})
 			.getAttribute("aria-valuenow"),
 	);
 
 const showToggle = (canvas: Canvas) =>
-	canvas.getByRole("button", { name: SHOW_LABEL });
+	canvas.getByRole("button", {
+		name: STORY_COPY.password.show,
+	});
 
 const meta = {
 	parameters: {
@@ -129,21 +121,20 @@ const meta = {
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
 			{ component: "components/text-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFPasswordField },
+		},
 	},
 	component: PasswordField,
 	render: ControlledPasswordField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
-		showPasswordLabel: SHOW_LABEL,
-		hidePasswordLabel: HIDE_LABEL,
-		showPasswordIcon: (
-			<Icon svg={VisibilityIcon} label="" />
-		),
-		hidePasswordIcon: (
-			<Icon svg={VisibilityOffIcon} label="" />
-		),
 		value: "",
 		autoComplete: "new-password",
 		onValueChange: fn(),
@@ -235,7 +226,7 @@ export const Strong: Story = {
 		);
 		await expect(meter).toHaveAttribute(
 			"aria-valuetext",
-			"Very strong",
+			STORY_COPY.password.scores[4],
 		);
 	},
 };
@@ -301,7 +292,9 @@ export const RevealKeyboard: Story = {
 			"type",
 			"text",
 		);
-		await expect(toggle).toHaveAccessibleName(HIDE_LABEL);
+		await expect(toggle).toHaveAccessibleName(
+			STORY_COPY.password.hide,
+		);
 
 		await userEvent.keyboard(" ");
 		await expect(input(canvas)).toHaveAttribute(
@@ -322,7 +315,9 @@ export const RevealMouse: Story = {
 		);
 
 		await userEvent.click(
-			canvas.getByRole("button", { name: HIDE_LABEL }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.password.hide,
+			}),
 		);
 		await expect(input(canvas)).toHaveAttribute(
 			"type",
@@ -347,7 +342,7 @@ export const RevealTouch: Story = {
 		await userEvent.pointer({
 			keys: "[TouchA]",
 			target: canvas.getByRole("button", {
-				name: HIDE_LABEL,
+				name: STORY_COPY.password.hide,
 			}),
 		});
 		await expect(input(canvas)).toHaveAttribute(

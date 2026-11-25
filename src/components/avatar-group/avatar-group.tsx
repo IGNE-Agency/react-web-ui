@@ -48,7 +48,7 @@ const Root = ({
 			"aria-label": label,
 			className: clsx(style.group, className),
 			style: {
-				"--_avatar-group-size": `${size}em`,
+				"--_kit-avatar-group-size": `${size}em`,
 				...inlineStyle,
 			},
 		},
@@ -312,6 +312,8 @@ export type AvatarGroupPerson = Readonly<{
 	name: string;
 	/** Portrait to show in place of the initials, where there is one. */
 	src?: string;
+	/** A class for this person's avatar, in the stack and in the list. */
+	className?: string;
 }>;
 
 export type AvatarGroupProps = Readonly<{
@@ -350,6 +352,7 @@ const Prefab = ({
 						name={person.name}
 						src={person.src}
 						size={size}
+						className={person.className}
 					/>
 				</Avatar>
 			))}
@@ -370,6 +373,7 @@ const Prefab = ({
 												name={person.name}
 												src={person.src}
 												size={LIST_AVATAR_SIZE}
+												className={person.className}
 											/>
 											<Name>
 												{person.name}

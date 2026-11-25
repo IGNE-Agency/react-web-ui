@@ -8,6 +8,7 @@
 				"$value": "{ref.neutral.750}"
 			},
 			"on-primary": {
+				"$description": "Text and icons on a primary fill",
 				"$type": "color",
 				"$value": "{ref.neutral.0}"
 			},
@@ -17,131 +18,20 @@
 				"$value": "{ref.neutral.50}"
 			},
 			"on-primary-container": {
+				"$description": "Text and icons on a primary container",
 				"$type": "color",
 				"$value": "{ref.neutral.800}"
 			},
 			"identity": {
-				"1": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					}
+				"$description": "A person's colour behind their initials. Grey, since telling people apart by colour is the app's choice to make",
+				"bg": {
+					"$type": "color",
+					"$value": "{sys.color.surface-highest}"
 				},
-				"2": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					}
-				},
-				"3": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					}
-				},
-				"4": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9602, 0.0119, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.2408, 0.0472, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					}
-				},
-				"$description": "The brand container, turned to a hue of its own"
+				"fg": {
+					"$type": "color",
+					"$value": "{sys.color.text}"
+				}
 			},
 			"success": {
 				"$description": "Done, approved",
@@ -238,6 +128,7 @@
 				"$value": "{ref.neutral.400}"
 			},
 			"text-inverse": {
+				"$description": "Text on a surface of the opposite theme",
 				"$type": "color",
 				"$value": "{ref.neutral.0}"
 			},
@@ -320,28 +211,53 @@
 					"$type": "color",
 					"$value": "{ref.neutral.300}"
 				}
+			},
+			"scrim": {
+				"$description": "The sheet a dialog dims the page with",
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.4
+				}
+			},
+			"scrim-low": {
+				"$description": "The lighter sheet a drawer dims the page with",
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.22
+				}
 			}
 		},
 		"state": {
 			"hover": {
+				"$description": "The state layer's opacity under the pointer",
 				"$type": "number",
 				"$value": 0.08
 			},
 			"focus": {
+				"$description": "The state layer's opacity while focused",
 				"$type": "number",
 				"$value": 0.1
 			},
 			"pressed": {
+				"$description": "The state layer's opacity while pressed",
 				"$type": "number",
 				"$value": 0.12
 			},
 			"dragged": {
+				"$description": "The state layer's opacity while something is dragged over it",
 				"$type": "number",
 				"$value": 0.16
 			}
 		},
 		"focus-ring": {
 			"width": {
+				"$description": "The focus ring's stroke",
 				"$type": "dimension",
 				"$value": {
 					"value": 3,
@@ -349,6 +265,7 @@
 				}
 			},
 			"offset": {
+				"$description": "The gap between the focus ring and what it surrounds",
 				"$type": "dimension",
 				"$value": {
 					"value": 2,
@@ -361,18 +278,7 @@
 				"$description": "Copy",
 				"small": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 0.917,
-							"unit": "rem"
-						},
-						"fontWeight": 400,
-						"lineHeight": 1.4,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.body.regular.0}"
 				},
 				"medium": {
 					"$type": "typography",
@@ -406,93 +312,27 @@
 				"$description": "Buttons, tabs, nav items, field labels and chips",
 				"small": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 0.917,
-							"unit": "rem"
-						},
-						"fontWeight": 600,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.semibold.0}"
 				},
 				"medium": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 1,
-							"unit": "rem"
-						},
-						"fontWeight": 600,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.semibold.1}"
 				},
 				"large": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 1.167,
-							"unit": "rem"
-						},
-						"fontWeight": 700,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.bold.2}"
 				},
 				"small-strong": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 0.917,
-							"unit": "rem"
-						},
-						"fontWeight": 800,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.extrabold.0}"
 				},
 				"medium-strong": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 1,
-							"unit": "rem"
-						},
-						"fontWeight": 800,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.extrabold.1}"
 				},
 				"large-strong": {
 					"$type": "typography",
-					"$value": {
-						"fontSize": {
-							"value": 1.167,
-							"unit": "rem"
-						},
-						"fontWeight": 800,
-						"lineHeight": 1.2,
-						"letterSpacing": {
-							"value": 0,
-							"unit": "px"
-						}
-					}
+					"$value": "{ref.font.label.extrabold.2}"
 				}
 			}
 		},
@@ -951,7 +791,8 @@
 					"value": 8,
 					"unit": "rem"
 				}
-			}
+			},
+			"$description": "The spacing scale, in eighths of a rem: unit.8 is 1rem"
 		},
 		"radius": {
 			"none": {
@@ -1018,6 +859,7 @@
 		},
 		"shadow": {
 			"umbra": {
+				"$description": "The dark core of every elevation shadow",
 				"$type": "color",
 				"$value": {
 					"colorSpace": "srgb",
@@ -1027,6 +869,7 @@
 				}
 			},
 			"penumbra": {
+				"$description": "The soft outer edge of every elevation shadow",
 				"$type": "color",
 				"$value": {
 					"colorSpace": "srgb",

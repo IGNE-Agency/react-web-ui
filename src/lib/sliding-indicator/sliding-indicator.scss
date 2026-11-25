@@ -1,6 +1,6 @@
 // The pill that slides onto the active item of a segmented control, a tab list
 // or a nav bar. Position comes from four custom properties under one prefix:
-// `useSlidingIndicator` writes `--active-item-*`, base-ui's `Tabs.Indicator`
+// `useSlidingIndicator` writes `--_kit-sliding-indicator-item-*`, base-ui's `Tabs.Indicator`
 // publishes `--active-tab-*`.
 
 /// The pill itself: absolutely placed over the active item, sliding between
@@ -15,29 +15,36 @@
 ///
 ///   .indicator {
 ///       @include indicator.pill("--active-tab");
-///       background: var(--tabs-indicator-bg, var(--sys-color-primary));
+///       background: var(--kit-tabs-indicator-bg, var(--sys-color-primary));
 ///   }
-@mixin pill($prefix: "--active-item", $slack: 0.5px) {
-	--_indicator-slack: var(
-		--sliding-indicator-slack,
+@mixin pill(
+	$prefix: "--_kit-sliding-indicator-item",
+	$slack: 0.5px
+) {
+	--_kit-sliding-indicator-slack: var(
+		--kit-sliding-indicator-slack,
 		#{$slack}
 	);
-	--_indicator-slide: var(--sys-motion-short)
+	--_kit-sliding-indicator-slide: var(--sys-motion-short)
 		var(--sys-motion-emphasized);
 
 	position: absolute;
 	inset-inline-start: calc(
-		var(#{$prefix}-left, 0) - var(--_indicator-slack)
+		var(#{$prefix}-left, 0) -
+			var(--_kit-sliding-indicator-slack)
 	);
 	inset-block-start: calc(
-		var(#{$prefix}-top, 0) - var(--_indicator-slack)
+		var(#{$prefix}-top, 0) -
+			var(--_kit-sliding-indicator-slack)
 	);
 	overflow: hidden;
 	inline-size: calc(
-		var(#{$prefix}-width, 0) + 2 * var(--_indicator-slack)
+		var(#{$prefix}-width, 0) + 2 *
+			var(--_kit-sliding-indicator-slack)
 	);
 	block-size: calc(
-		var(#{$prefix}-height, 0) + 2 * var(--_indicator-slack)
+		var(#{$prefix}-height, 0) + 2 *
+			var(--_kit-sliding-indicator-slack)
 	);
 	opacity: 1;
 	scale: 1;
@@ -45,10 +52,10 @@
 
 	@media not (prefers-reduced-motion) {
 		transition:
-			inset-inline-start var(--_indicator-slide),
-			inset-block-start var(--_indicator-slide),
-			inline-size var(--_indicator-slide),
-			block-size var(--_indicator-slide),
+			inset-inline-start var(--_kit-sliding-indicator-slide),
+			inset-block-start var(--_kit-sliding-indicator-slide),
+			inline-size var(--_kit-sliding-indicator-slide),
+			block-size var(--_kit-sliding-indicator-slide),
 			opacity var(--sys-motion-instant)
 				var(--sys-motion-standard),
 			scale var(--sys-motion-short)
@@ -56,7 +63,7 @@
 	}
 
 	&[data-jump] {
-		--_indicator-slide: 0s;
+		--_kit-sliding-indicator-slide: 0s;
 	}
 
 	&[data-empty] {
@@ -82,20 +89,22 @@
 ///   .indicatorLabels {
 ///       @include indicator.ink-copy;
 ///   }
-@mixin ink-copy($prefix: "--active-item") {
+@mixin ink-copy($prefix: "--_kit-sliding-indicator-item") {
 	position: absolute;
 	inset-inline-start: calc(
-		var(--_indicator-slack) - var(#{$prefix}-left, 0)
+		var(--_kit-sliding-indicator-slack) -
+			var(#{$prefix}-left, 0)
 	);
 	inset-block-start: calc(
-		var(--_indicator-slack) - var(#{$prefix}-top, 0)
+		var(--_kit-sliding-indicator-slack) -
+			var(#{$prefix}-top, 0)
 	);
 	display: flex;
 	inline-size: max-content;
 
 	@media not (prefers-reduced-motion) {
 		transition:
-			inset-inline-start var(--_indicator-slide),
-			inset-block-start var(--_indicator-slide);
+			inset-inline-start var(--_kit-sliding-indicator-slide),
+			inset-block-start var(--_kit-sliding-indicator-slide);
 	}
 }

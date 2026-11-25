@@ -2,7 +2,7 @@
 
 /// The strip a row of tabs sits on, the positioning context of its sliding
 /// indicator (`src/lib/sliding-indicator/sliding-indicator.scss`). Reads
-/// `--tab-gap`.
+/// `--kit-tab-gap`.
 ///
 /// @example
 ///   @use "../../style/tab.scss";
@@ -13,12 +13,12 @@
 @mixin strip {
 	position: relative;
 	display: flex;
-	gap: var(--tab-gap, var(--sys-unit-2));
+	gap: var(--kit-tab-gap, var(--sys-unit-2));
 	min-inline-size: max-content;
 }
 
 /// One tab, a pill. The real row and the copy inside the indicator share it, so
-/// both keep the same box metrics and type. Reads the `--tab-*` knobs.
+/// both keep the same box metrics and type. Reads the `--kit-tab-*` knobs.
 ///
 /// @example
 ///   .tab {
@@ -27,12 +27,15 @@
 @mixin tab {
 	display: inline-flex;
 	align-items: center;
-	gap: var(--tab-icon-gap, var(--sys-unit-4));
-	padding: var(--tab-pad-y, var(--sys-unit-6))
-		var(--tab-pad-x, var(--sys-unit-10));
-	border-radius: var(--tab-radius, var(--sys-radius-full));
-	color: var(--tab-fg, var(--sys-color-text-muted));
-	font: var(--tab-font, var(--sys-font-label-medium));
+	gap: var(--kit-tab-icon-gap, var(--sys-unit-4));
+	padding: var(--kit-tab-pad-y, var(--sys-unit-6))
+		var(--kit-tab-pad-x, var(--sys-unit-10));
+	border-radius: var(
+		--kit-tab-radius,
+		var(--sys-radius-full)
+	);
+	color: var(--kit-tab-fg, var(--sys-color-text-muted));
+	font: var(--kit-tab-font, var(--sys-font-label-medium));
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
@@ -48,7 +51,7 @@
 
 	&:hover {
 		background: var(
-			--tab-hover-bg,
+			--kit-tab-hover-bg,
 			var(--sys-color-primary-container)
 		);
 	}

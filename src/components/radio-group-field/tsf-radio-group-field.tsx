@@ -17,13 +17,13 @@ export type TSFRadioGroupFieldProps = Omit<
 >;
 
 /**
- * `RadioGroupField` bound to the TanStack Form field it renders in, whose value
+ * `RadioGroupField` connected to the TanStack Form field it renders in, whose value
  * is the chosen option's value or `null`. Reach it as `field.RadioGroupField`
  * inside `form.AppField`.
  *
  * @example
  * <form.AppField name="kind">
- * 	{field => <field.RadioGroupField label="Kind" options={kinds} optionalLabel="optional" />}
+ * 	{field => <field.RadioGroupField label="Kind" options={kinds} />}
  * </form.AppField>
  */
 export const TSFRadioGroupField = (

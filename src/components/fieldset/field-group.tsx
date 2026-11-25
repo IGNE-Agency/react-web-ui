@@ -9,7 +9,7 @@ import type {
 
 export type FieldGroupProps = Pick<
 	FieldProps,
-	"requiredness" | "optionalLabel"
+	"requiredness"
 > &
 	Readonly<{
 		/** The visible name of the group, such as "Address". */
@@ -31,10 +31,10 @@ export type FieldGroupProps = Pick<
  * Related fields side by side under one legend, with one error for all of
  * them: the lines of its `members`, each tied to its field's control, then its
  * own `errors`. Every field's label, control, description and error line up
- * with its neighbours'. The `--field-group-columns` knob sets the columns.
+ * with its neighbours'. The `--kit-field-group-columns` knob sets the columns.
  *
  * @example
- * <FieldGroup legend="Address" optionalLabel="optional" members={members}>
+ * <FieldGroup legend="Address" members={members}>
  * 	<TextField label="Postal code" … />
  * 	<TextField label="House number" … />
  * </FieldGroup>
@@ -44,7 +44,6 @@ export const FieldGroup = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	members,
 	formatError,
 	className,
@@ -71,8 +70,7 @@ export const FieldGroup = ({
 			aria-describedby={describedBy}
 			className={className}>
 			<Fieldset.Legend>
-				{legend}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{legend} <Field.Requiredness />
 			</Fieldset.Legend>
 			<Fieldset.Description id={descriptionId}>
 				{description}

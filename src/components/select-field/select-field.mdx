@@ -1,11 +1,8 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import { DocsPage } from "../../../.storybook/docs-page";
 import styles from "../../../docs/design-system/components.module.scss";
 import { DoDont } from "../../../docs/design-system/do-dont";
 import { Example } from "../../../docs/design-system/example";
-import { Icon } from "../icon/index.ts";
 import { SelectField } from "./select-field.tsx";
 import * as SelectFieldStories from "./select-field.stories.tsx";
 
@@ -28,20 +25,12 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
       <div className={styles.card}>
         <SelectField
           label="Status"
-          optionalLabel="optional"
           options={[
             { label: "Draft", value: "draft" },
             { label: "Submitted", value: "submitted" },
             { label: "Paid", value: "paid" },
           ]}
           defaultValue="submitted"
-          icon={<Icon svg={ExpandMoreIcon} label="" />}
-          checkIcon={<Icon svg={CheckIcon} label="" />}
-          loadingLabel="Loading options…"
-          loadFailedLabel="Options could not be loaded."
-          loadBrokenLabel="Options could not be loaded, and trying again won't help."
-          retryLabel="Try again"
-          noOptionsLabel="No options available."
         />
       </div>
     </div>
@@ -50,13 +39,9 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
 ```tsx
 <SelectField
 	label="Status"
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 
@@ -96,7 +81,7 @@ There is no native select in an app built on the kit. Its dropdown list is drawn
 
 ### A select is labelled through the field's label prop
 
-Label it with the field's own `label` prop rather than a `for` attribute: [the field ties its label to the trigger itself](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism), and an `id` given to the field never reaches the trigger, so a `for` pointed at it names nothing.
+Label it with the field's own `label` prop rather than a `for` attribute: [the field ties its label to the trigger itself](?path=/docs/design-system-principles-accessibility--docs#every-control-has-a-name-from-exactly-one-mechanism), so a `<label>` of your own pointed at the trigger is a second mechanism on one control, beside a field label left empty.
 
 <DoDont>
 <Example kind="do" caption="The component ties its label to its own trigger.">
@@ -104,31 +89,23 @@ Label it with the field's own `label` prop rather than a `for` attribute: [the f
 ```tsx
 <SelectField
 	label="Status"
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 
 </Example>
-<Example kind="dont" caption="A label pointed at an id that stops at the field.">
+<Example kind="dont" caption="Two labels for one trigger, and the field's own is empty.">
 
 ```tsx
 <label htmlFor={id}>Status</label>
 <SelectField
 	id={id}
 	label=""
-	optionalLabel="optional"
 	options={statusOptions}
-	icon={<ExpandMoreIcon />}
-	checkIcon={<CheckIcon />}
 	value={status}
 	onValueChange={setStatus}
-	{...selectLabels}
 />
 ```
 

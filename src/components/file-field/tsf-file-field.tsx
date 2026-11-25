@@ -14,12 +14,12 @@ export type TSFFileFieldProps = Omit<
 >;
 
 /**
- * `FileField` bound to the TanStack Form field it renders in, reached as
+ * `FileField` connected to the TanStack Form field it renders in, reached as
  * `field.FileField`. The field's value is the staged `File` list.
  *
  * @example
  * <form.AppField name="attachments">
- * 	{field => <field.FileField label="Attachments" optionalLabel="optional" maxFileSize={limit} {...fileCopy} />}
+ * 	{field => <field.FileField label="Attachments" maxFileSize={limit} {...fileCopy} />}
  * </form.AppField>
  */
 export const TSFFileField = (

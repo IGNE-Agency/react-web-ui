@@ -10,17 +10,12 @@ import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
-	type FieldState,
-	fieldStateAttributes,
-	useFieldState,
 } from "../field/index.ts";
-import { detachHiddenInput } from "../field/hidden-input.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import { Tooltip } from "../tooltip/index.ts";
-import {
-	Combobox,
-	type ComboboxPopupLabels,
-} from "./combobox.tsx";
+import { Combobox } from "./combobox.tsx";
 import {
 	type ComboboxItems,
 	type ItemQuery,
@@ -37,7 +32,6 @@ import {
 import {
 	type ItemLookup,
 	type ValueState,
-	type ValueStateLabels,
 	valueStateOf,
 } from "./value-state.ts";
 import {
@@ -52,11 +46,12 @@ const alwaysRetryable = (): boolean => true;
 
 /** Everything a combobox field takes besides its items, its value and how it reads them. */
 export type ComboboxFieldChrome = FieldProps &
-	ComboboxPopupLabels &
 	Readonly<{
 		/** Shown in the control while nothing is chosen. */
 		placeholder?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** The form field's name. */
 		name?: string;
@@ -68,10 +63,6 @@ export type ComboboxFieldChrome = FieldProps &
 		searchDelay?: number;
 		/** Applied to the field wrapper, so callers can size the control. */
 		className?: string;
-		/** The chevron at the end of the control, such as an expand icon. */
-		icon?: ReactNode;
-		/** The mark beside a chosen option, such as a tick. */
-		checkIcon: ReactNode;
 	}>;
 
 /** How a combobox field reads its items. */
@@ -85,21 +76,22 @@ export type ComboboxDerivations<TItem> = Readonly<{
 }>;
 
 /**
- * An `itemQuery` that looks up the values the loaded list does not hold, with
- * the copy for values it reports gone. Needs `ComboboxItemQueries` above it.
+ * An `itemQuery` that looks up the values the loaded list does not hold, and
+ * marks the ones it reports gone. Needs `ComboboxItemQueries` above it.
  */
 export type ComboboxItemLookup<
 	TItem,
 	TData = TItem,
 	TKey extends QueryKey = QueryKey,
 > =
-	| Readonly<{ itemQuery?: never }>
-	| (Readonly<{
+	| Readonly<{
+			/** Looks up the chosen items the loaded list does not hold. */
+			itemQuery?: never;
+	  }>
+	| Readonly<{
+			/** Looks up the chosen items the loaded list does not hold. */
 			itemQuery: ItemQuery<TItem, TData, TKey>;
-			/** Marks a value that is no longer available, beside its label. */
-			unavailableIcon?: ReactNode;
-	  }> &
-			ValueStateLabels);
+	  }>;
 
 export type ComboboxFieldProps<
 	TItem,
@@ -116,8 +108,7 @@ type FieldBodyProps<TItem> = Readonly<{
 	source: ComboboxItems<TItem>;
 	derivations: ComboboxDerivations<TItem>;
 	mode: ComboboxMode<TItem>;
-	labels: ValueStateLabels | undefined;
-	unavailableIcon: ReactNode;
+	marked: boolean;
 	values: readonly TItem[];
 	states: readonly ValueState<TItem>[];
 	onChange: (next: readonly TItem[]) => void;
@@ -128,8 +119,7 @@ const FieldBody = <TItem,>({
 	source,
 	derivations,
 	mode,
-	labels,
-	unavailableIcon,
+	marked,
 	values,
 	states,
 	onChange,
@@ -139,38 +129,26 @@ const FieldBody = <TItem,>({
 		description,
 		errors,
 		requiredness,
-		optionalLabel,
 		dirty,
 		touched,
-		pending = false,
+		pending,
 		placeholder,
+		disabled,
 		readOnly,
 		name,
 		onBlur,
 		retryable = alwaysRetryable,
 		searchDelay = DEFAULT_SEARCH_DELAY,
 		className,
-		icon,
-		checkIcon,
 	} = chrome;
+	const copy = useCopy();
+	const icons = useIcons();
 	const { itemKey, children: renderItem } = derivations;
 	const itemLabel =
 		derivations.itemToStringLabel ?? itemKey;
-	const ids = Field.useIds();
 	const anchorRef = useRef<HTMLDivElement>(null);
 	const items = itemsOf(source);
 	const load = loadOf(source, retryable);
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		disabled: chrome.disabled,
-		readOnly,
-		filled: values.length > 0,
-	});
-	const { disabled } = field;
 	const [search, setSearch] = useState("");
 	const searchTimer = useRef<
 		ReturnType<typeof setTimeout> | undefined
@@ -193,21 +171,18 @@ const FieldBody = <TItem,>({
 		);
 	};
 
-	const fieldState: FieldState = {
-		...field.state,
-		pending:
-			field.state.pending === true ||
-			load.status === "pending",
-	};
 	const nameOf = (state: ValueState<TItem>) =>
-		valueStateName(state, itemLabel, labels);
+		valueStateName(
+			state,
+			itemLabel,
+			marked ? copy.options.unavailableName : undefined,
+		);
 	const view = (state: ValueState<TItem>) => (
 		<ValueStateView
 			state={state}
 			renderItem={renderItem}
 			itemLabel={itemLabel}
-			labels={labels}
-			icon={unavailableIcon}
+			marked={marked}
 		/>
 	);
 	const [first] = states;
@@ -219,12 +194,19 @@ const FieldBody = <TItem,>({
 		itemToStringValue: itemKey,
 		isItemEqualToValue: (item: TItem, value: TItem) =>
 			itemKey(item) === itemKey(value),
-		name: name ?? ids.controlId,
-		inputRef: detachHiddenInput,
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		...(load.status === "pending" && {
+			state: { pending: true },
+		}),
+		name,
 		disabled,
 		readOnly,
-		...(readOnly === true && { open: false }),
-		required: requiredness === "required",
+		onBlur,
+		className,
 		onInputValueChange: (
 			next: string,
 			details: Readonly<{ reason: string }>,
@@ -244,18 +226,11 @@ const FieldBody = <TItem,>({
 
 	const parts = (
 		<>
-			<Field.Label>
-				{label}{" "}
-				<Field.Requiredness
-					requiredness={requiredness}
-					optionalLabel={optionalLabel}
-				/>
-			</Field.Label>
+			<Combobox.Label>
+				{label} <Field.Requiredness />
+			</Combobox.Label>
 
-			<Combobox.Control
-				ref={anchorRef}
-				state={fieldState}
-				onBlur={onBlur}>
+			<Combobox.Control ref={anchorRef}>
 				{mode.multiple === true && (
 					<Combobox.Chips>
 						{first === undefined ? (
@@ -265,8 +240,6 @@ const FieldBody = <TItem,>({
 								label={mode.selectedLabel}
 								items={states}
 								itemKey={state => state.key}
-								disabled={disabled}
-								readOnly={readOnly}
 								onRemove={remaining => {
 									const kept = new Set(
 										remaining.map(state => state.key),
@@ -284,12 +257,11 @@ const FieldBody = <TItem,>({
 										textValue={nameOf(state)}>
 										{view(state)}
 										<Tooltip
-											content={mode.removeHint(
+											content={copy.options.removeHint(
 												nameOf(state),
 											)}>
-											<Combobox.ChipRemove
-												aria-label={mode.removeLabel}>
-												{mode.removeIcon}
+											<Combobox.ChipRemove>
+												{icons.remove}
 											</Combobox.ChipRemove>
 										</Tooltip>
 									</Combobox.Chip>
@@ -315,7 +287,7 @@ const FieldBody = <TItem,>({
 					<Combobox.Pending>
 						<Spinner size={1} />
 					</Combobox.Pending>
-					<Combobox.Icon>{icon}</Combobox.Icon>
+					<Combobox.Icon>{icons.expand}</Combobox.Icon>
 				</Combobox.Trigger>
 			</Combobox.Control>
 
@@ -331,61 +303,38 @@ const FieldBody = <TItem,>({
 									: search === ""
 							}
 							multiple={mode.multiple === true}
-							itemKey={itemKey}
-							checkIcon={checkIcon}
-							loadingLabel={chrome.loadingLabel}
-							loadFailedLabel={chrome.loadFailedLabel}
-							loadBrokenLabel={chrome.loadBrokenLabel}
-							retryLabel={chrome.retryLabel}
-							noOptionsLabel={chrome.noOptionsLabel}
-							noResultsLabel={chrome.noResultsLabel}
-							searchLabel={chrome.searchLabel}
-							loadingMoreLabel={chrome.loadingMoreLabel}
-							resultsLabel={chrome.resultsLabel}>
+							itemKey={itemKey}>
 							{renderItem}
 						</Combobox.Body>
 					</Combobox.Popup>
 				</Combobox.Positioner>
 			</Combobox.Portal>
 
-			{labels !== undefined && (
-				<ValueStatesStatus
-					states={states}
-					labels={labels}
-				/>
-			)}
-			<Field.Description>{description}</Field.Description>
-			<Field.Error>{errors}</Field.Error>
+			{marked && <ValueStatesStatus states={states} />}
+			<Combobox.Description>
+				{description}
+			</Combobox.Description>
+			<Combobox.Error />
 		</>
 	);
 
-	return (
-		<Field.Root
-			className={className}
-			disabled={disabled}
-			invalid={field.invalid}
-			dirty={dirty}
-			touched={touched}
-			{...fieldStateAttributes(fieldState)}>
-			{mode.multiple === true ? (
-				<Combobox.Root<TItem, true>
-					{...root}
-					multiple
-					value={[...values]}
-					onValueChange={next => onChange(next)}>
-					{parts}
-				</Combobox.Root>
-			) : (
-				<Combobox.Root<TItem>
-					{...root}
-					value={values.at(0) ?? null}
-					onValueChange={next =>
-						onChange(next === null ? [] : [next])
-					}>
-					{parts}
-				</Combobox.Root>
-			)}
-		</Field.Root>
+	return mode.multiple === true ? (
+		<Combobox.Root<TItem, true>
+			{...root}
+			multiple
+			value={[...values]}
+			onValueChange={next => onChange(next)}>
+			{parts}
+		</Combobox.Root>
+	) : (
+		<Combobox.Root<TItem>
+			{...root}
+			value={values.at(0) ?? null}
+			onValueChange={next =>
+				onChange(next === null ? [] : [next])
+			}>
+			{parts}
+		</Combobox.Root>
 	);
 };
 
@@ -395,21 +344,17 @@ const FieldBody = <TItem,>({
  * search box and the list. Static `items` are filtered on the client; a paged
  * `query` is searched on the server, debounced, and loads its next page as the
  * list nears its end. An `itemQuery` looks up chosen values the list does not
- * hold, and marks the ones it reports gone.
+ * hold, and marks the ones it reports gone. Assembled from `Combobox`'s parts.
  *
  * @example
  * <ComboboxField
  * 	label="Reviewer"
- * 	optionalLabel="optional"
  * 	query={reviewersQuery}
  * 	onSearchChange={setSearch}
  * 	itemKey={user => user.id}
  * 	itemToStringLabel={user => user.name}
  * 	value={reviewer}
- * 	onValueChange={setReviewer}
- * 	icon={<ExpandMoreIcon />}
- * 	checkIcon={<CheckIcon />}
- * 	{...comboboxCopy}>
+ * 	onValueChange={setReviewer}>
  * 	{user => user.name}
  * </ComboboxField>
  */
@@ -472,16 +417,14 @@ export const ComboboxField = <
 
 	const body = (
 		states: readonly ValueState<TItem>[],
-		labels: ValueStateLabels | undefined,
-		unavailableIcon?: ReactNode,
+		marked: boolean,
 	) => (
 		<FieldBody
 			chrome={props}
 			source={props}
 			derivations={props}
 			mode={props}
-			labels={labels}
-			unavailableIcon={unavailableIcon}
+			marked={marked}
 			values={values}
 			states={states}
 			onChange={change}
@@ -489,21 +432,17 @@ export const ComboboxField = <
 	);
 
 	if (props.itemQuery === undefined) {
-		return body(statesOf([]), undefined);
+		return body(statesOf([]), false);
 	}
 	if (Lookups === null) {
 		throw new Error(
 			"A ComboboxField with an itemQuery needs a <ComboboxItemQueries> above it.",
 		);
 	}
-	const labels: ValueStateLabels = props;
-	const { unavailableIcon } = props;
 	return (
 		// oxlint-disable-next-line react/static-components -- The lookup component comes from context, set once by ComboboxItemQueries; it is never created here.
 		<Lookups keys={asked} itemQuery={props.itemQuery}>
-			{lookups =>
-				body(statesOf(lookups), labels, unavailableIcon)
-			}
+			{lookups => body(statesOf(lookups), true)}
 		</Lookups>
 	);
 };

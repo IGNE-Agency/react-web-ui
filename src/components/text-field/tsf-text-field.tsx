@@ -18,12 +18,12 @@ export type TSFTextFieldProps = Omit<
 	TextFieldCopyProps;
 
 /**
- * `TextField` bound to the TanStack Form field it renders in. Registered as
+ * `TextField` connected to the TanStack Form field it renders in. Registered as
  * `field.TextField`.
  *
  * @example
  * <form.AppField name="name">
- * 	{field => <field.TextField label="Name" optionalLabel="optional" />}
+ * 	{field => <field.TextField label="Name" />}
  * </form.AppField>
  */
 export const TSFTextField = (

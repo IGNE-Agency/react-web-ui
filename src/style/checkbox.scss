@@ -1,6 +1,6 @@
 // See `docs/design-system/components.mdx`.
 
-/// The edge of a checkbox or radio box, overridable through `--checkbox-size`
+/// The edge of a checkbox or radio box, overridable through `--kit-checkbox-size`
 /// from anywhere above it.
 $size: var(--sys-unit-16);
 
@@ -14,20 +14,20 @@ $size: var(--sys-unit-16);
 ///       @include checkbox.box;
 ///   }
 @mixin box {
-	--_checkbox-border: var(
-		--checkbox-border,
+	--_kit-checkbox-border: var(
+		--kit-checkbox-border,
 		var(--sys-color-border)
 	);
-	--_checkbox-bg: var(
-		--checkbox-bg,
+	--_kit-checkbox-bg: var(
+		--kit-checkbox-bg,
 		var(--sys-color-surface)
 	);
-	--_checkbox-fg: var(
-		--checkbox-fg,
+	--_kit-checkbox-fg: var(
+		--kit-checkbox-fg,
 		var(--sys-color-on-primary)
 	);
-	--_checkbox-checked-bg: var(
-		--checkbox-checked-bg,
+	--_kit-checkbox-checked-bg: var(
+		--kit-checkbox-checked-bg,
 		var(--sys-color-primary)
 	);
 
@@ -35,16 +35,16 @@ $size: var(--sys-unit-16);
 	flex: 0 0 auto;
 	place-items: center;
 	box-sizing: border-box;
-	inline-size: var(--checkbox-size, #{$size});
-	block-size: var(--checkbox-size, #{$size});
-	border: var(--checkbox-border-width, 1px) solid
-		var(--_checkbox-border);
+	inline-size: var(--kit-checkbox-size, #{$size});
+	block-size: var(--kit-checkbox-size, #{$size});
+	border: var(--kit-checkbox-border-width, 1px) solid
+		var(--_kit-checkbox-border);
 	border-radius: var(
-		--checkbox-radius,
+		--kit-checkbox-radius,
 		var(--sys-radius-sm)
 	);
-	background: var(--_checkbox-bg);
-	color: var(--_checkbox-fg);
+	background: var(--_kit-checkbox-bg);
+	color: var(--_kit-checkbox-fg);
 
 	@media not (prefers-reduced-motion) {
 		transition:
@@ -59,7 +59,7 @@ $size: var(--sys-unit-16);
 @mixin box-focus {
 	&:focus-visible {
 		border-color: var(
-			--checkbox-focus-border,
+			--kit-checkbox-focus-border,
 			var(--sys-color-primary)
 		);
 	}
@@ -67,70 +67,70 @@ $size: var(--sys-unit-16);
 
 /// Fills a `box` to read as checked.
 @mixin box-checked {
-	--_checkbox-border: var(
-		--checkbox-checked-border,
-		var(--_checkbox-checked-bg)
+	--_kit-checkbox-border: var(
+		--kit-checkbox-checked-border,
+		var(--_kit-checkbox-checked-bg)
 	);
-	--_checkbox-bg: var(--_checkbox-checked-bg);
+	--_kit-checkbox-bg: var(--_kit-checkbox-checked-bg);
 }
 
 /// Re-points a `box`'s fill knobs to the error palette.
 @mixin box-invalid {
-	--_checkbox-border: var(
-		--checkbox-invalid-border,
+	--_kit-checkbox-border: var(
+		--kit-checkbox-invalid-border,
 		var(--sys-color-error-fg)
 	);
-	--_checkbox-bg: var(
-		--checkbox-invalid-bg,
+	--_kit-checkbox-bg: var(
+		--kit-checkbox-invalid-bg,
 		var(--sys-color-error-bg)
 	);
-	--_checkbox-checked-bg: var(
-		--checkbox-invalid-checked-bg,
+	--_kit-checkbox-checked-bg: var(
+		--kit-checkbox-invalid-checked-bg,
 		var(--sys-color-error-fg)
 	);
-	--_checkbox-fg: var(
-		--checkbox-invalid-fg,
+	--_kit-checkbox-fg: var(
+		--kit-checkbox-invalid-fg,
 		var(--sys-color-error-bg)
 	);
 }
 
 /// Re-points a `box`'s fill knobs to the read-only palette, dashed rim included.
 @mixin box-readonly {
-	--_checkbox-border: var(
-		--checkbox-readonly-border,
+	--_kit-checkbox-border: var(
+		--kit-checkbox-readonly-border,
 		var(--sys-color-outline)
 	);
-	--_checkbox-bg: var(
-		--checkbox-readonly-bg,
+	--_kit-checkbox-bg: var(
+		--kit-checkbox-readonly-bg,
 		var(--sys-color-surface-high)
 	);
-	--_checkbox-checked-bg: var(
-		--checkbox-readonly-checked-bg,
+	--_kit-checkbox-checked-bg: var(
+		--kit-checkbox-readonly-checked-bg,
 		var(--sys-color-primary-container)
 	);
-	--_checkbox-fg: var(
-		--checkbox-readonly-fg,
+	--_kit-checkbox-fg: var(
+		--kit-checkbox-readonly-fg,
 		var(--sys-color-on-primary-container)
 	);
 
 	border-style: var(
-		--checkbox-readonly-border-style,
+		--kit-checkbox-readonly-border-style,
 		dashed
 	);
 }
 
 /// Re-points a `box`'s fill knobs to the disabled palette, checked or not.
 @mixin box-disabled {
-	--_checkbox-bg: var(
-		--checkbox-disabled-bg,
+	--_kit-checkbox-bg: var(
+		--kit-checkbox-disabled-bg,
 		var(--sys-color-disabled-bg)
 	);
-	--_checkbox-checked-bg: var(
-		--checkbox-disabled-checked-bg,
+	--_kit-checkbox-checked-bg: var(
+		--kit-checkbox-disabled-checked-bg,
 		var(--sys-color-disabled-bg)
 	);
-	--_checkbox-fg: var(
-		--checkbox-disabled-fg,
+	--_kit-checkbox-fg: var(
+		--kit-checkbox-disabled-fg,
 		var(--sys-color-disabled-fg)
 	);
 
@@ -149,7 +149,7 @@ $size: var(--sys-unit-16);
 
 	&:hover #{$box} {
 		border-color: var(
-			--checkbox-hover-border,
+			--kit-checkbox-hover-border,
 			var(--sys-color-primary)
 		);
 	}
@@ -159,8 +159,8 @@ $size: var(--sys-unit-16);
 
 		&:hover #{$box}:not([data-checked]) {
 			border-color: var(
-				--_checkbox-border,
-				var(--checkbox-border, var(--sys-color-border))
+				--_kit-checkbox-border,
+				var(--kit-checkbox-border, var(--sys-color-border))
 			);
 		}
 	}
@@ -180,9 +180,9 @@ $size: var(--sys-unit-16);
 	grid-template-columns: auto 1fr;
 	grid-template-areas: "control text";
 	align-items: center;
-	gap: var(--checkbox-label-row-gap, var(--sys-unit-1))
-		var(--checkbox-label-gap, var(--sys-unit-6));
-	font: var(--checkbox-label-font, inherit);
+	gap: var(--kit-checkbox-label-row-gap, var(--sys-unit-1))
+		var(--kit-checkbox-label-gap, var(--sys-unit-6));
+	font: var(--kit-checkbox-label-font, inherit);
 
 	&:has(> [data-optional-suffix]) {
 		grid-template-areas:
@@ -210,12 +210,12 @@ $size: var(--sys-unit-16);
 
 	svg {
 		inline-size: var(
-			--checkbox-indicator-size,
-			calc(var(--checkbox-size, #{$size}) * 0.7)
+			--kit-checkbox-indicator-size,
+			calc(var(--kit-checkbox-size, #{$size}) * 0.7)
 		);
 		block-size: var(
-			--checkbox-indicator-size,
-			calc(var(--checkbox-size, #{$size}) * 0.7)
+			--kit-checkbox-indicator-size,
+			calc(var(--kit-checkbox-size, #{$size}) * 0.7)
 		);
 	}
 }

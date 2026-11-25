@@ -1,5 +1,6 @@
-import { Toggle as BaseToggle } from "@base-ui/react/toggle";
-import { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
+import { Field as BaseField } from "@base-ui/react/field";
+import { Radio as BaseRadio } from "@base-ui/react/radio";
+import { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 import { clsx } from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import {
@@ -18,46 +19,49 @@ import style from "./segmented-control.module.scss";
 
 export type SegmentedControlRootProps = FieldsetRootProps;
 
-export type SegmentedControlGroupProps = Omit<
-	BaseToggleGroup.Props,
-	"multiple"
-> &
+export type SegmentedControlGroupProps<
+	TValue = string | null,
+> = BaseRadioGroup.Props<TValue> &
 	Readonly<{
-		/** Read-only groups still read, but no longer answer a press. */
-		readOnly?: boolean;
+		/** Lays the options out in a row or a column. */
+		orientation?: "horizontal" | "vertical";
 		/** Paints the track with the error treatment. */
 		invalid?: boolean;
 	}>;
 
-const SegmentedControlGroup = ({
+const SegmentedControlGroup = <TValue,>({
 	className,
 	readOnly,
 	invalid,
+	orientation = "horizontal",
 	disabled = false,
-	onValueChange,
-	children,
 	...props
-}: SegmentedControlGroupProps): ReactNode => {
+}: SegmentedControlGroupProps<TValue>): ReactNode => {
 	const formDisabled = useFormDisabled();
 	return (
-		<BaseToggleGroup
+		<BaseRadioGroup
 			className={clsx(style.group, className)}
-			onValueChange={
-				readOnly === true ? undefined : onValueChange
-			}
+			readOnly={readOnly}
 			disabled={disabled || formDisabled}
+			data-orientation={orientation}
 			{...fieldStateAttributes({
 				readonly: readOnly,
 				validity: invalid === true ? "invalid" : undefined,
 			})}
-			{...props}>
-			{children}
-		</BaseToggleGroup>
+			{...props}
+		/>
 	);
 };
 
-export type SegmentedControlOptionProps = BaseToggle.Props;
+export type SegmentedControlOptionProps =
+	BaseRadio.Root.Props;
 
+/**
+ * One option, a radio that carries its own label.
+ *
+ * @example
+ * <SegmentedControl.Option value="list">List</SegmentedControl.Option>
+ */
 const SegmentedControlOption = ({
 	className,
 	children,
@@ -65,13 +69,17 @@ const SegmentedControlOption = ({
 }: SegmentedControlOptionProps): ReactNode => {
 	const focus = useFieldFocus(props);
 	return (
-		<BaseToggle
-			className={clsx(style.option, className)}
-			{...fieldStateAttributes(focus)}
-			{...props}
-			{...focus.props}>
-			{children}
-		</BaseToggle>
+		<BaseField.Item
+			render={
+				<BaseRadio.Root
+					className={clsx(style.option, className)}
+					{...fieldStateAttributes(focus)}
+					{...props}
+					{...focus.props}>
+					{children}
+				</BaseRadio.Root>
+			}
+		/>
 	);
 };
 
@@ -81,7 +89,7 @@ export type SegmentedControlIndicatorProps = Omit<
 >;
 
 /**
- * The pill that slides to the pressed option, after the options in the group.
+ * The pill that slides to the chosen option, after the options in the group.
  * Arriving from an empty group it lands in place and pops. Give it
  * `IndicatorLabels` for ink that changes colour as the pill arrives.
  *
@@ -95,7 +103,7 @@ const SegmentedControlIndicator = ({
 	...props
 }: SegmentedControlIndicatorProps): ReactNode => {
 	const ref = useSlidingIndicator<HTMLSpanElement>({
-		active: "[data-pressed]",
+		active: "[data-checked]",
 	});
 
 	return (
@@ -110,7 +118,7 @@ const SegmentedControlIndicator = ({
 
 /**
  * A second copy of every option's label inside the pill, offset so that only
- * the pressed one falls inside it. Holds one `IndicatorLabel` per option, in
+ * the chosen one falls inside it. Holds one `IndicatorLabel` per option, in
  * the order the group renders them.
  *
  * @example
@@ -160,15 +168,14 @@ export type SegmentedControlParts = Readonly<{
 }>;
 
 /**
- * The styled parts of a single-choice base-ui ToggleGroup: a track of options,
- * one pressed at a time, with a pill that slides to it. The `Root` is a
- * fieldset named by its `Legend`. For the ordinary case, use
- * `SegmentedControlField`.
+ * The styled parts of a base-ui radio group drawn as a track of options, one
+ * chosen at a time, with a pill that slides to it. The `Root` is a fieldset
+ * named by its `Legend`. For the ordinary case, use `SegmentedControlField`.
  *
  * @example
  * <SegmentedControl.Root filled={view !== null} requiredness="optional">
- * 	<SegmentedControl.Legend>View <Field.Requiredness optionalLabel="optional" /></SegmentedControl.Legend>
- * 	<SegmentedControl.Group value={view === null ? [] : [view]} onValueChange={next => setView(next[0] ?? null)}>
+ * 	<SegmentedControl.Legend>View <Field.Requiredness /></SegmentedControl.Legend>
+ * 	<SegmentedControl.Group value={view} onValueChange={setView}>
  * 		<SegmentedControl.Option value="list">List</SegmentedControl.Option>
  * 		<SegmentedControl.Option value="board">Board</SegmentedControl.Option>
  * 		<SegmentedControl.Indicator>

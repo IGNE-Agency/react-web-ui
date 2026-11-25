@@ -13,7 +13,10 @@ import {
 import { useFormDisabled } from "../form/form-context.ts";
 import style from "./checkbox.module.scss";
 
-export type CheckboxRootProps = FieldRootProps &
+export type CheckboxRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -25,6 +28,7 @@ export type CheckboxRootProps = FieldRootProps &
 	Readonly<{
 		/** The box is checked. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 	}>;
 
@@ -59,6 +63,7 @@ const CheckboxRoot = ({
 			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
+			phase={field.phase}
 			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>
@@ -155,7 +160,7 @@ export type CheckboxParts = Readonly<{
  * 			<Checkbox.Indicator><CheckIcon /></Checkbox.Indicator>
  * 		</Checkbox.Control>
  * 		<Field.InlineLabelText>I agree to the terms <Field.RequiredMark /></Field.InlineLabelText>
- * 		<Field.InlineOptional optionalLabel="optional" />
+ * 		<Field.InlineOptional />
  * 	</Checkbox.Label>
  * </Checkbox.Root>
  */

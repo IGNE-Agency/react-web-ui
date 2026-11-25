@@ -1,6 +1,9 @@
 @use "../../style/layers.scss";
 @use "../../style/loading-motion.scss" as loading;
 
+$turn: 2s;
+$sweep: 1.5s;
+
 @layer kit.components {
 	@include loading.pulse-keyframes;
 
@@ -30,7 +33,7 @@
 
 	.spinner {
 		display: inline-block;
-		color: var(--spinner-color, currentcolor);
+		color: var(--kit-spinner-color, currentcolor);
 	}
 
 	.ring {
@@ -51,11 +54,11 @@
 
 	@media not (prefers-reduced-motion) {
 		.ring {
-			animation: spinner-turn 2s linear infinite;
+			animation: spinner-turn $turn linear infinite;
 		}
 
 		.arc {
-			animation: spinner-sweep 1.5s ease-in-out infinite;
+			animation: spinner-sweep $sweep ease-in-out infinite;
 		}
 	}
 }

@@ -22,7 +22,7 @@ export type PhoneFieldProps = TextPresetProps &
  * user. The number's rule belongs to the form's schema.
  *
  * @example
- * <PhoneField label="Phone number" optionalLabel="optional" autoComplete="tel" value={phone} onValueChange={setPhone} />
+ * <PhoneField label="Phone number" autoComplete="tel" value={phone} onValueChange={setPhone} />
  */
 export const PhoneField = (
 	props: PhoneFieldProps,

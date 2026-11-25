@@ -1,10 +1,6 @@
 import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
 import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
 import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import RestartIcon from "@material-design-icons/svg/outlined/restart_alt.svg?react";
 import { Meta } from "@storybook/addon-docs/blocks";
 import {
@@ -21,7 +17,7 @@ import { SwitchField } from "../../src/components/switch-field/index.ts";
 import { DateField } from "../../src/components/date-field/index.ts";
 import { TextField } from "../../src/components/text-field/index.ts";
 import { Icon } from "../../src/components/icon/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import { Beside } from "./beside";
 import componentStyles from "./components.module.scss";
 import { Details, DetailsList } from "./details";
@@ -38,43 +34,18 @@ import {
 import styles from "./patterns.module.scss";
 
 export const Live = ({ children }) => (
-	<StoryProviders>{children}</StoryProviders>
+	<DocsProviders>{children}</DocsProviders>
 );
 
 export const ignore = () => undefined;
 
-export const checkMarks = {
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	indeterminateIcon: <Icon svg={RemoveIcon} label="" />,
-};
-
 export const Box = props => (
 	<Checkbox.Control {...props}>
 		<Checkbox.Indicator>
-			{checkMarks.checkIcon}
+			<Icon svg={CheckIcon} label="" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 );
-
-export const dateLabels = {
-	optionalLabel: "optional",
-	openCalendarLabel: "Open calendar",
-	previousMonthLabel: "Previous month",
-	nextMonthLabel: "Next month",
-	monthLabel: "Month",
-	yearLabel: "Year",
-	noMatchingYearLabel: "No matching year.",
-};
-
-export const dateIcons = {
-	openCalendarIcon: (
-		<Icon svg={CalendarTodayIcon} label="" />
-	),
-	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-};
 
 export const guide = { accent: "blue" };
 
@@ -91,7 +62,7 @@ A product is built from components, but people meet it in moments, and in famili
 ## Applies to
 
 - **Regions of data:** [data tables](?path=/docs/components-data-table--docs), [comment threads](?path=/docs/components-conversation--docs), [stale content](?path=/docs/components-stale--docs), the menus of [selects](?path=/docs/components-select-field--docs) and [comboboxes](?path=/docs/components-combobox-field--docs), and [popovers](?path=/docs/components-popover--docs) that load details.
-- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs), banners, and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
+- **Telling people what happened:** [toasts](?path=/docs/components-toast--docs), [banners](?path=/docs/components-banner--docs), and the [status messages](?path=/docs/components-status-message--docs) for [loading](?path=/docs/components-loading-message--docs), [nothing found](?path=/docs/components-empty-message--docs) and [failure](?path=/docs/components-error-message--docs).
 - **Fields and forms:** [forms](?path=/docs/components-form--docs), [text fields](?path=/docs/components-text-field--docs), [password fields](?path=/docs/components-password-field--docs), [text areas](?path=/docs/components-textarea-field--docs), [number fields](?path=/docs/components-number-field--docs), [selects](?path=/docs/components-select-field--docs), [comboboxes](?path=/docs/components-combobox-field--docs), [date fields](?path=/docs/components-date-field--docs), [date range fields](?path=/docs/components-date-range-field--docs), [time fields](?path=/docs/components-time-field--docs), [checkboxes](?path=/docs/components-checkbox-field--docs), [checkbox groups](?path=/docs/components-checkbox-group-field--docs), [radio groups](?path=/docs/components-radio-group-field--docs), [segmented controls](?path=/docs/components-segmented-control-field--docs), [toggle groups](?path=/docs/components-toggle-group-field--docs), [switches](?path=/docs/components-switch-field--docs), [file fields](?path=/docs/components-file-field--docs), [photo fields](?path=/docs/components-photo-field--docs), [one-time code fields](?path=/docs/components-otp-field--docs) and the preset fields for [email](?path=/docs/components-email-field--docs), [phone numbers](?path=/docs/components-phone-field--docs) and [search](?path=/docs/components-search-field--docs).
 - **Labels pinned to things:** [tags](?path=/docs/components-tag--docs), [tag groups](?path=/docs/components-tag-group--docs), [badges](?path=/docs/components-badge--docs) and the [filter bar](?path=/docs/components-filter-bar--docs).
 - **Navigation:** [the nav](?path=/docs/components-nav--docs), as a rail or a bar, [tabs](?path=/docs/components-tabs--docs) and [breadcrumbs](?path=/docs/components-breadcrumbs--docs).
@@ -242,11 +213,11 @@ News is easiest to take in where the eye already is. Feedback about what is in f
 | A field is invalid | Under the field | "A KvK number has 8 digits." |
 | A form did its job | In place of its introduction | "A recovery link is on its way." |
 | Background work failed | A toast, with the fix | A comment that didn't send |
-| A condition that lasts | A banner across the app | "Storage almost full" |
+| A condition that lasts | [A banner](?path=/docs/components-banner--docs#a-banner-states-something-app-wide) across the app | "Storage almost full" |
 | The session ended | A toast at sign-in | "You were signed out" |
 | A step can't be undone | A dialog | "Delete comment?" |
 
-A toast that offers an action waits until it is dismissed, because a fix that disappears before it can be pressed is no fix. Any other toast leaves after a few seconds, and the same toast is never shown twice at once.
+A toast that offers an action waits until it is dismissed, because a fix that disappears before it can be pressed is no fix. Any other toast leaves after a few seconds. The same toast is never shown twice at once: news about something a toast on screen already covers replaces that toast's message where it stands.
 
 ## Where you type
 
@@ -270,8 +241,6 @@ The browser's own date picker isn't used, for [the same reasons as the native se
 				<Live>
 					<div className={componentStyles.card}>
 						<DateField
-							{...dateLabels}
-							{...dateIcons}
 							label="Service date"
 							defaultValue="2026-10-02"
 						/>
@@ -315,7 +284,6 @@ The reason is not taste. Every masking engine either rejects a character or cuts
 				<div
 					className={`${componentStyles.card} ${componentStyles.cardWide}`}>
 					<TextField
-						optionalLabel="optional"
 						label="IBAN"
 						description="For example NL91 ABNA 0417 1643 00"
 						value="NL91 ABNA 0417"
@@ -366,7 +334,6 @@ Invalid is the whole field turning: error ink on an error fill, inside an error 
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Amount"
 							prefix="€"
 							value="-5"
@@ -405,7 +372,7 @@ Invalid is the whole field turning: error ink on an error fill, inside an error 
 	/>
 </DoDont>
 
-Every field says when it is optional, always. <Pull>Silence is not the signal for either state: a field that says nothing is a field nobody can tell is optional.</Pull> The marker goes on the field's own label, which is also why a group of boxes or radios has a label of its own: the marker belongs to the field, not to the third option down.
+Every field in a form says whether it is required or optional, always. <Pull>Silence is not the signal for either state: a field that says nothing is a field nobody can tell is optional.</Pull> A field outside a form, such as a filter in a toolbar, asks nothing of anyone and leaves `requiredness` out. The marker goes on the field's own label, which is also why a group of boxes or radios has a label of its own: the marker belongs to the field, not to the third option down.
 
 <DoDont>
 	<Example
@@ -416,7 +383,6 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<CheckboxGroupField
-						optionalLabel="optional"
 						label="Status"
 						requiredness="optional"
 						items={[
@@ -425,7 +391,6 @@ Every field says when it is optional, always. <Pull>Silence is not the signal fo
 							{ label: "Paid", value: "paid" },
 						]}
 						defaultValue={["submitted"]}
-						checkIcon={checkMarks.checkIcon}
 					/>
 				</div>
 			</div>
@@ -465,13 +430,10 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 				<Live>
 					<div className={componentStyles.card}>
 						<CheckboxField
-							optionalLabel="optional"
 							label="Send me a copy by email"
 							requiredness="optional"
-							{...checkMarks}
 						/>
 						<SwitchField
-							optionalLabel="optional"
 							label="Notify the client contact"
 							requiredness="optional"
 						/>
@@ -488,11 +450,7 @@ A control whose only label sits beside it, like a lone checkbox or a switch, has
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<Live>
 					<div className={componentStyles.card}>
-						<CheckboxField
-							optionalLabel="optional"
-							label="Send me a copy by email (optional)"
-							{...checkMarks}
-						/>
+						<CheckboxField label="Send me a copy by email (optional)" />
 					</div>
 				</Live>
 			</div>
@@ -516,15 +474,12 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Consultant"
 							value="Anna de Vries"
 							onValueChange={ignore}
 							readOnly
 						/>
 						<DateField
-							{...dateLabels}
-							{...dateIcons}
 							label="Service date"
 							defaultValue="2026-10-02"
 							readOnly
@@ -580,13 +535,10 @@ Read-only is a dashed border on the raised surface, not a slightly different fil
 				<Live>
 					<div className={componentStyles.card}>
 						<CheckboxField
-							optionalLabel="optional"
 							label="Work completed"
 							readOnly
-							{...checkMarks}
 						/>
 						<SwitchField
-							optionalLabel="optional"
 							label="Notify the client contact"
 							readOnly
 						/>
@@ -631,7 +583,6 @@ Anything inside a group is bare. The control drops its border, background and pa
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -681,22 +632,16 @@ A field's height comes from the field, never from its parts. The group has a flo
 					<div
 						className={`${componentStyles.card} ${componentStyles.rowTop}`}>
 						<TextField
-							optionalLabel="optional"
 							label="Reference"
 							value=""
 							onValueChange={ignore}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 						<TextField
-							optionalLabel="optional"
 							label="Reference"
 							value="INV-0412"
 							onValueChange={ignore}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -746,7 +691,6 @@ Text on the field's line hugs the font, not the line height. A native entry lays
 				className={`sb-unstyled ${componentStyles.visual}`}>
 				<div className={componentStyles.card}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -796,7 +740,6 @@ A field's static text, like a currency sign, a unit or a fixed prefix, is [decor
 				<div
 					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount in euros"
 						prefix="€"
 						value="19,28"
@@ -821,7 +764,6 @@ A field's static text, like a currency sign, a unit or a fixed prefix, is [decor
 				<div
 					className={`${componentStyles.card} ${componentStyles.stackStart}`}>
 					<TextField
-						optionalLabel="optional"
 						label="Amount"
 						prefix="€"
 						value="19,28"
@@ -855,15 +797,12 @@ Invalid reaches the field's ink, not its buttons. The field's ink is set once, a
 				<Live>
 					<div className={componentStyles.card}>
 						<TextField
-							optionalLabel="optional"
 							label="Amount"
 							prefix="€"
 							value="-5"
 							onValueChange={ignore}
 							errors={["An amount can't be negative."]}
 							clearable
-							clearLabel="Clear"
-							clearIcon={<Icon svg={CloseIcon} label="" />}
 						/>
 					</div>
 				</Live>
@@ -909,7 +848,7 @@ Nobody likes being corrected mid-sentence. A form says nothing about errors whil
     	kind="do"
     	caption="After a submit, the field says what is wrong in a sentence that also says what is right."
     	visual={
-    		<TextField optionalLabel="optional"
+    		<TextField
     			className={styles.field}
     			label="KvK number"
     			value="1234"
@@ -1239,10 +1178,13 @@ The message replaces the rows and keeps the headers and filters. Explained in [T
 <Example kind="do" caption="The table's own empty state, under its headers.">
 
 ```tsx
-<DataTable
-	table={table}
-	emptyState={m.data_table_empty()}
-/>
+<DataTable.Root table={table} status={query.status}>
+	<DataTable.Content
+		emptyState={m.data_table_empty()}
+		errorLabel={m.data_table_error()}
+		loadingLabel={m.data_table_loading()}
+	/>
+</DataTable.Root>
 ```
 
 </Example>
@@ -1253,7 +1195,9 @@ The message replaces the rows and keeps the headers and filters. Explained in [T
 	rows.length === 0 ? (
 		<EmptyMessage title={m.data_table_empty()} />
 	) : (
-		<DataTable table={table} />
+		<DataTable.Root table={table} status={query.status}>
+			<DataTable.Content … />
+		</DataTable.Root>
 	);
 }
 ```
@@ -1302,7 +1246,7 @@ A timeout, a rate limit or a server fault is retried in the background, then off
 
 <Details title="Feedback appears where the user is looking">
 
-In the region, under the field or in place of the form's introduction. A toast is for what happened out of view, a banner for a condition that lasts, and a dialog only for a question. Explained in [Telling people what happened](#telling-people-what-happened).
+In the region, under the field or in place of the form's introduction. A toast is for what happened out of view, [a banner](?path=/docs/components-banner--docs#a-banner-states-something-app-wide) for a condition that lasts, and a dialog only for a question. Explained in [Telling people what happened](#telling-people-what-happened).
 
 </Details>
 
@@ -1347,7 +1291,7 @@ toast.error(m.toast_comment_send_failed(), {
 
 <Details title="The same toast is never shown twice at once">
 
-A toast about one thing carries that thing's key, so a second failure replaces it rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
+A toast about one thing carries that thing's key, so a second push with that key replaces the toast's message, tone and actions where it stands, restarts its timer and is announced again, rather than stacking beside it. Explained in [Telling people what happened](#telling-people-what-happened).
 
 ```ts
 toast.error(m.toast_comment_send_failed(), {
@@ -1474,9 +1418,9 @@ The format goes in the field's `description`, and the separators and case are no
 
 </Details>
 
-<Details title="Every field says when it is optional, on its own label">
+<Details title="Every field in a form says when it is optional, on its own label">
 
-A group of checkboxes or radios takes a `label` of its own, so the marker has a label to sit on. Explained in [What a field says about itself](#what-a-field-says-about-itself).
+A field in a form always passes `requiredness`, `"required"` or `"optional"`; left out, it shows neither mark, which only a field outside a form may do. A group of checkboxes or radios takes a `label` of its own, so the marker has a label to sit on. Explained in [What a field says about itself](#what-a-field-says-about-itself).
 
 <DoDont>
 <Example kind="do" caption="The group is named, so the marker has somewhere to live.">
@@ -1485,7 +1429,6 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 <CheckboxGroupField
 	label={m.invoices_status_label()}
 	items={items}
-	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1514,7 +1457,7 @@ A group of checkboxes or radios takes a `label` of its own, so the marker has a 
 
 <Details title="A lone checkbox or switch puts its optional marker on a row under the text">
 
-Its label is a two-column grid: the marker takes a second row, and the control stays centred in its own column. Pass `requiredness` rather than writing the marker into the label; on the raw tier, the marker is `Field.InlineOptional`, after the label's text. Shown in [What a field says about itself](#what-a-field-says-about-itself).
+Its label is a two-column grid: the marker takes a second row, and the control stays centred in its own column. Pass `requiredness` rather than writing the marker into the label; on the primitive, the marker is `Field.InlineOptional`, after the label's text. Shown in [What a field says about itself](#what-a-field-says-about-itself).
 
 <DoDont>
 <Example kind="do" caption="A lone checkbox puts the marker on a row of its own, under the text.">
@@ -1523,7 +1466,6 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 <CheckboxField
 	label={m.invoice_send_copy()}
 	requiredness="optional"
-	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1533,7 +1475,6 @@ Its label is a two-column grid: the marker takes a second row, and the control s
 ```tsx
 <CheckboxField
 	label={`${m.invoice_send_copy()} (${m.forms_optional()})`}
-	checkIcon={<CheckIcon />}
 />
 ```
 
@@ -1818,14 +1759,14 @@ The clear affordance, a password reveal, a calendar trigger and a copy-to-clipbo
 
 <Details title="Invalid re-points the field's ink and leaves its buttons alone">
 
-The field's ink, `--_field-fg` and `--_field-muted-fg`, is re-pointed once, on the control or on the group, and every part that is ink reads it bare, with no fallback literal. An app colours the ink through the public knobs those read first, `--field-fg` and `--field-muted-fg`, and through `--field-invalid-fg` for the invalid state. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
+The field's ink, `--_kit-field-fg` and `--_kit-field-muted-fg`, is re-pointed once, on the control or on the group, and every part that is ink reads it bare, with no fallback literal. An app colours the ink through the public knobs those read first, `--kit-field-fg` and `--kit-field-muted-fg`, and through `--kit-field-invalid-fg` for the invalid state. An inlay that acts declares no colour. Shown in [Everything in one box](#everything-in-one-box).
 
 <DoDont>
 <Example kind="do" caption="Ink reads the knob, and the action leaves its colour to the button.">
 
 ```scss
 .separator {
-	color: var(--_field-muted-fg);
+	color: var(--_kit-field-muted-fg);
 }
 
 .action {
@@ -1862,10 +1803,10 @@ On submit every problem shows at once, and the first invalid field takes focus a
 
 ```scss
 .chip {
-	@include tone.variants("chip");
+	@include tone.variants("_kit-chip");
 
-	background: var(--chip-bg);
-	color: var(--chip-fg);
+	background: var(--kit-chip-bg, var(--_kit-chip-bg));
+	color: var(--kit-chip-fg, var(--_kit-chip-fg));
 }
 ```
 
@@ -1893,8 +1834,8 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 ```scss
 &[data-variant="solid"] {
-	--chip-bg: var(--sys-color-error-fg);
-	--chip-fg: var(--sys-color-error-bg);
+	--_kit-chip-bg: var(--sys-color-error-fg);
+	--_kit-chip-fg: var(--sys-color-error-bg);
 }
 ```
 
@@ -1903,8 +1844,8 @@ Explained in [Labels pinned to things](#labels-pinned-to-things).
 
 ```scss
 &[data-variant="solid"] {
-	--chip-bg: var(--ref-red-600);
-	--chip-fg: var(--ref-neutral-0);
+	--_kit-chip-bg: var(--ref-red-600);
+	--_kit-chip-fg: var(--ref-neutral-0);
 }
 ```
 
@@ -2040,7 +1981,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_overlay-dim: 0.22;
+	--_kit-overlay-scrim: var(--sys-color-scrim-low);
 	backdrop-filter: blur(1px);
 }
 ```
@@ -2050,7 +1991,7 @@ A one-pixel blur, and a lighter dim under a drawer than under a dialog. Shown in
 
 ```scss
 .backdrop {
-	--_overlay-dim: 0.7;
+	--_kit-overlay-scrim: var(--sys-color-scrim);
 	backdrop-filter: blur(8px);
 }
 
@@ -2075,7 +2016,7 @@ An overlay includes `overlay.backdrop` and re-points the tier rather than restat
 .backdrop {
 	@include overlay.backdrop;
 
-	--_overlay-dim: 0.22;
+	--_kit-overlay-scrim: var(--sys-color-scrim-low);
 }
 ```
 
@@ -2157,7 +2098,7 @@ The title is a question that names the action, and the body says what will happe
 	description={m.comment_delete_description()}
 	confirmLabel={m.comment_delete_confirm()}
 	cancelLabel={m.comment_delete_cancel()}
-	onConfirm={() => void deleteComment(id)}
+	onConfirm={() => deleteComment(id)}
 	tone="danger"
 />
 ```
@@ -2172,7 +2113,7 @@ The title is a question that names the action, and the body says what will happe
 	title="Are you sure?"
 	confirmLabel="Yes"
 	cancelLabel="No"
-	onConfirm={() => void deleteComment(id)}
+	onConfirm={() => deleteComment(id)}
 />
 ```
 

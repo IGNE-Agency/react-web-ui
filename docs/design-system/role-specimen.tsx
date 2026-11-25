@@ -58,7 +58,7 @@ const Sample = ({
 		style={{
 			"--surface": `var(${variableNameOf(role.fill ?? SURFACE)})`,
 			"--ink": `var(${variableNameOf(role.ink ?? TEXT)})`,
-			"--line":
+			"--kit-line":
 				role.line === undefined
 					? undefined
 					: `var(${variableNameOf(role.line)})`,

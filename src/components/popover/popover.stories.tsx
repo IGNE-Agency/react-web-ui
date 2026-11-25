@@ -12,13 +12,13 @@ import {
 	useOverlayFrame,
 	withOverlayFrame,
 } from "../../lib/storybook/overlay-frame.tsx";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { Button } from "../button/button.tsx";
 import { Popover } from "./popover.tsx";
 import styles from "./popover.stories.module.scss";
 
 const SHOW_DETAILS = "Show client details";
-const LOADING = "Loading client details";
 const CLIENT_NAME = "Jan de Vries";
 const INDUSTRY = "Hospitality and leisure";
 
@@ -65,8 +65,7 @@ const PopoverParts = ({
 			</Button>
 			<Popover.Content
 				container={container}
-				loading={loading}
-				loadingLabel={LOADING}>
+				loading={loading}>
 				<Popover.Arrow />
 				<Popover.Title>
 					<Popover.Skeleton>{CLIENT_NAME}</Popover.Skeleton>
@@ -181,7 +180,7 @@ export const Loading: Story = {
 	play: async () => {
 		await expect(
 			await screen.findByRole("status"),
-		).toHaveTextContent(LOADING);
+		).toHaveTextContent(STORY_COPY.loading);
 	},
 };
 
@@ -302,18 +301,18 @@ export const EdgePadding: Story = {
 		docs: {
 			description: {
 				story:
-					"The positioner keeps the `--popup-edge-padding` knob's distance from the viewport's edges, read at runtime.",
+					"The positioner keeps the `--kit-popup-edge-padding` knob's distance from the viewport's edges, read at runtime.",
 			},
 		},
 	},
 	beforeEach: () => {
 		const root = document.documentElement;
 		root.style.setProperty(
-			"--popup-edge-padding",
+			"--kit-popup-edge-padding",
 			`${EDGE_PADDING_PX}px`,
 		);
 		return () => {
-			root.style.removeProperty("--popup-edge-padding");
+			root.style.removeProperty("--kit-popup-edge-padding");
 		};
 	},
 	play: async () => {

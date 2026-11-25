@@ -17,12 +17,12 @@ export type TSFDateFieldProps = Omit<
 >;
 
 /**
- * `DateField` bound to the TanStack Form field it renders in, reached as
+ * `DateField` connected to the TanStack Form field it renders in, reached as
  * `field.DateField`. The field's value is an ISO plain date, or `null`.
  *
  * @example
  * <form.AppField name="treatedOn">
- * 	{field => <field.DateField label="Service date" optionalLabel="optional" openCalendarIcon={<CalendarTodayIcon />} {...calendarLabels} {...calendarIcons} />}
+ * 	{field => <field.DateField label="Service date" />}
  * </form.AppField>
  */
 export const TSFDateField = (

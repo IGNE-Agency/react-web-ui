@@ -22,7 +22,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		gap: var(--text-field-bar-gap, var(--sys-unit-4));
+		gap: var(--kit-text-field-bar-gap, var(--sys-unit-4));
 		pointer-events: none;
 
 		&:empty {
@@ -43,31 +43,31 @@
 	}
 
 	.counter {
-		--_counter-fg: var(
-			--text-field-counter-fg,
+		--_kit-text-field-counter-fg: var(
+			--kit-text-field-counter-fg,
 			var(--sys-color-text-muted)
 		);
 
 		align-self: flex-end;
 		justify-self: end;
-		color: var(--_counter-fg);
+		color: var(--_kit-text-field-counter-fg);
 		font: var(
-			--text-field-counter-font,
+			--kit-text-field-counter-font,
 			var(--sys-font-body-small)
 		);
 		font-variant-numeric: tabular-nums;
 		cursor: default;
 
 		&[data-tone="warning"] {
-			--_counter-fg: var(
-				--text-field-counter-warning-fg,
+			--_kit-text-field-counter-fg: var(
+				--kit-text-field-counter-warning-fg,
 				var(--sys-color-warning-fg)
 			);
 		}
 
 		&[data-tone="error"] {
-			--_counter-fg: var(
-				--text-field-counter-error-fg,
+			--_kit-text-field-counter-fg: var(
+				--kit-text-field-counter-error-fg,
 				var(--sys-color-error-fg)
 			);
 		}

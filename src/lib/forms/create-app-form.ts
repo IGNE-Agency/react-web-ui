@@ -3,18 +3,18 @@ import type { ReactNode } from "react";
 import { fieldContext, formContext } from "./context.tsx";
 import { focusFirstInvalidField } from "./failed-submit.tsx";
 
-type Bridge = Readonly<{
+type Connector = Readonly<{
 	bivarianceHack(props: object): ReactNode;
 }>["bivarianceHack"];
 
-/** The bridges a form hook renders through `form.AppField`, by the name a field reaches each under. */
+/** The connectors a form hook renders through `form.AppField`, by the name a field reaches each under. */
 export type AppFieldComponents = Readonly<
-	Record<string, Bridge>
+	Record<string, Connector>
 >;
 
-/** The bridges that read a whole form rather than one field, such as `TSFFieldGroup`, by the name a form reaches each under. */
+/** The connectors that read a whole form rather than one field, such as `TSFFieldGroup`, by the name a form reaches each under. */
 export type AppFormComponents = Readonly<
-	Record<string, Bridge>
+	Record<string, Connector>
 >;
 
 /** A form hook's form components when it registers none. */
@@ -55,7 +55,7 @@ export type CreateAppForm = {
 const noFormComponents: NoFormComponents = {};
 
 /**
- * A form hook over the given bridges, whose failed submit focuses the first
+ * A form hook over the given connectors, whose failed submit focuses the first
  * invalid control of the `Form.Root` the form renders in.
  *
  * @example
@@ -89,8 +89,8 @@ const buildAppForm = <
 };
 
 /**
- * The app's form hook, with only the bridges it registers. A form reaches each
- * field bridge through `form.AppField` under its key, and each form component,
+ * The app's form hook, with only the connectors it registers. A form reaches each
+ * field connector through `form.AppField` under its key, and each form component,
  * such as `TSFFieldGroup`, as `form.<key>`. A failed submit focuses the first
  * invalid control of the `Form.Root` the form renders in.
  *

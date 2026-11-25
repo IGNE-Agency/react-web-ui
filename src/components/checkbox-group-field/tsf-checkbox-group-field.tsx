@@ -17,13 +17,13 @@ export type TSFCheckboxGroupFieldProps = Omit<
 >;
 
 /**
- * `CheckboxGroupField` bound to the TanStack Form field it renders in, whose
+ * `CheckboxGroupField` connected to the TanStack Form field it renders in, whose
  * value is the array of ticked values. Reach it as `field.CheckboxGroupField`
  * inside `form.AppField`.
  *
  * @example
  * <form.AppField name="statuses">
- * 	{field => <field.CheckboxGroupField label="Statuses" items={statuses} optionalLabel="optional" />}
+ * 	{field => <field.CheckboxGroupField label="Statuses" items={statuses} />}
  * </form.AppField>
  */
 export const TSFCheckboxGroupField = (

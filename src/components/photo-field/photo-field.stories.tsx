@@ -17,19 +17,23 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
+import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
 import {
 	PhotoField,
 	type PhotoFieldProps,
 } from "./photo-field.tsx";
+import { PhotoInput } from "./photo-input.tsx";
+import { TSFPhotoField } from "./tsf-photo-field.tsx";
 
 const LABEL = "Profile photo";
-const REMOVE = "Remove photo";
-const PHOTO_SET = "Photo set";
-const NO_PHOTO = "No photo";
-const PREVIEW = "Preview";
+const DESCRIPTION = "A square photo works best.";
+const JPEG_ERROR = "Use a JPEG photo.";
 
 const PORTRAIT = pngFile("portrait.png");
+const UPLOAD_TIME = 500;
 
 const STORED = <Icon svg={PersonIcon} label="" />;
 
@@ -63,6 +67,74 @@ const StatefulPhotoField = (args: PhotoFieldProps) => {
 	);
 };
 
+const UploadingPhotoField = (args: PhotoFieldProps) => {
+	const [value, setValue] = useState<File | undefined>();
+	const [uploading, setUploading] = useState(false);
+
+	return (
+		<PhotoField
+			{...args}
+			value={value}
+			pending={uploading}
+			onValueChange={async next => {
+				setValue(next);
+				setUploading(true);
+				await new Promise(resolve => {
+					setTimeout(resolve, UPLOAD_TIME);
+				});
+				setUploading(false);
+			}}
+		/>
+	);
+};
+
+const ComposedPhotoInput = () => {
+	const [file, setFile] = useState<File | undefined>();
+
+	return (
+		<PhotoInput.Root
+			value={file}
+			onValueChange={setFile}
+			errors={
+				file !== undefined && file.type !== "image/jpeg"
+					? [JPEG_ERROR]
+					: undefined
+			}
+			requiredness="required">
+			<PhotoInput.Label>
+				{LABEL} <Field.Requiredness />
+			</PhotoInput.Label>
+			<PhotoInput.Group>
+				<PhotoInput.Well>
+					<PhotoInput.Face>
+						<PhotoInput.Image alt="Preview" />
+						<PhotoInput.Fallback>
+							{STORED}
+						</PhotoInput.Fallback>
+					</PhotoInput.Face>
+					<PhotoInput.Badge>
+						<Icon svg={PhotoCameraIcon} label="" />
+					</PhotoInput.Badge>
+				</PhotoInput.Well>
+				<PhotoInput.Remove
+					render={
+						<IconButton
+							label="Remove photo"
+							variant="secondary">
+							<Icon svg={CloseIcon} label="" />
+						</IconButton>
+					}
+				/>
+				<PhotoInput.ValueText />
+			</PhotoInput.Group>
+			<PhotoInput.Description>
+				{DESCRIPTION}
+			</PhotoInput.Description>
+			<PhotoInput.Error />
+		</PhotoInput.Root>
+	);
+};
+
 const meta = {
 	parameters: {
 		designSystem: [
@@ -82,19 +154,23 @@ const meta = {
 				section:
 					"An icon-only control always has a tooltip and an accessible name",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"PhotoInput.Root": PhotoInput.Root,
+			},
+			connector: { TSFPhotoField },
+		},
 	},
 	component: PhotoField,
 	render: ControlledPhotoField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
-		previewLabel: PREVIEW,
-		photoSetLabel: PHOTO_SET,
-		noPhotoLabel: NO_PHOTO,
-		removeLabel: REMOVE,
-		removeIcon: <Icon svg={CloseIcon} label="" />,
 		icon: <Icon svg={PhotoCameraIcon} label="" />,
 		accept: ["image/png", "image/jpeg"],
 		value: undefined,
@@ -125,7 +201,7 @@ export const ReadOnly: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("img", { name: LABEL }),
-		).toHaveAccessibleDescription(PHOTO_SET);
+		).toHaveAccessibleDescription(STORY_COPY.photo.set);
 		await expect(
 			canvas.queryByRole("button"),
 		).not.toBeInTheDocument();
@@ -148,9 +224,57 @@ export const Pending: Story = {
 	args: { value: PORTRAIT, pending: true },
 };
 
+export const Uploading: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: UploadingPhotoField,
+	play: async ({ canvas, canvasElement }) => {
+		const status = canvas.getByRole("status");
+		await expect(status).toBeEmptyDOMElement();
+
+		await userEvent.upload(
+			fileInput(canvasElement),
+			PORTRAIT,
+		);
+
+		await waitFor(() =>
+			expect(status).toHaveTextContent(
+				STORY_COPY.photo.uploading,
+			),
+		);
+		await waitFor(() =>
+			expect(status).toBeEmptyDOMElement(),
+		);
+	},
+};
+
 export const WithDescription: Story = {
 	args: {
-		description: "A square photo works best.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedPhotoInput,
+	play: async ({ canvas, canvasElement }) => {
+		const well = canvas.getByRole("button", {
+			name: `${LABEL} ${STORY_COPY.required}`,
+		});
+
+		await expect(well).toHaveAccessibleDescription(
+			`${STORY_COPY.photo.none} ${DESCRIPTION}`,
+		);
+
+		await userEvent.upload(
+			fileInput(canvasElement),
+			PORTRAIT,
+		);
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(JPEG_ERROR);
+		await expect(
+			well.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 
@@ -167,7 +291,7 @@ export const Keyboard: Story = {
 		await userEvent.tab();
 		await expect(well).toHaveFocus();
 		await expect(well).toHaveAccessibleDescription(
-			PHOTO_SET,
+			STORY_COPY.photo.set,
 		);
 		await userEvent.keyboard("{Enter}");
 		await expect(picker).toHaveBeenCalledOnce();
@@ -207,7 +331,9 @@ export const MouseRemove: Story = {
 	render: PlainPhotoField,
 	play: async ({ args, canvas }) => {
 		await userEvent.click(
-			canvas.getByRole("button", { name: REMOVE }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.photo.remove,
+			}),
 		);
 
 		await expect(args.onValueChange).toHaveBeenCalledWith(
@@ -233,7 +359,7 @@ export const PreviewUrl: Story = {
 			PORTRAIT,
 		);
 		const preview = await canvas.findByRole("img", {
-			name: PREVIEW,
+			name: STORY_COPY.photo.preview,
 		});
 		const url = preview.getAttribute("src");
 		await expect(created).toHaveBeenCalledOnce();
@@ -248,7 +374,9 @@ export const PreviewUrl: Story = {
 		await expect(revoked).not.toHaveBeenCalled();
 
 		await userEvent.click(
-			canvas.getByRole("button", { name: REMOVE }),
+			canvas.getByRole("button", {
+				name: STORY_COPY.photo.remove,
+			}),
 		);
 		await waitFor(() =>
 			expect(revoked).toHaveBeenCalledWith(url),

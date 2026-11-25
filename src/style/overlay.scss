@@ -1,12 +1,11 @@
-@use "./theme.scss" as theme;
-
 // See `docs/design-system/components.mdx`.
 
 /// The dimmed, blurred sheet every modal overlay sits on — dialog, alert dialog,
-/// drawer — fading with the popup it belongs to. Re-point `--_overlay-dim` for a
-/// lighter tier, and `--overlay-opacity` where something other than presence
-/// drives what paints, such as a swipe. An app sets `--overlay-dim`, or the
-/// whole sheet through `--overlay-bg` and `--overlay-backdrop-filter`.
+/// drawer — fading with the popup it belongs to. Re-point `--_kit-overlay-scrim`
+/// to the theme's lighter scrim for a lighter tier, and `--_kit-overlay-opacity`
+/// where something other than presence drives what paints, such as a swipe. An
+/// app sets the sheet through `--kit-overlay-bg` and
+/// `--kit-overlay-backdrop-filter`, or the theme's scrim roles.
 ///
 /// @example
 ///   @use "../../style/overlay.scss" as overlay;
@@ -15,28 +14,24 @@
 ///       @include overlay.backdrop;
 ///   }
 @mixin backdrop {
-	--_overlay-dim: 0.4;
-	--overlay-opacity: 1;
+	--_kit-overlay-scrim: var(--sys-color-scrim);
+	--_kit-overlay-opacity: 1;
 
 	position: fixed;
 	inset: 0;
 	background-color: var(
-		--overlay-bg,
-		rgb(0 0 0 / var(--overlay-dim, var(--_overlay-dim)))
+		--kit-overlay-bg,
+		var(--_kit-overlay-scrim)
 	);
 	backdrop-filter: var(
-		--overlay-backdrop-filter,
+		--kit-overlay-backdrop-filter,
 		blur(1px)
 	);
-	opacity: var(--overlay-opacity);
+	opacity: var(--_kit-overlay-opacity);
 
 	@media not (prefers-reduced-motion) {
 		transition: opacity var(--sys-motion-short)
 			var(--sys-motion-standard);
-	}
-
-	@include theme.dark {
-		--_overlay-dim: 0.6;
 	}
 
 	&[data-starting-style],

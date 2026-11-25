@@ -23,13 +23,13 @@ export type TSFPhotoFieldProps = Omit<
 	}>;
 
 /**
- * `PhotoField` bound to the TanStack Form field it renders in, reached as
+ * `PhotoField` connected to the TanStack Form field it renders in, reached as
  * `field.PhotoField`. The field's value is the picked `File`, or nothing while
  * the stored photo stands.
  *
  * @example
  * <form.AppField name="photo">
- * 	{field => <field.PhotoField label="Profile photo" optionalLabel="optional" hasStoredImage defaultPreview={<Avatar name={user.name} src={user.photo} />} {...photoCopy} />}
+ * 	{field => <field.PhotoField label="Profile photo" hasStoredImage defaultPreview={<Avatar name={user.name} src={user.photo} />} />}
  * </form.AppField>
  */
 export const TSFPhotoField = ({

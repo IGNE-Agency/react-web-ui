@@ -1,6 +1,6 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -11,33 +11,29 @@ import {
 	within,
 } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
-import {
-	OPTIONS_LOAD_LABELS,
-	OPTIONS_LOADS,
-} from "../../lib/storybook/options-load.ts";
+import { OPTIONS_LOADS } from "../../lib/storybook/options-load.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	optionFocused,
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
+import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
+import { Select } from "./select.tsx";
 import {
 	SelectField,
 	type SelectFieldProps,
 } from "./select-field.tsx";
+import { TSFSelectField } from "./tsf-select-field.tsx";
 
 const LABEL = "Status";
-const OPTIONAL_LABEL = "optional";
 const OPEN_LABEL = "Open";
 const SENT_LABEL = "Sent";
 const PAID_LABEL = "Paid";
-const {
-	loadingLabel: LOADING_LABEL,
-	loadFailedLabel: LOAD_FAILED_LABEL,
-	loadBrokenLabel: LOAD_BROKEN_LABEL,
-	retryLabel: RETRY_LABEL,
-	noOptionsLabel: NO_OPTIONS_LABEL,
-} = OPTIONS_LOAD_LABELS;
+const DESCRIPTION = "The status the invoice is in now.";
+const PAID_ERROR =
+	"A paid invoice cannot be reopened here.";
 
 const STATUS_OPTIONS = [
 	{ value: "open", label: OPEN_LABEL },
@@ -70,6 +66,40 @@ const PlainSelectField = (
 	args: SelectFieldProps<string>,
 ) => <SelectField {...args} />;
 
+const ComposedSelect = () => {
+	const [value, setValue] = useState<string | null>(null);
+
+	return (
+		<Select.Root
+			options={STATUS_OPTIONS}
+			value={value}
+			onValueChange={setValue}
+			errors={value === "paid" ? [PAID_ERROR] : undefined}
+			requiredness="required">
+			<Select.Label>
+				{LABEL} <Field.Requiredness />
+			</Select.Label>
+			<Select.Trigger>
+				<Select.Value placeholder="Choose a status" />
+				<Select.Icon>
+					<Icon svg={ExpandMoreIcon} label="" />
+				</Select.Icon>
+			</Select.Trigger>
+			<Select.Portal>
+				<Select.Positioner>
+					<Select.Popup>
+						<Select.List>
+							<Select.Items />
+						</Select.List>
+					</Select.Popup>
+				</Select.Positioner>
+			</Select.Portal>
+			<Select.Description>{DESCRIPTION}</Select.Description>
+			<Select.Error />
+		</Select.Root>
+	);
+};
+
 const meta = {
 	parameters: {
 		test: { clearMocks: true },
@@ -90,21 +120,27 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"Select.Root": Select.Root,
+			},
+			connector: { TSFSelectField },
+		},
 	},
 	component: SelectField,
 	render: ControlledSelectField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		placeholder: "Choose a status",
 		options: STATUS_OPTIONS,
-		icon: <Icon svg={ExpandMoreIcon} label="" />,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
 		value: null,
 		load: mappedArg(OPTIONS_LOADS, "loaded"),
-		...OPTIONS_LOAD_LABELS,
 		onValueChange: valueChange,
 		onBlur: blurred,
 	},
@@ -123,6 +159,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 type Canvas = ReturnType<typeof within>;
+
+const STATUS = "[role=status]";
 
 const trigger = (canvas: Canvas) =>
 	canvas.getByRole("combobox", { name: LABEL });
@@ -159,7 +197,38 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The status the invoice is in now.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedSelect,
+	play: async ({ canvas }) => {
+		const control = trigger(canvas);
+
+		await expect(control).toHaveAccessibleName(LABEL);
+		await expect(control).toHaveAccessibleDescription(
+			DESCRIPTION,
+		);
+		await expect(control).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(control);
+		await userEvent.click(
+			await screen.findByRole("option", {
+				name: PAID_LABEL,
+			}),
+		);
+		await roleGone("listbox");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(PAID_ERROR);
+		await expect(
+			control.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 
@@ -191,8 +260,10 @@ export const Loading: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(LOADING_LABEL);
+			await screen.findByText(STORY_COPY.options.loading, {
+				selector: STATUS,
+			}),
+		).toBeInTheDocument();
 	},
 };
 
@@ -203,8 +274,10 @@ export const Empty: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(NO_OPTIONS_LABEL);
+			await screen.findByText(STORY_COPY.options.empty, {
+				selector: STATUS,
+			}),
+		).toBeInTheDocument();
 	},
 };
 
@@ -218,8 +291,13 @@ export const Failed: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(LOAD_FAILED_LABEL);
+			await screen.findByText(
+				STORY_COPY.options.loadFailed,
+				{
+					selector: STATUS,
+				},
+			),
+		).toBeInTheDocument();
 	},
 };
 
@@ -233,7 +311,7 @@ export const Retry: Story = {
 		await userEvent.click(trigger(canvas));
 		await userEvent.click(
 			await screen.findByRole("button", {
-				name: RETRY_LABEL,
+				name: STORY_COPY.retry,
 			}),
 		);
 
@@ -253,10 +331,17 @@ export const Broken: Story = {
 		await userEvent.click(trigger(canvas));
 
 		await expect(
-			await screen.findByRole("status"),
-		).toHaveTextContent(LOAD_BROKEN_LABEL);
+			await screen.findByText(
+				STORY_COPY.options.loadBroken,
+				{
+					selector: STATUS,
+				},
+			),
+		).toBeInTheDocument();
 		await expect(
-			screen.queryByRole("button", { name: RETRY_LABEL }),
+			screen.queryByRole("button", {
+				name: STORY_COPY.retry,
+			}),
 		).not.toBeInTheDocument();
 	},
 };

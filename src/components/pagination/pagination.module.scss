@@ -5,22 +5,29 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--pagination-gap, var(--sys-unit-8));
+		gap: var(--kit-pagination-gap, var(--sys-unit-8));
+	}
+
+	.pageSizeField {
+		--kit-field-inline-size: auto;
 	}
 
 	.pageSize {
 		display: flex;
 		align-items: center;
-		gap: var(--pagination-page-size-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-pagination-page-size-gap,
+			var(--sys-unit-4)
+		);
 	}
 
 	.index {
 		color: var(
-			--pagination-index-fg,
+			--kit-pagination-index-fg,
 			var(--sys-color-text)
 		);
 		font: var(
-			--pagination-index-font,
+			--kit-pagination-index-font,
 			var(--sys-font-body-medium)
 		);
 		font-variant-numeric: tabular-nums;
@@ -29,6 +36,9 @@
 	.controls {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--pagination-controls-gap, var(--sys-unit-2));
+		gap: var(
+			--kit-pagination-controls-gap,
+			var(--sys-unit-2)
+		);
 	}
 }

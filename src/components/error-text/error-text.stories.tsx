@@ -16,7 +16,8 @@ const meta = {
 			},
 			{
 				page: "Principles/Accessibility",
-				section: "A field's error is its only live region",
+				section:
+					"A field's error is the only live region for its validity",
 			},
 			{
 				page: "Foundation/Motion",
@@ -41,7 +42,7 @@ export const Single: Story = {
 		const text = canvas.getByText(MESSAGE);
 		await expect(
 			text.parentElement?.style.getPropertyValue(
-				"--error-index",
+				"--_kit-error-text-index",
 			),
 		).toBe("0");
 		await waitFor(() => expect(text).toBeVisible());

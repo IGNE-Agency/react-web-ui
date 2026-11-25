@@ -12,12 +12,12 @@ export type TSFEmailFieldProps =
 	TSFTextPresetProps<EmailFieldExtraProps>;
 
 /**
- * `EmailField` bound to the TanStack Form field it renders in. Registered as
+ * `EmailField` connected to the TanStack Form field it renders in. Registered as
  * `field.EmailField`.
  *
  * @example
  * <form.AppField name="email">
- * 	{field => <field.EmailField label="Email address" optionalLabel="optional" />}
+ * 	{field => <field.EmailField label="Email address" />}
  * </form.AppField>
  */
 export const TSFEmailField: (

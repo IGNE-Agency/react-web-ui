@@ -1,5 +1,4 @@
 import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import DeleteIcon from "@material-design-icons/svg/outlined/delete.svg?react";
 import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import HomeIcon from "@material-design-icons/svg/outlined/home.svg?react";
@@ -9,7 +8,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
 import { Icon } from "../../src/components/icon/index.ts";
 import { Tag } from "../../src/components/tag/index.ts";
 import { TagGroup } from "../../src/components/tag-group/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import components from "./components.module.scss";
 import { Details, DetailsList } from "./details";
 import { DoDont } from "./do-dont";
@@ -23,7 +22,7 @@ import {
 } from "./responsiveness-figures";
 
 export const Live = ({ children }) => (
-	<StoryProviders>{children}</StoryProviders>
+	<DocsProviders>{children}</DocsProviders>
 );
 
 export const guide = { accent: "green" };
@@ -172,15 +171,11 @@ The second is hover. A control that only shows up when the pointer passes over i
 						<TagGroup.List className={components.row}>
 							<TagGroup.Tag textValue="Submitted">
 								Submitted
-								<TagGroup.Remove label="Remove">
-									<Icon svg={CloseIcon} label="" />
-								</TagGroup.Remove>
+								<TagGroup.Remove />
 							</TagGroup.Tag>
 							<TagGroup.Tag textValue="October 2026">
 								October 2026
-								<TagGroup.Remove label="Remove">
-									<Icon svg={CloseIcon} label="" />
-								</TagGroup.Remove>
+								<TagGroup.Remove />
 							</TagGroup.Tag>
 						</TagGroup.List>
 					</TagGroup.Root>
@@ -400,9 +395,7 @@ A remove on a staged file, a chip's dismiss, a row's own action: none is reveale
 		{filter => (
 			<TagGroup.Tag textValue={filter.label}>
 				{filter.label}
-				<TagGroup.Remove label={removeLabel}>
-					<CloseIcon />
-				</TagGroup.Remove>
+				<TagGroup.Remove />
 			</TagGroup.Tag>
 		)}
 	</TagGroup.List>
@@ -429,7 +422,7 @@ A remove on a staged file, a chip's dismiss, a row's own action: none is reveale
 
 <Details title="A surface against an edge pays the safe-area inset">
 
-Its padding on that edge is the larger of the padding it wants and the inset the device reports, so it costs nothing on hardware without one. Shown in [The edge of the glass](#the-edge-of-the-glass).
+Its padding on that edge, or its offset from it, is the larger of the one it wants and the inset the device reports, so it costs nothing on hardware without one. Shown in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The bar's bottom padding grows to clear the home indicator.">
@@ -460,7 +453,7 @@ Its padding on that edge is the larger of the padding it wants and the inset the
 
 <Details title="Content and popups keep one gutter from the screen's edge">
 
-Nothing comes closer to the screen's edge than the gutter: the wide one from the breakpoint up, the narrow one below it. The page's content is inset by it, and a popup that would run past it is pushed back inside it. The gutter and the breakpoint belong to the app, which declares both; the kit has neither. Every kit popup takes its distance from the edge from the `--popup-edge-padding` knob and hands it to its positioner in pixels, so the app sets that knob to its own gutter, once, and the layouts and the popups cannot drift apart. Explained in [The edge of the glass](#the-edge-of-the-glass).
+Nothing comes closer to the screen's edge than the gutter: the wide one from the breakpoint up, the narrow one below it. The page's content is inset by it, and a popup that would run past it is pushed back inside it. The gutter and the breakpoint belong to the app, which declares both; the kit has neither. Every kit popup takes its distance from the edge from the `--kit-popup-edge-padding` knob and hands it to its positioner in pixels, so the app sets that knob to its own gutter, once, and the layouts and the popups cannot drift apart. Explained in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The page and the kit's popups read the app's one gutter.">
@@ -468,7 +461,7 @@ Nothing comes closer to the screen's edge than the gutter: the wide one from the
 ```scss
 :root {
 	--app-gutter: 1.5rem;
-	--popup-edge-padding: var(--app-gutter);
+	--kit-popup-edge-padding: var(--app-gutter);
 
 	@media (max-width: breakpoint.$mobile) {
 		--app-gutter: 1rem;
@@ -494,7 +487,7 @@ Nothing comes closer to the screen's edge than the gutter: the wide one from the
 
 <Details title="Full-height uses svh then dvh">
 
-Declare the small viewport unit first as a floor for browsers without the dynamic one, then the dynamic one. Explained in [The edge of the glass](#the-edge-of-the-glass).
+Declare the small viewport unit first as a floor for browsers without the dynamic one, then the dynamic one. A value inside a knob's fallback takes its floor from `@supports not (block-size: 1dvh)` instead: a declaration that reads `var()` is accepted when it is parsed, so it never falls back to the one before it. Explained in [The edge of the glass](#the-edge-of-the-glass).
 
 <DoDont>
 <Example kind="do" caption="The small unit is the floor, and the dynamic unit replaces it wherever it is understood.">

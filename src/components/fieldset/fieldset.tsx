@@ -75,13 +75,13 @@ export type FieldsetParts = Readonly<{
  * A group of related fields named by one legend, with one error for all of
  * them. `Fields` lays the fields side by side on one grid, so every field's
  * label, control, description and error share a row with its neighbours'.
- * `Error` is the group's only live region: it shows the lines of the `members`
- * the root collects, each tied to its field's control, then the group's own
- * `errors`. For the ordinary case, use `FieldGroup`.
+ * `Error` is the only live region for the group's errors: it shows the lines
+ * of the `members` the root collects, each tied to its field's control, then
+ * the group's own `errors`. For the ordinary case, use `FieldGroup`.
  *
  * @example
  * <Fieldset.Root members={members} requiredness="optional" aria-describedby={descriptionId}>
- * 	<Fieldset.Legend>Address <Field.Requiredness optionalLabel="optional" /></Fieldset.Legend>
+ * 	<Fieldset.Legend>Address <Field.Requiredness /></Fieldset.Legend>
  * 	<Fieldset.Description id={descriptionId}>We send the invoice here.</Fieldset.Description>
  * 	<Fieldset.Fields>…</Fieldset.Fields>
  * 	<Fieldset.Error />

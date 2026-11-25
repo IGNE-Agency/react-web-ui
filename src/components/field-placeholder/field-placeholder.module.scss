@@ -5,13 +5,13 @@
 	.placeholder {
 		display: flex;
 		flex-direction: column;
-		gap: var(--field-gap, var(--sys-unit-4));
+		gap: var(--kit-field-gap, var(--sys-unit-4));
 		inline-size: 100%;
 	}
 
 	.label {
 		inline-size: var(
-			--field-placeholder-label-size,
+			--kit-field-placeholder-label-size,
 			var(--sys-unit-56)
 		);
 		block-size: 1lh;
@@ -20,7 +20,7 @@
 	.controls {
 		display: flex;
 		gap: var(
-			--field-placeholder-controls-gap,
+			--kit-field-placeholder-controls-gap,
 			var(--sys-unit-4)
 		);
 		inline-size: 100%;

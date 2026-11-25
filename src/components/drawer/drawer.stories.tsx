@@ -98,7 +98,7 @@ const meta = {
 		open: { control: "boolean" },
 		swipeDirection: {
 			control: "radio",
-			options: ["right", "down"],
+			options: ["left", "right", "down"],
 		},
 	},
 	parameters: {
@@ -118,6 +118,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Open: Story = {};
+
+export const LeftPanel: Story = {
+	tags: ["!autodocs"],
+	args: { swipeDirection: "left" },
+	play: async () => {
+		const popup = await drawer();
+
+		await expect(popup).toBeVisible();
+		await expect(popup).toHaveAttribute(
+			"data-swipe-direction",
+			"left",
+		);
+		const { left, right } = popup.getBoundingClientRect();
+		await expect(left).toBeLessThan(
+			window.innerWidth - right,
+		);
+	},
+};
 
 export const BottomSheet: Story = {
 	tags: ["!autodocs"],

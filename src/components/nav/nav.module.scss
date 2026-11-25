@@ -7,10 +7,10 @@
 @layer kit.components {
 	.root {
 		border: 0 solid
-			var(--nav-border, var(--sys-color-border));
-		border-width: var(--nav-border-width, 0);
-		background: var(--nav-bg, transparent);
-		backdrop-filter: var(--nav-backdrop-filter, none);
+			var(--kit-nav-border, var(--sys-color-border));
+		border-width: var(--kit-nav-border-width, 0);
+		background: var(--kit-nav-bg, transparent);
+		backdrop-filter: var(--kit-nav-backdrop-filter, none);
 	}
 
 	.scroller {
@@ -24,7 +24,7 @@
 		&[data-orientation="vertical"] {
 			display: flex;
 			flex-direction: column;
-			gap: var(--nav-gap, var(--sys-unit-2));
+			gap: var(--kit-nav-gap, var(--sys-unit-2));
 		}
 
 		&[data-orientation="horizontal"] {
@@ -36,11 +36,11 @@
 		@include indicator.pill("--active-tab", 0px);
 
 		border-radius: var(
-			--tab-indicator-radius,
+			--kit-tab-indicator-radius,
 			var(--sys-radius-full)
 		);
 		background: var(
-			--tab-indicator,
+			--kit-tab-indicator,
 			var(--sys-color-primary)
 		);
 	}
@@ -61,7 +61,7 @@
 		&[aria-current="page"],
 		&[data-active="true"] {
 			color: var(
-				--tab-active-fg,
+				--kit-tab-active-fg,
 				var(--sys-color-on-primary)
 			);
 
@@ -74,7 +74,7 @@
 	.iconSlot {
 		@include nav.icon-slot;
 
-		font-size: var(--nav-icon-size, 1em);
+		font-size: var(--kit-nav-icon-size, 1em);
 	}
 
 	.item {
@@ -86,7 +86,7 @@
 			> .iconSlot {
 				@include nav.icon-slot-compact;
 
-				font-size: var(--nav-icon-size, 1.5em);
+				font-size: var(--kit-nav-icon-size, 1.5em);
 			}
 
 			&[data-active="true"] > .iconSlot,
@@ -140,9 +140,9 @@
 		grid-auto-flow: column;
 		grid-template-columns: minmax(0, 1fr);
 		align-items: center;
-		gap: var(--nav-group-header-gap, var(--sys-unit-2));
+		gap: var(--kit-nav-group-header-gap, var(--sys-unit-2));
 		border-radius: var(
-			--nav-item-radius,
+			--kit-nav-item-radius,
 			var(--sys-radius-full)
 		);
 
@@ -154,15 +154,15 @@
 		&:has(> [data-active="true"]),
 		&:has(> [aria-current="page"]) {
 			background-color: var(
-				--nav-item-active-bg,
+				--kit-nav-item-active-bg,
 				var(--sys-color-primary-container)
 			);
 		}
 	}
 
 	.groupToggle {
-		--btn-pad-y: var(
-			--nav-group-toggle-pad,
+		--kit-button-pad-y: var(
+			--kit-nav-group-toggle-pad,
 			var(--sys-unit-8)
 		);
 
@@ -198,44 +198,44 @@
 	}
 
 	.groupList {
-		--nav-item-min-size: var(
-			--nav-group-item-min-size,
+		--kit-nav-item-min-size: var(
+			--kit-nav-group-item-min-size,
 			var(--sys-unit-20)
 		);
-		--nav-item-fg: var(
-			--nav-group-item-fg,
+		--kit-nav-item-fg: var(
+			--kit-nav-group-item-fg,
 			var(--sys-color-text-muted)
 		);
 
 		display: flex;
 		flex-direction: column;
-		gap: var(--nav-group-list-gap, var(--sys-unit-2));
+		gap: var(--kit-nav-group-list-gap, var(--sys-unit-2));
 		padding-block: var(
-			--nav-group-list-pad-y,
+			--kit-nav-group-list-pad-y,
 			var(--sys-unit-2)
 		);
 		padding-inline-start: var(
-			--nav-group-list-indent,
+			--kit-nav-group-list-indent,
 			var(--sys-unit-20)
 		);
 		list-style: none;
 
 		> li {
-			--_nav-branch-gap: var(
-				--nav-group-list-gap,
+			--_kit-nav-branch-gap: var(
+				--kit-nav-group-list-gap,
 				var(--sys-unit-2)
 			);
-			--_nav-branch-reach: var(
-				--nav-branch-reach,
+			--_kit-nav-branch-reach: var(
+				--kit-nav-branch-reach,
 				var(--sys-unit-8)
 			);
-			--_nav-branch-line: var(
-					--nav-branch-border-width,
+			--_kit-nav-branch-line: var(
+					--kit-nav-branch-border-width,
 					1px
 				)
 				solid
 				var(
-					--nav-branch-border,
+					--kit-nav-branch-border,
 					color-mix(
 						in oklab,
 						var(--sys-color-border) 66.66%,
@@ -249,20 +249,20 @@
 				content: "";
 				position: absolute;
 				inset-block-start: calc(
-					-1 * var(--_nav-branch-gap)
+					-1 * var(--_kit-nav-branch-gap)
 				);
 				inset-inline-start: calc(
-					-1 * var(--_nav-branch-reach)
+					-1 * var(--_kit-nav-branch-reach)
 				);
-				inline-size: var(--_nav-branch-reach);
-				block-size: calc(50% + var(--_nav-branch-gap));
-				border-inline-start: var(--_nav-branch-line);
-				border-block-end: var(--_nav-branch-line);
+				inline-size: var(--_kit-nav-branch-reach);
+				block-size: calc(50% + var(--_kit-nav-branch-gap));
+				border-inline-start: var(--_kit-nav-branch-line);
+				border-block-end: var(--_kit-nav-branch-line);
 			}
 
 			&:last-child::before {
 				border-end-start-radius: var(
-					--nav-branch-radius,
+					--kit-nav-branch-radius,
 					var(--sys-radius-sm)
 				);
 			}
@@ -272,9 +272,9 @@
 				position: absolute;
 				inset-block: 50% 0;
 				inset-inline-start: calc(
-					-1 * var(--_nav-branch-reach)
+					-1 * var(--_kit-nav-branch-reach)
 				);
-				border-inline-start: var(--_nav-branch-line);
+				border-inline-start: var(--_kit-nav-branch-line);
 			}
 		}
 	}

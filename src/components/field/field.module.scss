@@ -1,42 +1,51 @@
 @use "../../style/layers.scss";
 @use "../../style/form.scss" as form;
+@use "../../style/visually-hidden.scss" as a11y;
 
 @layer kit.components {
 	.field {
 		display: flex;
 		flex-direction: column;
-		gap: var(--field-gap, var(--sys-unit-4));
-		inline-size: 100%;
+		gap: var(--kit-field-gap, var(--sys-unit-4));
+		inline-size: var(--kit-field-inline-size, 100%);
 
 		&[data-disabled] {
-			opacity: var(--field-disabled-opacity, 1);
+			opacity: var(--kit-field-disabled-opacity, 1);
 		}
 
 		&[data-field-group-member] {
-			> * {
+			> *,
+			> [data-field-contents] > * {
 				grid-row: extra;
 				margin-block-start: var(
-					--field-gap,
+					--kit-field-gap,
 					var(--sys-unit-4)
 				);
 			}
 
-			> :is(.label, .labelRow) {
+			> :is(.label, .labelRow),
+			> [data-field-contents] > :is(.label, .labelRow) {
 				grid-row: label;
-				margin-block: 0 var(--field-gap, var(--sys-unit-4));
+				margin-block: 0
+					var(--kit-field-gap, var(--sys-unit-4));
 			}
 
 			> :first-child:not(.label, .labelRow),
-			> :is(.label, .labelRow) + * {
+			> :is(.label, .labelRow) + *,
+			> [data-field-contents]
+				> :first-child:not(.label, .labelRow),
+			> [data-field-contents] > :is(.label, .labelRow) + * {
 				grid-row: control;
 				margin-block-start: 0;
 			}
 
-			> .description {
+			> .description,
+			> [data-field-contents] > .description {
 				grid-row: description;
 			}
 
-			> .error {
+			> .error,
+			> [data-field-contents] > .error {
 				grid-row: error;
 			}
 		}
@@ -49,9 +58,9 @@
 	.labelRow {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: var(--field-label-row-align, baseline);
+		align-items: var(--kit-field-label-row-align, baseline);
 		justify-content: space-between;
-		gap: var(--field-label-row-gap, var(--sys-unit-4));
+		gap: var(--kit-field-label-row-gap, var(--sys-unit-4));
 	}
 
 	.optional {
@@ -66,14 +75,18 @@
 		grid-area: optional;
 	}
 
+	.spoken {
+		@include a11y.visually-hidden;
+	}
+
 	.required {
 		display: inline-block;
 		vertical-align: middle;
 		translate: 0 -1px;
-		inline-size: var(--field-required-size, 0.625rem);
-		block-size: var(--field-required-size, 0.625rem);
+		inline-size: var(--kit-field-required-size, 0.625rem);
+		block-size: var(--kit-field-required-size, 0.625rem);
 		background-color: var(
-			--field-required-fg,
+			--kit-field-required-fg,
 			var(--sys-color-primary)
 		);
 		mask: url("../../assets/required.svg") center / contain
@@ -82,11 +95,11 @@
 
 	.description {
 		color: var(
-			--field-description-fg,
+			--kit-field-description-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--field-description-font,
+			--kit-field-description-font,
 			var(--sys-font-body-medium)
 		);
 	}

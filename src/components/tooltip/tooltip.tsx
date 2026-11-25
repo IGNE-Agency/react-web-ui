@@ -2,6 +2,7 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import { clsx } from "clsx";
 import type { ReactElement, ReactNode } from "react";
+import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { useIntent } from "../../lib/use-intent.ts";
 import style from "./tooltip.module.scss";
 
@@ -16,7 +17,7 @@ export type TooltipTriggerProps =
 			onIntent?: () => void;
 		}>;
 
-/** The element the hint describes, warming what it shows on intent. */
+/** The element the hint is for, warming what it shows on intent. */
 const TooltipTrigger = ({
 	onIntent,
 	onPointerEnter,
@@ -38,13 +39,21 @@ const TooltipTrigger = ({
 	);
 };
 
-/** Places the hint against its trigger. */
+export type TooltipPositionerProps = Omit<
+	BaseTooltip.Positioner.Props,
+	"ref"
+>;
+
+/** Places the hint against its trigger, clear of the viewport's edges. */
 const TooltipPositioner = ({
 	sideOffset = DEFAULT_SIDE_OFFSET,
+	className,
 	...props
-}: BaseTooltip.Positioner.Props): ReactNode => (
+}: TooltipPositionerProps): ReactNode => (
 	<BaseTooltip.Positioner
+		{...usePopupEdgePadding()}
 		sideOffset={sideOffset}
+		className={clsx(style.positioner, className)}
 		{...props}
 	/>
 );
@@ -111,7 +120,8 @@ type TooltipParts = typeof TooltipRoot &
 	}>;
 
 /**
- * A hint on the trigger given as `children`, wired to describe it. Mount
+ * A visual hint on the trigger given as `children`. It is not announced, so the
+ * trigger carries the same words as its accessible name. Mount
  * `Tooltip.Provider` once near the app root; the parts hanging off it build a
  * tooltip by hand.
  *

@@ -1,5 +1,6 @@
 import type { CheckboxGroup as BaseCheckboxGroup } from "@base-ui/react/checkbox-group";
 import type { ReactNode } from "react";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	Field,
 	type FieldBlurHandler,
@@ -22,11 +23,11 @@ export type CheckboxGroupFieldProps = FieldProps &
 	Readonly<{
 		/** The boxes, in the order they read. */
 		items: readonly CheckboxGroupItem[];
-		/** The mark a ticked box shows, such as a tick. */
-		checkIcon: ReactNode;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** Prefixes each box's id, so ids stay stable across renders. */
 		name?: string;
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** Applied to the fieldset, so callers can place the group. */
 		className?: string;
@@ -40,9 +41,7 @@ export type CheckboxGroupFieldProps = FieldProps &
  * @example
  * <CheckboxGroupField
  * 	label="Statuses"
- * 	optionalLabel="optional"
  * 	items={[{ label: "Open", value: "open" }]}
- * 	checkIcon={<CheckIcon />}
  * 	value={statuses}
  * 	onValueChange={setStatuses}
  * />
@@ -52,12 +51,10 @@ export const CheckboxGroupField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
 	items,
-	checkIcon,
 	readOnly,
 	name,
 	onBlur,
@@ -67,6 +64,7 @@ export const CheckboxGroupField = ({
 	onValueChange,
 	disabled,
 }: CheckboxGroupFieldProps): ReactNode => {
+	const icons = useIcons();
 	const { controlId } = CheckboxGroup.useIds();
 	const prefix = name ?? controlId;
 
@@ -83,8 +81,7 @@ export const CheckboxGroupField = ({
 			pending={pending}
 			filled={value !== undefined && value.length > 0}>
 			<CheckboxGroup.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</CheckboxGroup.Legend>
 
 			<CheckboxGroup.Group
@@ -102,7 +99,7 @@ export const CheckboxGroupField = ({
 							onBlur={onBlur}
 							readOnly={readOnly}>
 							<CheckboxGroup.Indicator>
-								{checkIcon}
+								{icons.check}
 							</CheckboxGroup.Indicator>
 						</CheckboxGroup.Control>
 						{item.label}

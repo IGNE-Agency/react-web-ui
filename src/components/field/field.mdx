@@ -8,17 +8,17 @@ import * as FieldStories from "./field.stories.tsx";
 
 ## Rules
 
-### Every control comes in three tiers, and the field frame belongs to the middle one
+### Every control comes in three tiers, and the primitive draws the field frame
 
-A control family is named after its field tier: `TextInput` → `TextField` → `TSFTextField`. Pick the lowest one that does the job.
+A control family is named after its prefab: `TextInput` → `TextField` → `TSFTextField`. Pick the lowest tier that does the job.
 
-1. **The raw compound**, such as `TextInput` or `Select`, owns the control and nothing else. It has no label, description or error, and it does not lay itself out. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control.
-2. **The shorthand**, such as `TextField`, assembles the raw parts with `Field` into the ordinary case: a label above a full-width control, then the description, then the error. It is built from the parts, never a second implementation of them, and it takes no prop that switches it to another anatomy. A control that should not be a stacked field drops to the raw tier.
-3. **The bridge**, such as `TSFTextField`, wires the shorthand to TanStack Form. It is registered in the form hook an app builds with `createAppForm` and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix.
+1. **The primitive**, such as `TextInput` or `Select`, owns the control and its field frame. Its root takes the field's states, draws the frame, owns the ids, the requiredness and the blur, and hands its state to every part; the label, description and error are parts the caller places inside it. Take it whenever the anatomy differs from an ordinary field: a control in a toolbar, two controls sharing one group, a label beside rather than above. Its `Label` part still names the control, and its `Description` and `Error` still describe it.
+2. **The prefab**, such as `TextField`, assembles the primitive's parts with `Field` into the ordinary case: a label above a full-width control, then the description, then the error. It is built from the parts, never a second implementation of them, and it takes no prop that switches it to another anatomy. A control that should not be a stacked field drops to the primitive.
+3. **The connector**, such as `TSFTextField`, connects the prefab to TanStack Form. It is registered in the form hook an app builds with `createAppForm` and reached as `field.TextField` inside `form.AppField`, so a call site never types its prefix. [Setting up forms](?path=/docs/design-system-setting-up-forms--docs#one-form-hook-per-app) shows how an app builds it.
 
-### Every field takes the same props on every tier
+### Each tier takes the field props nothing else supplies
 
-`label`, `description`, `errors`, `requiredness`, `optionalLabel`, `dirty`, `touched` and `pending`, with the same meaning on the shorthand and the bridge. A bridge passes them at the top level. The raw root takes the states among them, `requiredness` included; the label, the description and the requiredness suffix are parts placed inside it.
+The prefab takes them all at the top level: `label`, `description`, `errors`, `requiredness`, `dirty`, `touched` and `pending`. The connector takes `label`, `description` and `requiredness`, with the same meaning; the form supplies `errors`, `dirty`, `touched` and `pending`, so the connector takes none of them. The primitive's root takes the states, `requiredness` included; the label, the description and the requiredness suffix are parts placed inside it.
 
 ```tsx
 <form.AppField name="email">
@@ -27,7 +27,6 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 			label="Email"
 			description="We send the receipt here."
 			requiredness="required"
-			optionalLabel="optional"
 		/>
 	)}
 </form.AppField>
@@ -35,11 +34,11 @@ A control family is named after its field tier: `TextInput` → `TextField` → 
 
 ### Requiredness is stated, never inferred
 
-`requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails `optionalLabel`, which is part of the control's name.
+`requiredness` is `"required"`, `"optional"`, or left out, and left out shows neither mark. Nothing reads it from a schema and there is no default. A field in a form states one or the other; only a field outside a form, which asks nothing of anyone, leaves it out. A required label carries the mark, which is decoration: the control's own `required` tells assistive tech. An optional label trails the `CopyProvider`'s `optional`, which is part of the control's name.
 
 ### A label renders its children, and the suffix is a part
 
-The shorthand adds the suffix for you. On the raw tier, a label renders only its children, so the suffix is `Field.Requiredness`, placed inside the label after its text. It reads `requiredness` from the root it sits in, or from its own prop where no root carries it, and takes the `optionalLabel` it shows.
+The prefab adds the suffix for you. On the primitive, a label renders only its children, so the suffix is `Field.Requiredness`, placed inside the label after its text. It reads `requiredness` from the root it sits in, or from its own prop where no root carries it.
 
 ```tsx
 <TextInput.Root
@@ -47,7 +46,7 @@ The shorthand adds the suffix for you. On the raw tier, a label renders only its
 	onValueChange={setValue}
 	requiredness="optional">
 	<TextInput.Label>
-		Notes <Field.Requiredness optionalLabel="optional" />
+		Notes <Field.Requiredness />
 	</TextInput.Label>
 	…
 </TextInput.Root>
@@ -62,18 +61,18 @@ A label beside its control, such as a lone checkbox's, keeps the required mark w
 		<Field.InlineLabelText>
 			Send me a copy <Field.RequiredMark />
 		</Field.InlineLabelText>
-		<Field.InlineOptional optionalLabel="optional" />
+		<Field.InlineOptional />
 	</Checkbox.Label>
 </Checkbox.Root>
 ```
 
-### The error is the field's only live region, after the description
+### The error is the only live region for the field's validity, after the description
 
-`Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time, and any line of error makes the field invalid.
+`Field.Error` takes errors in any shape `normalizeFieldErrors` accepts: strings, and anything with a string `message`, such as a Standard Schema issue. It renders `ErrorText` as an alert, after `Field.Description`, and both chain into the control's `aria-describedby`. A control never announces the same message a second time: what else it announces, such as a copy's outcome or an options list's load state, is never an error. Any line of error makes the field invalid.
 
 ### A wait inside a field is a spinner inlay, and the field says it is busy
 
-A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A raw tier's `Pending` mounts itself once its root's wait is worth showing.
+A field waiting on background work, such as an async validator, mounts `Field.Pending` once the wait is worth showing, and projects `pending` through `fieldStateAttributes`, which sets `aria-busy`. `Field.Pending` is the inlay; the spinner is its child, and is hidden from assistive tech. A primitive's `Pending` mounts itself once its root's wait is worth showing. At the same moment `Field.Root`'s polite status region, given the wait through `phase`, says the `CopyProvider`'s `field.checking` (`photo.uploading` in a photo field), and it empties when the wait ends; `Field.Error` still says the outcome. Every primitive's root passes its `phase`; a field built on `Field.Root` itself passes the one `useFieldState` returns.
 
 ```tsx
 <TextInput.Pending>
@@ -83,7 +82,7 @@ A field waiting on background work, such as an async validator, mounts `Field.Pe
 
 ### What sits beside a label shares its row
 
-A link or a counter that belongs beside a label, such as "Forgot password?" or `TextInput.Counter`, goes in `Field.LabelRow` with the label, in place of the bare label. The row keeps the label at the start and the rest at the end, and wraps on a narrow field. Every raw tier takes it, and in a field group it takes the label's row. It reads `--field-label-row-gap` and `--field-label-row-align`.
+A link or a counter that belongs beside a label, such as "Forgot password?" or `TextInput.Counter`, goes in `Field.LabelRow` with the label, in place of the bare label. The row keeps the label at the start and the rest at the end, and wraps on a narrow field. Every primitive takes it, and in a field group it takes the label's row. It reads `--kit-field-label-row-gap` and `--kit-field-label-row-align`.
 
 ```tsx
 <TextInput.Root

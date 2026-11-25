@@ -1,10 +1,8 @@
 import type { ReactNode } from "react";
 import { IconButton } from "../button/index.ts";
-import {
-	Field,
-	type FieldProps,
-	useFieldState,
-} from "../field/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { Field, type FieldProps } from "../field/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import {
 	PhotoInput,
 	type PhotoInputPreviewProps,
@@ -23,21 +21,6 @@ export type PhotoFieldProps = Pick<
 	PhotoInputPreviewProps &
 	FieldProps &
 	Readonly<{
-		/** The picked photo's alternative text, such as "Preview". */
-		previewLabel: string;
-
-		/** What the control announces while a photo is set, such as "Photo set". */
-		photoSetLabel: string;
-
-		/** What the control announces while no photo is set, such as "No photo". */
-		noPhotoLabel: string;
-
-		/** Accessible name of the button that removes a picked photo, such as "Remove photo". */
-		removeLabel: string;
-
-		/** The remove button's icon, such as a cross. */
-		removeIcon: ReactNode;
-
 		/** The badge on the circle's rim, such as a camera icon. */
 		icon?: ReactNode;
 
@@ -49,89 +32,39 @@ export type PhotoFieldProps = Pick<
  * A labelled photo picker: the label, the circle that is both the photo and
  * the button that changes it, then the description and error. The label is
  * not a native one, because the circle is named by it through
- * `aria-labelledby` and also announces whether a photo is set.
+ * `aria-labelledby` and also announces whether a photo is set. Assembled from
+ * `PhotoInput`'s parts.
  *
  * @example
  * <PhotoField
  * 	label="Profile photo"
- * 	optionalLabel="optional"
  * 	value={file}
  * 	onValueChange={setFile}
  * 	hasStoredImage={user.photo !== null}
  * 	defaultPreview={<Avatar name={user.name} />}
  * 	accept={["image/png", "image/jpeg"]}
  * 	icon={<PhotoCameraIcon />}
- * 	previewLabel="Preview"
- * 	photoSetLabel="Photo set"
- * 	noPhotoLabel="No photo"
- * 	removeLabel="Remove photo"
- * 	removeIcon={<CloseIcon />}
  * />
  */
 export const PhotoField = ({
 	label,
 	description,
-	errors,
-	requiredness,
-	optionalLabel,
-	dirty,
-	touched,
-	pending,
-	readOnly,
-	className,
 	defaultPreview,
-	hasStoredImage,
-	previewLabel,
-	photoSetLabel,
-	noPhotoLabel,
-	removeLabel,
-	removeIcon,
 	icon,
-	...controlProps
+	...rootProps
 }: PhotoFieldProps): ReactNode => {
-	const ids = Field.useIds();
-	const { labelId, descriptionId, errorId } = ids;
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		readOnly,
-	});
-	const { invalid } = field;
+	const copy = useCopy();
+	const icons = useIcons();
 
 	return (
-		<Field.Root
-			className={className}
-			disabled={field.disabled}
-			invalid={invalid}
-			dirty={dirty}
-			touched={touched}>
-			<Field.Label
-				id={labelId}
-				nativeLabel={false}
-				render={<span />}>
-				{label}{" "}
-				<Field.Requiredness
-					requiredness={requiredness}
-					optionalLabel={optionalLabel}
-				/>
-			</Field.Label>
-			<PhotoInput.Root
-				{...controlProps}
-				hasStoredImage={hasStoredImage}
-				labelledBy={labelId}
-				describedBy={ids.describedBy(
-					description !== undefined,
-					invalid,
-				)}
-				readOnly={readOnly}
-				invalid={invalid}
-				pending={field.state.pending}>
+		<PhotoInput.Root {...rootProps}>
+			<PhotoInput.Label>
+				{label} <Field.Requiredness />
+			</PhotoInput.Label>
+			<PhotoInput.Group>
 				<PhotoInput.Well>
 					<PhotoInput.Face>
-						<PhotoInput.Image alt={previewLabel} />
+						<PhotoInput.Image alt={copy.photo.preview} />
 						<PhotoInput.Fallback>
 							{defaultPreview}
 						</PhotoInput.Fallback>
@@ -141,21 +74,18 @@ export const PhotoField = ({
 				<PhotoInput.Remove
 					render={
 						<IconButton
-							label={removeLabel}
+							label={copy.photo.remove}
 							variant="secondary">
-							{removeIcon}
+							{icons.remove}
 						</IconButton>
 					}
 				/>
-				<PhotoInput.ValueText
-					photoSetLabel={photoSetLabel}
-					noPhotoLabel={noPhotoLabel}
-				/>
-			</PhotoInput.Root>
-			<Field.Description id={descriptionId}>
+				<PhotoInput.ValueText />
+			</PhotoInput.Group>
+			<PhotoInput.Description>
 				{description}
-			</Field.Description>
-			<Field.Error id={errorId}>{errors}</Field.Error>
-		</Field.Root>
+			</PhotoInput.Description>
+			<PhotoInput.Error />
+		</PhotoInput.Root>
 	);
 };

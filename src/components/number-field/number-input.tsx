@@ -29,28 +29,40 @@ import {
 	useInputPartsContext,
 } from "../field/input-parts.tsx";
 import { renderAs } from "../../lib/render-as.tsx";
+import { useCopy } from "../copy-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import style from "./number-field.module.scss";
 
 export type NumberInputRootProps = Omit<
 	FieldProps,
-	"label" | "description" | "optionalLabel"
+	"label" | "description"
 > &
 	Readonly<{
+		/** The current value, or `null` while the control is empty. */
 		value: number | null;
+		/** Called with the new value. */
 		onValueChange: (value: number | null) => void;
 		/** How the amount is rendered and parsed inside the control. */
 		format?: Intl.NumberFormatOptions;
+		/** The smallest value allowed. */
 		min?: number;
+		/** The largest value allowed. */
 		max?: number;
+		/** How far the steppers and arrow keys move the value. */
 		step?: number;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
+		/** Submits the value under this name. */
 		name?: string;
+		/** The control's id. */
 		id?: string;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 
@@ -108,6 +120,7 @@ const NumberInputRoot = ({
 				requiredness={field.state.requiredness}
 				dirty={dirty}
 				touched={touched}
+				phase={field.phase}
 				className={clsx(style.root, className)}
 				{...fieldStateAttributes(field.state)}>
 				<BaseNumberField.Root
@@ -124,6 +137,7 @@ const NumberInputRoot = ({
 					name={name ?? ids.controlId}
 					inputRef={detachHiddenInput}
 					id={id}
+					data-field-contents=""
 					className={style.wrapper}>
 					{children}
 				</BaseNumberField.Root>
@@ -207,20 +221,25 @@ export type NumberInputInputProps = Omit<
 	Readonly<{ className?: string }>;
 
 /**
- * The bare control, formatting and parsing `Root`'s value.
+ * The bare control, formatting and parsing `Root`'s value. It announces itself
+ * as the `CopyProvider`'s `number.field`.
  *
  * @example
- * <NumberInput.Input aria-roledescription="Number field" />
+ * <NumberInput.Input />
  */
 const NumberInputInput = ({
 	className,
 	...props
-}: NumberInputInputProps): ReactNode => (
-	<BaseNumberField.Input
-		className={clsx(style.input, className)}
-		{...props}
-	/>
-);
+}: NumberInputInputProps): ReactNode => {
+	const copy = useCopy();
+	return (
+		<BaseNumberField.Input
+			aria-roledescription={copy.number.field}
+			className={clsx(style.input, className)}
+			{...props}
+		/>
+	);
+};
 
 export type NumberInputStepProps = Omit<
 	BaseNumberField.Decrement.Props,
@@ -325,13 +344,13 @@ export type NumberInputParts = Readonly<{
 /**
  * The parts of a number input: the field frame, a group carrying the border
  * with the stepper buttons and the bare control between them. For the ordinary
- * case, use the `NumberField` shorthand, which is assembled from exactly these
+ * case, use the `NumberField` prefab, which is assembled from exactly these
  * parts. An `Affix` is decoration, so its meaning belongs in the label or
  * description too. `Error` renders the errors `Root` was given.
  *
  * @example
  * <NumberInput.Root value={hours} onValueChange={setHours} requiredness="optional">
- * 	<NumberInput.Label>Hours <Field.Requiredness optionalLabel="optional" /></NumberInput.Label>
+ * 	<NumberInput.Label>Hours <Field.Requiredness /></NumberInput.Label>
  * 	<NumberInput.Group>
  * 		<NumberInput.Decrement
  * 			render={
@@ -340,7 +359,7 @@ export type NumberInputParts = Readonly<{
  * 				</IconButton>
  * 			}
  * 		/>
- * 		<NumberInput.Input aria-roledescription="Number field" />
+ * 		<NumberInput.Input />
  * 		<NumberInput.Increment
  * 			render={
  * 				<IconButton label="Increase" variant="tertiary" size="sm">

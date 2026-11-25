@@ -621,161 +621,6 @@
 			"$type": "color",
 			"$description": "Error"
 		},
-		"sand": {
-			"0": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [1, 0, 17.89]
-				}
-			},
-			"10": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.9913, 0.0005, 17.89]
-				}
-			},
-			"25": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.9783, 0.0012, 17.89]
-				}
-			},
-			"50": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.9566, 0.0024, 17.89]
-				}
-			},
-			"100": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.9133, 0.0048, 17.89]
-				}
-			},
-			"150": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.8699, 0.0072, 17.89]
-				}
-			},
-			"200": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.8266, 0.0096, 17.89]
-				}
-			},
-			"250": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.7832, 0.012, 17.89]
-				}
-			},
-			"300": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.7399, 0.0144, 17.89]
-				}
-			},
-			"350": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.6965, 0.0168, 17.89]
-				}
-			},
-			"400": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.6532, 0.0192, 17.89]
-				}
-			},
-			"450": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.6098, 0.0215, 17.89]
-				}
-			},
-			"500": {
-				"$value": {
-					"colorSpace": "srgb",
-					"components": [0.517647, 0.443137, 0.443137],
-					"hex": "#847171"
-				}
-			},
-			"550": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.5098, 0.0215, 17.89]
-				}
-			},
-			"600": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.4532, 0.0191, 17.89]
-				}
-			},
-			"650": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.3965, 0.0167, 17.89]
-				}
-			},
-			"700": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.3399, 0.0144, 17.89]
-				}
-			},
-			"750": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.2832, 0.012, 17.89]
-				}
-			},
-			"800": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.2266, 0.0096, 17.89]
-				}
-			},
-			"850": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.1699, 0.0072, 17.89]
-				}
-			},
-			"900": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.1133, 0.0048, 17.89]
-				}
-			},
-			"950": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.0566, 0.0024, 17.89]
-				}
-			},
-			"975": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.0283, 0.0012, 17.89]
-				}
-			},
-			"990": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0.0113, 0.0005, 17.89]
-				}
-			},
-			"1000": {
-				"$value": {
-					"colorSpace": "oklch",
-					"components": [0, 0, 17.89]
-				}
-			},
-			"$type": "color",
-			"$description": "Warm neutral: surfaces and lines"
-		},
 		"neutral": {
 			"0": {
 				"$value": {
@@ -1092,6 +937,21 @@
 			"body": {
 				"$description": "Everything else: copy, labels, buttons, fields and chips",
 				"regular": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 400,
+							"lineHeight": 1.4,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
 					"1": {
 						"$type": "typography",
 						"$value": {
@@ -1169,6 +1029,21 @@
 					}
 				},
 				"semibold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 600,
+							"lineHeight": 1.4,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
 					"1": {
 						"$type": "typography",
 						"$value": {
@@ -1246,6 +1121,21 @@
 					}
 				},
 				"bold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 700,
+							"lineHeight": 1.4,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
 					"1": {
 						"$type": "typography",
 						"$value": {
@@ -1323,6 +1213,21 @@
 					}
 				},
 				"extrabold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 800,
+							"lineHeight": 1.4,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
 					"1": {
 						"$type": "typography",
 						"$value": {
@@ -1400,7 +1305,151 @@
 					}
 				}
 			},
-			"$description": "The type scale: every weight at every size, in the heading and the body family."
+			"label": {
+				"$description": "The body sizes, set tight for a single line: buttons, tabs, labels and chips.",
+				"semibold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 600,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"1": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1,
+								"unit": "rem"
+							},
+							"fontWeight": 600,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"2": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1.167,
+								"unit": "rem"
+							},
+							"fontWeight": 600,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					}
+				},
+				"bold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 700,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"1": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1,
+								"unit": "rem"
+							},
+							"fontWeight": 700,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"2": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1.167,
+								"unit": "rem"
+							},
+							"fontWeight": 700,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					}
+				},
+				"extrabold": {
+					"0": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 0.917,
+								"unit": "rem"
+							},
+							"fontWeight": 800,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"1": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1,
+								"unit": "rem"
+							},
+							"fontWeight": 800,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					},
+					"2": {
+						"$type": "typography",
+						"$value": {
+							"fontSize": {
+								"value": 1.167,
+								"unit": "rem"
+							},
+							"fontWeight": 800,
+							"lineHeight": 1.2,
+							"letterSpacing": {
+								"value": 0,
+								"unit": "px"
+							}
+						}
+					}
+				}
+			},
+			"$description": "The type scale: every weight at every size, in the heading, body and label families."
 		}
 	}
 }

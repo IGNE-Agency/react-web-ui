@@ -7,6 +7,7 @@ import {
 	fieldStateAttributes,
 	useFieldFocus,
 } from "../field/index.ts";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
 import {
 	FieldsetLegend,
 	FieldsetRoot,
@@ -16,6 +17,18 @@ import { useFormDisabled } from "../form/form-context.ts";
 import style from "./toggle-group.module.scss";
 
 export type ToggleGroupRootProps = FieldsetRootProps;
+
+/** The fieldset around the chips, named by its `Legend`, whose required mark says "required" in words. */
+const ToggleGroupRoot = ({
+	children,
+	...props
+}: ToggleGroupRootProps): ReactNode => (
+	<FieldsetRoot {...props}>
+		<RequiredSpokenContext value={true}>
+			{children}
+		</RequiredSpokenContext>
+	</FieldsetRoot>
+);
 
 export type ToggleGroupGroupProps = Omit<
 	BaseToggleGroup.Props,
@@ -84,7 +97,7 @@ const ToggleGroupOption = ({
 
 /** The parts of a toggle group. */
 export type ToggleGroupParts = Readonly<{
-	Root: typeof FieldsetRoot;
+	Root: typeof ToggleGroupRoot;
 	Legend: typeof FieldsetLegend;
 	Group: typeof ToggleGroupGroup;
 	Option: typeof ToggleGroupOption;
@@ -100,7 +113,7 @@ export type ToggleGroupParts = Readonly<{
  *
  * @example
  * <ToggleGroup.Root filled={days.length > 0} requiredness="optional">
- * 	<ToggleGroup.Legend>Days <Field.Requiredness optionalLabel="optional" /></ToggleGroup.Legend>
+ * 	<ToggleGroup.Legend>Days <Field.Requiredness /></ToggleGroup.Legend>
  * 	<ToggleGroup.Group value={days} onValueChange={setDays}>
  * 		<ToggleGroup.Option value="mon">Monday</ToggleGroup.Option>
  * 		<ToggleGroup.Option value="tue">Tuesday</ToggleGroup.Option>
@@ -108,7 +121,7 @@ export type ToggleGroupParts = Readonly<{
  * </ToggleGroup.Root>
  */
 export const ToggleGroup: ToggleGroupParts = {
-	Root: FieldsetRoot,
+	Root: ToggleGroupRoot,
 	Legend: FieldsetLegend,
 	Group: ToggleGroupGroup,
 	Option: ToggleGroupOption,

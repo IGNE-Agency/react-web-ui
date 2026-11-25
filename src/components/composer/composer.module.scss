@@ -3,34 +3,37 @@
 
 @layer kit.components {
 	.composer {
-		--_composer-border: var(
-			--composer-border,
+		--_kit-composer-border: var(
+			--kit-composer-border,
 			var(--sys-color-border)
 		);
-		--_composer-pad-x: var(
-			--composer-pad-x,
+		--_kit-composer-pad-x: var(
+			--kit-composer-pad-x,
 			var(--sys-unit-6)
 		);
-		--_composer-pad-y: var(
-			--composer-pad-y,
+		--_kit-composer-pad-y: var(
+			--kit-composer-pad-y,
 			var(--sys-unit-4)
 		);
 
 		display: flex;
 		flex-direction: column;
 		min-inline-size: 0;
-		border: var(--composer-border-width, 1px) solid
-			var(--_composer-border);
+		border: var(--kit-composer-border-width, 1px) solid
+			var(--_kit-composer-border);
 		border-radius: var(
-			--composer-radius,
+			--kit-composer-radius,
 			var(--sys-radius-sm)
 		);
 		background: var(
-			--composer-bg,
+			--kit-composer-bg,
 			var(--sys-color-surface)
 		);
-		color: var(--composer-fg, var(--sys-color-text));
-		font: var(--composer-font, var(--sys-font-body-medium));
+		color: var(--kit-composer-fg, var(--sys-color-text));
+		font: var(
+			--kit-composer-font,
+			var(--sys-font-body-medium)
+		);
 		cursor: text;
 
 		@include focus.ring-projected;
@@ -42,19 +45,19 @@
 
 		&:hover:not([data-disabled]),
 		&[data-focused] {
-			--_composer-border: var(
-				--composer-active-border,
+			--_kit-composer-border: var(
+				--kit-composer-active-border,
 				var(--sys-color-primary)
 			);
 		}
 
 		&[data-disabled] {
 			background: var(
-				--composer-disabled-bg,
+				--kit-composer-disabled-bg,
 				var(--sys-color-disabled-bg)
 			);
 			color: var(
-				--composer-disabled-fg,
+				--kit-composer-disabled-fg,
 				var(--sys-color-disabled-fg)
 			);
 			cursor: not-allowed;
@@ -66,30 +69,31 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
-		gap: var(--composer-gap, var(--sys-unit-4));
-		padding: var(--_composer-pad-y) var(--_composer-pad-x);
+		gap: var(--kit-composer-gap, var(--sys-unit-4));
+		padding: var(--_kit-composer-pad-y)
+			var(--_kit-composer-pad-x);
 	}
 
 	.counter {
 		color: var(
-			--composer-counter-fg,
+			--kit-composer-counter-fg,
 			var(--sys-color-text-muted)
 		);
 		font: var(
-			--composer-counter-font,
+			--kit-composer-counter-font,
 			var(--sys-font-label-small)
 		);
 
 		&[data-tone="warning"] {
 			color: var(
-				--composer-counter-warning-fg,
+				--kit-composer-counter-warning-fg,
 				var(--sys-color-warning-fg)
 			);
 		}
 
 		&[data-tone="error"] {
 			color: var(
-				--composer-counter-error-fg,
+				--kit-composer-counter-error-fg,
 				var(--sys-color-error-fg)
 			);
 		}
@@ -100,19 +104,24 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--composer-attachments-gap, var(--sys-unit-8));
+		gap: var(
+			--kit-composer-attachments-gap,
+			var(--sys-unit-8)
+		);
 		min-inline-size: 0;
-		padding: var(--_composer-pad-x) var(--_composer-pad-x) 0;
+		padding: var(--_kit-composer-pad-x)
+			var(--_kit-composer-pad-x) 0;
 	}
 
 	.attachmentsError {
-		padding: var(--_composer-pad-y) var(--_composer-pad-x) 0;
+		padding: var(--_kit-composer-pad-y)
+			var(--_kit-composer-pad-x) 0;
 		color: var(
-			--composer-attachments-error-fg,
+			--kit-composer-attachments-error-fg,
 			var(--sys-color-error-fg)
 		);
 		font: var(
-			--composer-attachments-error-font,
+			--kit-composer-attachments-error-font,
 			var(--sys-font-label-small)
 		);
 	}

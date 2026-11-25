@@ -1,3 +1,5 @@
+import type { StrictArgTypes } from "storybook/internal/types";
+
 type DocComment = Readonly<{
 	markdown: string;
 	defaultValue: string | undefined;
@@ -89,3 +91,42 @@ export const docCommentOf = (text: string): DocComment => {
 		defaultValue: defaultTag?.body.trim(),
 	};
 };
+
+/**
+ * Arg types with each description read as a JSDoc comment by `docCommentOf`,
+ * and its `@default` shown in the table's Default column unless docgen already
+ * filled it.
+ *
+ * @example
+ * argTypesEnhancers: [({ argTypes }) => withDocComments(argTypes)];
+ */
+export const withDocComments = (
+	argTypes: StrictArgTypes,
+): StrictArgTypes =>
+	Object.fromEntries(
+		Object.entries(argTypes).map(([name, argType]) => {
+			if (argType.description === undefined) {
+				return [name, argType];
+			}
+			const { markdown, defaultValue } = docCommentOf(
+				argType.description,
+			);
+			return [
+				name,
+				{
+					...argType,
+					description: markdown,
+					table:
+						defaultValue === undefined ||
+						argType.table?.defaultValue !== undefined
+							? argType.table
+							: {
+									...argType.table,
+									defaultValue: {
+										summary: defaultValue,
+									},
+								},
+				},
+			];
+		}),
+	);

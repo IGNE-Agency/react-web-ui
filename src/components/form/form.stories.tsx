@@ -1,19 +1,6 @@
-import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
-import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import CalendarTodayIcon from "@material-design-icons/svg/outlined/calendar_today.svg?react";
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
-import ChevronLeftIcon from "@material-design-icons/svg/outlined/chevron_left.svg?react";
-import ChevronRightIcon from "@material-design-icons/svg/outlined/chevron_right.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import DateRangeIcon from "@material-design-icons/svg/outlined/date_range.svg?react";
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
 import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import SearchIcon from "@material-design-icons/svg/outlined/search.svg?react";
-import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
-import VisibilityIcon from "@material-design-icons/svg/outlined/visibility.svg?react";
-import VisibilityOffIcon from "@material-design-icons/svg/outlined/visibility_off.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
 import { revalidateLogic } from "@tanstack/react-form";
@@ -28,8 +15,8 @@ import {
 import { pdfFile } from "../../lib/storybook/files.ts";
 import { z } from "zod";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
-import { OPTIONS_LOAD_LABELS } from "../../lib/storybook/options-load.ts";
 import { roleGone } from "../../lib/storybook/waits.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { Form, type FormRootProps } from "./index.ts";
 import style from "./form.stories.module.scss";
 
@@ -41,26 +28,16 @@ const NOTES_LABEL = "Notes";
 const NOTES_DESCRIPTION =
 	"Anything the reviewer should know.";
 const PASSWORD_LABEL = "Password";
-const SHOW_PASSWORD_LABEL = "Show password";
-const HIDE_PASSWORD_LABEL = "Hide password";
 const PHONE_LABEL = "Phone number";
 const CONTACT_LABEL = "Client contact";
-const CLEAR_LABEL = "Clear";
 const HOURS_LABEL = "Hours";
-const DECREMENT_LABEL = "Decrease";
-const INCREMENT_LABEL = "Increase";
-const NUMBER_ROLE = "Number field";
 const CODE_LABEL = "Invitation code";
-const OPTIONAL_LABEL = "optional";
 const SUBMIT_LABEL = "Submit";
 const BUSY_LABEL = "Submitting";
 const REFUSED = "The invoice period has closed.";
 const REFUSED_NAME = "Closed";
 
 const CODE_LENGTH = 6;
-
-const codeSlotLabel = (index: number, total: number) =>
-	`character ${index} of ${total}`;
 
 const SCHEMA = z.object({
 	name: z.string().min(2, NAME_ERROR),
@@ -125,7 +102,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.TextField
 						label={NAME_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -134,7 +110,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.EmailField
 						label={EMAIL_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 						icon={<Icon svg={MailIcon} label="" />}
 					/>
 				)}
@@ -145,7 +120,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 						label={NOTES_LABEL}
 						description={NOTES_DESCRIPTION}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -154,15 +128,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.PasswordField
 						label={PASSWORD_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
-						showPasswordLabel={SHOW_PASSWORD_LABEL}
-						hidePasswordLabel={HIDE_PASSWORD_LABEL}
-						showPasswordIcon={
-							<Icon svg={VisibilityIcon} label="" />
-						}
-						hidePasswordIcon={
-							<Icon svg={VisibilityOffIcon} label="" />
-						}
 						autoComplete="new-password"
 					/>
 				)}
@@ -172,7 +137,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.PhoneField
 						label={PHONE_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -181,9 +145,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.SearchField
 						label={CONTACT_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
-						clearLabel={CLEAR_LABEL}
-						clearIcon={<Icon svg={CloseIcon} label="" />}
 						icon={<Icon svg={SearchIcon} label="" />}
 					/>
 				)}
@@ -193,14 +154,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.NumberField
 						label={HOURS_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
-						decrementLabel={DECREMENT_LABEL}
-						incrementLabel={INCREMENT_LABEL}
-						decrementIcon={
-							<Icon svg={RemoveIcon} label="" />
-						}
-						incrementIcon={<Icon svg={AddIcon} label="" />}
-						roleDescription={NUMBER_ROLE}
 						min={0}
 					/>
 				)}
@@ -210,8 +163,6 @@ const ExampleForm = (props: ExampleFormProps) => {
 					<field.OtpField
 						label={CODE_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
-						slotLabel={codeSlotLabel}
 						length={CODE_LENGTH}
 					/>
 				)}
@@ -239,19 +190,6 @@ const DAYS_LABEL = "Days";
 const OWNER_LABEL = "Owner";
 const OWNER_ERROR = "Choose an owner.";
 const OWNERS = ["Ada", "Grace", "Linus"];
-
-const CHECK_ICON = <Icon svg={CheckIcon} label="" />;
-const EXPAND_ICON = <Icon svg={ExpandMoreIcon} label="" />;
-
-const COMBOBOX_LABELS = {
-	...OPTIONS_LOAD_LABELS,
-	noResultsLabel: "No results.",
-	searchLabel: "Search",
-	loadingMoreLabel: "Loading more options…",
-	resultsLabel: (count: number) => `${count} results`,
-	icon: EXPAND_ICON,
-	checkIcon: CHECK_ICON,
-};
 
 const STATUS_OPTIONS = [
 	{ value: "open", label: "Open" },
@@ -332,9 +270,7 @@ const ChoiceForm = (props: ExampleFormProps) => {
 				{field => (
 					<field.CheckboxField
 						label={TERMS_LABEL}
-						checkIcon={CHECK_ICON}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -343,9 +279,7 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.CheckboxGroupField
 						label={STATUSES_LABEL}
 						items={STATUS_ITEMS}
-						checkIcon={CHECK_ICON}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -355,7 +289,6 @@ const ChoiceForm = (props: ExampleFormProps) => {
 						label={KIND_LABEL}
 						options={KIND_OPTIONS}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -364,7 +297,6 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.SwitchField
 						label={NOTIFY_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -373,23 +305,17 @@ const ChoiceForm = (props: ExampleFormProps) => {
 					<field.SelectField
 						label={STATUS_LABEL}
 						options={STATUS_OPTIONS}
-						icon={EXPAND_ICON}
-						checkIcon={CHECK_ICON}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
-						{...OPTIONS_LOAD_LABELS}
 					/>
 				)}
 			</form.AppField>
 			<form.AppField name="owner">
 				{field => (
 					<field.ComboboxField
-						{...COMBOBOX_LABELS}
 						label={OWNER_LABEL}
 						items={OWNERS}
 						itemKey={owner => owner}
-						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}>
+						requiredness="required">
 						{owner => owner}
 					</field.ComboboxField>
 				)}
@@ -400,7 +326,6 @@ const ChoiceForm = (props: ExampleFormProps) => {
 						label={VIEW_LABEL}
 						options={VIEW_OPTIONS}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -410,7 +335,6 @@ const ChoiceForm = (props: ExampleFormProps) => {
 						label={DAYS_LABEL}
 						options={DAY_OPTIONS}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -466,6 +390,9 @@ const textbox = (canvas: Canvas, name: string) =>
 	canvas.getByRole("textbox", {
 		name: startsWith(name),
 	});
+
+const formStatus = (canvas: Canvas) =>
+	canvas.getAllByRole("status").at(-1);
 
 const submitButton = (canvas: Canvas) =>
 	canvas.getByRole("button", { name: SUBMIT_LABEL });
@@ -535,7 +462,7 @@ export const SubmitWithErrors: Story = {
 };
 
 const errorIndex = (element: HTMLElement) =>
-	element.style.getPropertyValue("--error-index");
+	element.style.getPropertyValue("--_kit-error-text-index");
 
 export const ErrorsCascade: Story = {
 	tags: ["!dev", "!autodocs"],
@@ -656,7 +583,7 @@ export const Submitted: Story = {
 			textbox(canvas, EMAIL_LABEL),
 			"jan@example.com",
 		);
-		const status = canvas.getByRole("status");
+		const status = formStatus(canvas);
 		await expect(status).toBeEmptyDOMElement();
 
 		await userEvent.click(submitButton(canvas));
@@ -815,7 +742,7 @@ export const ChoicesSubmitted: Story = {
 		await chooseStatus(canvas, "Paid");
 		await chooseOwner(canvas, "Grace");
 		await userEvent.click(
-			canvas.getByRole("button", { name: "Board" }),
+			canvas.getByRole("radio", { name: "Board" }),
 		);
 		await userEvent.click(
 			canvas.getByRole("button", { name: "Monday" }),
@@ -850,47 +777,12 @@ const ATTACHMENTS_LABEL = "Attachments";
 const ATTACHMENTS_ERROR = "Add at least one attachment.";
 const PHOTO_LABEL = "Profile photo";
 
-const CALENDAR_COPY = {
-	openCalendarLabel: "Open calendar",
-	previousMonthLabel: "Previous month",
-	nextMonthLabel: "Next month",
-	monthLabel: "Month",
-	yearLabel: "Year",
-	noMatchingYearLabel: "No matching year.",
-};
-
-const CALENDAR_ICONS = {
-	previousIcon: <Icon svg={ChevronLeftIcon} label="" />,
-	nextIcon: <Icon svg={ChevronRightIcon} label="" />,
-	checkIcon: <Icon svg={CheckIcon} label="" />,
-	expandIcon: <Icon svg={ExpandMoreIcon} label="" />,
-};
-
 const FILE_COPY = {
 	dropTargetLabel: "Drop zone for attachments",
-	dropHint: "Drag files here",
-	dropIcon: <Icon svg={UploadFileIcon} label="" />,
-	chooseLabel: "Choose files",
-	chooseIcon: <Icon svg={AttachFileIcon} label="" />,
 	filesLabel: "Files for attachments",
-	removeLabel: "Remove",
-	removeIcon: <Icon svg={CloseIcon} label="" />,
-	fileHint: (name: string, size: string) =>
-		`${name} (${size})`,
-	tooLargeError: (name: string, maxSize: string) =>
-		`${name} is larger than the maximum size of ${maxSize}.`,
-	wrongTypeError: (name: string) =>
-		`${name} is not an accepted file type.`,
 };
 
-const PHOTO_COPY = {
-	previewLabel: "Preview",
-	photoSetLabel: "Photo set",
-	noPhotoLabel: "No photo",
-	removeLabel: "Remove photo",
-	removeIcon: <Icon svg={CloseIcon} label="" />,
-	icon: <Icon svg={PhotoCameraIcon} label="" />,
-};
+const PHOTO_ICON = <Icon svg={PhotoCameraIcon} label="" />;
 
 const INVOICE = pdfFile("invoice-july.pdf");
 
@@ -947,12 +839,6 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 					<field.DateField
 						label={WORKED_ON_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
-						openCalendarIcon={
-							<Icon svg={CalendarTodayIcon} label="" />
-						}
-						{...CALENDAR_COPY}
-						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>
@@ -961,13 +847,7 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 					<field.DateRangeField
 						label={PERIOD_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 						visibleMonths={2}
-						openCalendarIcon={
-							<Icon svg={DateRangeIcon} label="" />
-						}
-						{...CALENDAR_COPY}
-						{...CALENDAR_ICONS}
 					/>
 				)}
 			</form.AppField>
@@ -976,7 +856,6 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 					<field.TimeField
 						label={START_TIME_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 					/>
 				)}
 			</form.AppField>
@@ -985,7 +864,6 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 					<field.FileField
 						label={ATTACHMENTS_LABEL}
 						requiredness="required"
-						optionalLabel={OPTIONAL_LABEL}
 						maxFileSize={1024 ** 2}
 						accept={["application/pdf", "image/png"]}
 						multiple
@@ -998,8 +876,7 @@ const FilesAndDatesForm = (props: ExampleFormProps) => {
 					<field.PhotoField
 						label={PHOTO_LABEL}
 						requiredness="optional"
-						optionalLabel={OPTIONAL_LABEL}
-						{...PHOTO_COPY}
+						icon={PHOTO_ICON}
 					/>
 				)}
 			</form.AppField>
@@ -1068,7 +945,7 @@ export const FilesAndDatesFileBlurTouches: Story = {
 			name: startsWith(ATTACHMENTS_LABEL),
 		});
 		const choose = within(attachments).getByRole("button", {
-			name: FILE_COPY.chooseLabel,
+			name: STORY_COPY.files.choose,
 		});
 		choose.focus();
 		await expect(choose).toHaveFocus();

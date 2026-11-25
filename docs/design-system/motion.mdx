@@ -43,6 +43,8 @@ The kit has four durations and five easings, and each has a job. The quickest is
 
 Every one of them is switched off for someone who has asked for less motion.
 
+A loop is the one move the scale doesn't time. A spinner's turn or a loading pulse runs in one component only, over and over, at a pace no transition shares, so it keeps a duration of its own, named once where it runs. A step on the scale for it would be a step nothing else may use.
+
 <Specimen caption="The same popup at every duration, with what twenty such moves cost a task. Below, each easing on the element that uses it, eight times slower than in the kit, with the curve it follows.">
 	<MotionSpecimen
 		scenes={{
@@ -348,16 +350,16 @@ Standard for most moves, emphasised for a larger one like a dialog opening, dece
 
 </Details>
 
-<Details title="A duration or an easing is never a literal value">
+<Details title="A move between two states takes its timing from the motion scale">
 
-Every transition reads its timing from the motion scale, so it matches every other move and can be retuned in one place. Shown in [Durations and easings](#durations-and-easings).
+Every transition reads its duration and its easing from the motion scale, so it matches every other move and can be retuned in one place. A loop that one component runs, such as a spinner's turn, names its own duration once, at the top of its stylesheet or as its mixin's parameter, and never repeats the number. Explained in [Durations and easings](#durations-and-easings).
 
 <DoDont>
 <Example kind="do" caption="The timing comes from the scale.">
 
 ```scss
 .popup {
-	transition: opacity var(--sys-motion-short)
+	transition: opacity var(--sys-motion-instant)
 		var(--sys-motion-standard);
 }
 ```
@@ -386,7 +388,7 @@ Guard it with the `prefers-reduced-motion` media query. Explained in [Time and p
 ```scss
 .popup {
 	@media not (prefers-reduced-motion) {
-		transition: opacity var(--sys-motion-short)
+		transition: opacity var(--sys-motion-instant)
 			var(--sys-motion-standard);
 	}
 }

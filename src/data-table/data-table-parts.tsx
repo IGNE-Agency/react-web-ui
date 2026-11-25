@@ -136,11 +136,11 @@ const cellProps = (
 			? inlineStyle
 			: pin.side === "start"
 				? {
-						insetInlineStart: `var(--table-sticky-inset-${pin.index}, 0px)`,
+						insetInlineStart: `var(--kit-table-sticky-inset-${pin.index}, 0px)`,
 						...inlineStyle,
 					}
 				: {
-						insetInlineEnd: `var(--table-sticky-end-${pin.index}, 0px)`,
+						insetInlineEnd: `var(--kit-table-sticky-end-${pin.index}, 0px)`,
 						...inlineStyle,
 					},
 });

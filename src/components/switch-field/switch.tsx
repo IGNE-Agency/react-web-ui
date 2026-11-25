@@ -12,7 +12,10 @@ import {
 } from "../field/index.ts";
 import style from "./switch.module.scss";
 
-export type SwitchRootProps = FieldRootProps &
+export type SwitchRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -24,6 +27,7 @@ export type SwitchRootProps = FieldRootProps &
 	Readonly<{
 		/** The switch is on. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 	}>;
 
@@ -57,6 +61,7 @@ const SwitchRoot = ({
 			requiredness={requiredness}
 			dirty={dirty}
 			touched={touched}
+			phase={field.phase}
 			{...fieldStateAttributes(field.state)}
 			{...props}
 		/>
@@ -132,7 +137,7 @@ export type SwitchParts = Readonly<{
  * 			<Switch.Thumb />
  * 		</Switch.Control>
  * 		<Field.InlineLabelText>Email me about new messages <Field.RequiredMark /></Field.InlineLabelText>
- * 		<Field.InlineOptional optionalLabel="optional" />
+ * 		<Field.InlineOptional />
  * 	</Switch.Label>
  * </Switch.Root>
  */

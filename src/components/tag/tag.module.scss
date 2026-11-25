@@ -3,24 +3,24 @@
 
 @layer kit.components {
 	.root {
-		@include tag.shell("tag");
+		@include tag.shell("kit-tag");
 	}
 
 	.dot {
 		flex-shrink: 0;
-		inline-size: var(--tag-dot-size, var(--sys-unit-3));
-		block-size: var(--tag-dot-size, var(--sys-unit-3));
+		inline-size: var(--kit-tag-dot-size, var(--sys-unit-3));
+		block-size: var(--kit-tag-dot-size, var(--sys-unit-3));
 		border-radius: var(
-			--tag-dot-radius,
+			--kit-tag-dot-radius,
 			var(--sys-radius-circle)
 		);
-		background: var(--tag-dot-bg, currentcolor);
+		background: var(--kit-tag-dot-bg, currentcolor);
 	}
 
 	.icon {
 		display: inline-flex;
 		flex-shrink: 0;
-		font-size: var(--tag-icon-size, 1em);
+		font-size: var(--kit-tag-icon-size, 1em);
 		margin-inline-start: calc(-1 * var(--sys-unit-1));
 	}
 }

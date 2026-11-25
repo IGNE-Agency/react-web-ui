@@ -1,15 +1,10 @@
-import { Spinner } from "../spinner/index.ts";
 import type { ReactNode } from "react";
-import {
-	isoToTimeOfDay,
-	timeOfDayToIso,
-} from "../../lib/calendar/temporal-value.ts";
 import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
-	useFieldState,
 } from "../field/index.ts";
+import { Spinner } from "../spinner/index.ts";
 import { TimeInput } from "./time-input.tsx";
 
 export type TimeFieldProps = FieldProps &
@@ -23,10 +18,14 @@ export type TimeFieldProps = FieldProps &
 		/** Called with the `"HH:mm"` typed, or `null` once cleared. */
 		onValueChange?: (value: string | null) => void;
 
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 
+		/** Submits the time under this name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 
 		/** Applied to the field wrapper, so callers can size the control. */
@@ -36,98 +35,31 @@ export type TimeFieldProps = FieldProps &
 /**
  * A labelled time entry whose hour and minute segments follow the
  * `LocaleProvider`'s locale, so Dutch reads as 24-hour. Its value is a
- * `"HH:mm"` string.
+ * `"HH:mm"` string. Assembled from `TimeInput`'s parts.
  *
  * @example
- * <TimeField label="Start time" optionalLabel="optional" value={startTime} onValueChange={setStartTime} />
+ * <TimeField label="Start time" value={startTime} onValueChange={setStartTime} />
  */
 export const TimeField = ({
 	label,
 	description,
-	errors,
-	requiredness,
-	optionalLabel,
-	dirty,
-	touched,
-	pending,
-	value,
-	defaultValue,
-	onValueChange,
-	onBlur,
-	name,
-	disabled,
-	readOnly,
-	className,
-}: TimeFieldProps): ReactNode => {
-	const time = isoToTimeOfDay(value);
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		disabled,
-		readOnly,
-		filled: time !== null,
-	});
-	const { phase } = field;
-	const fieldState = field.state;
-
-	const ids = TimeInput.useIds();
-
-	return (
-		<Field.Root
-			className={className}
-			invalid={field.invalid}
-			disabled={field.disabled}
-			requiredness={requiredness}
-			dirty={dirty}
-			touched={touched}>
-			<TimeInput.Label id={ids.labelId}>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
-			</TimeInput.Label>
-			<TimeInput.Root
-				state={fieldState}
-				aria-labelledby={ids.labelId}
-				aria-describedby={ids.describedBy(
-					description !== undefined,
-					field.invalid,
-				)}
-				value={value === undefined ? undefined : time}
-				defaultValue={
-					isoToTimeOfDay(defaultValue) ?? undefined
-				}
-				onChange={next =>
-					onValueChange?.(timeOfDayToIso(next))
-				}
-				onBlur={onBlur}
-				name={name ?? ids.controlId}
-				isDisabled={field.disabled}
-				isReadOnly={readOnly}
-				isRequired={requiredness === "required"}
-				isInvalid={field.invalid}>
-				<TimeInput.Group
-					role="presentation"
-					state={fieldState}>
-					<TimeInput.Input>
-						{segment => (
-							<TimeInput.Segment segment={segment} />
-						)}
-					</TimeInput.Input>
-					{phase !== "fresh" && (
-						<TimeInput.Pending>
-							<Spinner size={1} />
-						</TimeInput.Pending>
-					)}
-				</TimeInput.Group>
-			</TimeInput.Root>
-			<TimeInput.Description id={ids.descriptionId}>
-				{description}
-			</TimeInput.Description>
-			<TimeInput.Error id={ids.errorId}>
-				{errors}
-			</TimeInput.Error>
-		</Field.Root>
-	);
-};
+	...rootProps
+}: TimeFieldProps): ReactNode => (
+	<TimeInput.Root {...rootProps}>
+		<TimeInput.Label>
+			{label} <Field.Requiredness />
+		</TimeInput.Label>
+		<TimeInput.Group>
+			<TimeInput.Input>
+				{segment => <TimeInput.Segment segment={segment} />}
+			</TimeInput.Input>
+			<TimeInput.Pending>
+				<Spinner size={1} />
+			</TimeInput.Pending>
+		</TimeInput.Group>
+		<TimeInput.Description>
+			{description}
+		</TimeInput.Description>
+		<TimeInput.Error />
+	</TimeInput.Root>
+);

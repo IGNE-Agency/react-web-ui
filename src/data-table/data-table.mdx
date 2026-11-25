@@ -11,7 +11,7 @@ import styles from "../../docs/design-system/components.module.scss";
 import { Beside } from "../../docs/design-system/beside";
 import { DoDont } from "../../docs/design-system/do-dont";
 import { Example } from "../../docs/design-system/example";
-import { StoryProviders } from "../lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import {
 	Button,
 	IconButton,
@@ -37,7 +37,7 @@ export const Box = ({ indeterminate, ...props }) => (
 );
 
 export const Live = ({ children }) => (
-	<StoryProviders>{children}</StoryProviders>
+	<DocsProviders>{children}</DocsProviders>
 );
 
 <Meta of={DataTableStories} />
@@ -387,7 +387,7 @@ A pinned column can line up exactly with the columns it covers, and then it read
 	inline-size: var(--sys-unit-6);
 	background: linear-gradient(
 		to right,
-		var(--table-edge-shadow),
+		var(--kit-table-edge-shadow),
 		transparent
 	);
 }
@@ -402,7 +402,7 @@ A pinned column can line up exactly with the columns it covers, and then it read
 	inline-size: var(--sys-unit-6);
 	background: linear-gradient(
 		to left,
-		var(--table-edge-shadow),
+		var(--kit-table-edge-shadow),
 		transparent
 	);
 }
@@ -456,10 +456,10 @@ Size it to its own content rather than stretching it to the width of the table i
 
 ```scss
 .nested {
-	--table-header-bg: transparent;
-	--table-header-fg: var(--sys-color-text-muted);
-	--table-row-stripe: transparent;
-	--table-row-hover: transparent;
+	--kit-table-header-bg: transparent;
+	--kit-table-header-fg: var(--sys-color-text-muted);
+	--kit-table-row-stripe: transparent;
+	--kit-table-row-hover: transparent;
 
 	border-radius: 0;
 	background: none;
@@ -791,7 +791,7 @@ Mix the stripe from the tonal container, not from the solid brand colour. A satu
   }>
 
 ```scss
---table-row-stripe: color-mix(
+--kit-table-row-stripe: color-mix(
 	in oklab,
 	var(--sys-color-primary-container) 30%,
 	var(--sys-color-surface)
@@ -821,7 +821,7 @@ Mix the stripe from the tonal container, not from the solid brand colour. A satu
   }>
 
 ```scss
---table-row-stripe: color-mix(
+--kit-table-row-stripe: color-mix(
 	in oklab,
 	var(--sys-color-primary) 6%,
 	var(--sys-color-surface)
@@ -860,11 +860,11 @@ Hover must not be the plain tonal container. That is [the fill of a secondary bu
 ```scss
 .row {
 	&[data-stripe="true"] {
-		background: var(--table-row-stripe);
+		background: var(--kit-table-row-stripe);
 	}
 
 	&:hover {
-		background: var(--table-row-hover);
+		background: var(--kit-table-row-hover);
 	}
 }
 ```
@@ -985,11 +985,7 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ```tsx
 <DataTable.Pagination>
-	<Pagination.Index
-		label={({ pageIndex, pageCount }) =>
-			`Page ${pageIndex + 1} of ${pageCount}`
-		}
-	/>
+	<Pagination.Index />
 	<Pagination.Controls>
 		<Pagination.Previous
 			render={
@@ -1013,7 +1009,7 @@ Stripe parity comes from an attribute set off the row's own index, never a struc
 
 ### Content is the whole table; its parts are the same table in your markup
 
-`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, through `sortAscendingIcon`, `sortDescendingIcon` and `unsortedIcon`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`. A `SortButton` draws its column's header; given children, it draws those, such as the header and a `SortIcon` that picks a glyph for the column's sort:
+`DataTable.Content` draws the headers, a sort toggle on every sortable column, and the body the query state calls for. Its sort glyphs are the app's own, the `IconProvider`'s `sortAscending`, `sortDescending` and `unsorted`; a glyph left out draws nothing. Where a row or a cell needs markup of its own, compose the parts `Content` is made of instead, and branch the body on `useDataTableView`. A `SortButton` draws its column's header; given children, it draws those, such as the header and a `SortIcon` that picks a glyph for the column's sort:
 
 ```tsx
 const { view } = useDataTableView();

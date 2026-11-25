@@ -20,7 +20,7 @@
 		@include form.bare-control;
 
 		font-variant-numeric: tabular-nums;
-		text-align: var(--number-field-text-align, end);
+		text-align: var(--kit-number-field-text-align, end);
 		cursor: text;
 	}
 

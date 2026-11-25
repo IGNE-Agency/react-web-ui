@@ -51,7 +51,6 @@ const PAIRS: readonly Pair[] = [
 
 const BUTTON_LABEL = "Save changes";
 const FIELD_LABEL = "Name";
-const OPTIONAL_LABEL = "optional";
 const LINK_LABEL = "Create an account";
 const PARAGRAPH = "A paragraph in the kit's own type.";
 const PARAGRAPH_LINK = "Read the guide";
@@ -79,7 +78,6 @@ const KitElements = (): ReactElement => {
 			<Button>{BUTTON_LABEL}</Button>
 			<TextField
 				label={FIELD_LABEL}
-				optionalLabel={OPTIONAL_LABEL}
 				value={name}
 				onValueChange={setName}
 			/>

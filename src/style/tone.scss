@@ -7,11 +7,11 @@
 ///   @use "../../style/tone.scss" as tone;
 ///
 ///   .tag {
-///       @include tone.variants("_tag");
+///       @include tone.variants("_kit-tag");
 ///
-///       border: 1px solid var(--tag-border, var(--_tag-border));
-///       background: var(--tag-bg, var(--_tag-bg));
-///       color: var(--tag-fg, var(--_tag-fg));
+///       border: 1px solid var(--kit-tag-border, var(--_kit-tag-border));
+///       background: var(--kit-tag-bg, var(--_kit-tag-bg));
+///       color: var(--kit-tag-fg, var(--_kit-tag-fg));
 ///   }
 @mixin variants($prefix) {
 	&[data-variant="subtle"] {

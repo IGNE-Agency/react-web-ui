@@ -1,7 +1,7 @@
 import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
 import InboxIcon from "@material-design-icons/svg/outlined/inbox.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn } from "storybook/test";
+import { expect, fn, waitFor } from "storybook/test";
 import { mappedArg } from "../../lib/storybook/mapped-arg.ts";
 import { Button } from "../button/button.tsx";
 import { EmptyMessage } from "./empty-message.tsx";
@@ -10,6 +10,7 @@ import { Icon } from "../icon/index.ts";
 const TITLE = "No invoices yet";
 const DESCRIPTION = "Invoices you send show up here.";
 const ADD = "New invoice";
+const WORD_JOINER = String.fromCodePoint(0x2060);
 
 const ICONS = {
 	none: undefined,
@@ -87,5 +88,38 @@ export const TitleOnly: Story = {
 	args: {
 		description: undefined,
 		icon: mappedArg(ICONS, "none"),
+	},
+};
+
+export const AnnouncedOnMount: Story = {
+	tags: ["!dev", "!autodocs"],
+	play: async ({ mount, canvasElement }) => {
+		const texts: string[] = [];
+		const observer = new MutationObserver(records => {
+			texts.push(
+				...records.map(
+					record => record.target.nodeValue ?? "",
+				),
+			);
+		});
+		observer.observe(canvasElement, {
+			characterData: true,
+			subtree: true,
+		});
+
+		const canvas = await mount();
+
+		await waitFor(() =>
+			expect(texts).toContain(
+				`${DESCRIPTION}${WORD_JOINER}`,
+			),
+		);
+		await waitFor(() =>
+			expect(texts.at(-1)).toBe(DESCRIPTION),
+		);
+		observer.disconnect();
+		await expect(
+			canvas.getByRole("status").textContent,
+		).not.toContain(WORD_JOINER);
 	},
 };

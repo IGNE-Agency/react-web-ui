@@ -1,0 +1,60 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocsPage } from "../../../.storybook/docs-page";
+import * as BannerStories from "./banner.stories.tsx";
+
+<Meta of={BannerStories} />
+
+<DocsPage>
+
+## Rules
+
+### A banner states something app-wide
+
+A banner says something that holds across the whole app, around its shell. It is a condition that stays true while the reader works, such as being offline, a read-only workspace, sending being down, storage almost full or maintenance coming, or it is a promotion or a notice, such as a sale. A transient event, something that happened, is [a toast](?path=/docs/components-toast--docs), something about the region in view is said [in that region](?path=/docs/components-status-message--docs), and a question is a dialog. A session about to end is that kind of question, so [it warns in a dialog](?path=/docs/design-system-patterns--docs#a-session-warns-before-it-ends-and-says-so-after), not a banner. There is one banner per condition, and it goes when the condition does.
+
+### The app places it in the page's flow
+
+The kit owns no layout, so the app puts the banner where the condition applies, usually at the top of the app's shell, above everything it concerns. It spans its container and sits in the flow, pushing the content down rather than covering it, so it [carries no shadow](?path=/docs/design-system-foundation-elevation--docs#an-element-that-is-part-of-the-page-carries-no-shadow): its tone's fill sets it apart. A banner against the screen's edge says which one with `edge="top"` or `edge="bottom"`. It then [pays that edge's safe-area inset](?path=/docs/design-system-principles-responsiveness--docs#a-surface-against-an-edge-pays-the-safe-area-inset) and the sides', and it squares its corners, because its edges run on past the glass. A banner inside the content leaves `edge` out and keeps its rounded corners.
+
+```tsx
+<Banner.Root tone="warning" edge="top" live="status">
+	<Banner.Icon>
+		<CloudOffIcon />
+	</Banner.Icon>
+	<Banner.Title>{m.banner_offline_title()}</Banner.Title>
+	<Banner.Description>
+		{m.banner_offline_description()}
+	</Banner.Description>
+</Banner.Root>
+```
+
+### It is a region a screen reader can jump to
+
+The `Root` is a region named by its `Title`, so a screen reader lists every banner, a condition or a promotion, among the page's landmarks and can jump straight to it.
+
+### A condition is announced when it appears, a promotion never is
+
+A condition passes `live="status"`, as [a status message](?path=/docs/components-status-message--docs) does. When it appears mid-session it is announced once, politely, when the screen reader pauses, even though it arrives with its words already in it, and a later change to its words is announced too. A promotion or a notice leaves `live` out and is never announced: it is not news, so it is read in its place, in reading order, or reached through its region. A banner is never an alert: a condition that cannot wait for a pause is a question, and a question is a dialog.
+
+### Its tone says how much the condition matters
+
+`neutral` or `info` is for a mode the app is in, such as read-only or maintenance ahead. `warning` is for a condition that will cost the reader something if they ignore it, such as being offline or running out of storage. `error` is for something broken now, such as an outage. `success` is seldom a banner: a condition that cleared is news, so the banner goes and a toast says so. The title says what the tone says, and the text takes [the tone's own ink](?path=/docs/design-system-foundation-colour--docs#a-status-fill-always-takes-its-own-ink).
+
+### It is dismissable only when it is a heads-up
+
+A condition that still changes what the reader can do, such as being offline, a read-only workspace or an outage, has no `Close`. It leaves when the condition clears. A `Close` is for a condition the reader can act on later, such as storage almost full or maintenance ahead, and for a promotion. Dismissing it hides it until the condition changes, such as storage running out or maintenance starting, when a new banner says so. The button's name and icon come from the `CopyProvider`'s and the `IconProvider`'s `close`. The kit stores nothing: an app that remembers a dismissal across visits keeps it through a `StorageAdapter`. The handler that removes the banner [moves focus](?path=/docs/design-system-principles-accessibility--docs#focus-returns-after-a-part-removes-itself) to where the reader was working, such as the page's heading.
+
+```tsx
+<Banner.Close
+	onClick={() => {
+		dismissStorageWarning();
+		pageHeading.current?.focus();
+	}}
+/>
+```
+
+### Its actions are the app's buttons, retoned by the banner
+
+An action is the way on from the condition, such as "Manage storage", "Sign in again" or "View status". [Trying again is offered only when it can help](?path=/docs/design-system-patterns--docs#trying-again-is-offered-only-when-it-can-help). The buttons go in `Actions`, under the text, and the banner sizes and colours them through their knobs: a primary button takes the tone's ink as its fill, a secondary one an outline in that ink, and a tertiary one the ink alone. A banner carries one primary action at most.
+
+</DocsPage>

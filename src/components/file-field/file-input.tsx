@@ -20,36 +20,113 @@ import {
 } from "../attachment-tile/index.ts";
 import {
 	Field,
+	type FieldBlurHandler,
 	type FieldLabelProps,
-	type FieldRootProps,
 	type FieldState,
 	fieldStateAttributes,
+	useFieldState,
 } from "../field/index.ts";
+import {
+	FieldWiringContext,
+	useFieldWiring,
+	useFieldWiringContext,
+	WiredDescription,
+	WiredError,
+} from "../field/field-wiring.tsx";
+import {
+	InputPartsContext,
+	InputPending,
+	useInputPartsContext,
+} from "../field/input-parts.tsx";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
+import type { FieldsetRootProps } from "../fieldset/fieldset-root.tsx";
 import style from "./file-field.module.scss";
 
 export type FileInputRootProps = Omit<
-	FieldRootProps,
-	"requiredness"
+	FieldsetRootProps,
+	"members" | "formatError" | "invalid" | "onBlur"
 > &
 	Readonly<{
-		/** The states projected onto the field as `data-*` attributes. */
+		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
+		/** Called once focus has left the whole field, not when it moves within it. */
+		onBlur?: FieldBlurHandler;
 	}>;
 
-/** The fieldset around the file input, which projects its state as `data-*` attributes. */
+/**
+ * The fieldset around the file input, named by its `Legend`, projecting its
+ * state onto every part. Its required mark says "required" in words.
+ *
+ * @example
+ * <FileInput.Root filled={files.length > 0} errors={errors} requiredness="required">…</FileInput.Root>
+ */
 const FileInputRoot = ({
-	state,
+	errors,
+	requiredness,
+	dirty,
+	touched,
+	pending = false,
+	filled,
 	disabled,
+	readOnly,
+	state,
+	onBlur,
+	children,
 	...props
-}: FileInputRootProps): ReactNode => (
-	<Field.Root
-		render={<BaseFieldset.Root disabled={disabled} />}
-		disabled={disabled}
-		requiredness={state?.requiredness}
-		{...fieldStateAttributes(state ?? {})}
-		{...props}
-	/>
-);
+}: FileInputRootProps): ReactNode => {
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled,
+		state,
+	});
+	const wiring = useFieldWiring(field.invalid);
+
+	return (
+		<InputPartsContext
+			value={{
+				state: field.state,
+				errors,
+				phase: field.phase,
+			}}>
+			<FieldWiringContext value={wiring}>
+				<Field.Root
+					render={
+						<BaseFieldset.Root disabled={field.disabled} />
+					}
+					{...props}
+					disabled={field.disabled}
+					invalid={field.invalid}
+					requiredness={field.state.requiredness}
+					dirty={dirty}
+					touched={touched}
+					phase={field.phase}
+					onBlur={event => {
+						if (
+							!(
+								event.relatedTarget instanceof Node &&
+								event.currentTarget.contains(
+									event.relatedTarget,
+								)
+							)
+						) {
+							onBlur?.();
+						}
+					}}
+					{...fieldStateAttributes(field.state)}>
+					<RequiredSpokenContext value={true}>
+						{children}
+					</RequiredSpokenContext>
+				</Field.Root>
+			</FieldWiringContext>
+		</InputPartsContext>
+	);
+};
 
 /** The legend that names the fieldset. */
 const FileInputLegend = (
@@ -70,24 +147,38 @@ export type FileInputDropTargetProps = Omit<
 		/** Accessible name for the drop target, which is not a labelable element. */
 		"aria-label": string;
 
-		/** The states projected onto the target as `data-*` attributes. */
+		/** States the root does not own, projected over its own onto the target. */
 		state?: FieldState;
 
 		className?: string;
 	}>;
 
-/** The area files are dropped on, holding the hint, the picker button and the staged files. */
+/**
+ * The area files are dropped on, holding the hint, the picker button and the
+ * staged files. It takes no drop while its root is disabled or read-only.
+ *
+ * @example
+ * <FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>…</FileInput.DropTarget>
+ */
 const FileInputDropTarget = ({
-	state,
+	state: ownState,
 	className,
 	...props
-}: FileInputDropTargetProps): ReactNode => (
-	<AriaDropZone
-		className={clsx(style.dropTarget, className)}
-		{...fieldStateAttributes(state ?? {})}
-		{...props}
-	/>
-);
+}: FileInputDropTargetProps): ReactNode => {
+	const root = useInputPartsContext();
+	const state = { ...root.state, ...ownState };
+	return (
+		<AriaDropZone
+			className={clsx(style.dropTarget, className)}
+			isDisabled={state.disabled}
+			getDropOperation={
+				state.readonly === true ? () => "cancel" : undefined
+			}
+			{...fieldStateAttributes(state)}
+			{...props}
+		/>
+	);
+};
 
 /**
  * The prompt inside the drop target, holding its text and an optional
@@ -136,18 +227,15 @@ export type FileInputTriggerProps = Omit<
 	Readonly<{
 		/** The button to render, such as `<Button variant="secondary" size="sm">Choose files</Button>`. */
 		render: useRender.RenderProp;
+		/** Disables the button while its root is enabled. */
 		disabled?: boolean;
-		/** Ids of the description and error text, chained onto the button. */
-		describedBy?: string;
 		/** The picker button itself, for returning focus to it. */
 		buttonRef?: Ref<HTMLButtonElement>;
-		/** Marks the picker button as the field's invalid control. */
-		invalid?: boolean;
 	}>;
 
 /**
- * The button that opens the file dialog. It renders whichever button it is
- * given.
+ * The button that opens the file dialog, described by its root's
+ * `Description` and `Error`. It renders whichever button it is given.
  *
  * @example
  * <FileInput.Trigger
@@ -157,26 +245,28 @@ export type FileInputTriggerProps = Omit<
  */
 const FileInputTrigger = ({
 	render,
-	disabled,
-	describedBy,
+	disabled = false,
 	buttonRef,
-	invalid,
 	...props
-}: FileInputTriggerProps): ReactNode => (
-	<AriaFileTrigger {...props}>
-		<AriaButton
-			ref={buttonRef}
-			isDisabled={disabled}
-			aria-describedby={describedBy}
-			render={renderAs(render, {
-				...fieldStateAttributes({
-					validity:
-						invalid === true ? "invalid" : undefined,
-				}),
-			})}
-		/>
-	</AriaFileTrigger>
-);
+}: FileInputTriggerProps): ReactNode => {
+	const { state } = useInputPartsContext();
+	const { describedBy } = useFieldWiringContext();
+	return (
+		<AriaFileTrigger {...props}>
+			<AriaButton
+				ref={buttonRef}
+				isDisabled={disabled || state.disabled === true}
+				aria-describedby={describedBy}
+				render={renderAs(
+					render,
+					fieldStateAttributes({
+						validity: state.validity,
+					}),
+				)}
+			/>
+		</AriaFileTrigger>
+	);
+};
 
 export type FileInputListProps = Readonly<{
 	/** Accessible name for the group of tiles. */
@@ -213,6 +303,7 @@ export type FileInputItemProps = Omit<
 		id: string;
 		/** The file's name, which the tile is read and typed to as. */
 		textValue: string;
+		/** Disables the tile while its root is enabled. */
 		disabled?: boolean;
 	}>;
 
@@ -229,18 +320,21 @@ const FileInputItem = ({
 	textValue,
 	disabled = false,
 	...props
-}: FileInputItemProps): ReactNode => (
-	<AttachmentTile.Root
-		render={
-			<AriaTag
-				id={id}
-				textValue={textValue}
-				isDisabled={disabled}
-			/>
-		}
-		{...props}
-	/>
-);
+}: FileInputItemProps): ReactNode => {
+	const { state } = useInputPartsContext();
+	return (
+		<AttachmentTile.Root
+			render={
+				<AriaTag
+					id={id}
+					textValue={textValue}
+					isDisabled={disabled || state.disabled === true}
+				/>
+			}
+			{...props}
+		/>
+	);
+};
 
 /** The parts of a file input. */
 export type FileInputParts = Readonly<{
@@ -250,22 +344,24 @@ export type FileInputParts = Readonly<{
 	Hint: typeof FileInputHint;
 	HintIcon: typeof FileInputHintIcon;
 	Trigger: typeof FileInputTrigger;
-	Pending: typeof Field.Pending;
+	Pending: typeof InputPending;
 	List: typeof FileInputList;
 	Item: typeof FileInputItem;
-	Description: typeof Field.Description;
-	Error: typeof Field.Error;
+	Description: typeof WiredDescription;
+	Error: typeof WiredError;
 }>;
 
 /**
  * The styled parts of a file input: the field frame around react-aria's
  * `DropZone` and `FileTrigger`, plus the staged files as removable tiles built
- * from `AttachmentTile`'s parts. The `Root` is a fieldset named by its `Legend`. For the
- * ordinary case, use `FileField`.
+ * from `AttachmentTile`'s parts. The `Root` is a fieldset named by its
+ * `Legend`; it holds the field's states and describes the picker button by its
+ * `Description` and `Error`, so no part below it takes either again. For the
+ * ordinary case, use `FileField`, which is assembled from exactly these parts.
  *
  * @example
- * <FileInput.Root state={{ requiredness: "optional" }}>
- * 	<FileInput.Legend>Attachments <Field.Requiredness optionalLabel="optional" /></FileInput.Legend>
+ * <FileInput.Root filled={files.length > 0} errors={errors} requiredness="required">
+ * 	<FileInput.Legend>Attachments <Field.Requiredness /></FileInput.Legend>
  * 	<FileInput.DropTarget aria-label="Drop zone for attachments" onDrop={onDrop}>
  * 		<FileInput.Hint>
  * 			<FileInput.HintIcon><UploadFileIcon /></FileInput.HintIcon>
@@ -283,7 +379,10 @@ export type FileInputParts = Readonly<{
  * 				</AttachmentTile.Preview>
  * 			</FileInput.Item>
  * 		</FileInput.List>
+ * 		<FileInput.Pending><Spinner size={1} /></FileInput.Pending>
  * 	</FileInput.DropTarget>
+ * 	<FileInput.Description>Add the invoice and any signed timesheet.</FileInput.Description>
+ * 	<FileInput.Error />
  * </FileInput.Root>
  */
 export const FileInput: FileInputParts = {
@@ -293,9 +392,9 @@ export const FileInput: FileInputParts = {
 	Hint: FileInputHint,
 	HintIcon: FileInputHintIcon,
 	Trigger: FileInputTrigger,
-	Pending: Field.Pending,
+	Pending: InputPending,
 	List: FileInputList,
 	Item: FileInputItem,
-	Description: Field.Description,
-	Error: Field.Error,
+	Description: WiredDescription,
+	Error: WiredError,
 };

@@ -9,13 +9,7 @@ import {
 export type SearchFieldExtraProps = Pick<
 	TextFieldBaseProps,
 	"labelHidden" | "placeholder" | "icon"
-> &
-	Readonly<{
-		/** The clear button's accessible name and tooltip, such as "Clear search". */
-		clearLabel: string;
-		/** The clear button's icon. */
-		clearIcon: ReactNode;
-	}>;
+>;
 
 export type SearchFieldProps = TextPresetProps &
 	SearchFieldExtraProps;
@@ -26,7 +20,7 @@ export type SearchFieldProps = TextPresetProps &
  * carries no room for a visible label.
  *
  * @example
- * <SearchField label="Search clients" optionalLabel="optional" clearLabel="Clear search" clearIcon={<CloseIcon />} icon={<SearchIcon />} value={search} onValueChange={setSearch} />
+ * <SearchField label="Search clients" icon={<SearchIcon />} value={search} onValueChange={setSearch} />
  */
 export const SearchField = ({
 	enterKeyHint = "search",

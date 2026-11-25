@@ -1,7 +1,5 @@
-import AttachFileIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import UploadFileIcon from "@material-design-icons/svg/outlined/upload_file.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -15,21 +13,25 @@ import {
 	pickerOpens,
 	pngFile,
 } from "../../lib/storybook/files.ts";
-import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
+import { AttachmentTile } from "../attachment-tile/index.ts";
+import { Button } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import {
 	FileField,
 	type FileFieldProps,
 } from "./file-field.tsx";
+import { FileInput } from "./file-input.tsx";
+import { TSFFileField } from "./tsf-file-field.tsx";
 
 const LABEL = "Attachments";
 const DROP_TARGET = "Drop zone for attachments";
-const CHOOSE = "Choose files";
-const REMOVE = "Remove";
-const tooLarge = (name: string, maxSize: string) =>
-	`${name} is larger than the maximum size of ${maxSize} and must be removed.`;
-const wrongType = (name: string) =>
-	`${name} is not an accepted file type and must be removed.`;
+const CHOOSE = STORY_COPY.files.choose;
 const SCAN_NAME = "signed-timesheet.png";
+const FILES_LABEL = "Files for attachments";
+const DESCRIPTION =
+	"Add the invoice and any signed timesheet.";
+const PDF_ERROR = "Attach PDFs only.";
 
 const KILOBYTE = 1024;
 
@@ -67,6 +69,59 @@ const ControlledFileField = (args: FileFieldProps) => {
 	);
 };
 
+const ComposedFileInput = () => {
+	const [files, setFiles] = useState<readonly File[]>([]);
+	const notPdf = files.some(
+		file => file.type !== "application/pdf",
+	);
+
+	return (
+		<FileInput.Root
+			filled={files.length > 0}
+			errors={notPdf ? [PDF_ERROR] : undefined}
+			requiredness="required">
+			<FileInput.Legend>
+				{LABEL} <Field.Requiredness />
+			</FileInput.Legend>
+			<FileInput.DropTarget aria-label={DROP_TARGET}>
+				<FileInput.Hint>Drag files here</FileInput.Hint>
+				<FileInput.Trigger
+					allowsMultiple
+					onSelect={list =>
+						setFiles(list === null ? [] : [...list])
+					}
+					render={
+						<Button variant="secondary" size="sm">
+							{CHOOSE}
+						</Button>
+					}
+				/>
+				{files.length === 0 ? null : (
+					<FileInput.List label={FILES_LABEL}>
+						{files.map(file => (
+							<FileInput.Item
+								key={file.name}
+								id={file.name}
+								textValue={file.name}>
+								<AttachmentTile.Preview
+									name={file.name}
+									src={undefined}>
+									<AttachmentTile.Extension />
+									<AttachmentTile.Name />
+								</AttachmentTile.Preview>
+							</FileInput.Item>
+						))}
+					</FileInput.List>
+				)}
+			</FileInput.DropTarget>
+			<FileInput.Description>
+				{DESCRIPTION}
+			</FileInput.Description>
+			<FileInput.Error />
+		</FileInput.Root>
+	);
+};
+
 const meta = {
 	parameters: {
 		designSystem: [
@@ -81,26 +136,26 @@ const meta = {
 				section:
 					"Focus returns after a part removes itself",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 			{ component: "components/attachment-tile" },
 		],
+		tiers: {
+			primitive: {
+				"FileInput.Root": FileInput.Root,
+			},
+			connector: { TSFFileField },
+		},
 	},
 	component: FileField,
 	render: ControlledFileField,
 	args: {
 		label: LABEL,
-		optionalLabel: "optional",
 		dropTargetLabel: DROP_TARGET,
-		dropHint: "Drag files here",
-		dropIcon: <Icon svg={UploadFileIcon} label="" />,
-		chooseLabel: CHOOSE,
-		chooseIcon: <Icon svg={AttachFileIcon} label="" />,
-		filesLabel: "Files for attachments",
-		removeLabel: REMOVE,
-		removeIcon: <Icon svg={CloseIcon} label="" />,
-		fileHint: (name, size) => `${name} (${size})`,
-		tooLargeError: tooLarge,
-		wrongTypeError: wrongType,
+		filesLabel: FILES_LABEL,
 		value: [],
 		onValueChange: fn(),
 		multiple: true,
@@ -124,7 +179,12 @@ export const TooLarge: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert").textContent,
-		).toBe(tooLarge(OVERSIZED_SCAN.name, "1 kB"));
+		).toBe(
+			STORY_COPY.files.tooLargeFile(
+				OVERSIZED_SCAN.name,
+				"1 kB",
+			),
+		);
 	},
 };
 
@@ -133,7 +193,7 @@ export const WrongType: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("alert").textContent,
-		).toBe(wrongType(PROGRAM.name));
+		).toBe(STORY_COPY.files.wrongType(PROGRAM.name));
 	},
 };
 
@@ -155,7 +215,7 @@ export const ReadOnly: Story = {
 		).not.toBeInTheDocument();
 		await expect(
 			canvas.queryByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		).not.toBeInTheDocument();
 	},
@@ -179,8 +239,34 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description:
-			"Add the invoice and any signed timesheet.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedFileInput,
+	play: async ({ canvas, canvasElement }) => {
+		const trigger = canvas.getByRole("button", {
+			name: CHOOSE,
+		});
+
+		await expect(
+			canvas.getByRole("group", {
+				name: `${LABEL} ${STORY_COPY.required}`,
+			}),
+		).toBeInTheDocument();
+		await expect(trigger).toHaveAccessibleDescription(
+			DESCRIPTION,
+		);
+
+		await userEvent.upload(fileInput(canvasElement), SCAN);
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(PDF_ERROR);
+		await expect(
+			trigger.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 
@@ -241,7 +327,7 @@ export const Mouse: Story = {
 			within(
 				canvas.getByRole("row", { name: INVOICE.name }),
 			).getByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		);
 		await expect(

@@ -119,7 +119,7 @@ $wide: "(width >= 40rem)";
 
 	.line {
 		border-radius: var(--sys-radius-full);
-		background: var(--line);
+		background: var(--kit-line);
 		block-size: var(--sys-unit-2);
 		inline-size: 75%;
 	}

@@ -1,13 +1,14 @@
 @use "../../style/layers.scss";
 @use "../../style/overlay.scss" as overlay;
-@use "../../style/theme.scss" as theme;
+
+$settle: 0.2s;
 
 @layer kit.components {
 	.backdrop {
 		@include overlay.backdrop;
 
-		--_overlay-dim: 0.22;
-		--overlay-opacity: calc(
+		--_kit-overlay-scrim: var(--sys-color-scrim-low);
+		--_kit-overlay-opacity: calc(
 			1 - var(--drawer-swipe-progress)
 		);
 
@@ -21,60 +22,86 @@
 			position: absolute;
 		}
 
-		@include theme.dark {
-			--_overlay-dim: 0.4;
-		}
-
 		&[data-swiping] {
 			transition-duration: 0ms;
 		}
 
 		&[data-ending-style] {
 			transition-duration: calc(
-				var(--drawer-swipe-strength) * 0.2s
+				var(--drawer-swipe-strength) * #{$settle}
 			);
 		}
 	}
 
 	.viewport {
-		--drawer-viewport-padding: 0px;
+		--_kit-drawer-viewport-padding: 0px;
 
 		position: fixed;
 		inset: 0;
 		display: flex;
-		justify-content: flex-end;
-		padding: var(--drawer-viewport-padding);
+		padding: var(--_kit-drawer-viewport-padding);
 
 		@supports (-webkit-touch-callout: none) {
-			--drawer-viewport-padding: var(--sys-unit-8);
+			--_kit-drawer-viewport-padding: var(--sys-unit-8);
 		}
 	}
 
 	.popup {
-		--drawer-bleed: 3rem;
+		--_kit-drawer-bleed: 3rem;
+		--_kit-drawer-sheet-block-size: auto;
+		--_kit-drawer-inset: var(
+			--kit-drawer-inset,
+			var(--sys-unit-16)
+		);
+		--_kit-drawer-inline-size: 33dvw;
+		--_kit-drawer-sheet-max: 85dvh;
 
 		position: relative;
 		box-sizing: border-box;
 		inline-size: calc(
-			var(--drawer-inline-size, 33dvw) + var(--drawer-bleed)
+			var(
+					--kit-drawer-inline-size,
+					var(--_kit-drawer-inline-size)
+				) +
+				var(--_kit-drawer-bleed)
 		);
-		min-inline-size: var(--drawer-min-inline-size, 24rem);
+		min-inline-size: var(
+			--kit-drawer-min-inline-size,
+			24rem
+		);
 		block-size: 100%;
 		background: var(
-			--drawer-surface,
+			--kit-drawer-surface,
 			var(--sys-color-surface)
 		);
-		padding: var(--drawer-inset, var(--sys-unit-16));
+		padding: var(--_kit-drawer-inset);
+		padding-block: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-top)
+			)
+			max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-bottom)
+			);
 		padding-right: calc(
-			var(--drawer-inset, var(--sys-unit-16)) +
-				var(--drawer-bleed)
+			max(
+					var(--_kit-drawer-inset),
+					env(safe-area-inset-right)
+				) +
+				var(--_kit-drawer-bleed)
 		);
-		margin-right: calc(-1 * var(--drawer-bleed));
-		color: var(--drawer-fg, var(--sys-color-text));
+		margin-right: calc(-1 * var(--_kit-drawer-bleed));
+		margin-left: auto;
+		color: var(--kit-drawer-fg, var(--sys-color-text));
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		touch-action: auto;
 		transform: translateX(var(--drawer-swipe-movement-x));
+
+		@supports not (block-size: 1dvh) {
+			--_kit-drawer-inline-size: 33svw;
+			--_kit-drawer-sheet-max: 85svh;
+		}
 
 		@media not (prefers-reduced-motion) {
 			transition: transform var(--sys-motion-short)
@@ -85,22 +112,22 @@
 		&::before {
 			content: "";
 			position: absolute;
-			inset-inline-start: var(--sys-unit-3);
+			left: var(--sys-unit-3);
 			inset-block-start: 50%;
 			inline-size: var(
-				--drawer-handle-thickness,
+				--kit-drawer-handle-thickness,
 				var(--sys-unit-2)
 			);
 			block-size: var(
-				--drawer-handle-length,
+				--kit-drawer-handle-length,
 				var(--sys-unit-16)
 			);
 			border-radius: var(
-				--drawer-handle-radius,
+				--kit-drawer-handle-radius,
 				var(--sys-radius-full)
 			);
 			background: var(
-				--drawer-handle-bg,
+				--kit-drawer-handle-bg,
 				var(--sys-color-outline)
 			);
 			translate: 0 -50%;
@@ -114,52 +141,93 @@
 		&[data-ending-style] {
 			transform: translateX(
 				calc(
-					100% - var(--drawer-bleed) +
-						var(--drawer-viewport-padding) + 2px
+					100% - var(--_kit-drawer-bleed) +
+						var(--_kit-drawer-viewport-padding) + 2px
 				)
 			);
 		}
 
 		&[data-ending-style] {
 			transition-duration: calc(
-				var(--drawer-swipe-strength) * 0.2s
+				var(--drawer-swipe-strength) * #{$settle}
 			);
 		}
 
 		@supports (-webkit-touch-callout: none) {
-			--drawer-bleed: 0px;
+			--_kit-drawer-bleed: 0px;
 
-			margin-right: 0;
 			border-radius: var(
-				--drawer-radius,
+				--kit-drawer-radius,
 				var(--sys-radius-lg)
 			);
+		}
+
+		&[data-swipe-direction="left"] {
+			padding-right: var(--_kit-drawer-inset);
+			padding-left: calc(
+				max(
+						var(--_kit-drawer-inset),
+						env(safe-area-inset-left)
+					) +
+					var(--_kit-drawer-bleed)
+			);
+			margin-right: auto;
+			margin-left: calc(-1 * var(--_kit-drawer-bleed));
+
+			&::before {
+				right: var(--sys-unit-3);
+				left: auto;
+			}
+
+			&[data-starting-style],
+			&[data-ending-style] {
+				transform: translateX(
+					calc(
+						-100% + var(--_kit-drawer-bleed) -
+							var(--_kit-drawer-viewport-padding) - 2px
+					)
+				);
+			}
 		}
 
 		&[data-swipe-direction="down"] {
 			align-self: flex-end;
 			inline-size: 100%;
 			min-inline-size: 0;
-			block-size: var(--drawer-sheet-block-size, auto);
-			max-block-size: var(--drawer-sheet-max, 85dvh);
+			block-size: var(
+				--kit-drawer-sheet-block-size,
+				var(--_kit-drawer-sheet-block-size)
+			);
+			max-block-size: var(
+				--kit-drawer-sheet-max,
+				var(--_kit-drawer-sheet-max)
+			);
 			border-radius: var(
-					--drawer-sheet-radius,
+					--kit-drawer-sheet-radius,
 					var(--sys-radius-xl)
 				)
-				var(--drawer-sheet-radius, var(--sys-radius-xl)) 0 0;
-			margin-right: 0;
-			margin-bottom: calc(-1 * var(--drawer-bleed));
-			padding-top: var(
-				--drawer-handle-space,
-				var(--sys-unit-6)
+				var(--kit-drawer-sheet-radius, var(--sys-radius-xl))
+				0 0;
+			margin-inline: 0;
+			margin-bottom: calc(-1 * var(--_kit-drawer-bleed));
+			padding-block: var(
+					--kit-drawer-handle-space,
+					var(--sys-unit-6)
+				)
+				calc(
+					max(
+							var(--_kit-drawer-inset) + 1.75rem,
+							env(safe-area-inset-bottom)
+						) +
+						var(--_kit-drawer-bleed)
+				);
+			padding-right: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-right)
 			);
-			padding-right: var(
-				--drawer-inset,
-				var(--sys-unit-16)
-			);
-			padding-bottom: calc(
-				var(--drawer-inset, var(--sys-unit-16)) +
-					var(--drawer-bleed) + 1.75rem
+			padding-left: max(
+				var(--_kit-drawer-inset),
+				env(safe-area-inset-left)
 			);
 			transform: translateY(var(--drawer-swipe-movement-y));
 
@@ -168,16 +236,16 @@
 				display: block;
 				flex-shrink: 0;
 				inline-size: var(
-					--drawer-handle-length,
+					--kit-drawer-handle-length,
 					var(--sys-unit-16)
 				);
 				block-size: var(
-					--drawer-handle-thickness,
+					--kit-drawer-handle-thickness,
 					var(--sys-unit-2)
 				);
 				margin-inline: auto;
 				margin-block-end: var(
-					--drawer-handle-space,
+					--kit-drawer-handle-space,
 					var(--sys-unit-6)
 				);
 				translate: none;
@@ -187,8 +255,8 @@
 			&[data-ending-style] {
 				transform: translateY(
 					calc(
-						100% - var(--drawer-bleed) +
-							var(--drawer-viewport-padding) + 2px
+						100% - var(--_kit-drawer-bleed) +
+							var(--_kit-drawer-viewport-padding) + 2px
 					)
 				);
 			}
@@ -196,9 +264,9 @@
 	}
 
 	.filled {
-		--drawer-sheet-block-size: var(
-			--drawer-sheet-max,
-			85dvh
+		--_kit-drawer-sheet-block-size: var(
+			--kit-drawer-sheet-max,
+			var(--_kit-drawer-sheet-max)
 		);
 
 		display: flex;
@@ -210,16 +278,16 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--drawer-header-gap, var(--sys-unit-8));
+		gap: var(--kit-drawer-header-gap, var(--sys-unit-8));
 	}
 
 	.title {
 		color: var(
-			--drawer-title-fg,
-			var(--drawer-fg, var(--sys-color-text))
+			--kit-drawer-title-fg,
+			var(--kit-drawer-fg, var(--sys-color-text))
 		);
 		font: var(
-			--drawer-title-font,
+			--kit-drawer-title-font,
 			var(--sys-font-heading-small)
 		);
 	}

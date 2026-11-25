@@ -1,6 +1,4 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import { Icon } from "../../src/components/icon/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import styles from "./ramp-specimen.module.scss";
 import { Swatch, SwatchGroup } from "./swatch";
 import { nameOf, type Ramp, RAMPS } from "./tokens";
@@ -43,8 +41,7 @@ const RampRow = ({ ramp }: Readonly<{ ramp: Ramp }>) => (
  */
 export const RampSpecimen = () => {
 	return (
-		<StoryProviders
-			toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
+		<DocsProviders>
 			<SwatchGroup>
 				<div className={styles.ramps}>
 					{RAMPS.map(ramp => (
@@ -52,6 +49,6 @@ export const RampSpecimen = () => {
 					))}
 				</div>
 			</SwatchGroup>
-		</StoryProviders>
+		</DocsProviders>
 	);
 };

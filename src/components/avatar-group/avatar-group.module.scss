@@ -12,16 +12,17 @@
 		display: inline-flex;
 		flex-shrink: 0;
 		border-radius: var(
-			--avatar-group-radius,
+			--kit-avatar-group-radius,
 			var(--sys-radius-circle)
 		);
-		box-shadow: 0 0 0 var(--avatar-group-ring-width, 2px)
-			var(--avatar-group-ring, var(--sys-color-surface));
+		box-shadow: 0 0 0
+			var(--kit-avatar-group-ring-width, 2px)
+			var(--kit-avatar-group-ring, var(--sys-color-surface));
 
 		&:not(:first-child) {
 			margin-inline-start: calc(
-				-1 * var(--avatar-group-overlap, 0.4) *
-					var(--_avatar-group-size)
+				-1 * var(--kit-avatar-group-overlap, 0.4) *
+					var(--_kit-avatar-group-size)
 			);
 		}
 	}
@@ -30,22 +31,22 @@
 		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
-		inline-size: var(--_avatar-group-size);
-		block-size: var(--_avatar-group-size);
+		inline-size: var(--_kit-avatar-group-size);
+		block-size: var(--_kit-avatar-group-size);
 		border: none;
 		background-color: var(
-			--avatar-group-overflow-bg,
+			--kit-avatar-group-overflow-bg,
 			var(--sys-color-surface-high)
 		);
 		padding: 0;
 		color: var(
-			--avatar-group-overflow-fg,
+			--kit-avatar-group-overflow-fg,
 			var(--sys-color-text)
 		);
 		font: inherit;
 		font-weight: var(
-			--avatar-group-overflow-font-weight,
-			600
+			--kit-avatar-group-overflow-font-weight,
+			var(--sys-font-label-medium-font-weight)
 		);
 		line-height: 1;
 		cursor: default;
@@ -54,41 +55,47 @@
 	}
 
 	.count {
-		font-size: calc(0.4 * var(--_avatar-group-size));
+		font-size: calc(0.4 * var(--_kit-avatar-group-size));
 	}
 
 	.popup {
-		--popover-radius: var(
-			--avatar-group-popup-radius,
+		--kit-popover-radius: var(
+			--kit-avatar-group-popup-radius,
 			var(--sys-radius-md)
 		);
-		--popover-padding: var(
-			--avatar-group-popup-padding,
+		--kit-popover-padding: var(
+			--kit-avatar-group-popup-padding,
 			var(--sys-unit-4)
 		);
-		--popover-min-inline-size: 0;
+		--kit-popover-min-inline-size: 0;
 	}
 
 	.list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--avatar-group-list-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-avatar-group-list-gap,
+			var(--sys-unit-4)
+		);
 		list-style: none;
 	}
 
 	.item {
 		display: flex;
 		align-items: center;
-		gap: var(--avatar-group-item-gap, var(--sys-unit-4));
+		gap: var(
+			--kit-avatar-group-item-gap,
+			var(--sys-unit-4)
+		);
 		font: var(
-			--avatar-group-item-font,
+			--kit-avatar-group-item-font,
 			var(--sys-font-body-medium)
 		);
 	}
 
 	.suffix {
 		color: var(
-			--avatar-group-suffix-fg,
+			--kit-avatar-group-suffix-fg,
 			var(--sys-color-text-muted)
 		);
 	}

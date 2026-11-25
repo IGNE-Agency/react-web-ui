@@ -15,12 +15,17 @@ export type ToggleGroupFieldProps = FieldProps &
 		options: readonly ChoiceOption[];
 		/** The chosen values. */
 		value: readonly string[];
+		/** Called with the new value. */
 		onValueChange: (value: readonly string[]) => void;
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
+		/** Lays the options out in a row or a column. @default "horizontal" */
 		orientation?: BaseToggleGroup.Props["orientation"];
 		/** Applied to the field wrapper, so callers can place the group. */
 		className?: string;
@@ -33,7 +38,6 @@ export type ToggleGroupFieldProps = FieldProps &
  * @example
  * <ToggleGroupField
  * 	label="Days"
- * 	optionalLabel="optional"
  * 	options={[{ label: "Monday", value: "mon" }, { label: "Tuesday", value: "tue" }]}
  * 	value={days}
  * 	onValueChange={setDays}
@@ -44,7 +48,6 @@ export const ToggleGroupField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -75,8 +78,7 @@ export const ToggleGroupField = ({
 			pending={pending}
 			filled={value.length > 0}>
 			<ToggleGroup.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</ToggleGroup.Legend>
 
 			<ToggleGroup.Group

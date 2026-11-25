@@ -154,7 +154,7 @@
 			},
 			"border": {
 				"$type": "color",
-				"$value": "{ref.neutral.500}"
+				"$value": "{ref.neutral.450}"
 			},
 			"outline": {
 				"$type": "color",
@@ -170,126 +170,22 @@
 					"$value": "{ref.neutral.450}"
 				}
 			},
-			"identity": {
-				"1": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.3612, 0.0709, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9204, 0.0237, 84]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 84
-							}
-						}
-					}
-				},
-				"2": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.3612, 0.0709, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9204, 0.0237, 127]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 127
-							}
-						}
-					}
-				},
-				"3": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.3612, 0.0709, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9204, 0.0237, 283]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 283
-							}
-						}
-					}
-				},
-				"4": {
-					"bg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.3612, 0.0709, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					},
-					"fg": {
-						"$type": "color",
-						"$value": {
-							"colorSpace": "oklch",
-							"components": [0.9204, 0.0237, 333]
-						},
-						"$extensions": {
-							"nl.igne.derived": {
-								"from": "{sys.color.on-primary-container}",
-								"space": "oklch",
-								"hue": 333
-							}
-						}
-					}
+			"scrim": {
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.6
+				}
+			},
+			"scrim-low": {
+				"$type": "color",
+				"$value": {
+					"colorSpace": "srgb",
+					"components": [0, 0, 0],
+					"hex": "#000000",
+					"alpha": 0.4
 				}
 			}
 		},

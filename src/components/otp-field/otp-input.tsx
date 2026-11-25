@@ -1,6 +1,7 @@
 import { OTPField as BaseOTPField } from "@base-ui/react/otp-field";
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	Field,
 	type FieldProps,
@@ -32,17 +33,21 @@ export type { OtpInputBaseProps };
 
 export type OtpInputRootProps = Omit<
 	FieldProps,
-	"label" | "description" | "optionalLabel"
+	"label" | "description"
 > &
 	OtpInputBaseProps &
 	Readonly<{
+		/** The current value. */
 		value: string;
+		/** Called with the new value. */
 		onValueChange: (value: string) => void;
 		/** Number of character slots. @default 6 */
 		length?: number;
 		/** States no prop here owns, projected over the ones that do. */
 		state?: FieldState;
+		/** Applied to the field frame, so callers can size the control. */
 		className?: string;
+		/** The field's parts. */
 		children?: ReactNode;
 	}>;
 
@@ -100,6 +105,7 @@ const OtpInputRoot = ({
 					requiredness={field.state.requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					className={clsx(style.root, className)}
 					{...fieldStateAttributes(field.state)}>
 					{children}
@@ -126,7 +132,7 @@ export type OtpInputGroupProps = Omit<
  * The row of character slots, bound to `Root`'s value.
  *
  * @example
- * <OtpInput.Group><OtpInput.Slots slotLabel={slotLabel} /></OtpInput.Group>
+ * <OtpInput.Group><OtpInput.Slots /></OtpInput.Group>
  */
 const OtpInputGroup = ({
 	className,
@@ -136,6 +142,7 @@ const OtpInputGroup = ({
 	return (
 		<BaseOTPField.Root
 			{...base}
+			required={state.requiredness === "required"}
 			className={clsx(style.group, className)}
 			{...fieldStateAttributes(state)}
 			{...props}
@@ -201,29 +208,23 @@ export type OtpSlotLabel = (
 	total: number,
 ) => string;
 
-export type OtpInputSlotsProps = Readonly<{
-	/** Names a slot past the first by its 1-based position, such as "character 2 of 6". */
-	slotLabel: OtpSlotLabel;
-}>;
-
 /**
  * Every slot of the input: the first takes its name from the field's label, the
- * rest are named by `slotLabel`.
+ * rest are named by the `CopyProvider`'s `otp.slot`.
  *
  * @example
- * <OtpInput.Slots slotLabel={(index, total) => `character ${index} of ${total}`} />
+ * <OtpInput.Slots />
  */
-const OtpInputSlots = ({
-	slotLabel,
-}: OtpInputSlotsProps): ReactNode => {
+const OtpInputSlots = (): ReactNode => {
 	const { length } = useOtpInputContext();
+	const { otp } = useCopy();
 	return Array.from({ length }, (_, index) => (
 		<OtpInputInput
 			key={index}
 			aria-label={
 				index === 0
 					? undefined
-					: slotLabel(index + 1, length)
+					: otp.slot(index + 1, length)
 			}
 		/>
 	));
@@ -249,15 +250,15 @@ export type OtpInputParts = Readonly<{
 /**
  * The parts of a one-time-code input: the field frame, a group of character
  * slots, and the slots themselves. For the ordinary case, use the `OtpField`
- * shorthand, which is assembled from exactly these parts. `Pending` shows once
+ * prefab, which is assembled from exactly these parts. `Pending` shows once
  * the `Root`'s wait is worth showing, and `Error` renders the errors `Root` was
  * given.
  *
  * @example
  * <OtpInput.Root value={code} onValueChange={setCode} requiredness="optional">
- * 	<OtpInput.Label>Verification code <Field.Requiredness optionalLabel="optional" /></OtpInput.Label>
+ * 	<OtpInput.Label>Verification code <Field.Requiredness /></OtpInput.Label>
  * 	<OtpInput.Group>
- * 		<OtpInput.Slots slotLabel={(index, total) => `character ${index} of ${total}`} />
+ * 		<OtpInput.Slots />
  * 		<OtpInput.Pending>
  * 			<Spinner size={1} />
  * 		</OtpInput.Pending>

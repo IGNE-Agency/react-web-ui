@@ -1,6 +1,8 @@
 import type { Row as TableRow } from "@tanstack/react-table";
 import { Fragment, type ReactNode } from "react";
 import { Button } from "../components/button/button.tsx";
+import { useCopy } from "../components/copy-provider/index.ts";
+import { useIcons } from "../components/icon-provider/index.ts";
 import { Stale } from "../components/stale/stale.tsx";
 import { useDataTable } from "./data-table-context.tsx";
 import {
@@ -42,16 +44,6 @@ export type DataTableContentProps<
 	errorLabel: string;
 	/** What is announced while the first page loads, as the table's caption, such as "Loading invoices". */
 	loadingLabel: string;
-	/** What the overlay says when a refresh runs long, such as "This is taking longer than usual." */
-	slowLabel: string;
-	/** The retry's label, such as "Try again". */
-	retryLabel: string;
-	/** The glyph on a header sorted ascending. */
-	sortAscendingIcon?: ReactNode;
-	/** The glyph on a header sorted descending. */
-	sortDescendingIcon?: ReactNode;
-	/** The glyph on a sortable header that is not sorted. */
-	unsortedIcon?: ReactNode;
 	/** Set on the `Scroller`. */
 	className?: string;
 }>;
@@ -69,13 +61,10 @@ export const DataTableContent = <
 	emptyState,
 	errorLabel,
 	loadingLabel,
-	slowLabel,
-	retryLabel,
-	sortAscendingIcon,
-	sortDescendingIcon,
-	unsortedIcon,
 	className,
 }: DataTableContentProps<TData>): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const { table, onRetry } = useDataTable<TData>();
 	const { view } = useDataTableView();
 
@@ -88,7 +77,7 @@ export const DataTableContent = <
 						variant="tertiary"
 						size="sm"
 						onClick={onRetry}>
-						{retryLabel}
+						{copy.retry}
 					</Button>
 				) : null}
 			</RefreshFailed>
@@ -111,10 +100,10 @@ export const DataTableContent = <
 													<SortIcon header={header}>
 														{sort =>
 															sort === "asc"
-																? sortAscendingIcon
+																? icons.sortAscending
 																: sort === "desc"
-																	? sortDescendingIcon
-																	: unsortedIcon
+																	? icons.sortDescending
+																	: icons.unsorted
 														}
 													</SortIcon>
 												</SortButton>
@@ -157,10 +146,10 @@ export const DataTableContent = <
 					</Table>
 				</Scroller>
 				<StaleOverlay>
-					<Stale.Message>{slowLabel}</Stale.Message>
+					<Stale.Message>{copy.table.slow}</Stale.Message>
 					{onRetry ? (
 						<Stale.Retry onRetry={onRetry}>
-							{retryLabel}
+							{copy.retry}
 						</Stale.Retry>
 					) : null}
 				</StaleOverlay>

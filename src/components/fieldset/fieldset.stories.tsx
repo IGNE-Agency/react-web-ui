@@ -3,7 +3,7 @@ import {
 	revalidateLogic,
 	useStore,
 } from "@tanstack/react-form";
-import type { ReactElement } from "react";
+import { type ReactElement, useState } from "react";
 import {
 	expect,
 	userEvent,
@@ -14,9 +14,13 @@ import { z } from "zod";
 import { getFieldErrors } from "../../lib/forms/errors.ts";
 import { useConnectedField } from "../../lib/forms/use-connected-field.ts";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
+import { DateField } from "../date-field/index.ts";
 import { Field } from "../field/index.ts";
 import { Form } from "../form/index.ts";
-import { TextInput } from "../text-field/index.ts";
+import {
+	TextField,
+	TextInput,
+} from "../text-field/index.ts";
 import {
 	FieldGroup,
 	type FieldGroupProps,
@@ -26,7 +30,6 @@ import style from "./fieldset.stories.module.scss";
 
 const LEGEND = "Address";
 const DESCRIPTION = "We send the invoice to this address.";
-const OPTIONAL_LABEL = "optional";
 const POSTAL_CODE_LABEL = "Postal code";
 const POSTAL_CODE_DESCRIPTION = "For example 1234 AB.";
 const HOUSE_NUMBER_LABEL = "House number";
@@ -133,7 +136,6 @@ const AddressForm = ({
 							label={POSTAL_CODE_LABEL}
 							description={POSTAL_CODE_DESCRIPTION}
 							requiredness="required"
-							optionalLabel={OPTIONAL_LABEL}
 							autoComplete="postal-code"
 						/>
 					)}
@@ -143,7 +145,6 @@ const AddressForm = ({
 						<field.TextField
 							label={houseNumberLabel}
 							requiredness="required"
-							optionalLabel={OPTIONAL_LABEL}
 						/>
 					)}
 				</form.AppField>
@@ -154,7 +155,6 @@ const AddressForm = ({
 							labelHidden={additionLabelHidden}
 							maxLength={additionMaxLength}
 							requiredness="optional"
-							optionalLabel={OPTIONAL_LABEL}
 						/>
 					)}
 				</form.AppField>
@@ -179,7 +179,8 @@ const meta = {
 			},
 			{
 				page: "Principles/Accessibility",
-				section: "A field's error is its only live region",
+				section:
+					"A field's error is the only live region for its validity",
 			},
 			{
 				page: "Principles/Accessibility",
@@ -201,7 +202,6 @@ const meta = {
 	args: {
 		legend: LEGEND,
 		description: DESCRIPTION,
-		optionalLabel: OPTIONAL_LABEL,
 		children: null,
 	},
 } satisfies Meta<typeof FieldGroup>;
@@ -424,10 +424,7 @@ const RawAddressField = ({
 			onValueChange={field.handleChange}
 			className={style.customField}>
 			<TextInput.Label className={style.customLabel}>
-				{label}{" "}
-				<Field.Requiredness
-					optionalLabel={OPTIONAL_LABEL}
-				/>
+				{label} <Field.Requiredness />
 			</TextInput.Label>
 			<TextInput.Group className={style.customControl}>
 				<TextInput.Input name={name} onBlur={onBlur} />
@@ -440,7 +437,6 @@ const RawAddressField = ({
 const CustomLayoutForm = ({
 	legend,
 	requiredness,
-	optionalLabel,
 }: FieldGroupProps): ReactElement => {
 	const form = useAppForm({
 		defaultValues: EMPTY,
@@ -460,10 +456,7 @@ const CustomLayoutForm = ({
 				members={members}
 				requiredness={requiredness}>
 				<Fieldset.Legend>
-					{legend}{" "}
-					<Field.Requiredness
-						optionalLabel={optionalLabel}
-					/>
+					{legend} <Field.Requiredness />
 				</Fieldset.Legend>
 				<div className={style.customRow}>
 					<form.AppField name="postalCode">
@@ -496,11 +489,125 @@ export const CustomLayout: Story = {
 		docs: {
 			description: {
 				story:
-					"`FieldGroup`, `TextField` and the other shorthands are for the common case. A custom layout drops to the raw tier: `Fieldset` and each control's raw parts, bound with `useConnectedField`, placed by the app's own CSS. Here the row is a grid whose rows the CSS names (`label`, `control`), each field a `minmax(0, 1fr)` column on a subgrid, and each part placed on its named row.",
+					"`FieldGroup`, `TextField` and the other prefabs are for the common case. A custom layout drops to the primitives: `Fieldset` and each control's primitive, connected with `useConnectedField`, placed by the app's own CSS. Here the row is a grid whose rows the CSS names (`label`, `control`), each field a `minmax(0, 1fr)` column on a subgrid, and each part placed on its named row.",
 			},
 		},
 	},
 	render: CustomLayoutForm,
+};
+
+const MOVING_LABEL = "Moving date";
+const DESCRIBED_POSTAL_CODE_LABEL = "New postal code";
+const DESCRIBED_MOVING_LABEL = "Date of the move";
+const BOTH_POSTAL_CODE_LABEL = "Previous postal code";
+const BOTH_MOVING_LABEL = "Date you left";
+const MOVING_DESCRIPTION = "The day the keys change hands.";
+const PREVIOUS_POSTAL_CODE_DESCRIPTION =
+	"Where we sent the last invoice.";
+
+type MixedRowProps = Readonly<{
+	legend: string;
+	textLabel: string;
+	dateLabel: string;
+	textDescription?: string;
+	dateDescription?: string;
+}>;
+
+const MixedRow = ({
+	legend,
+	textLabel,
+	dateLabel,
+	textDescription,
+	dateDescription,
+}: MixedRowProps): ReactElement => {
+	const [postalCode, setPostalCode] = useState("");
+	return (
+		<Fieldset.Root>
+			<Fieldset.Legend>{legend}</Fieldset.Legend>
+			<Fieldset.Fields>
+				<TextField
+					label={textLabel}
+					description={textDescription}
+					value={postalCode}
+					onValueChange={setPostalCode}
+				/>
+				<DateField
+					label={dateLabel}
+					description={dateDescription}
+				/>
+			</Fieldset.Fields>
+		</Fieldset.Root>
+	);
+};
+
+const MixedRows = (): ReactElement => (
+	<div className={style.form}>
+		<MixedRow
+			legend={LEGEND}
+			textLabel={POSTAL_CODE_LABEL}
+			dateLabel={MOVING_LABEL}
+		/>
+		<MixedRow
+			legend="New address"
+			textLabel={DESCRIBED_POSTAL_CODE_LABEL}
+			dateLabel={DESCRIBED_MOVING_LABEL}
+			textDescription={POSTAL_CODE_DESCRIPTION}
+		/>
+		<MixedRow
+			legend="Previous address"
+			textLabel={BOTH_POSTAL_CODE_LABEL}
+			dateLabel={BOTH_MOVING_LABEL}
+			textDescription={PREVIOUS_POSTAL_CODE_DESCRIPTION}
+			dateDescription={MOVING_DESCRIPTION}
+		/>
+	</div>
+);
+
+const topOf = (element: HTMLElement | null) =>
+	element?.getBoundingClientRect().top;
+
+const expectControlsLevel = async (
+	canvas: Canvas,
+	textLabel: string,
+	dateLabel: string,
+) => {
+	const textControl = textbox(
+		canvas,
+		textLabel,
+	).parentElement;
+	const dateControl = canvas.getByRole("group", {
+		name: dateLabel,
+	});
+	await expect(topOf(dateControl)).toBe(topOf(textControl));
+};
+
+export const DateBesideText: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: MixedRows,
+	play: async ({ canvas }) => {
+		await expectControlsLevel(
+			canvas,
+			POSTAL_CODE_LABEL,
+			MOVING_LABEL,
+		);
+		await expectControlsLevel(
+			canvas,
+			DESCRIBED_POSTAL_CODE_LABEL,
+			DESCRIBED_MOVING_LABEL,
+		);
+		await expectControlsLevel(
+			canvas,
+			BOTH_POSTAL_CODE_LABEL,
+			BOTH_MOVING_LABEL,
+		);
+		await expect(
+			topOf(canvas.getByText(MOVING_DESCRIPTION)),
+		).toBe(
+			topOf(
+				canvas.getByText(PREVIOUS_POSTAL_CODE_DESCRIPTION),
+			),
+		);
+	},
 };
 
 const submitEmpty = async (canvas: Canvas) => {

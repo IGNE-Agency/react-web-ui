@@ -1,7 +1,3 @@
-import SendIcon from "@material-design-icons/svg/outlined/arrow_forward.svg?react";
-import AttachIcon from "@material-design-icons/svg/outlined/attach_file.svg?react";
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
-import DescriptionIcon from "@material-design-icons/svg/outlined/description.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import {
@@ -16,6 +12,7 @@ import {
 	fileInput,
 	pngFile,
 } from "../../lib/storybook/files.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
 import { AttachmentTile } from "../attachment-tile/index.ts";
 import { Button } from "../button/index.ts";
@@ -30,7 +27,6 @@ import type {
 	MentionSource,
 } from "./mention-sources.ts";
 import { serializeMention } from "./mention-text.tsx";
-import { Icon } from "../icon/index.ts";
 
 type Person = Readonly<{
 	id: string;
@@ -45,11 +41,8 @@ const DRAFT = "Could you take another look?";
 const IMAGE_NAME = "scan.png";
 const CLEAR_LABEL = "Clear draft";
 const FOCUS_LABEL = "Go to comment";
-const SEND = "Send";
 const ATTACHMENTS = "Attachments";
 const MENTIONS = "People to mention";
-const ADD_ATTACHMENT = "Add attachment";
-const REMOVE = "Remove";
 
 const person = (id: string, name: string): Person => ({
 	id,
@@ -89,21 +82,8 @@ const documentFile = (size = 128) =>
 		type: "application/pdf",
 	});
 
-const fileHint = (name: string, size: string) =>
-	`${name} (${size})`;
-
-const tooLargeError = (maxSize: string) =>
-	`Some files exceed the maximum size of ${maxSize} and must be removed before sending.`;
-
 const ATTACHMENT_OPTIONS: ComposerAttachmentOptions = {
 	label: ATTACHMENTS,
-	removeLabel: REMOVE,
-	removeIcon: <Icon svg={CloseIcon} label="" />,
-	fileIcon: <Icon svg={DescriptionIcon} label="" />,
-	fileHint,
-	tooLargeError,
-	attachLabel: ADD_ATTACHMENT,
-	attachIcon: <Icon svg={AttachIcon} label="" />,
 };
 
 const ComposerParts = ({
@@ -124,17 +104,17 @@ const ComposerParts = ({
 				<AttachmentTile
 					id={attachment.id}
 					file={attachment.file}
-					hint={fileHint(attachment.file.name, state.size)}
-					removeLabel={REMOVE}
-					removeIcon={<Icon svg={CloseIcon} label="" />}
+					hint={STORY_COPY.files.fileHint(
+						attachment.file.name,
+						state.size,
+					)}
+					removable
 					invalid={state.oversized}
 					disabled={state.disabled}
 				/>
 			)}
 		</Composer.Attachments>
-		<Composer.AttachmentsError
-			tooLargeError={tooLargeError}
-		/>
+		<Composer.AttachmentsError />
 		<Composer.Editor label={EDITOR_LABEL}>
 			<Composer.Placeholder>
 				{PLACEHOLDER}
@@ -146,12 +126,8 @@ const ComposerParts = ({
 		</Composer.Editor>
 		<Composer.Toolbar>
 			<Composer.MaxLength />
-			<Composer.AttachButton label={ADD_ATTACHMENT}>
-				<Icon svg={AttachIcon} label="" />
-			</Composer.AttachButton>
-			<Composer.SendButton label={SEND}>
-				<Icon svg={SendIcon} label="" />
-			</Composer.SendButton>
+			<Composer.AttachButton />
+			<Composer.SendButton />
 		</Composer.Toolbar>
 	</Composer.Root>
 );
@@ -186,7 +162,9 @@ const editor = (canvas: Canvas) =>
 	});
 
 const sendButton = (canvas: Canvas) =>
-	canvas.getByRole("button", { name: SEND });
+	canvas.getByRole("button", {
+		name: STORY_COPY.composer.send,
+	});
 
 const attachments = () =>
 	screen.findByRole("grid", {
@@ -232,15 +210,12 @@ const meta = {
 		placeholder: PLACEHOLDER,
 		mentions: { label: MENTIONS, sources: [PEOPLE_SOURCE] },
 		attachments: ATTACHMENT_OPTIONS,
-		sendLabel: SEND,
-		sendIcon: <Icon svg={SendIcon} label="" />,
 		maxLength: 2000,
 		onSend: fn(),
 	},
 	argTypes: {
 		mentions: { control: false },
 		attachments: { control: false },
-		sendIcon: { control: false },
 	},
 } satisfies Meta<typeof Composer>;
 
@@ -294,7 +269,7 @@ export const Disabled: Story = {
 		await expect(sendButton(canvas)).toBeDisabled();
 		await expect(
 			canvas.getByRole("button", {
-				name: ADD_ATTACHMENT,
+				name: STORY_COPY.composer.attach,
 			}),
 		).toBeDisabled();
 	},
@@ -603,7 +578,7 @@ export const RemoveAttachmentMouse: Story = {
 			within(
 				canvas.getByRole("row", { name: pdf.name }),
 			).getByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		);
 
@@ -628,7 +603,7 @@ export const RemoveAttachmentTouch: Story = {
 		await userEvent.pointer({
 			keys: "[TouchA]",
 			target: canvas.getByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		});
 
@@ -659,7 +634,7 @@ export const OversizedAttachment: Story = {
 
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: REMOVE,
+				name: STORY_COPY.remove,
 			}),
 		);
 

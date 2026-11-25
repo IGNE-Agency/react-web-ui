@@ -15,6 +15,7 @@ import {
 	Avatar,
 	type AvatarProps,
 } from "../avatar/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
 import { useLocale } from "../locale-provider/index.ts";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 import type {
@@ -96,23 +97,19 @@ const GroupSeparator = ({
 
 export type ConversationDateSeparatorProps = Readonly<{
 	date: ConversationMoment;
-	/** What the separator says for today's messages, such as "Today". */
-	todayLabel: string;
-	/** What the separator says for yesterday's messages, such as "Yesterday". */
-	yesterdayLabel: string;
 }> &
 	Omit<ConversationGroupSeparatorProps, "children">;
 
 /**
  * A `GroupSeparator` naming the day of `date` in the provider's time zone:
- * `todayLabel`, `yesterdayLabel`, or the long date.
+ * the `CopyProvider`'s `conversation.today` or `conversation.yesterday`, or
+ * the long date.
  */
 const DateSeparator = ({
 	date,
-	todayLabel,
-	yesterdayLabel,
 	...props
 }: ConversationDateSeparatorProps): ReactNode => {
+	const copy = useCopy();
 	const locale = useLocale();
 	const timeZone = useTimeZone();
 	const zoned = toZonedDateTime(date, timeZone);
@@ -123,10 +120,10 @@ const DateSeparator = ({
 		const day = zoned.toPlainDate();
 		const today = Temporal.Now.plainDateISO(timeZone);
 		if (day.equals(today)) {
-			return todayLabel;
+			return copy.conversation.today;
 		}
 		if (day.equals(today.subtract({ days: 1 }))) {
-			return yesterdayLabel;
+			return copy.conversation.yesterday;
 		}
 		return new TemporalIntl.DateTimeFormat(locale, {
 			dateStyle: "long",
@@ -267,29 +264,35 @@ const MessageTimestamp = ({
 export type ConversationMessageReadIndicatorProps =
 	Readonly<{
 		status: ConversationMessageStatus;
-		/** What the status is announced as, such as "Read" or "Unread". */
-		label: string;
 		/** What shows for the status, such as a `MessageReadDot`. */
 		children?: ReactNode;
 	}> &
 		Omit<ComponentProps<"div">, "children">;
 
-/** Whether the other party has read the message: its children, and its `label` for assistive tech. */
+/** Whether the other party has read the message: its children, and the `CopyProvider`'s `conversation.read` or `conversation.unread` for assistive tech. */
 const MessageReadIndicator = ({
 	status,
-	label,
 	className,
 	children,
 	...props
-}: ConversationMessageReadIndicatorProps): ReactNode => (
-	<div
-		className={clsx(style.messageReadIndicator, className)}
-		data-status={status}
-		{...props}>
-		{children}
-		<span className={style.visuallyHidden}>{label}</span>
-	</div>
-);
+}: ConversationMessageReadIndicatorProps): ReactNode => {
+	const copy = useCopy();
+
+	return (
+		<div
+			className={clsx(
+				style.messageReadIndicator,
+				className,
+			)}
+			data-status={status}
+			{...props}>
+			{children}
+			<span className={style.visuallyHidden}>
+				{copy.conversation[status]}
+			</span>
+		</div>
+	);
+};
 
 export type ConversationMessageReadDotProps =
 	useRender.ComponentProps<"span">;
@@ -298,7 +301,7 @@ export type ConversationMessageReadDotProps =
  * The dot a `MessageReadIndicator` shows, filled while the message is unread.
  *
  * @example
- * <Conversation.MessageReadIndicator status="unread" label="Unread">
+ * <Conversation.MessageReadIndicator status="unread">
  * 	<Conversation.MessageReadDot />
  * </Conversation.MessageReadIndicator>
  */
@@ -344,7 +347,10 @@ const MessageContent = ({
 			style:
 				lineClamp === undefined
 					? inlineStyle
-					: { ...inlineStyle, "--line-clamp": lineClamp },
+					: {
+							...inlineStyle,
+							"--_kit-conversation-line-clamp": lineClamp,
+						},
 		},
 	});
 
@@ -473,14 +479,6 @@ export type ConversationProps = Omit<
 	Readonly<{
 		/** The messages, oldest first. */
 		messages: ReadonlyArray<ConversationMessage>;
-		/** What the separator says for today's messages, such as "Today". */
-		todayLabel: string;
-		/** What the separator says for yesterday's messages, such as "Yesterday". */
-		yesterdayLabel: string;
-		/** What a read message's status is announced as, such as "Read". */
-		readLabel: string;
-		/** What an unread message's status is announced as, such as "Unread". */
-		unreadLabel: string;
 		/** Cuts each message's text off after this many lines. */
 		lineClamp?: number;
 		/** What the log shows while there are no messages. */
@@ -491,10 +489,6 @@ export type ConversationProps = Omit<
 
 const Prefab = ({
 	messages,
-	todayLabel,
-	yesterdayLabel,
-	readLabel,
-	unreadLabel,
 	lineClamp,
 	empty,
 	children,
@@ -505,9 +499,6 @@ const Prefab = ({
 		message => message.sentAt,
 		useTimeZone(),
 	);
-	const statusLabel: Readonly<
-		Record<ConversationMessageStatus, string>
-	> = { read: readLabel, unread: unreadLabel };
 
 	return (
 		<Root {...props}>
@@ -516,11 +507,7 @@ const Prefab = ({
 			) : null}
 			{days.map(day => (
 				<Group key={day.key}>
-					<DateSeparator
-						date={day.date}
-						todayLabel={todayLabel}
-						yesterdayLabel={yesterdayLabel}
-					/>
+					<DateSeparator date={day.date} />
 					{groupByBurst(
 						day.items,
 						message => message.authorId,
@@ -535,9 +522,7 @@ const Prefab = ({
 									{first.authorName}
 									<MessageTimestamp date={first.sentAt} />
 									{status === undefined ? null : (
-										<MessageReadIndicator
-											status={status}
-											label={statusLabel[status]}>
+										<MessageReadIndicator status={status}>
 											<MessageReadDot />
 										</MessageReadIndicator>
 									)}
@@ -596,10 +581,6 @@ export type ConversationParts = typeof Prefab &
  * @example
  * <Conversation
  * 	messages={messages}
- * 	todayLabel="Today"
- * 	yesterdayLabel="Yesterday"
- * 	readLabel="Read"
- * 	unreadLabel="Unread"
  * />
  */
 export const Conversation: ConversationParts =

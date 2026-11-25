@@ -1,4 +1,3 @@
-import type { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
 import type { ReactNode } from "react";
 import {
 	Field,
@@ -6,8 +5,12 @@ import {
 	type ChoiceOption,
 	type FieldProps,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
 import { normalizeFieldErrors } from "../../lib/forms/errors.ts";
-import { SegmentedControl } from "./segmented-control.tsx";
+import {
+	SegmentedControl,
+	type SegmentedControlGroupProps,
+} from "./segmented-control.tsx";
 
 export type SegmentedControlFieldProps = FieldProps &
 	Readonly<{
@@ -15,25 +18,30 @@ export type SegmentedControlFieldProps = FieldProps &
 		options: readonly ChoiceOption[];
 		/** The chosen value, or `null` while nothing is chosen. */
 		value: string | null;
-		onValueChange: (value: string | null) => void;
+		/** Called with the chosen value. A radio cannot be unchosen, so it is never `null`. */
+		onValueChange: (value: string) => void;
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
+		/** Whether the field is disabled. */
 		disabled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
-		orientation?: BaseToggleGroup.Props["orientation"];
+		/** Lays the options out in a row or a column. @default "horizontal" */
+		orientation?: SegmentedControlGroupProps["orientation"];
 		/** Applied to the field wrapper, so callers can place the group. */
 		className?: string;
 	}>;
 
 /**
- * The assembled segmented control: a labelled track of options, one pressed at
- * a time, with a pill that slides to it, then the description and the error.
+ * The assembled segmented control: a labelled radio group drawn as a track of
+ * options, one chosen at a time, with a pill that slides to it, then the
+ * description and the error.
  *
  * @example
  * <SegmentedControlField
  * 	label="View"
- * 	optionalLabel="optional"
  * 	options={[{ label: "List", value: "list" }, { label: "Board", value: "board" }]}
  * 	value={view}
  * 	onValueChange={setView}
@@ -44,7 +52,6 @@ export const SegmentedControlField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -58,7 +65,7 @@ export const SegmentedControlField = ({
 	orientation,
 	className,
 }: SegmentedControlFieldProps): ReactNode => {
-	const { descriptionId, errorId, describedBy } =
+	const { descriptionId, errorId, controlId, describedBy } =
 		SegmentedControl.useIds();
 	const invalid = normalizeFieldErrors(errors).length > 0;
 
@@ -75,11 +82,10 @@ export const SegmentedControlField = ({
 			pending={pending}
 			filled={value !== null}>
 			<SegmentedControl.Legend>
-				{label}{" "}
-				<Field.Requiredness optionalLabel={optionalLabel} />
+				{label} <Field.Requiredness />
 			</SegmentedControl.Legend>
 
-			<SegmentedControl.Group
+			<SegmentedControl.Group<string | null>
 				aria-describedby={describedBy(
 					description !== undefined,
 					invalid,
@@ -88,10 +94,16 @@ export const SegmentedControlField = ({
 				invalid={invalid}
 				orientation={orientation}
 				disabled={disabled}
-				value={value === null ? [] : [value]}
-				onValueChange={next =>
-					onValueChange(next[0] ?? null)
-				}
+				required={requiredness === "required"}
+				name={name ?? controlId}
+				inputRef={detachHiddenInput}
+				id={controlId}
+				value={value}
+				onValueChange={next => {
+					if (next !== null) {
+						onValueChange(next);
+					}
+				}}
 				onBlur={onBlur}>
 				{options.map(option => (
 					<SegmentedControl.Option

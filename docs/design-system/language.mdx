@@ -540,18 +540,24 @@ The formatters write each language's own format, always in the app's time zone, 
 <Example kind="do" caption="The shared formatter, read in the app's time zone.">
 
 ```tsx
+import {
+	Temporal,
+	Intl as TemporalIntl,
+} from "temporal-polyfill";
+
 const locale = useLocale();
 const timeZone = useTimeZone();
-new Intl.DateTimeFormat(locale, { timeZone }).format(
-	invoice.date,
-);
+new TemporalIntl.DateTimeFormat(locale, {
+	dateStyle: "short",
+	timeZone,
+}).format(Temporal.Instant.from(invoice.createdAt));
 ```
 
 </Example>
 <Example kind="dont" caption="The device's own zone and format.">
 
 ```tsx
-new Date(invoice.date).toLocaleDateString();
+new Date(invoice.createdAt).toLocaleDateString();
 ```
 
 </Example>

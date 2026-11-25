@@ -17,7 +17,7 @@
 }
 
 /// A message dropping into place as it arrives, held back by `$step` for every
-/// error message ahead of it on the page: `--error-index` counts the ones in
+/// error message ahead of it on the page: `--_kit-error-text-index` counts the ones in
 /// earlier blocks, `sibling-index()` the ones in this block.
 ///
 /// @example
@@ -28,13 +28,18 @@
 	@media not (prefers-reduced-motion) {
 		animation: error-pop-in var(--sys-motion-short)
 			var(--sys-motion-emphasized) both;
-		animation-delay: calc(var(--error-index, 0) * #{$step});
+		animation-delay: calc(
+			var(--_kit-error-text-index, 0) * #{$step}
+		);
 
 		@supports (
 			animation-delay: calc(sibling-index() * 1ms)
 		) {
 			animation-delay: calc(
-				(var(--error-index, 0) + sibling-index() - 1) *
+				(
+						var(--_kit-error-text-index, 0) +
+							sibling-index() - 1
+					) *
 					#{$step}
 			);
 		}

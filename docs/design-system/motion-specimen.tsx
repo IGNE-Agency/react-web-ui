@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import MoreVertIcon from "@material-design-icons/svg/outlined/more_vert.svg?react";
 import ReplayIcon from "@material-design-icons/svg/outlined/replay.svg?react";
@@ -10,7 +9,7 @@ import {
 } from "react";
 import { IconButton } from "../../src/components/button/index.ts";
 import { Icon } from "../../src/components/icon/index.ts";
-import { StoryProviders } from "../../src/lib/storybook/story-providers.tsx";
+import { DocsProviders } from "../../.storybook/story-icons.tsx";
 import { resolver } from "./tokens.gen.js";
 import { variableNameOf } from "../../src/terrazzo/index";
 import styles from "./motion-specimen.module.scss";
@@ -460,8 +459,7 @@ export const MotionSpecimen = ({
 			: order.length;
 
 	return (
-		<StoryProviders
-			toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
+		<DocsProviders>
 			<div className={styles.motion}>
 				<DurationRow />
 				<div className={styles.easings}>
@@ -476,6 +474,6 @@ export const MotionSpecimen = ({
 						))}
 				</div>
 			</div>
-		</StoryProviders>
+		</DocsProviders>
 	);
 };

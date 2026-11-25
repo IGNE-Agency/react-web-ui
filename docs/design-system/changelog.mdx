@@ -17,6 +17,45 @@ Two kinds of change, newest first: a design decision, and a change to the system
 
 ## November 2026
 
+- <Pill>New</Pill> **25 November.** Something app-wide, a
+  condition such as being offline or a promotion, is a
+  banner in the page's flow and a named region: a condition
+  is announced once when it appears, a promotion never is,
+  and only a heads-up can be dismissed.
+- <Pill>New</Pill> **25 November.** A field that waits on
+  background work long enough to show it says so once,
+  through its own status region, and its error says the
+  outcome.
+- <Pill>New</Pill> **25 November.** A segmented control is a
+  radio group.
+- <Pill>New</Pill> **25 November.** The kit says and shows
+  nothing of its own: every string and icon a component
+  shows on its own comes from the app's `CopyProvider` and
+  `IconProvider`, one decision per app, with no override per
+  instance.
+- <Pill>New</Pill> **25 November.** A form control comes in
+  three tiers: the primitive, the prefab and the connector.
+- <Pill>New</Pill> **25 November.** A required group whose
+  control cannot say so itself, such as a checkbox group,
+  says "required" after its legend.
+- <Pill>New</Pill> **20 November.** [A person's colour is
+  the identity
+  role](?path=/docs/design-system-foundation-colour--docs#a-persons-colour-is-the-identity-role-never-a-status-colour):
+  one grey, which an app sets if colour should tell its
+  people apart.
+- <Pill>New</Pill> **20 November.** [The scrim is a
+  role](?path=/docs/design-system-foundation-colour--docs#the-scrim-is-a-role-so-no-component-holds-a-theme-selector)
+  the theme sets, so no component holds a theme selector.
+- <Pill>New</Pill> **20 November.** [A move between two
+  states takes its timing from the motion
+  scale](?path=/docs/design-system-foundation-motion--docs#a-move-between-two-states-takes-its-timing-from-the-motion-scale),
+  and a loop names its own duration once.
+- <Pill>New</Pill> **20 November.** [Every custom property
+  names who owns
+  it](?path=/docs/design-system-foundation-token-architecture--docs#every-custom-property-names-who-owns-it):
+  a component's knobs are `--kit-*` and its private tokens
+  `--_kit-*`, so an app's own custom properties never reach
+  the kit's.
 - <Pill>New</Pill> **10 November.** Every component styles
   itself through its own knobs, read with a fallback and
   never declared, so an app restyles any part by setting

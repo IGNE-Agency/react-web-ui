@@ -6,11 +6,13 @@ import {
 	TextareaField,
 	type TextareaFieldProps,
 } from "./index.ts";
+import { TextInput } from "../text-field/index.ts";
+import { Textarea } from "./textarea.tsx";
+import { TSFTextareaField } from "./tsf-textarea-field.tsx";
 
 const COUNTER_MAX = 200;
 const MAX_ROWS = 8;
 const LABEL = "Note";
-const OPTIONAL_LABEL = "optional";
 const VALUE =
 	"The client asked to move the next session to the afternoon.";
 
@@ -49,13 +51,24 @@ const meta = {
 					"A counter and a pending state do not announce per keystroke",
 			},
 			{ component: "components/text-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"TextInput.Root": TextInput.Root,
+				Textarea,
+			},
+			connector: { TSFTextareaField },
+		},
 	},
 	component: TextareaField,
 	render: ControlledTextareaField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		value: "",
 		maxRows: MAX_ROWS,
 		onValueChange: fn(),

@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import axe from "axe-core";
@@ -9,13 +8,16 @@ import {
 import { addons } from "storybook/preview-api";
 import { configure, spyOn } from "storybook/test";
 import { z } from "zod";
-import { Icon } from "../src/components/icon/index.ts";
 import {
 	STORY_LOCALE,
 	StoryProviders,
 } from "../src/lib/storybook/story-providers.tsx";
+import { STORY_ICONS } from "./story-icons.tsx";
 import { registerContrastChecks } from "./contrast-checks.ts";
-import { docCommentOf } from "./doc-comment.ts";
+import {
+	docCommentOf,
+	withDocComments,
+} from "./doc-comment.ts";
 import { DocsPage } from "./docs-page.tsx";
 import { mdxComponents } from "./mdx-components.tsx";
 import { themeOf } from "./theme-global.ts";
@@ -115,6 +117,7 @@ const preview: Preview = {
 						],
 						"Patterns",
 						"Components",
+						"Setting up forms",
 						"Working on the system",
 						["Contributing", "Writing a rule", "Changelog"],
 					],
@@ -124,34 +127,7 @@ const preview: Preview = {
 		},
 	},
 	argTypesEnhancers: [
-		({ argTypes }) =>
-			Object.fromEntries(
-				Object.entries(argTypes).map(([name, argType]) => {
-					if (argType.description === undefined) {
-						return [name, argType];
-					}
-					const { markdown, defaultValue } = docCommentOf(
-						argType.description,
-					);
-					return [
-						name,
-						{
-							...argType,
-							description: markdown,
-							table:
-								defaultValue === undefined ||
-								argType.table?.defaultValue !== undefined
-									? argType.table
-									: {
-											...argType.table,
-											defaultValue: {
-												summary: defaultValue,
-											},
-										},
-						},
-					];
-				}),
-			),
+		({ argTypes }) => withDocComments(argTypes),
 	],
 	initialGlobals: {
 		theme: "light",
@@ -163,8 +139,7 @@ const preview: Preview = {
 			attributeName: "data-theme",
 		}),
 		Story => (
-			<StoryProviders
-				toastCloseIcon={<Icon svg={CloseIcon} label="" />}>
+			<StoryProviders icons={STORY_ICONS}>
 				<Story />
 			</StoryProviders>
 		),

@@ -21,15 +21,30 @@ import { usePopupEdgePadding } from "../../lib/popup-edge-padding.ts";
 import { useInfiniteScroll } from "../../lib/use-infinite-scroll.ts";
 import { Button } from "../button/index.ts";
 import {
+	type KitCopy,
+	useCopy,
+} from "../copy-provider/index.ts";
+import {
 	Field,
+	type FieldBlurHandler,
 	type FieldPendingProps,
+	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
-	type OptionsLoadLabels,
 	useFieldFocus,
+	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
+import {
+	InputError,
+	InputLabel,
+	InputPartsContext,
+	useInputPartsContext,
+} from "../field/input-parts.tsx";
+import { optionsLoadMessage } from "../field/options-load.ts";
 import { withFieldFocus } from "../field/use-field-focus.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { Spinner } from "../spinner/index.ts";
 import {
 	type PagedQuery,
@@ -40,43 +55,128 @@ import style from "./combobox.module.scss";
 export type ComboboxRootProps<
 	TItem,
 	TMultiple extends boolean | undefined = false,
-> = Omit<
-	BaseCombobox.Root.Props<TItem, TMultiple>,
-	"autoHighlight"
-> &
+> = Omit<FieldProps, "label" | "description"> &
+	Omit<
+		BaseCombobox.Root.Props<TItem, TMultiple>,
+		| "autoHighlight"
+		| "disabled"
+		| "readOnly"
+		| "required"
+		| "inputRef"
+		| "children"
+	> &
 	Readonly<{
 		/** `"always"` highlights the first item whenever the list changes. @default "always" */
 		autoHighlight?: boolean | "always";
+		/** Whether the field is disabled. */
+		disabled?: boolean;
+		/** Keeps the value and the popup closed. */
+		readOnly?: boolean;
+		/** States no prop here owns, projected over the ones that do. */
+		state?: FieldState;
+		/** Called when focus leaves the control. */
+		onBlur?: FieldBlurHandler;
+		/** Applied to the field frame, so callers can size the control. */
+		className?: string;
+		/** The field's parts. */
+		children?: ReactNode;
 	}>;
 
-/** The combobox's state, holding its items and its value. */
+const RootBlurContext: Context<
+	FieldBlurHandler | undefined
+> = createContext<FieldBlurHandler | undefined>(undefined);
+
+const holdsValue = (value: unknown): boolean =>
+	Array.isArray(value)
+		? value.length > 0
+		: value !== null && value !== undefined;
+
+/**
+ * The field frame around a combobox, holding its items and value and
+ * projecting its state onto every part.
+ *
+ * @example
+ * <Combobox.Root items={statuses} value={status} onValueChange={setStatus}>…</Combobox.Root>
+ */
 const ComboboxRoot = <
 	TItem,
 	TMultiple extends boolean | undefined = false,
 >({
 	autoHighlight = "always",
+	disabled,
+	readOnly,
+	requiredness,
+	errors,
+	dirty,
+	touched,
+	pending = false,
+	state,
+	onBlur,
+	name,
+	open,
+	className,
+	children,
 	...props
-}: ComboboxRootProps<TItem, TMultiple>): ReactNode => (
-	<BaseCombobox.Root<TItem, TMultiple>
-		// oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- base-ui's Root types `autoHighlight` as boolean, but forwards it unchanged to the AriaCombobox beneath, which accepts "always".
-		autoHighlight={autoHighlight as boolean}
-		{...props}
-	/>
-);
+}: ComboboxRootProps<TItem, TMultiple>): ReactNode => {
+	const ids = Field.useIds();
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled: holdsValue(props.value),
+		state,
+	});
+
+	return (
+		<InputPartsContext
+			value={{
+				state: field.state,
+				errors,
+				phase: field.phase,
+			}}>
+			<RootBlurContext value={onBlur}>
+				<Field.Root
+					disabled={field.disabled}
+					invalid={field.invalid}
+					requiredness={field.state.requiredness}
+					dirty={dirty}
+					touched={touched}
+					phase={field.phase}
+					className={className}
+					{...fieldStateAttributes(field.state)}>
+					<BaseCombobox.Root<TItem, TMultiple>
+						// oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- base-ui's Root types `autoHighlight` as boolean, but forwards it unchanged to the AriaCombobox beneath, which accepts "always".
+						autoHighlight={autoHighlight as boolean}
+						name={name ?? ids.controlId}
+						inputRef={detachHiddenInput}
+						disabled={field.disabled}
+						readOnly={readOnly}
+						required={requiredness === "required"}
+						open={readOnly === true ? false : open}
+						{...props}>
+						{children}
+					</BaseCombobox.Root>
+				</Field.Root>
+			</RootBlurContext>
+		</InputPartsContext>
+	);
+};
 
 export type ComboboxControlProps =
 	BaseCombobox.InputGroup.Props &
 		Readonly<{
 			/** The control element, which the positioner takes as its `anchor`. */
 			ref?: Ref<HTMLDivElement>;
-			/** The states projected onto the control as `data-*` attributes. */
+			/** States the root does not own, projected over its own onto the control. */
 			state?: FieldState;
 		}>;
 
-const NO_STATE: FieldState = {};
-
 const ControlStateContext: Context<FieldState> =
-	createContext<FieldState>(NO_STATE);
+	createContext<FieldState>({});
 
 const ControlBusyContext: Context<boolean | undefined> =
 	createContext<boolean | undefined>(undefined);
@@ -137,21 +237,32 @@ const ComboboxIcon = ({
 	);
 
 /**
- * The control's box, projecting `state` onto itself and holding the `Chips`
- * and the `Trigger`. The positioner takes it as its `anchor`.
+ * The control's box, projecting the root's state onto itself and holding the
+ * `Chips` and the `Trigger`. The positioner takes it as its `anchor`.
  *
  * @example
- * <Combobox.Control ref={anchorRef} state={state}>
+ * <Combobox.Control ref={anchorRef}>
  * 	<Combobox.Trigger>…</Combobox.Trigger>
  * </Combobox.Control>
  */
 const ComboboxControl = ({
 	className,
 	children,
-	state = NO_STATE,
+	state: ownState,
+	onFocus,
+	onBlur,
 	...props
 }: ComboboxControlProps): ReactNode => {
-	const focus = useFieldFocus(props);
+	const root = useInputPartsContext();
+	const rootBlur = useContext(RootBlurContext);
+	const state = { ...root.state, ...ownState };
+	const focus = useFieldFocus({
+		onFocus,
+		onBlur: event => {
+			onBlur?.(event);
+			rootBlur?.();
+		},
+	});
 	const { "aria-busy": busy, ...attributes } =
 		fieldStateAttributes(withFieldFocus(state, focus));
 	return (
@@ -254,8 +365,8 @@ const ComboboxSpokenValue = ({
 );
 
 /**
- * What the trigger shows while the control's `state` is pending, such as a
- * spinner. Renders nothing otherwise.
+ * What the trigger shows while the field is pending, such as a spinner.
+ * Renders nothing otherwise.
  *
  * @example
  * <Combobox.Pending><Spinner size={1} /></Combobox.Pending>
@@ -315,7 +426,9 @@ export type ComboboxChipListProps<TItem> = Readonly<{
 	children: (item: TItem) => ReactNode;
 	/** Called with the items left after a removal. */
 	onRemove: (remaining: readonly TItem[]) => void;
+	/** Left out, it follows the control's state. */
 	disabled?: boolean;
+	/** Left out, it follows the control's state. */
 	readOnly?: boolean;
 	className?: string;
 }>;
@@ -335,18 +448,21 @@ const ComboboxChipList = <TItem,>({
 	itemKey,
 	children,
 	onRemove,
-	disabled = false,
-	readOnly = false,
+	disabled,
+	readOnly,
 	className,
 }: ComboboxChipListProps<TItem>): ReactNode => {
 	const ref = useRef<HTMLDivElement>(null);
-	const locked = disabled || readOnly;
+	const control = useContext(ControlStateContext);
+	const isDisabled = disabled ?? control.disabled === true;
+	const locked =
+		isDisabled || (readOnly ?? control.readonly === true);
 	return (
 		<TagGroup
 			ref={ref}
 			aria-label={label}
 			className={style.tags}
-			disabledKeys={disabled ? items.map(itemKey) : []}
+			disabledKeys={isDisabled ? items.map(itemKey) : []}
 			onRemove={
 				locked
 					? undefined
@@ -407,8 +523,6 @@ export type ComboboxChipRemoveProps = Omit<
 	"className" | "slot" | "aria-label"
 > &
 	Readonly<{
-		/** The button's own name, which the chip's name completes, such as "Remove". */
-		"aria-label": string;
 		className?: string;
 	}>;
 
@@ -418,21 +532,25 @@ export type ComboboxChipRemoveProps = Omit<
  *
  * @example
  * <Tooltip content="Remove Open">
- * 	<Combobox.ChipRemove aria-label="Remove"><CloseIcon /></Combobox.ChipRemove>
+ * 	<Combobox.ChipRemove><CloseIcon /></Combobox.ChipRemove>
  * </Tooltip>
  */
 const ComboboxChipRemove = ({
 	className,
 	...props
-}: ComboboxChipRemoveProps): ReactNode => (
-	<RemoveButton
-		slot="remove"
-		excludeFromTabOrder
-		isDisabled={useContext(ChipsLockedContext)}
-		className={clsx(style.tagRemove, className)}
-		{...props}
-	/>
-);
+}: ComboboxChipRemoveProps): ReactNode => {
+	const copy = useCopy();
+	return (
+		<RemoveButton
+			slot="remove"
+			excludeFromTabOrder
+			isDisabled={useContext(ChipsLockedContext)}
+			aria-label={copy.remove}
+			className={clsx(style.tagRemove, className)}
+			{...props}
+		/>
+	);
+};
 
 /** Places the popup against the control, given as its `anchor`. */
 const ComboboxPositioner = ({
@@ -462,11 +580,7 @@ const ComboboxPopup = ({
 export type ComboboxSearchProps = Omit<
 	BaseCombobox.Input.Props,
 	"aria-label" | "aria-labelledby"
-> &
-	Readonly<{
-		/** The search box's accessible name. */
-		"aria-label": string;
-	}>;
+>;
 
 /**
  * The search box inside the popup. It names itself, clearing the field label
@@ -476,13 +590,17 @@ export type ComboboxSearchProps = Omit<
 const ComboboxSearch = ({
 	className,
 	...props
-}: ComboboxSearchProps): ReactNode => (
-	<BaseCombobox.Input
-		aria-labelledby={undefined}
-		className={clsx(style.search, className)}
-		{...props}
-	/>
-);
+}: ComboboxSearchProps): ReactNode => {
+	const { options } = useCopy();
+	return (
+		<BaseCombobox.Input
+			aria-labelledby={undefined}
+			aria-label={options.search}
+			className={clsx(style.search, className)}
+			{...props}
+		/>
+	);
+};
 
 export type ComboboxListProps = Omit<
 	BaseCombobox.List.Props,
@@ -632,68 +750,37 @@ const ComboboxStatusArea = ({
 	/>
 );
 
-/** The copy a combobox's popup shows about its options. */
-export type ComboboxPopupLabels = OptionsLoadLabels &
-	Readonly<{
-		/** Shown when the search matches nothing. */
-		noResultsLabel: string;
-		/** The search box's accessible name, such as "Search". */
-		searchLabel: string;
-		/** Read while a paged query fetches its next page. */
-		loadingMoreLabel: string;
-		/** The match count of a paged query, such as "40 results". */
-		resultsLabel: (count: number) => string;
-	}>;
-
-/** The copy `LoadStatus` shows. */
-export type ComboboxLoadStatusLabels = Pick<
-	ComboboxPopupLabels,
-	| "loadingLabel"
-	| "loadFailedLabel"
-	| "loadBrokenLabel"
-	| "retryLabel"
-	| "loadingMoreLabel"
-	| "resultsLabel"
->;
-
-export type ComboboxLoadStatusProps =
-	ComboboxLoadStatusLabels &
-		Readonly<{
-			/** How far the items have loaded. */
-			load: OptionsLoad;
-			/** A paged query, whose match count and next page it reports. */
-			query?: Pick<
-				PagedQuery<unknown>,
-				"data" | "isFetchingNextPage"
-			>;
-			/** Runs a retry, such as to move focus back afterwards. @default retry() */
-			onRetry?: (retry: () => void) => void;
-			className?: string;
-		}>;
+export type ComboboxLoadStatusProps = Readonly<{
+	/** How far the items have loaded. */
+	load: OptionsLoad;
+	/** A paged query, whose match count and next page it reports. */
+	query?: Pick<
+		PagedQuery<unknown>,
+		"data" | "isFetchingNextPage"
+	>;
+	/** Runs a retry, such as to move focus back afterwards. @default retry() */
+	onRetry?: (retry: () => void) => void;
+	className?: string;
+}>;
 
 const loadMessage = (
-	labels: ComboboxLoadStatusLabels,
+	copy: KitCopy["options"],
 	load: OptionsLoad,
 	query: ComboboxLoadStatusProps["query"],
 ): string | undefined => {
-	if (load.status === "pending") {
-		return labels.loadingLabel;
-	}
-	if (load.status === "error") {
-		return load.retry === undefined
-			? labels.loadBrokenLabel
-			: labels.loadFailedLabel;
+	if (load.status !== "success") {
+		return optionsLoadMessage(load, copy);
 	}
 	const paged = pagedProgress(query);
 	if (paged === undefined) {
 		return undefined;
 	}
 	if (paged.isFetchingNextPage) {
-		return labels.loadingMoreLabel;
+		return copy.loadingMore;
 	}
 	return paged.totalCount === undefined
 		? undefined
-		: labels.resultsLabel(paged.totalCount);
+		: copy.results(paged.totalCount);
 };
 
 const runRetry = (retry: () => void): void => {
@@ -706,8 +793,8 @@ const ComboboxLoadStatus = ({
 	query,
 	onRetry = runRetry,
 	className,
-	...labels
 }: ComboboxLoadStatusProps): ReactNode => {
+	const copy = useCopy();
 	const retry =
 		load.status === "error" ? load.retry : undefined;
 	return (
@@ -717,7 +804,7 @@ const ComboboxLoadStatus = ({
 					query?.isFetchingNextPage === true) && (
 					<Spinner size={1} />
 				)}
-				{loadMessage(labels, load, query)}
+				{loadMessage(copy.options, load, query)}
 			</ComboboxStatus>
 			{retry !== undefined && (
 				<Button
@@ -726,30 +813,27 @@ const ComboboxLoadStatus = ({
 					onClick={() => {
 						onRetry(retry);
 					}}>
-					{labels.retryLabel}
+					{copy.retry}
 				</Button>
 			)}
 		</ComboboxStatusArea>
 	);
 };
 
-export type ComboboxBodyProps<TItem> = ComboboxPopupLabels &
-	Readonly<{
-		/** How far the items have loaded. */
-		load: OptionsLoad;
-		/** A paged query, searched on the server and loaded page by page. */
-		query?: PagedQuery<TItem>;
-		/** There are no items at all, rather than none matching the search. */
-		noOptions: boolean;
-		/** Draws each option's mark inside an `OptionCheckbox`. */
-		multiple?: boolean;
-		/** A stable identity per item. */
-		itemKey: (item: TItem) => string;
-		/** The mark beside a chosen option, such as a tick. */
-		checkIcon: ReactNode;
-		/** Renders one item's row. */
-		children: (item: TItem) => ReactNode;
-	}>;
+export type ComboboxBodyProps<TItem> = Readonly<{
+	/** How far the items have loaded. */
+	load: OptionsLoad;
+	/** A paged query, searched on the server and loaded page by page. */
+	query?: PagedQuery<TItem>;
+	/** There are no items at all, rather than none matching the search. */
+	noOptions: boolean;
+	/** Draws each option's mark inside an `OptionCheckbox`. */
+	multiple?: boolean;
+	/** A stable identity per item. */
+	itemKey: (item: TItem) => string;
+	/** Renders one item's row. */
+	children: (item: TItem) => ReactNode;
+}>;
 
 /**
  * What a combobox's popup holds: the search box, the load status with a retry
@@ -762,27 +846,18 @@ const ComboboxBody = <TItem,>({
 	noOptions,
 	multiple = false,
 	itemKey,
-	checkIcon,
 	children,
-	...labels
 }: ComboboxBodyProps<TItem>): ReactNode => {
+	const { options } = useCopy();
+	const { check } = useIcons();
 	const searchRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<>
-			<ComboboxSearch
-				ref={searchRef}
-				aria-label={labels.searchLabel}
-			/>
+			<ComboboxSearch ref={searchRef} />
 			<ComboboxLoadStatus
 				load={load}
 				query={query}
-				loadingLabel={labels.loadingLabel}
-				loadFailedLabel={labels.loadFailedLabel}
-				loadBrokenLabel={labels.loadBrokenLabel}
-				retryLabel={labels.retryLabel}
-				loadingMoreLabel={labels.loadingMoreLabel}
-				resultsLabel={labels.resultsLabel}
 				onRetry={retry => {
 					retry();
 					searchRef.current?.focus();
@@ -791,8 +866,8 @@ const ComboboxBody = <TItem,>({
 			<ComboboxEmpty>
 				{load.status === "success"
 					? noOptions
-						? labels.noOptionsLabel
-						: labels.noResultsLabel
+						? options.empty
+						: options.noResults
 					: null}
 			</ComboboxEmpty>
 			<ComboboxList query={query}>
@@ -801,12 +876,12 @@ const ComboboxBody = <TItem,>({
 						{multiple ? (
 							<ComboboxOptionCheckbox>
 								<ComboboxOptionIndicator>
-									{checkIcon}
+									{check}
 								</ComboboxOptionIndicator>
 							</ComboboxOptionCheckbox>
 						) : (
 							<ComboboxOptionIndicator>
-								{checkIcon}
+								{check}
 							</ComboboxOptionIndicator>
 						)}
 						<ComboboxOptionText>
@@ -823,6 +898,7 @@ const ComboboxBody = <TItem,>({
 export type ComboboxParts = Omit<
 	typeof BaseCombobox,
 	| "Root"
+	| "Label"
 	| "Icon"
 	| "Trigger"
 	| "Chips"
@@ -837,6 +913,7 @@ export type ComboboxParts = Omit<
 > &
 	Readonly<{
 		Root: typeof ComboboxRoot;
+		Label: typeof InputLabel;
 		Control: typeof ComboboxControl;
 		Trigger: typeof ComboboxTrigger;
 		TriggerValue: typeof ComboboxTriggerValue;
@@ -860,18 +937,23 @@ export type ComboboxParts = Omit<
 		LoadStatus: typeof ComboboxLoadStatus;
 		Body: typeof ComboboxBody;
 		Pending: typeof ComboboxPending;
+		Description: typeof Field.Description;
+		Error: typeof InputError;
 	}>;
 
 /**
- * The styled parts of a base-ui Combobox: a filterable select whose control
- * matches `Select`'s trigger and whose popup is the shared popup surface. Every
- * unstyled base-ui part stays reachable. A multiple combobox shows its
- * selection as `Chips` beside the `Trigger`. `Body` holds what the popup
- * usually does. For the ordinary case, use `ComboboxField`. The positioner takes the
- * control as its `anchor`.
+ * The styled parts of a base-ui Combobox: the field frame, a filterable select
+ * whose control matches `Select`'s trigger, and the shared popup surface. Every
+ * unstyled base-ui part stays reachable. `Root` holds the field's states, so no
+ * part below it takes them again, and `Error` renders the errors `Root` was
+ * given. A multiple combobox shows its selection as `Chips` beside the
+ * `Trigger`. `Body` holds what the popup usually does. For the ordinary case,
+ * use the `ComboboxField` prefab, which is assembled from exactly these parts.
+ * The positioner takes the control as its `anchor`.
  *
  * @example
- * <Combobox.Root items={statuses}>
+ * <Combobox.Root items={statuses} value={status} onValueChange={setStatus} errors={errors} requiredness="required">
+ * 	<Combobox.Label>Status <Field.Requiredness /></Combobox.Label>
  * 	<Combobox.Control ref={anchorRef}>
  * 		<Combobox.Trigger>
  * 			<Combobox.TriggerValue>
@@ -883,7 +965,7 @@ export type ComboboxParts = Omit<
  * 	<Combobox.Portal>
  * 		<Combobox.Positioner anchor={anchorRef}>
  * 			<Combobox.Popup>
- * 				<Combobox.Search aria-label="Search" />
+ * 				<Combobox.Search />
  * 				<Combobox.List>
  * 					{(status: string) => (
  * 						<Combobox.Option key={status} value={status}>
@@ -895,11 +977,14 @@ export type ComboboxParts = Omit<
  * 			</Combobox.Popup>
  * 		</Combobox.Positioner>
  * 	</Combobox.Portal>
+ * 	<Combobox.Description>The status the invoice is in now.</Combobox.Description>
+ * 	<Combobox.Error />
  * </Combobox.Root>
  */
 export const Combobox: ComboboxParts = {
 	...BaseCombobox,
 	Root: ComboboxRoot,
+	Label: InputLabel,
 	Control: ComboboxControl,
 	Trigger: ComboboxTrigger,
 	TriggerValue: ComboboxTriggerValue,
@@ -923,4 +1008,6 @@ export const Combobox: ComboboxParts = {
 	LoadStatus: ComboboxLoadStatus,
 	Body: ComboboxBody,
 	Pending: ComboboxPending,
+	Description: Field.Description,
+	Error: InputError,
 };

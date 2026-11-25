@@ -74,7 +74,10 @@ export const useFieldsetContext =
 		);
 
 /** What the root of a fieldset takes, for a group of choices or a group of fields. */
-export type FieldsetRootProps = FieldRootProps &
+export type FieldsetRootProps = Omit<
+	FieldRootProps,
+	"phase"
+> &
 	Pick<
 		FieldProps,
 		| "errors"
@@ -86,6 +89,7 @@ export type FieldsetRootProps = FieldRootProps &
 	Readonly<{
 		/** A choice is made. */
 		filled?: boolean;
+		/** Shows the value without letting it be changed. */
 		readOnly?: boolean;
 		/** The fields whose errors the group shows in its own error instead of under each field. */
 		members?: readonly FieldsetMember[];
@@ -208,6 +212,7 @@ export const FieldsetRoot = ({
 					requiredness={requiredness}
 					dirty={dirty}
 					touched={touched}
+					phase={field.phase}
 					{...fieldStateAttributes(field.state)}
 					{...props}>
 					{children}
@@ -221,7 +226,7 @@ export const FieldsetRoot = ({
  * The legend that names a {@link FieldsetRoot}.
  *
  * @example
- * <FieldsetLegend>Kind <Field.Requiredness optionalLabel="optional" /></FieldsetLegend>
+ * <FieldsetLegend>Kind <Field.Requiredness /></FieldsetLegend>
  */
 export const FieldsetLegend = (
 	props: FieldLabelProps,

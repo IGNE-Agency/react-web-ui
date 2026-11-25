@@ -53,6 +53,12 @@ A drawer whose `swipeDirection` is `"down"` is a bottom sheet: full width, a max
 
 </Beside>
 
+### A side panel stands against the screen edge its direction names
+
+A drawer whose `swipeDirection` is `"right"` or `"left"` is a side panel against that edge of the screen, and a swipe towards that edge dismisses it. The edge is the screen's, not the reading direction's: a swipe is a physical gesture, so the panel does not flip in a right-to-left document. An app that wants its panel at the end of the line picks `"left"` or `"right"` from its own `dir`.
+
+The panel and the bottom sheet [pay the safe-area inset](?path=/docs/design-system-principles-responsiveness--docs#a-surface-against-an-edge-pays-the-safe-area-inset) on every edge they touch, so their content clears a notch or the home indicator while the surface runs to the glass.
+
 ### A swipeable surface shows a grab bar
 
 Swipe-to-dismiss is invisible. Draw the affordance: a short rounded bar on the edge the gesture starts from, centred along it. A bottom sheet gets a horizontal bar at the top, a side panel a vertical one on its inner edge. Same bar, rotated.

@@ -1,13 +1,28 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { expect, fn, userEvent } from "storybook/test";
 import { Temporal } from "temporal-polyfill";
+import { Field } from "../field/index.ts";
 import {
 	TimeField,
 	type TimeFieldProps,
 } from "./time-field.tsx";
+import { TimeInput } from "./time-input.tsx";
+import { TSFTimeField } from "./tsf-time-field.tsx";
 
 const TIME = Temporal.PlainTime.from("09:30");
+const LABEL = "Start time";
+const DESCRIPTION = "The time the session started.";
+const EARLY_ERROR = "Sessions start at 6 AM or later.";
+const OPENING = Temporal.PlainTime.from("06:00");
+
+const beforeOpening = (value: string | null) =>
+	value !== null &&
+	Temporal.PlainTime.compare(
+		Temporal.PlainTime.from(value),
+		OPENING,
+	) < 0;
 
 const isoTime = (time: Temporal.PlainTime) =>
 	time.toString({ smallestUnit: "minute" });
@@ -27,6 +42,35 @@ const ControlledTimeField = (args: TimeFieldProps) => {
 				updateArgs({ value });
 			}}
 		/>
+	);
+};
+
+const ComposedTimeInput = () => {
+	const [value, setValue] = useState<string | null>(null);
+
+	return (
+		<TimeInput.Root
+			value={value}
+			onValueChange={setValue}
+			errors={
+				beforeOpening(value) ? [EARLY_ERROR] : undefined
+			}
+			requiredness="required">
+			<TimeInput.Label>
+				{LABEL} <Field.Requiredness />
+			</TimeInput.Label>
+			<TimeInput.Group>
+				<TimeInput.Input>
+					{segment => (
+						<TimeInput.Segment segment={segment} />
+					)}
+				</TimeInput.Input>
+			</TimeInput.Group>
+			<TimeInput.Description>
+				{DESCRIPTION}
+			</TimeInput.Description>
+			<TimeInput.Error />
+		</TimeInput.Root>
 	);
 };
 
@@ -58,14 +102,23 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"TimeInput.Root": TimeInput.Root,
+			},
+			connector: { TSFTimeField },
+		},
 	},
 	component: TimeField,
 	render: ControlledTimeField,
 	args: {
-		label: "Start time",
-		optionalLabel: "optional",
+		label: LABEL,
 		value: null,
 		onValueChange: fn(),
 	},
@@ -113,7 +166,38 @@ export const Pending: Story = {
 };
 
 export const WithDescription: Story = {
-	args: { description: "The time the session started." },
+	args: { description: DESCRIPTION },
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedTimeInput,
+	play: async ({ canvas }) => {
+		const group = canvas.getByRole("group", {
+			name: LABEL,
+		});
+		const { hour } = segmentsOf(
+			canvas.getAllByRole("spinbutton"),
+		);
+
+		await expect(group).toHaveAccessibleName(LABEL);
+		await expect(group).toHaveAccessibleDescription(
+			DESCRIPTION,
+		);
+		await expect(hour).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(hour);
+		await userEvent.keyboard("0530");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(EARLY_ERROR);
+		await expect(
+			group.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
+	},
 };
 
 export const Keyboard: Story = {

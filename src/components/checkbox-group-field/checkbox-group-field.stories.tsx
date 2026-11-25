@@ -1,4 +1,3 @@
-import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -13,14 +12,15 @@ import {
 	PendingToggle,
 	pendingOnPress,
 } from "../../lib/storybook/pending.tsx";
-import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import {
 	CheckboxGroupField,
 	type CheckboxGroupFieldProps,
 } from "./checkbox-group-field.tsx";
+import { CheckboxGroup } from "./checkbox-group.tsx";
+import { TSFCheckboxGroupField } from "./tsf-checkbox-group-field.tsx";
 
 const LABEL = "Statuses";
-const OPTIONAL_LABEL = "optional";
 const OPEN_LABEL = "Open";
 const SENT_LABEL = "Sent";
 const PAID_LABEL = "Paid";
@@ -65,15 +65,24 @@ const meta = {
 				page: "Principles/Interaction",
 				section: "The cursor says what happens on click",
 			},
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"CheckboxGroup.Root": CheckboxGroup.Root,
+			},
+			connector: { TSFCheckboxGroupField },
+		},
 	},
 	component: CheckboxGroupField,
 	render: ControlledCheckboxGroupField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		items: STATUS_ITEMS,
-		checkIcon: <Icon svg={CheckIcon} label="" />,
 		value: [],
 		onValueChange: valueChange,
 	},
@@ -163,6 +172,18 @@ export const ReadOnly: Story = {
 
 export const Required: Story = {
 	args: { requiredness: "required" },
+	play: async ({ canvas }) => {
+		const named = canvas.getAllByRole("group", {
+			name: name =>
+				name.startsWith(LABEL) &&
+				name.endsWith(STORY_COPY.required),
+		});
+		await expect(
+			named.some(
+				group => group instanceof HTMLFieldSetElement,
+			),
+		).toBe(true);
+	},
 };
 
 export const Optional: Story = {

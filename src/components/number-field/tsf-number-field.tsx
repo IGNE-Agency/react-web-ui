@@ -14,12 +14,12 @@ export type TSFNumberFieldProps = Omit<
 >;
 
 /**
- * `NumberField` bound to the TanStack Form field it renders in, whose value is
+ * `NumberField` connected to the TanStack Form field it renders in, whose value is
  * a `number | null`. Registered as `field.NumberField`.
  *
  * @example
  * <form.AppField name="hours">
- * 	{field => <field.NumberField label="Hours" optionalLabel="optional" decrementLabel="Decrease" incrementLabel="Increase" decrementIcon={<RemoveIcon />} incrementIcon={<AddIcon />} roleDescription="Number field" />}
+ * 	{field => <field.NumberField label="Hours" />}
  * </form.AppField>
  */
 export const TSFNumberField = (

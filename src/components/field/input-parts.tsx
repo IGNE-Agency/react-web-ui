@@ -13,7 +13,7 @@ import {
 } from "./field.tsx";
 import type { FieldState } from "./field-state.ts";
 
-/** What a raw input's `Root` hands its label, pending and error parts. */
+/** What an input primitive's `Root` hands its label, pending and error parts. */
 export type InputPartsContextValue = Readonly<{
 	/** Projected by `Root`; every part reads it, none of them own it. */
 	state: FieldState;
@@ -22,12 +22,12 @@ export type InputPartsContextValue = Readonly<{
 	phase: BusyPhase;
 }>;
 
-/** The context a raw input's `Root` provides its shared parts. */
+/** The context an input primitive's `Root` provides its shared parts. */
 export const InputPartsContext: Context<InputPartsContextValue | null> =
 	createContext<InputPartsContextValue | null>(null);
 
 /**
- * The surrounding raw input's projected state, errors and busy phase.
+ * The surrounding input primitive's projected state, errors and busy phase.
  *
  * @example
  * const { state } = useInputPartsContext();
@@ -42,11 +42,11 @@ export const useInputPartsContext =
 export type InputLabelProps = FieldLabelProps;
 
 /**
- * The label above a raw input. Add `Field.Requiredness` to trail the
+ * The label above an input primitive. Add `Field.Requiredness` to trail the
  * requiredness its `Root` was given.
  *
  * @example
- * <TextInput.Label>Email <Field.Requiredness optionalLabel="optional" /></TextInput.Label>
+ * <TextInput.Label>Email <Field.Requiredness /></TextInput.Label>
  */
 export const InputLabel = (
 	props: InputLabelProps,
@@ -55,7 +55,7 @@ export const InputLabel = (
 export type InputPendingProps = FieldPendingProps;
 
 /**
- * The box a raw input's wait shows in, holding what it is given, such as a
+ * The box an input primitive's wait shows in, holding what it is given, such as a
  * spinner. It renders once its `Root`'s wait is worth showing.
  *
  * @example
@@ -77,7 +77,7 @@ export type InputErrorProps = Omit<
 >;
 
 /**
- * The errors a raw input's `Root` was given.
+ * The errors an input primitive's `Root` was given.
  *
  * @example
  * <TextInput.Error />

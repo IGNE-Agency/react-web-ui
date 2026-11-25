@@ -8,7 +8,6 @@ export * from "./composer.tsx";
 export type {
 	ComposerAttachButtonProps,
 	ComposerAttachmentState,
-	ComposerAttachmentsErrorProps,
 	ComposerAttachmentsProps,
 } from "./composer-attachments.tsx";
 export type {

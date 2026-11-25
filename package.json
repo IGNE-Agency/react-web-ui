@@ -44,6 +44,10 @@
 			"types": "./dist/components/badge/index.d.ts",
 			"default": "./dist/components/badge/index.js"
 		},
+		"./banner": {
+			"types": "./dist/components/banner/index.d.ts",
+			"default": "./dist/components/banner/index.js"
+		},
 		"./base.css": "./dist/base.css",
 		"./breadcrumbs": {
 			"types": "./dist/components/breadcrumbs/index.d.ts",
@@ -80,6 +84,10 @@
 		"./confirm-dialog": {
 			"types": "./dist/components/confirm-dialog/index.d.ts",
 			"default": "./dist/components/confirm-dialog/index.js"
+		},
+		"./copy-provider": {
+			"types": "./dist/components/copy-provider/index.d.ts",
+			"default": "./dist/components/copy-provider/index.js"
 		},
 		"./conversation": {
 			"types": "./dist/components/conversation/index.d.ts",
@@ -172,6 +180,10 @@
 		"./icon": {
 			"types": "./dist/components/icon/index.d.ts",
 			"default": "./dist/components/icon/index.js"
+		},
+		"./icon-provider": {
+			"types": "./dist/components/icon-provider/index.d.ts",
+			"default": "./dist/components/icon-provider/index.js"
 		},
 		"./link": {
 			"types": "./dist/components/link/index.d.ts",

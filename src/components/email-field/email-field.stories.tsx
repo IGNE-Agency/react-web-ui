@@ -1,4 +1,3 @@
-import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import MailIcon from "@material-design-icons/svg/outlined/mail.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../icon/index.ts";
@@ -14,10 +13,9 @@ import {
 	EmailField,
 	type EmailFieldProps,
 } from "./index.ts";
+import { TSFEmailField } from "./tsf-email-field.tsx";
 
 const LABEL = "Email address";
-const OPTIONAL_LABEL = "optional";
-const CLEAR_LABEL = "Clear";
 const ERROR = "This is not a valid email address.";
 const VALID = "anna@voorbeeld.nl";
 const INVALID = "anna.voorbeeld.nl";
@@ -47,13 +45,20 @@ const meta = {
 		designSystem: [
 			{ page: "Patterns", section: "Where you type" },
 			{ component: "components/text-field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			connector: { TSFEmailField },
+		},
 	},
 	component: EmailField,
 	render: ControlledEmailField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
 		icon: <Icon svg={MailIcon} label="" />,
 		value: "",
 		onValueChange: fn(),
@@ -112,8 +117,6 @@ export const Clearable: Story = {
 	args: {
 		value: VALID,
 		clearable: true,
-		clearLabel: CLEAR_LABEL,
-		clearIcon: <Icon svg={CloseIcon} label="" />,
 	},
 };
 

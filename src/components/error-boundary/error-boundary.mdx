@@ -14,6 +14,6 @@ A boundary catches a failure in what it wraps and puts its fallback in that one 
 
 ### The fallback is an error message, with a retry only where it can help
 
-The fallback is an `ErrorMessage` with the boundary's title and description. It offers a retry only when given a `retryLabel`, and only where trying again can help. A part that needs a different fallback passes `fallbackRender`.
+The fallback is an `ErrorMessage` with the boundary's title and description. It offers a retry, in the `CopyProvider`'s `retry`, only when `retryable`, and only where trying again can help. A part that needs a different fallback passes `fallbackRender`.
 
 </DocsPage>

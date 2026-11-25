@@ -20,6 +20,7 @@ export type SwitchFieldProps = FieldProps &
 		| "readOnly"
 	> &
 	Readonly<{
+		/** Called once focus has left the control. */
 		onBlur?: FieldBlurHandler;
 		/** The form field's name. */
 		name?: string;
@@ -34,7 +35,6 @@ export type SwitchFieldProps = FieldProps &
  * @example
  * <SwitchField
  * 	label="Email me about new messages"
- * 	optionalLabel="optional"
  * 	checked={enabled}
  * 	onCheckedChange={setEnabled}
  * />
@@ -44,7 +44,6 @@ export const SwitchField = ({
 	description,
 	errors,
 	requiredness,
-	optionalLabel,
 	dirty,
 	touched,
 	pending,
@@ -77,9 +76,7 @@ export const SwitchField = ({
 				<Field.InlineLabelText>
 					{label} <Field.RequiredMark />
 				</Field.InlineLabelText>
-				<Field.InlineOptional
-					optionalLabel={optionalLabel}
-				/>
+				<Field.InlineOptional />
 			</Switch.Label>
 			<Switch.Description>{description}</Switch.Description>
 			<Switch.Error>{errors}</Switch.Error>

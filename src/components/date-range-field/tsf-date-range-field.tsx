@@ -20,13 +20,13 @@ export type TSFDateRangeFieldProps = Omit<
 >;
 
 /**
- * `DateRangeField` bound to the TanStack Form field it renders in, reached as
+ * `DateRangeField` connected to the TanStack Form field it renders in, reached as
  * `field.DateRangeField`. The field's value is a pair of inclusive ISO plain
  * dates, or `null`.
  *
  * @example
  * <form.AppField name="period">
- * 	{field => <field.DateRangeField label="Period" optionalLabel="optional" openCalendarLabel="Open calendar" openCalendarIcon={<DateRangeIcon />} {...calendarLabels} {...calendarIcons} />}
+ * 	{field => <field.DateRangeField label="Period" />}
  * </form.AppField>
  */
 export const TSFDateRangeField = (

@@ -27,9 +27,9 @@ export const ignore = () => undefined;
   visual={
     <div className={`sb-unstyled ${styles.visual}`}>
       <div className={styles.card}>
-        <TextField label="Empty" optionalLabel="optional" value="" onValueChange={ignore} clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
-        <TextField label="Filled" optionalLabel="optional" value="INV-0412" onValueChange={ignore} clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
-        <TextField label="Read-only" optionalLabel="optional" value="INV-0412" onValueChange={ignore} readOnly clearable clearLabel="Clear" clearIcon={<Icon svg={CloseIcon} label="" />} />
+        <TextField label="Empty" value="" onValueChange={ignore} clearable />
+        <TextField label="Filled" value="INV-0412" onValueChange={ignore} clearable />
+        <TextField label="Read-only" value="INV-0412" onValueChange={ignore} readOnly clearable />
       </div>
     </div>
   }>

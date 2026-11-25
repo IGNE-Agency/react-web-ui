@@ -1,7 +1,5 @@
-import AddIcon from "@material-design-icons/svg/outlined/add.svg?react";
-import RemoveIcon from "@material-design-icons/svg/outlined/remove.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "../icon/index.ts";
+import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import type { ReactElement } from "react";
 import { useArgs } from "storybook/preview-api";
 import { expect, fn, userEvent } from "storybook/test";
@@ -11,6 +9,8 @@ import {
 	percentFormat,
 	unitFormat,
 } from "./index.ts";
+import { NumberInput } from "./number-input.tsx";
+import { TSFNumberField } from "./tsf-number-field.tsx";
 
 const SAMPLE_HOURS = 8;
 const SAMPLE_PERCENT = 21;
@@ -21,10 +21,6 @@ const TYPED_HOURS = 12;
 const LARGE_STEP = 10;
 
 const LABEL = "Hours";
-const OPTIONAL_LABEL = "optional";
-const DECREMENT_LABEL = "Decrease";
-const INCREMENT_LABEL = "Increase";
-const ROLE_DESCRIPTION = "Number field";
 
 const ControlledNumberField = (
 	args: NumberFieldProps,
@@ -60,19 +56,23 @@ const meta = {
 				section:
 					"Everything you can reach with the keyboard shows the focus ring",
 			},
-			{ component: "components/field" },
+			{
+				component: "components/field",
+				section:
+					"Every control comes in three tiers, and the primitive draws the field frame",
+			},
 		],
+		tiers: {
+			primitive: {
+				"NumberInput.Root": NumberInput.Root,
+			},
+			connector: { TSFNumberField },
+		},
 	},
 	component: NumberField,
 	render: ControlledNumberField,
 	args: {
 		label: LABEL,
-		optionalLabel: OPTIONAL_LABEL,
-		decrementLabel: DECREMENT_LABEL,
-		incrementLabel: INCREMENT_LABEL,
-		decrementIcon: <Icon svg={RemoveIcon} label="" />,
-		incrementIcon: <Icon svg={AddIcon} label="" />,
-		roleDescription: ROLE_DESCRIPTION,
 		value: null,
 		min: 0,
 		onValueChange: fn(),
@@ -138,12 +138,12 @@ export const AtMinimum: Story = {
 	play: async ({ canvas }) => {
 		await expect(
 			canvas.getByRole("button", {
-				name: DECREMENT_LABEL,
+				name: STORY_COPY.number.decrement,
 			}),
 		).toBeDisabled();
 		await expect(
 			canvas.getByRole("button", {
-				name: INCREMENT_LABEL,
+				name: STORY_COPY.number.increment,
 			}),
 		).toBeEnabled();
 	},
@@ -180,7 +180,7 @@ export const Keyboard: Story = {
 		await expect(control).toHaveFocus();
 		await expect(control).toHaveAttribute(
 			"aria-roledescription",
-			ROLE_DESCRIPTION,
+			STORY_COPY.number.field,
 		);
 
 		await userEvent.keyboard(String(TYPED_HOURS));
@@ -238,7 +238,7 @@ export const Mouse: Story = {
 			name: LABEL,
 		});
 		const increment = canvas.getByRole("button", {
-			name: INCREMENT_LABEL,
+			name: STORY_COPY.number.increment,
 		});
 
 		await userEvent.click(increment);
@@ -252,7 +252,7 @@ export const Mouse: Story = {
 
 		await userEvent.click(
 			canvas.getByRole("button", {
-				name: DECREMENT_LABEL,
+				name: STORY_COPY.number.decrement,
 			}),
 		);
 		await expect(
@@ -273,7 +273,7 @@ export const Touch: Story = {
 			name: LABEL,
 		});
 		const increment = canvas.getByRole("button", {
-			name: INCREMENT_LABEL,
+			name: STORY_COPY.number.increment,
 		});
 
 		await userEvent.pointer({
@@ -294,7 +294,7 @@ export const Touch: Story = {
 		await userEvent.pointer({
 			keys: "[TouchA]",
 			target: canvas.getByRole("button", {
-				name: DECREMENT_LABEL,
+				name: STORY_COPY.number.decrement,
 			}),
 		});
 		await expect(

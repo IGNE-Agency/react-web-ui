@@ -11,6 +11,8 @@ import {
 } from "react-aria-components";
 import { renderAs } from "../../lib/render-as.tsx";
 import { IconButton } from "../button/index.ts";
+import { useCopy } from "../copy-provider/index.ts";
+import { useIcons } from "../icon-provider/index.ts";
 import { Tooltip } from "../tooltip/index.ts";
 import {
 	AttachmentExtension,
@@ -122,20 +124,10 @@ export type AttachmentTileProps = Readonly<{
 	disabled: boolean;
 	/** A file-type glyph, shown above the extension where the file is not an image. */
 	icon?: ReactNode;
+	/** Shows a remove button; without it the tile is fixed. */
+	removable?: boolean;
 	className?: string;
-}> &
-	(
-		| Readonly<{
-				/** Accessible name for the remove button; without one the tile is fixed. */
-				removeLabel: string;
-				/** The remove button's glyph. */
-				removeIcon: ReactNode;
-		  }>
-		| Readonly<{
-				removeLabel?: undefined;
-				removeIcon?: undefined;
-		  }>
-	);
+}>;
 
 type PreviewContentProps = Readonly<{
 	name: string;
@@ -170,13 +162,14 @@ const Prefab = ({
 	id,
 	file,
 	hint,
-	removeLabel,
-	removeIcon,
+	removable = false,
 	invalid,
 	disabled,
 	icon,
 	className,
 }: AttachmentTileProps): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
 	const preview = useAttachmentPreview(file);
 
 	return (
@@ -197,20 +190,20 @@ const Prefab = ({
 				pending={preview.pending}
 				icon={icon}
 			/>
-			{removeLabel === undefined ? null : (
+			{removable ? (
 				<Corner>
 					<Remove
 						render={
 							<IconButton
 								variant="tertiary"
 								size="sm"
-								label={removeLabel}>
-								{removeIcon}
+								label={copy.remove}>
+								{icons.remove}
 							</IconButton>
 						}
 					/>
 				</Corner>
-			)}
+			) : null}
 		</Root>
 	);
 };
@@ -238,7 +231,7 @@ export type AttachmentTileParts = typeof Prefab &
  * `Remove` button in the `Corner`.
  *
  * @example
- * <AttachmentTile id={id} file={file} hint={hint} removeLabel="Remove" removeIcon={<CloseIcon />} invalid={false} disabled={false} />
+ * <AttachmentTile id={id} file={file} hint={hint} removable invalid={false} disabled={false} />
  */
 export const AttachmentTile: AttachmentTileParts =
 	Object.assign(Prefab, {

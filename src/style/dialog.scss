@@ -10,7 +10,7 @@
 ///   .popup {
 ///       @include dialog.surface;
 ///
-///       padding: var(--confirm-dialog-pad, var(--sys-unit-20));
+///       padding: var(--kit-confirm-dialog-pad, var(--sys-unit-20));
 ///   }
 @mixin surface {
 	position: fixed;
@@ -18,19 +18,22 @@
 	left: 50%;
 	box-sizing: border-box;
 	inline-size: min(
-		var(--dialog-inline-size, 32rem),
+		var(--kit-dialog-inline-size, 32rem),
 		var(
-			--dialog-max-inline-size,
+			--kit-dialog-max-inline-size,
 			calc(100dvw - var(--sys-unit-16))
 		)
 	);
 	border: none;
-	border-radius: var(--dialog-radius, var(--sys-radius-xl));
+	border-radius: var(
+		--kit-dialog-radius,
+		var(--sys-radius-xl)
+	);
 	background: var(
-		--dialog-bg,
+		--kit-dialog-bg,
 		var(--sys-color-surface-overlay)
 	);
-	color: var(--dialog-fg, var(--sys-color-text));
+	color: var(--kit-dialog-fg, var(--sys-color-text));
 	transform: translate(-50%, -50%);
 
 	@media not (prefers-reduced-motion) {
@@ -59,17 +62,17 @@
 ///   }
 @mixin title($spaced: true) {
 	color: var(
-		--dialog-title-fg,
-		var(--dialog-fg, var(--sys-color-text))
+		--kit-dialog-title-fg,
+		var(--kit-dialog-fg, var(--sys-color-text))
 	);
 	font: var(
-		--dialog-title-font,
+		--kit-dialog-title-font,
 		var(--sys-font-heading-small)
 	);
 
 	@if $spaced {
 		margin-block-end: var(
-			--dialog-title-space,
+			--kit-dialog-title-space,
 			var(--sys-unit-8)
 		);
 	}
@@ -85,11 +88,11 @@
 ///   }
 @mixin description {
 	color: var(
-		--dialog-description-fg,
+		--kit-dialog-description-fg,
 		var(--sys-color-text-muted)
 	);
 	font: var(
-		--dialog-description-font,
+		--kit-dialog-description-font,
 		var(--sys-font-body-medium)
 	);
 }
@@ -107,9 +110,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: end;
-	gap: var(--dialog-actions-gap, var(--sys-unit-8));
+	gap: var(--kit-dialog-actions-gap, var(--sys-unit-8));
 	margin-block-start: var(
-		--dialog-actions-space,
+		--kit-dialog-actions-space,
 		var(--sys-unit-20)
 	);
 }

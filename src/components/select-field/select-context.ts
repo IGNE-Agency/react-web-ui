@@ -11,6 +11,10 @@ export type SelectOption<T extends string> = Readonly<{
 
 export type SelectContextValue = Readonly<{
 	options: readonly SelectOption<string>[];
+	/** Called by the trigger as focus lands on it. */
+	triggerFocused: () => void;
+	/** Called by the trigger as focus leaves it. */
+	triggerBlurred: () => void;
 }>;
 
 export const SelectContext: Context<SelectContextValue | null> =
@@ -18,7 +22,8 @@ export const SelectContext: Context<SelectContextValue | null> =
 
 /**
  * The options the enclosing `Select.Root` was given, so the parts below it need
- * not be handed the same list a second time.
+ * not be handed the same list a second time, and the trigger's link to the
+ * root's blur tracking.
  *
  * @example
  * const { options } = useSelectContext();

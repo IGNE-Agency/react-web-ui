@@ -5,10 +5,12 @@ import {
 	ErrorBoundary as ReactErrorBoundary,
 } from "react-error-boundary";
 import { Button } from "../button/button.tsx";
+import { useCopy } from "../copy-provider/index.ts";
 import {
 	ErrorMessage,
 	type ErrorMessageProps,
 } from "../error-message/error-message.tsx";
+import { useIcons } from "../icon-provider/index.ts";
 
 type SharedProps = Readonly<{
 	children: ReactNode;
@@ -28,10 +30,8 @@ type DefaultFallbackProps = SharedProps &
 		description?: string;
 		/** A glyph on the fallback's error disc. */
 		icon?: ErrorMessageProps["icon"];
-		/** The retry button's label; without it, the fallback offers no retry. */
-		retryLabel?: string;
-		/** The retry button's leading glyph, such as the app's restart icon. */
-		retryIcon?: ReactNode;
+		/** Offers a retry button in the fallback. @default false */
+		retryable?: boolean;
 		fallbackRender?: never;
 	}>;
 
@@ -42,21 +42,34 @@ type CustomFallbackProps = SharedProps &
 		title?: never;
 		description?: never;
 		icon?: never;
-		retryLabel?: never;
-		retryIcon?: never;
+		retryable?: never;
 	}>;
 
 export type ErrorBoundaryProps =
 	| DefaultFallbackProps
 	| CustomFallbackProps;
 
+const RetryButton = ({
+	onRetry,
+}: Readonly<{ onRetry: () => void }>): ReactNode => {
+	const copy = useCopy();
+	const icons = useIcons();
+	return (
+		<Button
+			variant="primary"
+			icon={icons.retry}
+			onClick={onRetry}>
+			{copy.retry}
+		</Button>
+	);
+};
+
 const defaultFallback =
 	({
 		title,
 		description,
 		icon,
-		retryLabel,
-		retryIcon,
+		retryable = false,
 	}: DefaultFallbackProps) =>
 	({ resetErrorBoundary }: FallbackProps): ReactNode => (
 		<ErrorMessage
@@ -64,14 +77,11 @@ const defaultFallback =
 			description={description}
 			icon={icon}
 			action={
-				retryLabel === undefined ? undefined : (
-					<Button
-						variant="primary"
-						icon={retryIcon}
-						onClick={() => resetErrorBoundary()}>
-						{retryLabel}
-					</Button>
-				)
+				retryable ? (
+					<RetryButton
+						onRetry={() => resetErrorBoundary()}
+					/>
+				) : undefined
 			}
 		/>
 	);
@@ -81,7 +91,7 @@ const defaultFallback =
  * `ErrorMessage` with the given copy, or whatever `fallbackRender` returns.
  *
  * @example
- * <ErrorBoundary title="This widget failed to load" retryLabel="Try again">
+ * <ErrorBoundary title="This widget failed to load" retryable>
  * 	<Widget />
  * </ErrorBoundary>
  */

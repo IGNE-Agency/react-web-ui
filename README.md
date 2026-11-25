@@ -1,6 +1,6 @@
 # @igne-agency/react-web-ui
 
-IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control in three tiers with a TanStack Form bridge, and DTCG design tokens that each app themes. It is the web counterpart of `@igne-agency/react-native-ui`, with the same names and semantics where both have the concept.
+IGNE's React component kit for the web: base-ui and react-aria primitives wrapped as compound parts, presets over them, every form control as a primitive, a prefab and a TanStack Form connector, and DTCG design tokens that each app themes. It is the web counterpart of `@igne-agency/react-native-ui`, with the same names and semantics where both have the concept.
 
 The package ships built ESM, one module per source file, each importing only its own CSS. An app needs no Vite, Sass or React Compiler configuration for it.
 
@@ -15,9 +15,10 @@ Some entry points need an optional peer as well:
 
 | Import | Needs |
 | --- | --- |
+| `@igne-agency/react-web-ui/combobox-field/react-query` | `@tanstack/react-query` |
 | `@igne-agency/react-web-ui/composer` | `lexical`, `@lexical/react`, `@lexical/history`, `@lexical/plain-text` |
 | `@igne-agency/react-web-ui/data-table` | `@tanstack/react-table` |
-| `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query` |
+| `@igne-agency/react-web-ui/data-view` | `@tanstack/react-query`, `@tanstack/react-table` |
 | `@igne-agency/react-web-ui/unsaved-changes/tanstack-router` | `@tanstack/react-router` |
 | `@igne-agency/react-web-ui/terrazzo` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css` |
 | `@igne-agency/react-web-ui/terrazzo/vite` | `@terrazzo/cli`, `@terrazzo/parser`, `@terrazzo/plugin-css`, `vite` |
@@ -39,11 +40,7 @@ import "@igne-agency/react-web-ui/base.css";
 import "@igne-agency/react-web-ui/tokens.css";
 ```
 
-`base.css` resets the user agent's styles and sets the body's font and colour, `::selection`, links and their focus ring. It also sets `isolation: isolate` on `#root` and `position: relative` on `body`, which base-ui's popups need. It loads no fonts; the app loads its own.
-
-`tokens.css` is the kit's default theme: the `--ref-*` ramps and the `--sys-*` roles, light on `:root` and dark on `html[data-theme="dark"]`, and under `prefers-color-scheme: dark` unless `data-theme="light"`.
-
-All kit CSS sits in the cascade layers `kit.reset`, `kit.base` and `kit.components`, so any unlayered CSS in the app wins without a specificity fight. Each component reads its own custom properties ("knobs"), defaulting to a `--sys-*` role, so a stylesheet can retheme one component by setting its knobs.
+`base.css` is the reset, and sets `isolation: isolate` on `#root`, which base-ui's popups need. `tokens.css` is the kit's default theme, light and dark. All kit CSS sits in cascade layers, so the app's unlayered CSS always wins; how a component is restyled through its `--kit-*` knobs is in [`docs/design-system/token-architecture.mdx`](docs/design-system/token-architecture.mdx#every-custom-property-names-who-owns-it).
 
 ## Theming
 
@@ -115,81 +112,56 @@ export default defineConfig({
 
 It reads `terrazzo.config.*` from the working directory, which Terrazzo resolves the config's paths from, and builds the tokens before `vite build` and when the dev server starts, then again whenever the config, the resolver or a token file it references changes. The app needs no `tokens` script and no `tz build`. Gitignore the file it writes. Under Node, a `terrazzo.config.ts` needs Node 22.18 or later.
 
-The resolver needs a `theme` modifier with `light` and `dark` contexts. Like the kit's own `tokens.css`, the file the preset writes opens with the kit's layer order and keeps every rule in `kit.base`, so an unlayered override in the app still wins. The preset names every token by its path with dots as hyphens (`sys.color.primary` becomes `--sys-color-primary`), and writes a shadow tagged `$extensions["nl.igne.css"].property: "filter"` as `drop-shadow()` filters. Typography tokens name no family, so the preset narrows Terrazzo's `core/valid-typography` rule to `fontSize`, `fontWeight` and `lineHeight`.
+The resolver needs a `theme` modifier with `light` and `dark` contexts. What the layers and roles are, and why breakpoints and gutters stay the app's own, is in [`docs/design-system/token-architecture.mdx`](docs/design-system/token-architecture.mdx).
 
 ### Typeface
 
-The kit names no typeface and loads no font. Every type role reads its family from one of two custom properties: `--sys-font-family-heading` for headings and `--sys-font-family-body` for everything else. The body family defaults to `system-ui, sans-serif`, and the heading family follows the body family. To use a typeface, load it the way the app loads any font, then name it on `:root` in unlayered CSS:
-
-```css
-:root {
-	--sys-font-family-body: "Inter", system-ui, sans-serif;
-	--sys-font-family-heading:
-		"Satoshi", system-ui, sans-serif;
-}
-```
-
-This works the same over the kit's `tokens.css` and over a theme the preset builds.
-
-The kit owns no breakpoints and no gutters; those are the app's layout.
+The kit loads no font. Load the app's own and name it in `--sys-font-family-body` and `--sys-font-family-heading` on `:root`: see [`docs/design-system/type.mdx`](docs/design-system/type.mdx#an-app-sets-its-typeface-through-the-family-properties-on-the-root-and-loads-the-font-itself).
 
 ## Icons
 
-The kit renders no icons and depends on no icon set. Wherever a component shows one, it leaves a slot the app fills from its own set: a part's children, or, on a ready-made component, a prop named for the icon's job (`icon`, `closeIcon`, `expandIcon`). The slot sizes the glyph to its text and colours it, so an SVG drawn at `1em` in `currentColor` fits as is. A slot is required only where the icon is all the control shows, such as a close button's cross; anywhere else, left out, nothing renders.
-
-```tsx
-import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
-import { Select } from "@igne-agency/react-web-ui/select-field";
-
-<Select.Icon>
-	<ExpandMoreIcon />
-</Select.Icon>;
-```
-
-`Icon`, from `./icon`, sizes and labels any SVG component: `label=""` hides a glyph that stands beside its word, and a label names one that stands alone.
+The kit ships no icons: the app hands them over through `IconProvider`, below. Which ones it needs, and where any other icon goes, is in [`docs/design-system/iconography.mdx`](docs/design-system/iconography.mdx#the-kit-renders-no-icons-and-the-app-hands-it-every-one).
 
 ## Providers
 
 The kit has no catch-all provider. Wrap the app in the ones it uses:
 
 ```tsx
+import { CopyProvider } from "@igne-agency/react-web-ui/copy-provider";
+import { IconProvider } from "@igne-agency/react-web-ui/icon-provider";
 import { LocaleProvider } from "@igne-agency/react-web-ui/locale-provider";
 import { TimeZoneProvider } from "@igne-agency/react-web-ui/time-zone-provider";
 import { ToastProvider } from "@igne-agency/react-web-ui/toast";
 import { Tooltip } from "@igne-agency/react-web-ui/tooltip";
-import CloseIcon from "./icons/close.svg?react";
+import { copy } from "./copy.ts";
+import { icons } from "./icons.tsx";
 
 export const Providers = ({
 	children,
 }: Readonly<{ children: React.ReactNode }>) => (
 	<LocaleProvider locale="nl-NL">
 		<TimeZoneProvider timeZone="Europe/Amsterdam">
-			<Tooltip.Provider>
-				<ToastProvider
-					closeLabel="Close"
-					closeIcon={<CloseIcon />}
-					viewportLabel="Notifications">
-					{children}
-				</ToastProvider>
-			</Tooltip.Provider>
+			<CopyProvider copy={copy}>
+				<IconProvider icons={icons}>
+					<Tooltip.Provider>
+						<ToastProvider>{children}</ToastProvider>
+					</Tooltip.Provider>
+				</IconProvider>
+			</CopyProvider>
 		</TimeZoneProvider>
 	</LocaleProvider>
 );
 ```
 
-`LocaleProvider` takes a BCP 47 locale and `TimeZoneProvider` an IANA time zone. Both are required: `useLocale()` and `useTimeZone()` throw outside them, and nothing falls back to the device.
+- `LocaleProvider` takes a BCP 47 locale, and `TimeZoneProvider` an IANA time zone.
+- `CopyProvider` takes a `KitCopy`: every string the kit's components say on their own, in the app's language. The kit ships no copy.
+- `IconProvider` takes a `KitIcons`: every icon the kit's components show on their own.
 
-The kit has no copy of its own. Every string a component shows or announces is a prop named for what it says, such as `clearLabel` or `retryLabel`, so the app passes its own translations.
+All four are required: their hooks throw outside them, and nothing falls back to the device or to English. `ToastProvider` sits inside the copy and icon providers.
 
 ## Forms
 
-Every control comes in three tiers:
-
-- the raw compound, such as `TextInput` or `Select`
-- the field shorthand with label, description and errors, such as `TextField` or `SelectField`
-- the TanStack Form bridge, such as `TSFTextField`, which the app registers on its form hook
-
-`createAppForm` builds the app's form hook from the bridges it registers, once, in a module of the app's own. A form reaches each bridge through `form.AppField` under its key, and loads the code and CSS of those bridges only:
+Build the app's form hook once, in a module of its own, registering only the connectors the app uses, so it loads only their code and CSS:
 
 ```ts
 // src/form.ts
@@ -200,86 +172,11 @@ export const { useAppForm, withForm, withFieldGroup } =
 	createAppForm({ EmailField: TSFEmailField });
 ```
 
-```tsx
-import { Form } from "@igne-agency/react-web-ui/form";
-import { useAppForm } from "./form.ts";
+The rest, from validators to `Form.Root` and field groups, is in [`docs/design-system/setting-up-forms.mdx`](docs/design-system/setting-up-forms.mdx).
 
-const SignUp = () => {
-	const form = useAppForm({
-		defaultValues: { email: "" },
-		validators: { onSubmit: schema },
-		onSubmit: ({ value }) => save(value),
-	});
-	return (
-		<Form.Root form={form}>
-			<form.AppField name="email">
-				{field => (
-					<field.EmailField
-						label="Email"
-						requiredness="required"
-						optionalLabel="optional"
-					/>
-				)}
-			</form.AppField>
-			<Form.Errors />
-			<Form.Submit busyLabel="Signing up">
-				Sign up
-			</Form.Submit>
-		</Form.Root>
-	);
-};
-```
+## Docs
 
-Related fields, such as the parts of an address, share one legend and one error in a field group, which lines them up side by side. Register `TSFFieldGroup` as a form component and name the fields whose errors it shows:
-
-```ts
-import { TSFFieldGroup } from "@igne-agency/react-web-ui/fieldset";
-import { TSFTextField } from "@igne-agency/react-web-ui/text-field";
-
-export const { useAppForm, withForm, withFieldGroup } =
-	createAppForm(
-		{ TextField: TSFTextField },
-		{ FieldGroup: TSFFieldGroup },
-	);
-```
-
-```tsx
-<form.FieldGroup
-	legend="Address"
-	optionalLabel="optional"
-	names={["postalCode", "houseNumber"]}>
-	<form.AppField name="postalCode">
-		{field => (
-			<field.TextField
-				label="Postal code"
-				requiredness="required"
-				optionalLabel="optional"
-			/>
-		)}
-	</form.AppField>
-	<form.AppField name="houseNumber">
-		{field => (
-			<field.TextField
-				label="House number"
-				requiredness="required"
-				optionalLabel="optional"
-			/>
-		)}
-	</form.AppField>
-</form.FieldGroup>
-```
-
-Every field takes `requiredness` (`"required"`, `"optional"`, or left out to show neither mark) and `errors`, which accepts strings and anything with a string `message`, such as Standard Schema issues. Validation is the app's own, through Standard Schema; the kit ships no validators.
-
-`Form.Root` reports unsaved changes to the page's leave guards (`useLeaveGuard`, or `useRouterLeaveGuard` from `./unsaved-changes/tanstack-router`) while its `leaveGuard` policy returns true for the form's live state. The default, `whenDirty`, guards while the values differ from their defaults and no submit is in flight. Pass `never` for a form whose edits need not survive leaving, or any `(state) => boolean`:
-
-```tsx
-import { never } from "@igne-agency/react-web-ui/unsaved-changes";
-
-<Form.Root form={filters} leaveGuard={never}>
-	…
-</Form.Root>;
-```
+The docs are this repository's Storybook (`bun run storybook`), written as `.mdx` files: start at [`docs/design-system/getting-started.mdx`](docs/design-system/getting-started.mdx). A component's own rules sit beside its stories, such as [`src/components/field/field.mdx`](src/components/field/field.mdx).
 
 ## License
 

@@ -19,12 +19,12 @@ export type TSFCheckboxFieldProps = Omit<
 	CheckboxFieldIndeterminateProps;
 
 /**
- * `CheckboxField` bound to the TanStack Form field it renders in, whose value
+ * `CheckboxField` connected to the TanStack Form field it renders in, whose value
  * is a boolean. Reach it as `field.CheckboxField` inside `form.AppField`.
  *
  * @example
  * <form.AppField name="terms">
- * 	{field => <field.CheckboxField label="I agree to the terms" requiredness="required" optionalLabel="optional" />}
+ * 	{field => <field.CheckboxField label="I agree to the terms" requiredness="required" />}
  * </form.AppField>
  */
 export const TSFCheckboxField = (

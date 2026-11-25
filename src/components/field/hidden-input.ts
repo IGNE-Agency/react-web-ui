@@ -3,7 +3,7 @@
  * so the value it carries is never submitted natively.
  *
  * @example
- * <Select.Root inputRef={detachHiddenInput} />
+ * <BaseSelect.Root inputRef={detachHiddenInput} />
  */
 export const detachHiddenInput = (
 	node: HTMLInputElement | null,

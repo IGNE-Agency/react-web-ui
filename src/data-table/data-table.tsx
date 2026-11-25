@@ -123,7 +123,7 @@ export type DataTablePaginationProps = Omit<
  *
  * @example
  * <DataTable.Pagination>
- * 	<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
+ * 	<Pagination.Index />
  * 	<Pagination.Controls>…</Pagination.Controls>
  * </DataTable.Pagination>
  */
@@ -199,13 +199,9 @@ type DataTableParts = Readonly<{
  * 		emptyState="No invoices yet."
  * 		errorLabel="The invoices could not be loaded."
  * 		loadingLabel="Loading invoices"
- * 		slowLabel="This is taking longer than usual."
- * 		retryLabel="Try again"
- * 		sortAscendingIcon={<ArrowUpwardIcon />}
- * 		sortDescendingIcon={<ArrowDownwardIcon />}
  * 	/>
  * 	<DataTable.Pagination>
- * 		<Pagination.Index label={page => `Page ${page.pageIndex + 1} of ${page.pageCount}`} />
+ * 		<Pagination.Index />
  * 		<Pagination.Controls>
  * 			<Pagination.Previous render={<IconButton label="Previous page" variant="tertiary"><ChevronLeftIcon /></IconButton>} />
  * 			<Pagination.Next render={<IconButton label="Next page" variant="tertiary"><ChevronRightIcon /></IconButton>} />

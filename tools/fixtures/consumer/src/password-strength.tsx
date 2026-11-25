@@ -6,17 +6,7 @@ import { createRoot } from "react-dom/client";
 createRoot(document.body).render(
 	<LocaleProvider locale="nl-NL">
 		<Suspense>
-			<PasswordStrength
-				password="correct horse battery staple"
-				label="Password strength"
-				scoreLabels={{
-					0: "Very weak",
-					1: "Weak",
-					2: "Fair",
-					3: "Strong",
-					4: "Very strong",
-				}}
-			/>
+			<PasswordStrength password="correct horse battery staple" />
 		</Suspense>
 	</LocaleProvider>,
 );
