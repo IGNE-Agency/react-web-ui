@@ -7,8 +7,8 @@ import kitTokens from "./src/terrazzo/index.ts";
 /**
  * Builds the kit's default theme from its own token files. Apps run the
  * published preset (`@igne-agency/react-web-ui/terrazzo`) against their own
- * resolver instead; this config imports the preset's source so `bun run tokens`
- * needs no build first. The token values as JavaScript are for the design
+ * resolver instead; this config imports the preset's source so the kit's own
+ * Vite configs need no build first. The token values as JavaScript are for the design
  * system's specimens only and never ship.
  */
 const config: ConfigInit = defineConfig({

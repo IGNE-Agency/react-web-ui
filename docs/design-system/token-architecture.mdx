@@ -320,9 +320,9 @@ Declaring the knobs first makes the variants below readable as a table of what c
 
 </Details>
 
-<Details title="Tokens are design-token JSON in tokens/, built with bun run tokens">
+<Details title="Tokens are design-token JSON in tokens/, built by the kit's Vite plugin">
 
-Three files hold the layers: `ref.tokens.json` has the ramps and the type scale, `sys.tokens.json` has the roles, and `dark.tokens.json` has the roles' values for the dark theme. `bun run tokens` turns them into custom properties named after the token's path, so `sys.color.primary` becomes `--sys-color-primary`.
+Three files hold the layers: `ref.tokens.json` has the ramps and the type scale, `sys.tokens.json` has the roles, and `dark.tokens.json` has the roles' values for the dark theme. The kit's Vite plugin turns them into custom properties named after the token's path whenever Vite runs, so `sys.color.primary` becomes `--sys-color-primary`.
 
 <Beside>
 

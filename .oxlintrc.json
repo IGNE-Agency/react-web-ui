@@ -21,7 +21,8 @@
 		"dist",
 		"storybook-static",
 		"tools/fixtures/consumer/src",
-		"tools/fixtures/consumer/terrazzo.config.ts"
+		"tools/fixtures/consumer/terrazzo.config.ts",
+		"tools/fixtures/consumer/vite.config.ts"
 	],
 	"rules": {
 		"curly": "error",

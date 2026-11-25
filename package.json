@@ -7,9 +7,6 @@
 		"type": "git",
 		"url": "git+https://github.com/IGNE-Agency/react-web-ui.git"
 	},
-	"bin": {
-		"react-web-ui-tokens": "./dist/terrazzo/build-tokens.js"
-	},
 	"files": [
 		"dist",
 		"tokens"
@@ -288,6 +285,10 @@
 			"types": "./dist/terrazzo/index.d.ts",
 			"default": "./dist/terrazzo/index.js"
 		},
+		"./terrazzo/vite": {
+			"types": "./dist/terrazzo/vite.d.ts",
+			"default": "./dist/terrazzo/vite.js"
+		},
 		"./text-field": {
 			"types": "./dist/components/text-field/index.d.ts",
 			"default": "./dist/components/text-field/index.js"
@@ -332,15 +333,14 @@
 		}
 	},
 	"scripts": {
-		"fix": "bun run tokens && oxfmt . && oxlint --fix .",
-		"check": "bun run tokens && oxfmt --check . && oxlint . && bun tools/check-docs-tokens.ts",
-		"tokens": "bun src/terrazzo/build-tokens.ts",
-		"build": "bun run tokens && vite build && tsc -p tsconfig.build.json && tsc -p tsconfig.terrazzo.json",
+		"fix": "oxfmt . && oxlint --fix .",
+		"check": "oxfmt --check . && oxlint . && bun tools/check-docs-tokens.ts",
+		"build": "vite build && tsc -p tsconfig.build.json && tsc -p tsconfig.terrazzo.json",
 		"check:exports": "bun tools/check-exports.ts",
 		"prepack": "bun run build",
-		"test": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 vitest run",
-		"storybook": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
-		"storybook:build": "bun run tokens && STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
+		"test": "STORYBOOK_DISABLE_TELEMETRY=1 vitest run",
+		"storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
+		"storybook:build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
 		"docs:links": "bun .storybook/docs-links/report.ts"
 	},
 	"dependencies": {
@@ -429,7 +429,8 @@
 		"react": "^19.3.1",
 		"react-aria-components": "^1.22.1",
 		"react-dom": "^19.3.1",
-		"temporal-polyfill": "^1.0.7"
+		"temporal-polyfill": "^1.0.7",
+		"vite": "^8.3.5"
 	},
 	"peerDependenciesMeta": {
 		"@lexical/history": {
@@ -460,6 +461,9 @@
 			"optional": true
 		},
 		"lexical": {
+			"optional": true
+		},
+		"vite": {
 			"optional": true
 		}
 	},
