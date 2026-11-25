@@ -5,6 +5,10 @@
 @use "../../style/state-layer.scss" as state;
 
 @layer kit.components {
+	.picker {
+		display: contents;
+	}
+
 	.group {
 		@include form.group;
 

@@ -14,7 +14,8 @@
 		}
 
 		&[data-field-group-member] {
-			> * {
+			> *,
+			> [data-field-contents] > * {
 				grid-row: extra;
 				margin-block-start: var(
 					--kit-field-gap,
@@ -22,23 +23,29 @@
 				);
 			}
 
-			> :is(.label, .labelRow) {
+			> :is(.label, .labelRow),
+			> [data-field-contents] > :is(.label, .labelRow) {
 				grid-row: label;
 				margin-block: 0
 					var(--kit-field-gap, var(--sys-unit-4));
 			}
 
 			> :first-child:not(.label, .labelRow),
-			> :is(.label, .labelRow) + * {
+			> :is(.label, .labelRow) + *,
+			> [data-field-contents]
+				> :first-child:not(.label, .labelRow),
+			> [data-field-contents] > :is(.label, .labelRow) + * {
 				grid-row: control;
 				margin-block-start: 0;
 			}
 
-			> .description {
+			> .description,
+			> [data-field-contents] > .description {
 				grid-row: description;
 			}
 
-			> .error {
+			> .error,
+			> [data-field-contents] > .error {
 				grid-row: error;
 			}
 		}

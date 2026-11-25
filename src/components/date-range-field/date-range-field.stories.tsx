@@ -18,15 +18,12 @@ import {
 } from "../../lib/storybook/calendar.ts";
 import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
 import { roleGone } from "../../lib/storybook/waits.ts";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Temporal } from "temporal-polyfill";
-import { isoToDayRange } from "../../lib/calendar/temporal-value.ts";
+import type { IsoDateRange } from "../../lib/calendar/temporal-value.ts";
 import { IconButton } from "../button/index.ts";
 import { Field } from "../field/index.ts";
-import {
-	TimeZoneProvider,
-	useTimeZone,
-} from "../time-zone-provider/index.ts";
+import { TimeZoneProvider } from "../time-zone-provider/index.ts";
 import { DateRangeInput } from "./date-range-input.tsx";
 import {
 	DateRangeField,
@@ -43,6 +40,15 @@ const RANGE = {
 };
 const LABEL = "Invoice period";
 const TRIGGER_NAME = `${STORY_COPY.calendar.open} ${LABEL}`;
+const DESCRIPTION =
+	"From the first through the last day of work.";
+const SPAN_ERROR = "Keep the period within one month.";
+
+const spansMonths = (range: IsoDateRange | null) =>
+	range !== null &&
+	!Temporal.PlainYearMonth.from(range.start).equals(
+		Temporal.PlainYearMonth.from(range.end),
+	);
 
 const FAR_ZONE = "Pacific/Kiritimati";
 const INSTANTS = {
@@ -74,113 +80,97 @@ const COMPOSED_MONTHS = [0, 1] as const;
 
 const ComposedDateRangeInput = () => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
-	const ids = DateRangeInput.useIds();
-	const timeZone = useTimeZone();
+	const [value, setValue] = useState<IsoDateRange | null>(
+		RANGE,
+	);
 
 	return (
-		<Field.Root>
-			<DateRangeInput.Label id={ids.labelId}>
-				{LABEL}
+		<DateRangeInput.Root
+			value={value}
+			onValueChange={setValue}
+			errors={spansMonths(value) ? [SPAN_ERROR] : undefined}
+			requiredness="required">
+			<DateRangeInput.Label>
+				{LABEL} <Field.Requiredness />
 			</DateRangeInput.Label>
-			<DateRangeInput.Root
-				aria-labelledby={ids.labelId}
-				defaultValue={isoToDayRange(RANGE, timeZone)}>
-				{({ isFocusWithin }) => (
-					<>
-						<DateRangeInput.Group
-							state={{ focused: isFocusWithin }}>
-							<DateRangeInput.Input slot="start">
-								{segment => (
-									<DateRangeInput.Segment
-										segment={segment}
-									/>
-								)}
-							</DateRangeInput.Input>
-							<DateRangeInput.Separator>
-								to
-							</DateRangeInput.Separator>
-							<DateRangeInput.Input slot="end">
-								{segment => (
-									<DateRangeInput.Segment
-										segment={segment}
-									/>
-								)}
-							</DateRangeInput.Input>
-							<DateRangeInput.Spacer />
-							<DateRangeInput.Trigger
-								ref={triggerRef}
-								render={
-									<IconButton
-										label={STORY_COPY.calendar.open}
-										variant="tertiary"
-										size="sm">
-										<Icon svg={DateRangeIcon} label="" />
-									</IconButton>
-								}
-							/>
-						</DateRangeInput.Group>
-						<DateRangeInput.Popup triggerRef={triggerRef}>
-							<DateRangeInput.Calendar
-								visibleMonths={COMPOSED_MONTHS.length}>
-								<DateRangeInput.CalendarHeader>
-									<DateRangeInput.Previous
-										render={
-											<IconButton
-												label={
-													STORY_COPY.calendar.previousMonth
-												}
-												variant="tertiary">
-												<Icon
-													svg={ChevronLeftIcon}
-													label=""
-												/>
-											</IconButton>
-										}
-									/>
-									<DateRangeInput.Heading />
-									<DateRangeInput.Next
-										render={
-											<IconButton
-												label={
-													STORY_COPY.calendar.nextMonth
-												}
-												variant="tertiary">
-												<Icon
-													svg={ChevronRightIcon}
-													label=""
-												/>
-											</IconButton>
-										}
-									/>
-								</DateRangeInput.CalendarHeader>
-								<DateRangeInput.Months>
-									{COMPOSED_MONTHS.map(month => (
-										<DateRangeInput.Grid
-											key={month}
-											offset={{ months: month }}>
-											<DateRangeInput.GridHeader>
-												{day => (
-													<DateRangeInput.HeaderCell>
-														{day}
-													</DateRangeInput.HeaderCell>
-												)}
-											</DateRangeInput.GridHeader>
-											<DateRangeInput.GridBody>
-												{date => (
-													<DateRangeInput.Cell
-														date={date}
-													/>
-												)}
-											</DateRangeInput.GridBody>
-										</DateRangeInput.Grid>
-									))}
-								</DateRangeInput.Months>
-							</DateRangeInput.Calendar>
-						</DateRangeInput.Popup>
-					</>
-				)}
-			</DateRangeInput.Root>
-		</Field.Root>
+			<DateRangeInput.Group>
+				<DateRangeInput.Input slot="start">
+					{segment => (
+						<DateRangeInput.Segment segment={segment} />
+					)}
+				</DateRangeInput.Input>
+				<DateRangeInput.Separator>
+					to
+				</DateRangeInput.Separator>
+				<DateRangeInput.Input slot="end">
+					{segment => (
+						<DateRangeInput.Segment segment={segment} />
+					)}
+				</DateRangeInput.Input>
+				<DateRangeInput.Spacer />
+				<DateRangeInput.Trigger
+					ref={triggerRef}
+					render={
+						<IconButton
+							label={STORY_COPY.calendar.open}
+							variant="tertiary"
+							size="sm">
+							<Icon svg={DateRangeIcon} label="" />
+						</IconButton>
+					}
+				/>
+			</DateRangeInput.Group>
+			<DateRangeInput.Popup triggerRef={triggerRef}>
+				<DateRangeInput.Calendar
+					visibleMonths={COMPOSED_MONTHS.length}>
+					<DateRangeInput.CalendarHeader>
+						<DateRangeInput.Previous
+							render={
+								<IconButton
+									label={STORY_COPY.calendar.previousMonth}
+									variant="tertiary">
+									<Icon svg={ChevronLeftIcon} label="" />
+								</IconButton>
+							}
+						/>
+						<DateRangeInput.Heading />
+						<DateRangeInput.Next
+							render={
+								<IconButton
+									label={STORY_COPY.calendar.nextMonth}
+									variant="tertiary">
+									<Icon svg={ChevronRightIcon} label="" />
+								</IconButton>
+							}
+						/>
+					</DateRangeInput.CalendarHeader>
+					<DateRangeInput.Months>
+						{COMPOSED_MONTHS.map(month => (
+							<DateRangeInput.Grid
+								key={month}
+								offset={{ months: month }}>
+								<DateRangeInput.GridHeader>
+									{day => (
+										<DateRangeInput.HeaderCell>
+											{day}
+										</DateRangeInput.HeaderCell>
+									)}
+								</DateRangeInput.GridHeader>
+								<DateRangeInput.GridBody>
+									{date => (
+										<DateRangeInput.Cell date={date} />
+									)}
+								</DateRangeInput.GridBody>
+							</DateRangeInput.Grid>
+						))}
+					</DateRangeInput.Months>
+				</DateRangeInput.Calendar>
+			</DateRangeInput.Popup>
+			<DateRangeInput.Description>
+				{DESCRIPTION}
+			</DateRangeInput.Description>
+			<DateRangeInput.Error />
+		</DateRangeInput.Root>
 	);
 };
 
@@ -277,14 +267,33 @@ export const WithDescription: Story = {
 };
 
 export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
 	render: ComposedDateRangeInput,
-	parameters: {
-		docs: {
-			description: {
-				story:
-					"The primitive's parts, composed by hand: a word between the ends, and a heading between the month steppers over two months.",
-			},
-		},
+	play: async ({ canvas }) => {
+		const group = canvas.getByRole("group", {
+			name: LABEL,
+		});
+		const { startMonth, endMonth } = segmentsOf(
+			canvas.getAllByRole("spinbutton"),
+		);
+
+		await expect(group).toHaveAccessibleName(LABEL);
+		await expect(group).toHaveAccessibleDescription(
+			expect.stringContaining(DESCRIPTION),
+		);
+		await expect(startMonth).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(endMonth);
+		await userEvent.keyboard("{ArrowUp}");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(SPAN_ERROR);
+		await expect(
+			group.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 

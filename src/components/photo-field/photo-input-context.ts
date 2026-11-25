@@ -10,10 +10,6 @@ export type PhotoInputContextValue = Readonly<{
 	value: File | undefined;
 	filled: boolean;
 	readOnly: boolean;
-	invalid: boolean;
-	pending: boolean;
-	labelledBy: string;
-	describedBy: string;
 	valueId: string;
 	well: RefObject<HTMLButtonElement | null>;
 	picker: RefObject<HTMLInputElement | null>;

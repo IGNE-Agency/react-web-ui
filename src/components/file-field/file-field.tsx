@@ -9,7 +9,6 @@ import {
 	type FieldBlurHandler,
 	type FieldProps,
 	Field,
-	useFieldState,
 } from "../field/index.ts";
 import { useCopy } from "../copy-provider/index.ts";
 import { useIcons } from "../icon-provider/index.ts";
@@ -64,7 +63,6 @@ type StagedFileProps = Readonly<{
 	file: File;
 	hint: string;
 	invalid: boolean;
-	disabled: boolean | undefined;
 	removable: boolean;
 }>;
 
@@ -73,7 +71,6 @@ const StagedFile = ({
 	file,
 	hint,
 	invalid,
-	disabled,
 	removable,
 }: StagedFileProps): ReactNode => {
 	const copy = useCopy();
@@ -83,8 +80,7 @@ const StagedFile = ({
 		<FileInput.Item
 			id={id}
 			textValue={file.name}
-			invalid={invalid}
-			disabled={disabled}>
+			invalid={invalid}>
 			<Tooltip content={hint}>
 				<AttachmentTile.Preview
 					name={file.name}
@@ -121,7 +117,8 @@ const StagedFile = ({
  * A labelled drop target holding the staged files as removable tiles, with a
  * file picker button. Files over `maxFileSize` or of a type outside `accept`
  * stay in the target, marked invalid, and are reported through the field's
- * error text, in the `CopyProvider`'s `files` copy.
+ * error text, in the `CopyProvider`'s `files` copy. Assembled from
+ * `FileInput`'s parts.
  *
  * @example
  * <FileField
@@ -157,7 +154,6 @@ export const FileField = ({
 	const copy = useCopy();
 	const icons = useIcons();
 	const locale = useLocale();
-	const ids = Field.useIds();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	const maxSize = formatBytes(maxFileSize, locale);
@@ -170,23 +166,6 @@ export const FileField = ({
 			copy.files.wrongType(file.name),
 		),
 	];
-
-	const field = useFieldState({
-		errors: messages,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		disabled,
-		readOnly,
-		filled: value.length > 0,
-	});
-	const fieldState = field.state;
-
-	const describedBy = ids.describedBy(
-		description !== undefined,
-		field.invalid,
-	);
 
 	const add = (incoming: readonly File[]) => {
 		if (incoming.length === 0) {
@@ -230,7 +209,6 @@ export const FileField = ({
 							isOversized(file, maxFileSize) ||
 							!isAccepted(file, accept ?? [])
 						}
-						disabled={fieldState.disabled}
 						removable={readOnly !== true}
 					/>
 				))}
@@ -239,32 +217,22 @@ export const FileField = ({
 
 	return (
 		<FileInput.Root
-			state={fieldState}
-			disabled={fieldState.disabled}
-			className={className}
-			onBlur={event => {
-				if (
-					!(
-						event.relatedTarget instanceof Node &&
-						event.currentTarget.contains(
-							event.relatedTarget,
-						)
-					)
-				) {
-					onBlur?.();
-				}
-			}}>
+			errors={messages}
+			requiredness={requiredness}
+			dirty={dirty}
+			touched={touched}
+			pending={pending}
+			filled={value.length > 0}
+			disabled={disabled}
+			readOnly={readOnly}
+			onBlur={onBlur}
+			className={className}>
 			<FileInput.Legend>
 				{label} <Field.Requiredness />
 			</FileInput.Legend>
 
 			<FileInput.DropTarget
 				aria-label={dropTargetLabel}
-				state={fieldState}
-				isDisabled={field.disabled}
-				getDropOperation={
-					readOnly === true ? () => "cancel" : undefined
-				}
 				onDrop={async event => {
 					add(
 						await Promise.all(
@@ -291,10 +259,7 @@ export const FileField = ({
 									{copy.files.choose}
 								</Button>
 							}
-							disabled={field.disabled}
-							describedBy={describedBy}
 							buttonRef={triggerRef}
-							invalid={field.invalid}
 							allowsMultiple={multiple}
 							acceptedFileTypes={accept}
 							onSelect={files =>
@@ -304,19 +269,15 @@ export const FileField = ({
 					</>
 				)}
 				{tiles}
-				{field.phase !== "fresh" && (
-					<FileInput.Pending>
-						<Spinner size={1} />
-					</FileInput.Pending>
-				)}
+				<FileInput.Pending>
+					<Spinner size={1} />
+				</FileInput.Pending>
 			</FileInput.DropTarget>
 
-			<FileInput.Description id={ids.descriptionId}>
+			<FileInput.Description>
 				{description}
 			</FileInput.Description>
-			<FileInput.Error id={ids.errorId}>
-				{messages}
-			</FileInput.Error>
+			<FileInput.Error />
 		</FileInput.Root>
 	);
 };

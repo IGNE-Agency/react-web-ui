@@ -125,6 +125,7 @@ const NumberInputRoot = ({
 					name={name ?? ids.controlId}
 					inputRef={detachHiddenInput}
 					id={id}
+					data-field-contents=""
 					className={style.wrapper}>
 					{children}
 				</BaseNumberField.Root>

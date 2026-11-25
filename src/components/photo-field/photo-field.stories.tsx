@@ -1,3 +1,4 @@
+import CloseIcon from "@material-design-icons/svg/outlined/close.svg?react";
 import PersonIcon from "@material-design-icons/svg/outlined/person.svg?react";
 import PhotoCameraIcon from "@material-design-icons/svg/outlined/photo_camera.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -17,13 +18,18 @@ import {
 	pngFile,
 } from "../../lib/storybook/files.ts";
 import { STORY_COPY } from "../../lib/storybook/story-providers.tsx";
+import { IconButton } from "../button/index.ts";
+import { Field } from "../field/index.ts";
 import { Icon } from "../icon/index.ts";
 import {
 	PhotoField,
 	type PhotoFieldProps,
 } from "./photo-field.tsx";
+import { PhotoInput } from "./photo-input.tsx";
 
 const LABEL = "Profile photo";
+const DESCRIPTION = "A square photo works best.";
+const JPEG_ERROR = "Use a JPEG photo.";
 
 const PORTRAIT = pngFile("portrait.png");
 
@@ -56,6 +62,53 @@ const StatefulPhotoField = (args: PhotoFieldProps) => {
 			value={value}
 			onValueChange={next => setValue(next)}
 		/>
+	);
+};
+
+const ComposedPhotoInput = () => {
+	const [file, setFile] = useState<File | undefined>();
+
+	return (
+		<PhotoInput.Root
+			value={file}
+			onValueChange={setFile}
+			errors={
+				file !== undefined && file.type !== "image/jpeg"
+					? [JPEG_ERROR]
+					: undefined
+			}
+			requiredness="required">
+			<PhotoInput.Label>
+				{LABEL} <Field.Requiredness />
+			</PhotoInput.Label>
+			<PhotoInput.Group>
+				<PhotoInput.Well>
+					<PhotoInput.Face>
+						<PhotoInput.Image alt="Preview" />
+						<PhotoInput.Fallback>
+							{STORED}
+						</PhotoInput.Fallback>
+					</PhotoInput.Face>
+					<PhotoInput.Badge>
+						<Icon svg={PhotoCameraIcon} label="" />
+					</PhotoInput.Badge>
+				</PhotoInput.Well>
+				<PhotoInput.Remove
+					render={
+						<IconButton
+							label="Remove photo"
+							variant="secondary">
+							<Icon svg={CloseIcon} label="" />
+						</IconButton>
+					}
+				/>
+				<PhotoInput.ValueText />
+			</PhotoInput.Group>
+			<PhotoInput.Description>
+				{DESCRIPTION}
+			</PhotoInput.Description>
+			<PhotoInput.Error />
+		</PhotoInput.Root>
 	);
 };
 
@@ -140,7 +193,32 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "A square photo works best.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedPhotoInput,
+	play: async ({ canvas, canvasElement }) => {
+		const well = canvas.getByRole("button", {
+			name: `${LABEL} ${STORY_COPY.required}`,
+		});
+
+		await expect(well).toHaveAccessibleDescription(
+			`${STORY_COPY.photo.none} ${DESCRIPTION}`,
+		);
+
+		await userEvent.upload(
+			fileInput(canvasElement),
+			PORTRAIT,
+		);
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(JPEG_ERROR);
+		await expect(
+			well.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 

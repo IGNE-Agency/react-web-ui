@@ -1,12 +1,7 @@
 import type { ReactNode } from "react";
 import { IconButton } from "../button/index.ts";
 import { useCopy } from "../copy-provider/index.ts";
-import {
-	Field,
-	type FieldProps,
-	useFieldState,
-} from "../field/index.ts";
-import { RequiredSpokenContext } from "../field/required-spoken.ts";
+import { Field, type FieldProps } from "../field/index.ts";
 import { useIcons } from "../icon-provider/index.ts";
 import {
 	PhotoInput,
@@ -37,7 +32,8 @@ export type PhotoFieldProps = Pick<
  * A labelled photo picker: the label, the circle that is both the photo and
  * the button that changes it, then the description and error. The label is
  * not a native one, because the circle is named by it through
- * `aria-labelledby` and also announces whether a photo is set.
+ * `aria-labelledby` and also announces whether a photo is set. Assembled from
+ * `PhotoInput`'s parts.
  *
  * @example
  * <PhotoField
@@ -53,59 +49,19 @@ export type PhotoFieldProps = Pick<
 export const PhotoField = ({
 	label,
 	description,
-	errors,
-	requiredness,
-	dirty,
-	touched,
-	pending,
-	readOnly,
-	className,
 	defaultPreview,
-	hasStoredImage,
 	icon,
-	...controlProps
+	...rootProps
 }: PhotoFieldProps): ReactNode => {
 	const copy = useCopy();
 	const icons = useIcons();
-	const ids = Field.useIds();
-	const { labelId, descriptionId, errorId } = ids;
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		readOnly,
-	});
-	const { invalid } = field;
 
 	return (
-		<Field.Root
-			className={className}
-			disabled={field.disabled}
-			invalid={invalid}
-			dirty={dirty}
-			touched={touched}>
-			<Field.Label
-				id={labelId}
-				nativeLabel={false}
-				render={<span />}>
-				{label}{" "}
-				<RequiredSpokenContext value={true}>
-					<Field.Requiredness requiredness={requiredness} />
-				</RequiredSpokenContext>
-			</Field.Label>
-			<PhotoInput.Root
-				{...controlProps}
-				hasStoredImage={hasStoredImage}
-				labelledBy={labelId}
-				describedBy={ids.describedBy(
-					description !== undefined,
-					invalid,
-				)}
-				readOnly={readOnly}
-				invalid={invalid}
-				pending={field.state.pending}>
+		<PhotoInput.Root {...rootProps}>
+			<PhotoInput.Label>
+				{label} <Field.Requiredness />
+			</PhotoInput.Label>
+			<PhotoInput.Group>
 				<PhotoInput.Well>
 					<PhotoInput.Face>
 						<PhotoInput.Image alt={copy.photo.preview} />
@@ -125,11 +81,11 @@ export const PhotoField = ({
 					}
 				/>
 				<PhotoInput.ValueText />
-			</PhotoInput.Root>
-			<Field.Description id={descriptionId}>
+			</PhotoInput.Group>
+			<PhotoInput.Description>
 				{description}
-			</Field.Description>
-			<Field.Error id={errorId}>{errors}</Field.Error>
-		</Field.Root>
+			</PhotoInput.Description>
+			<PhotoInput.Error />
+		</PhotoInput.Root>
 	);
 };

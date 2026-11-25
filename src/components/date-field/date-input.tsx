@@ -1,6 +1,6 @@
 import { TemporalCalendar } from "../../lib/calendar/calendar-prefab.tsx";
 import type { CalendarDate } from "@internationalized/date";
-import { type ReactNode, useId } from "react";
+import type { ReactNode } from "react";
 import {
 	DatePicker as AriaDatePicker,
 	type DatePickerProps as AriaDatePickerProps,
@@ -22,46 +22,122 @@ import {
 	CalendarPrevious,
 	CalendarRoot,
 } from "../../lib/calendar/calendar-parts.tsx";
-import { todayIn } from "../../lib/calendar/temporal-value.ts";
+import {
+	dayToIso,
+	isoToDay,
+	todayIn,
+} from "../../lib/calendar/temporal-value.ts";
 import {
 	TemporalDialog,
+	TemporalFocusContext,
+	TemporalFrame,
 	TemporalGroup,
 	TemporalInput,
-	TemporalLabel,
+	type TemporalOwnedProps,
 	TemporalPopover,
 	TemporalPopup,
+	type TemporalRootBaseProps,
 	TemporalSegment,
-	type TemporalStateProps,
 	TemporalTrigger,
 } from "../../lib/calendar/temporal.tsx";
 import {
-	Field,
-	fieldStateAttributes,
-} from "../field/index.ts";
+	WiredDescription,
+	WiredError,
+	WiredLabel,
+} from "../field/field-wiring.tsx";
+import { InputPending } from "../field/input-parts.tsx";
 import { useTimeZone } from "../time-zone-provider/index.ts";
 
-export type DateInputRootProps =
-	AriaDatePickerProps<CalendarDate> & TemporalStateProps;
+export type DateInputRootProps = TemporalRootBaseProps &
+	Omit<
+		AriaDatePickerProps<CalendarDate>,
+		TemporalOwnedProps
+	> &
+	Readonly<{
+		/**
+		 * An ISO plain date, such as `"2026-07-24"`. A date-time or an instant is
+		 * read as the day it falls on in the `TimeZoneProvider`'s zone.
+		 */
+		value?: string | null;
+		/** The same, for an uncontrolled control. */
+		defaultValue?: string | null;
+		/** Called with the ISO plain date picked or typed, or `null` once cleared. */
+		onValueChange?: (value: string | null) => void;
+		/** Earliest selectable ISO plain date. */
+		minValue?: string;
+		/** Latest selectable ISO plain date. */
+		maxValue?: string;
+		/** Submits the date under this name. */
+		name?: string;
+	}>;
 
 /**
- * A react-aria `DatePicker` holding the value, with today as the placeholder
- * in the `TimeZoneProvider`'s zone.
+ * The field frame around a react-aria `DatePicker`, holding its value as an ISO
+ * plain date and projecting its state onto every part. Today, in the
+ * `TimeZoneProvider`'s zone, is the placeholder.
  *
  * @example
- * <DateInput.Root aria-labelledby={labelId}>…</DateInput.Root>
+ * <DateInput.Root value={date} onValueChange={setDate}>…</DateInput.Root>
  */
 const DateInputRoot = ({
+	errors,
+	requiredness,
+	dirty,
+	touched,
+	pending,
+	disabled,
+	readOnly,
 	state,
+	className,
+	value,
+	defaultValue,
+	onValueChange,
+	onBlur,
+	minValue,
+	maxValue,
+	name,
+	children,
 	...props
 }: DateInputRootProps): ReactNode => {
-	const id = useId();
+	const timeZone = useTimeZone();
+	const day = isoToDay(value, timeZone);
 	return (
-		<AriaDatePicker<CalendarDate>
-			validationBehavior="aria"
-			placeholderValue={todayIn(useTimeZone())}
-			{...fieldStateAttributes(state ?? {})}
-			{...props}
-			name={props.name ?? id}
+		<TemporalFrame
+			errors={errors}
+			requiredness={requiredness}
+			dirty={dirty}
+			touched={touched}
+			pending={pending}
+			disabled={disabled}
+			readOnly={readOnly}
+			state={state}
+			className={className}
+			filled={day !== null}
+			render={(picker, controlId) => (
+				<AriaDatePicker<CalendarDate>
+					placeholderValue={todayIn(timeZone)}
+					{...props}
+					{...picker}
+					value={value === undefined ? undefined : day}
+					defaultValue={
+						isoToDay(defaultValue, timeZone) ?? undefined
+					}
+					onChange={next => onValueChange?.(dayToIso(next))}
+					onBlur={onBlur}
+					minValue={
+						isoToDay(minValue, timeZone) ?? undefined
+					}
+					maxValue={
+						isoToDay(maxValue, timeZone) ?? undefined
+					}
+					name={name ?? controlId}>
+					{({ isFocusWithin }) => (
+						<TemporalFocusContext value={isFocusWithin}>
+							{children}
+						</TemporalFocusContext>
+					)}
+				</AriaDatePicker>
+			)}
 		/>
 	);
 };
@@ -69,12 +145,12 @@ const DateInputRoot = ({
 /** The parts of a date input. */
 export type DateInputParts = Readonly<{
 	Root: typeof DateInputRoot;
-	Label: typeof TemporalLabel;
+	Label: typeof WiredLabel;
 	Group: typeof TemporalGroup;
 	Input: typeof TemporalInput;
 	Segment: typeof TemporalSegment;
 	Trigger: typeof TemporalTrigger;
-	Pending: typeof Field.Pending;
+	Pending: typeof InputPending;
 	Popup: typeof TemporalPopup;
 	Popover: typeof TemporalPopover;
 	Dialog: typeof TemporalDialog;
@@ -92,69 +168,65 @@ export type DateInputParts = Readonly<{
 	HeaderCell: typeof CalendarHeaderCell;
 	GridBody: typeof CalendarGridBody;
 	Cell: typeof CalendarCell;
-	Description: typeof Field.Description;
-	Error: typeof Field.Error;
-	useIds: typeof Field.useIds;
+	Description: typeof WiredDescription;
+	Error: typeof WiredError;
 }>;
 
 /**
  * The styled parts of a react-aria `DatePicker`, a date entry plus a calendar
- * popover, following react-aria's own anatomy. It sits in a `Field.Root` and
- * names itself through `Label`'s id. For the ordinary case, use `DateField`,
- * which is assembled from exactly these parts. `StandardCalendar` is the whole
- * calendar, its header, pickers and grid, assembled from them.
+ * popover, following react-aria's own anatomy. `Root` draws the field frame and
+ * holds the value and the field's states, and names and describes the picker
+ * by its `Label`, `Description` and `Error`, so no part below it takes either
+ * again. For the ordinary case, use `DateField`, which is assembled from
+ * exactly these parts. `StandardCalendar` is the whole calendar, its header,
+ * pickers and grid, assembled from them.
  *
  * @example
- * const ids = DateInput.useIds();
- *
- * <Field.Root>
- * 	<DateInput.Label id={ids.labelId}>Service date</DateInput.Label>
- * 	<DateInput.Root aria-labelledby={ids.labelId}>
- * 		{({ isFocusWithin }) => (
- * 			<>
- * 				<DateInput.Group state={{ focused: isFocusWithin }}>
- * 					<DateInput.Input>
- * 						{segment => <DateInput.Segment segment={segment} />}
- * 					</DateInput.Input>
- * 					<DateInput.Trigger
- * 						ref={triggerRef}
- * 						render={
- * 							<IconButton label="Open calendar" variant="tertiary" size="sm">
- * 								<CalendarTodayIcon />
- * 							</IconButton>
- * 						}
- * 					/>
- * 				</DateInput.Group>
- * 				<DateInput.Popup triggerRef={triggerRef}>
- * 					<DateInput.Calendar>
- * 						<DateInput.CalendarHeader>
- * 							<DateInput.Previous render={<IconButton label="Previous month"><ChevronLeftIcon /></IconButton>} />
- * 							<DateInput.Heading />
- * 							<DateInput.Next render={<IconButton label="Next month"><ChevronRightIcon /></IconButton>} />
- * 						</DateInput.CalendarHeader>
- * 						<DateInput.Grid>
- * 							<DateInput.GridHeader>
- * 								{day => <DateInput.HeaderCell>{day}</DateInput.HeaderCell>}
- * 							</DateInput.GridHeader>
- * 							<DateInput.GridBody>
- * 								{date => <DateInput.Cell date={date} />}
- * 							</DateInput.GridBody>
- * 						</DateInput.Grid>
- * 					</DateInput.Calendar>
- * 				</DateInput.Popup>
- * 			</>
- * 		)}
- * 	</DateInput.Root>
- * </Field.Root>
+ * <DateInput.Root value={date} onValueChange={setDate} errors={errors} requiredness="required">
+ * 	<DateInput.Label>Service date <Field.Requiredness /></DateInput.Label>
+ * 	<DateInput.Group>
+ * 		<DateInput.Input>
+ * 			{segment => <DateInput.Segment segment={segment} />}
+ * 		</DateInput.Input>
+ * 		<DateInput.Pending><Spinner size={1} /></DateInput.Pending>
+ * 		<DateInput.Trigger
+ * 			ref={triggerRef}
+ * 			render={
+ * 				<IconButton label="Open calendar" variant="tertiary" size="sm">
+ * 					<CalendarTodayIcon />
+ * 				</IconButton>
+ * 			}
+ * 		/>
+ * 	</DateInput.Group>
+ * 	<DateInput.Popup triggerRef={triggerRef}>
+ * 		<DateInput.Calendar>
+ * 			<DateInput.CalendarHeader>
+ * 				<DateInput.Previous render={<IconButton label="Previous month"><ChevronLeftIcon /></IconButton>} />
+ * 				<DateInput.Heading />
+ * 				<DateInput.Next render={<IconButton label="Next month"><ChevronRightIcon /></IconButton>} />
+ * 			</DateInput.CalendarHeader>
+ * 			<DateInput.Grid>
+ * 				<DateInput.GridHeader>
+ * 					{day => <DateInput.HeaderCell>{day}</DateInput.HeaderCell>}
+ * 				</DateInput.GridHeader>
+ * 				<DateInput.GridBody>
+ * 					{date => <DateInput.Cell date={date} />}
+ * 				</DateInput.GridBody>
+ * 			</DateInput.Grid>
+ * 		</DateInput.Calendar>
+ * 	</DateInput.Popup>
+ * 	<DateInput.Description>The day the work was done.</DateInput.Description>
+ * 	<DateInput.Error />
+ * </DateInput.Root>
  */
 export const DateInput: DateInputParts = {
 	Root: DateInputRoot,
-	Label: TemporalLabel,
+	Label: WiredLabel,
 	Group: TemporalGroup,
 	Input: TemporalInput,
 	Segment: TemporalSegment,
 	Trigger: TemporalTrigger,
-	Pending: Field.Pending,
+	Pending: InputPending,
 	Popup: TemporalPopup,
 	Popover: TemporalPopover,
 	Dialog: TemporalDialog,
@@ -172,7 +244,6 @@ export const DateInput: DateInputParts = {
 	HeaderCell: CalendarHeaderCell,
 	GridBody: CalendarGridBody,
 	Cell: CalendarCell,
-	Description: Field.Description,
-	Error: Field.Error,
-	useIds: Field.useIds,
+	Description: WiredDescription,
+	Error: WiredError,
 };

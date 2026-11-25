@@ -16,9 +16,26 @@ import {
 } from "react";
 import { useCopy } from "../copy-provider/index.ts";
 import {
+	Field,
 	type FieldBlurHandler,
+	type FieldProps,
+	type FieldState,
 	fieldStateAttributes,
+	useFieldState,
 } from "../field/index.ts";
+import {
+	FieldWiringContext,
+	useFieldWiring,
+	useFieldWiringContext,
+	WiredDescription,
+	WiredError,
+	WiredLabel,
+} from "../field/field-wiring.tsx";
+import {
+	InputPartsContext,
+	useInputPartsContext,
+} from "../field/input-parts.tsx";
+import { RequiredSpokenContext } from "../field/required-spoken.ts";
 import {
 	PhotoInputContext,
 	usePhotoInput,
@@ -59,8 +76,8 @@ export type PhotoInputPreviewProps =
 	  }>;
 
 export type PhotoInputRootProps = Omit<
-	ComponentProps<"div">,
-	"onBlur"
+	FieldProps,
+	"label" | "description"
 > &
 	Readonly<{
 		/** The picked file, or nothing while the stored photo stands. */
@@ -77,46 +94,70 @@ export type PhotoInputRootProps = Omit<
 		/** Mime types, wildcards or extensions the file dialog offers. @default ["image/*"] */
 		accept?: readonly string[];
 
-		/** The id of the label that names the control. */
-		labelledBy: string;
-
-		/** The ids of the description and error, joined. */
-		describedBy?: string;
-
 		/** Submits the picked file under this name. */
 		name?: string;
+
+		disabled?: boolean;
 
 		/** Shows the photo without letting it be changed. */
 		readOnly?: boolean;
 
-		invalid?: boolean;
+		/** States no prop here owns, projected over the ones that do. */
+		state?: FieldState;
 
-		/** Background work, such as an upload, is in flight. */
-		pending?: boolean;
-
+		/** Called once focus has left the well. */
 		onBlur?: FieldBlurHandler;
+
+		/** Applied to the field frame, where a caller lays it out itself. */
+		className?: string;
+
+		children?: ReactNode;
 	}>;
 
-/** The photo input's state and frame, which holds the hidden file input the well opens. */
+/**
+ * The field frame around a photo input, holding its value and the hidden file
+ * input the well opens, and projecting its state onto every part. Its required
+ * mark says "required" in words, because the well cannot carry
+ * `aria-required`.
+ *
+ * @example
+ * <PhotoInput.Root value={file} onValueChange={setFile} requiredness="required">…</PhotoInput.Root>
+ */
 const PhotoInputRoot = ({
 	value,
 	onValueChange,
 	hasStoredImage = false,
 	accept = IMAGES,
-	labelledBy,
-	describedBy,
 	name,
-	readOnly = false,
-	invalid = false,
+	errors,
+	requiredness,
+	dirty,
+	touched,
 	pending = false,
+	disabled,
+	readOnly,
+	state,
 	onBlur,
 	className,
 	children,
-	...props
 }: PhotoInputRootProps): ReactNode => {
 	const valueId = useId();
 	const well = useRef<HTMLButtonElement>(null);
 	const picker = useRef<HTMLInputElement>(null);
+	const filled = value !== undefined || hasStoredImage;
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled,
+		state,
+	});
+	const wiring = useFieldWiring(field.invalid);
+	const locked = field.state.readonly === true;
 
 	const pick = async (file: File) => {
 		await onValueChange?.(file);
@@ -127,58 +168,92 @@ const PhotoInputRoot = ({
 	};
 
 	return (
-		<PhotoInputContext
+		<InputPartsContext
 			value={{
-				value,
-				filled: value !== undefined || hasStoredImage,
-				readOnly,
-				invalid,
-				pending,
-				labelledBy,
-				describedBy: [valueId, describedBy]
-					.filter(id => id !== undefined)
-					.join(" "),
-				valueId,
-				well,
-				picker,
-				pick,
-				remove,
-				onBlur,
+				state: field.state,
+				errors,
+				phase: field.phase,
 			}}>
-			<div
-				className={clsx(style.photoInput, className)}
-				{...props}>
-				{children}
-				{readOnly ? null : (
-					<input
-						ref={picker}
-						type="file"
-						name={name}
-						accept={accept.join(",")}
-						tabIndex={-1}
-						aria-hidden="true"
-						className={style.picker}
-						onChange={async event => {
-							const file = event.target.files?.[0];
-							event.target.value = "";
-							if (file !== undefined) {
-								await pick(file);
-							}
-						}}
-					/>
-				)}
-			</div>
-		</PhotoInputContext>
+			<FieldWiringContext value={wiring}>
+				<PhotoInputContext
+					value={{
+						value,
+						filled,
+						readOnly: locked,
+						valueId,
+						well,
+						picker,
+						pick,
+						remove,
+						onBlur,
+					}}>
+					<Field.Root
+						disabled={field.disabled}
+						invalid={field.invalid}
+						requiredness={field.state.requiredness}
+						dirty={dirty}
+						touched={touched}
+						className={className}
+						{...fieldStateAttributes(field.state)}>
+						<RequiredSpokenContext value={true}>
+							{children}
+						</RequiredSpokenContext>
+						{locked ? null : (
+							<input
+								ref={picker}
+								type="file"
+								name={name}
+								accept={accept.join(",")}
+								tabIndex={-1}
+								aria-hidden="true"
+								className={style.picker}
+								onChange={async event => {
+									const file = event.target.files?.[0];
+									event.target.value = "";
+									if (file !== undefined) {
+										await pick(file);
+									}
+								}}
+							/>
+						)}
+					</Field.Root>
+				</PhotoInputContext>
+			</FieldWiringContext>
+		</InputPartsContext>
 	);
 };
+
+/**
+ * The box the well and the buttons on its rim sit in, sized by
+ * `--kit-photo-input-size`.
+ *
+ * @example
+ * <PhotoInput.Group>
+ * 	<PhotoInput.Well>…</PhotoInput.Well>
+ * 	<PhotoInput.Remove render={…} />
+ * </PhotoInput.Group>
+ */
+const PhotoInputGroup = ({
+	className,
+	...props
+}: ComponentProps<"div">): ReactNode => (
+	<div
+		className={clsx(style.photoInput, className)}
+		{...props}
+	/>
+);
 
 export type PhotoInputWellProps =
 	HTMLAttributes<HTMLElement>;
 
 /**
- * The circle that shows the photo. It is the button that opens the file dialog
- * and the target a file is dropped on, and Delete removes a picked photo.
- * Read-only, it is a focusable image that opens nothing.
+ * The circle that shows the photo, named by its root's `Label` and described
+ * by its `ValueText`, `Description` and `Error`. It is the button that opens
+ * the file dialog and the target a file is dropped on, and Delete removes a
+ * picked photo. Read-only, it is a focusable image that opens nothing.
+ *
+ * @example
+ * <PhotoInput.Well><PhotoInput.Face>…</PhotoInput.Face></PhotoInput.Well>
  */
 const PhotoInputWell = ({
 	className,
@@ -188,16 +263,20 @@ const PhotoInputWell = ({
 		value,
 		filled,
 		readOnly,
-		invalid,
-		pending,
-		labelledBy,
-		describedBy,
+		valueId,
 		well,
 		picker,
 		pick,
 		remove,
 		onBlur,
 	} = usePhotoInput();
+	const { state } = useInputPartsContext();
+	const { ids, describedBy: fieldDescribedBy } =
+		useFieldWiringContext();
+	const labelledBy = ids.labelId;
+	const describedBy = [valueId, fieldDescribedBy]
+		.filter(id => id !== undefined)
+		.join(" ");
 	const [dragOver, setDragOver] = useState(false);
 
 	if (readOnly) {
@@ -214,7 +293,7 @@ const PhotoInputWell = ({
 						...fieldStateAttributes({
 							readonly: true,
 							filled,
-							pending,
+							pending: state.pending,
 						}),
 					},
 					props,
@@ -229,6 +308,7 @@ const PhotoInputWell = ({
 			type="button"
 			{...mergeProps<"button">(
 				{
+					disabled: state.disabled,
 					"aria-labelledby": labelledBy,
 					"aria-describedby": describedBy,
 					"aria-keyshortcuts":
@@ -259,9 +339,10 @@ const PhotoInputWell = ({
 						}
 					},
 					...fieldStateAttributes({
-						validity: invalid ? "invalid" : undefined,
+						validity: state.validity,
+						disabled: state.disabled,
 						filled,
-						pending,
+						pending: state.pending,
 					}),
 				},
 				props,
@@ -396,11 +477,13 @@ const PhotoInputRemove = ({
 	...props
 }: PhotoInputRemoveProps): ReactElement | null => {
 	const { value, readOnly, remove } = usePhotoInput();
+	const { state } = useInputPartsContext();
 	return useRender({
 		render,
 		enabled: !readOnly && value !== undefined,
 		props: {
 			type: "button",
+			disabled: state.disabled,
 			...props,
 			className: clsx(style.remove, className),
 			onClick: (event: MouseEvent<HTMLButtonElement>) => {
@@ -436,6 +519,8 @@ const PhotoInputValueText = ({
 /** The parts of a photo input. */
 export type PhotoInputParts = Readonly<{
 	Root: typeof PhotoInputRoot;
+	Label: typeof WiredLabel;
+	Group: typeof PhotoInputGroup;
 	Well: typeof PhotoInputWell;
 	Face: typeof PhotoInputFace;
 	Image: typeof PhotoInputImage;
@@ -443,35 +528,47 @@ export type PhotoInputParts = Readonly<{
 	Badge: typeof PhotoInputBadge;
 	Remove: typeof PhotoInputRemove;
 	ValueText: typeof PhotoInputValueText;
+	Description: typeof WiredDescription;
+	Error: typeof WiredError;
 }>;
 
 /**
  * The parts of a photo picker: a circle showing the photo, which is itself the
  * button that opens the file dialog and the target a file is dropped on, with
- * a remove button on its rim. It carries no name of its own, so an enclosing
- * field names it. For the ordinary case, use `PhotoField`.
+ * a remove button on its rim. `Root` draws the field frame and holds the value
+ * and the field's states, and names and describes the well by its `Label`,
+ * `ValueText`, `Description` and `Error`, so no part below it takes either
+ * again. For the ordinary case, use `PhotoField`, which is assembled from
+ * exactly these parts.
  *
  * @example
- * <PhotoInput.Root labelledBy={labelId} value={file} onValueChange={setFile}>
- * 	<PhotoInput.Well>
- * 		<PhotoInput.Face>
- * 			<PhotoInput.Image alt="Preview" />
- * 			<PhotoInput.Fallback><Avatar name={user.name} /></PhotoInput.Fallback>
- * 		</PhotoInput.Face>
- * 		<PhotoInput.Badge><PhotoCameraIcon /></PhotoInput.Badge>
- * 	</PhotoInput.Well>
- * 	<PhotoInput.Remove
- * 		render={
- * 			<IconButton label="Remove photo" variant="secondary">
- * 				<CloseIcon />
- * 			</IconButton>
- * 		}
- * 	/>
- * 	<PhotoInput.ValueText />
+ * <PhotoInput.Root value={file} onValueChange={setFile} errors={errors} requiredness="required">
+ * 	<PhotoInput.Label>Profile photo <Field.Requiredness /></PhotoInput.Label>
+ * 	<PhotoInput.Group>
+ * 		<PhotoInput.Well>
+ * 			<PhotoInput.Face>
+ * 				<PhotoInput.Image alt="Preview" />
+ * 				<PhotoInput.Fallback><Avatar name={user.name} /></PhotoInput.Fallback>
+ * 			</PhotoInput.Face>
+ * 			<PhotoInput.Badge><PhotoCameraIcon /></PhotoInput.Badge>
+ * 		</PhotoInput.Well>
+ * 		<PhotoInput.Remove
+ * 			render={
+ * 				<IconButton label="Remove photo" variant="secondary">
+ * 					<CloseIcon />
+ * 				</IconButton>
+ * 			}
+ * 		/>
+ * 		<PhotoInput.ValueText />
+ * 	</PhotoInput.Group>
+ * 	<PhotoInput.Description>A square photo works best.</PhotoInput.Description>
+ * 	<PhotoInput.Error />
  * </PhotoInput.Root>
  */
 export const PhotoInput: PhotoInputParts = {
 	Root: PhotoInputRoot,
+	Label: WiredLabel,
+	Group: PhotoInputGroup,
 	Well: PhotoInputWell,
 	Face: PhotoInputFace,
 	Image: PhotoInputImage,
@@ -479,4 +576,6 @@ export const PhotoInput: PhotoInputParts = {
 	Badge: PhotoInputBadge,
 	Remove: PhotoInputRemove,
 	ValueText: PhotoInputValueText,
+	Description: WiredDescription,
+	Error: WiredError,
 };

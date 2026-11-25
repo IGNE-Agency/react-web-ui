@@ -1,9 +1,12 @@
 import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
-import type {
-	ComponentProps,
-	ComponentPropsWithRef,
-	ReactNode,
+import {
+	type ComponentProps,
+	type ComponentPropsWithRef,
+	type Context,
+	createContext,
+	type ReactNode,
+	useContext,
 } from "react";
 import {
 	Button as AriaButton,
@@ -16,38 +19,170 @@ import {
 } from "react-aria-components";
 import {
 	Field,
-	type FieldLabelProps,
+	type FieldBlurHandler,
+	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
 	useFieldFocus,
+	useFieldState,
 } from "../../components/field/index.ts";
+import {
+	FieldWiringContext,
+	useFieldWiring,
+} from "../../components/field/field-wiring.tsx";
+import {
+	InputPartsContext,
+	useInputPartsContext,
+} from "../../components/field/input-parts.tsx";
 import { focusControlOnRim } from "../../components/field/rim-focus.ts";
 import { withFieldFocus } from "../../components/field/use-field-focus.ts";
 import style from "./temporal.module.scss";
 
 export type TemporalStateProps = Readonly<{
-	/** Projected onto the element as presence-style `data-*` attributes. */
+	/** States the root does not own, projected over its own onto the element. */
 	state?: FieldState;
 }>;
 
-export type TemporalLabelProps = FieldLabelProps;
+/** The react-aria picker props a date or time root owns, so its own props leave them out. */
+export type TemporalOwnedProps =
+	| "value"
+	| "defaultValue"
+	| "onChange"
+	| "onBlur"
+	| "minValue"
+	| "maxValue"
+	| "name"
+	| "startName"
+	| "endName"
+	| "isDisabled"
+	| "isReadOnly"
+	| "isRequired"
+	| "isInvalid"
+	| "validationBehavior"
+	| "aria-labelledby"
+	| "aria-describedby"
+	| "className"
+	| "style"
+	| "children";
+
+/** The props every date or time root takes beside the react-aria picker's own. */
+export type TemporalRootBaseProps = Omit<
+	FieldProps,
+	"label" | "description"
+> &
+	Readonly<{
+		/** Called once focus has left the control. */
+		onBlur?: FieldBlurHandler;
+		disabled?: boolean;
+		readOnly?: boolean;
+		/** States no prop here owns, projected over the ones that do. */
+		state?: FieldState;
+		/** Applied to the field frame, so callers can size the control. */
+		className?: string;
+		children?: ReactNode;
+	}>;
+
+/** The props a date or time root wires onto the react-aria picker it renders. */
+export type TemporalPickerProps = Readonly<{
+	"aria-labelledby": string;
+	"aria-describedby": string | undefined;
+	isDisabled: boolean;
+	isReadOnly: boolean | undefined;
+	isRequired: boolean;
+	isInvalid: boolean;
+	validationBehavior: "aria";
+	className: string | undefined;
+	/** Marks the picker's wrapper, whose parts a field group's row places. */
+	"data-field-contents": "";
+}>;
+
+export type TemporalFrameProps = Omit<
+	TemporalRootBaseProps,
+	"onBlur" | "children"
+> &
+	Readonly<{
+		/** The control holds a value. */
+		filled: boolean;
+		/** Renders the react-aria picker, given the props that wire it to the field and a stable name for it. */
+		render: (
+			picker: TemporalPickerProps,
+			controlId: string,
+		) => ReactNode;
+	}>;
 
 /**
- * The visible label of a date or time control: a `span` its `Root` names
- * itself by through `aria-labelledby`. Renders nothing without children.
+ * The field frame a date or time root draws: it reads the field's state, hands
+ * it with the ids to every part, and wires the picker it renders to them.
  *
  * @example
- * <DateInput.Label id={labelId}>Service date <Field.Requiredness /></DateInput.Label>
+ * <TemporalFrame filled={day !== null} render={picker => <AriaDatePicker {...picker}>…</AriaDatePicker>} />
  */
-export const TemporalLabel = (
-	props: TemporalLabelProps,
-): ReactNode => (
-	<Field.Label
-		nativeLabel={false}
-		render={<span />}
-		{...props}
-	/>
-);
+export const TemporalFrame = ({
+	errors,
+	requiredness,
+	dirty,
+	touched,
+	pending = false,
+	disabled,
+	readOnly,
+	filled,
+	state,
+	className,
+	render,
+}: TemporalFrameProps): ReactNode => {
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled,
+		state,
+	});
+	const wiring = useFieldWiring(field.invalid);
+
+	return (
+		<InputPartsContext
+			value={{
+				state: field.state,
+				errors,
+				phase: field.phase,
+			}}>
+			<FieldWiringContext value={wiring}>
+				<Field.Root
+					disabled={field.disabled}
+					invalid={field.invalid}
+					requiredness={field.state.requiredness}
+					dirty={dirty}
+					touched={touched}
+					className={className}
+					{...fieldStateAttributes(field.state)}>
+					{render(
+						{
+							"aria-labelledby": wiring.ids.labelId,
+							"aria-describedby": wiring.describedBy,
+							isDisabled: field.state.disabled === true,
+							isReadOnly: field.state.readonly,
+							isRequired:
+								field.state.requiredness === "required",
+							isInvalid: field.state.validity === "invalid",
+							validationBehavior: "aria",
+							className: style.picker,
+							"data-field-contents": "",
+						},
+						wiring.ids.controlId,
+					)}
+				</Field.Root>
+			</FieldWiringContext>
+		</InputPartsContext>
+	);
+};
+
+/** Whether focus is anywhere in the picker, its popover included, for the group to stay warm. */
+export const TemporalFocusContext: Context<boolean> =
+	createContext(false);
 
 export type TemporalGroupProps = Omit<
 	AriaGroupProps,
@@ -57,25 +192,36 @@ export type TemporalGroupProps = Omit<
 	Readonly<{ children?: ReactNode }>;
 
 /**
- * The shell carrying the border, the ring and the inlay row.
+ * The shell carrying the border, the ring and the inlay row, projecting its
+ * root's state onto itself.
  *
  * @example
- * <DateInput.Group state={state}><DateInput.Input>…</DateInput.Input></DateInput.Group>
+ * <DateInput.Group><DateInput.Input>…</DateInput.Input></DateInput.Group>
  */
 export const TemporalGroup = ({
-	state,
+	state: ownState,
 	className,
 	children,
 	...props
 }: TemporalGroupProps): ReactNode => {
+	const root = useInputPartsContext();
+	const pickerFocused = useContext(TemporalFocusContext);
 	const focus = useFieldFocus(props);
+	const state = { ...root.state, ...ownState };
 	return (
 		<AriaGroup
 			className={clsx(style.group, className)}
 			onMouseDown={focusControlOnRim}
-			isReadOnly={state?.readonly}
+			isReadOnly={state.readonly}
 			{...fieldStateAttributes(
-				withFieldFocus(state ?? {}, focus),
+				withFieldFocus(
+					{
+						...state,
+						focused:
+							state.focused === true || pickerFocused,
+					},
+					focus,
+				),
 			)}
 			{...props}
 			{...focus.props}>

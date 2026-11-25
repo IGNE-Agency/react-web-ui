@@ -3,7 +3,7 @@ import {
 	revalidateLogic,
 	useStore,
 } from "@tanstack/react-form";
-import type { ReactElement } from "react";
+import { type ReactElement, useState } from "react";
 import {
 	expect,
 	userEvent,
@@ -14,9 +14,13 @@ import { z } from "zod";
 import { getFieldErrors } from "../../lib/forms/errors.ts";
 import { useConnectedField } from "../../lib/forms/use-connected-field.ts";
 import { useAppForm } from "../../lib/storybook/app-form.tsx";
+import { DateField } from "../date-field/index.ts";
 import { Field } from "../field/index.ts";
 import { Form } from "../form/index.ts";
-import { TextInput } from "../text-field/index.ts";
+import {
+	TextField,
+	TextInput,
+} from "../text-field/index.ts";
 import {
 	FieldGroup,
 	type FieldGroupProps,
@@ -489,6 +493,120 @@ export const CustomLayout: Story = {
 		},
 	},
 	render: CustomLayoutForm,
+};
+
+const MOVING_LABEL = "Moving date";
+const DESCRIBED_POSTAL_CODE_LABEL = "New postal code";
+const DESCRIBED_MOVING_LABEL = "Date of the move";
+const BOTH_POSTAL_CODE_LABEL = "Previous postal code";
+const BOTH_MOVING_LABEL = "Date you left";
+const MOVING_DESCRIPTION = "The day the keys change hands.";
+const PREVIOUS_POSTAL_CODE_DESCRIPTION =
+	"Where we sent the last invoice.";
+
+type MixedRowProps = Readonly<{
+	legend: string;
+	textLabel: string;
+	dateLabel: string;
+	textDescription?: string;
+	dateDescription?: string;
+}>;
+
+const MixedRow = ({
+	legend,
+	textLabel,
+	dateLabel,
+	textDescription,
+	dateDescription,
+}: MixedRowProps): ReactElement => {
+	const [postalCode, setPostalCode] = useState("");
+	return (
+		<Fieldset.Root>
+			<Fieldset.Legend>{legend}</Fieldset.Legend>
+			<Fieldset.Fields>
+				<TextField
+					label={textLabel}
+					description={textDescription}
+					value={postalCode}
+					onValueChange={setPostalCode}
+				/>
+				<DateField
+					label={dateLabel}
+					description={dateDescription}
+				/>
+			</Fieldset.Fields>
+		</Fieldset.Root>
+	);
+};
+
+const MixedRows = (): ReactElement => (
+	<div className={style.form}>
+		<MixedRow
+			legend={LEGEND}
+			textLabel={POSTAL_CODE_LABEL}
+			dateLabel={MOVING_LABEL}
+		/>
+		<MixedRow
+			legend="New address"
+			textLabel={DESCRIBED_POSTAL_CODE_LABEL}
+			dateLabel={DESCRIBED_MOVING_LABEL}
+			textDescription={POSTAL_CODE_DESCRIPTION}
+		/>
+		<MixedRow
+			legend="Previous address"
+			textLabel={BOTH_POSTAL_CODE_LABEL}
+			dateLabel={BOTH_MOVING_LABEL}
+			textDescription={PREVIOUS_POSTAL_CODE_DESCRIPTION}
+			dateDescription={MOVING_DESCRIPTION}
+		/>
+	</div>
+);
+
+const topOf = (element: HTMLElement | null) =>
+	element?.getBoundingClientRect().top;
+
+const expectControlsLevel = async (
+	canvas: Canvas,
+	textLabel: string,
+	dateLabel: string,
+) => {
+	const textControl = textbox(
+		canvas,
+		textLabel,
+	).parentElement;
+	const dateControl = canvas.getByRole("group", {
+		name: dateLabel,
+	});
+	await expect(topOf(dateControl)).toBe(topOf(textControl));
+};
+
+export const DateBesideText: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: MixedRows,
+	play: async ({ canvas }) => {
+		await expectControlsLevel(
+			canvas,
+			POSTAL_CODE_LABEL,
+			MOVING_LABEL,
+		);
+		await expectControlsLevel(
+			canvas,
+			DESCRIBED_POSTAL_CODE_LABEL,
+			DESCRIBED_MOVING_LABEL,
+		);
+		await expectControlsLevel(
+			canvas,
+			BOTH_POSTAL_CODE_LABEL,
+			BOTH_MOVING_LABEL,
+		);
+		await expect(
+			topOf(canvas.getByText(MOVING_DESCRIPTION)),
+		).toBe(
+			topOf(
+				canvas.getByText(PREVIOUS_POSTAL_CODE_DESCRIPTION),
+			),
+		);
+	},
 };
 
 const submitEmpty = async (canvas: Canvas) => {

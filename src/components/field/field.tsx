@@ -243,6 +243,9 @@ const FieldCaption = ({
 		</p>
 	);
 
+export type FieldDescriptionProps =
+	BaseField.Description.Props;
+
 /**
  * The help under a control. Renders nothing without children.
  *
@@ -253,7 +256,7 @@ const FieldDescription = ({
 	children,
 	className,
 	...props
-}: BaseField.Description.Props): ReactNode =>
+}: FieldDescriptionProps): ReactNode =>
 	isEmpty(children) ? null : (
 		<BaseField.Description
 			className={clsx(style.description, className)}
