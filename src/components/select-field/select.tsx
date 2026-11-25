@@ -13,12 +13,21 @@ import { useCopy } from "../copy-provider/index.ts";
 import { useIcons } from "../icon-provider/index.ts";
 import {
 	Field,
+	type FieldBlurHandler,
 	type FieldPendingProps,
+	type FieldProps,
 	type FieldState,
 	fieldStateAttributes,
 	type OptionsLoad,
 	useFieldFocus,
+	useFieldState,
 } from "../field/index.ts";
+import { detachHiddenInput } from "../field/hidden-input.ts";
+import {
+	InputError,
+	InputPartsContext,
+	useInputPartsContext,
+} from "../field/input-parts.tsx";
 import {
 	OPTIONS_LOADED,
 	optionsLoadMessage,
@@ -35,33 +44,148 @@ import style from "./select.module.scss";
 export type { SelectOption };
 
 export type SelectRootProps<T extends string> = Omit<
-	BaseSelect.Root.Props<T>,
-	"items" | "onValueChange"
+	FieldProps,
+	"label" | "description"
 > &
+	Omit<
+		BaseSelect.Root.Props<T>,
+		| "items"
+		| "onValueChange"
+		| "disabled"
+		| "readOnly"
+		| "required"
+		| "inputRef"
+		| "children"
+	> &
 	Readonly<{
 		/** The selectable options; `label` is what the trigger and list display. */
 		options: readonly SelectOption<T>[];
 		onValueChange?: (value: T) => void;
+		disabled?: boolean;
+		readOnly?: boolean;
+		/** States no prop here owns, projected over the ones that do. */
+		state?: FieldState;
+		/** Called once focus has left the field, its popup included. */
+		onBlur?: FieldBlurHandler;
+		className?: string;
+		children?: ReactNode;
 	}>;
 
-/** The select's state, holding the options every part below it reads. */
+/**
+ * The field frame around a select, holding its options and value and
+ * projecting its state onto every part.
+ *
+ * @example
+ * <Select.Root options={options} value={value} onValueChange={setValue}>…</Select.Root>
+ */
 const SelectRoot = <T extends string>({
 	options,
 	onValueChange,
+	disabled,
+	readOnly,
+	requiredness,
+	errors,
+	dirty,
+	touched,
+	pending = false,
+	state,
+	onBlur,
+	name,
+	onOpenChange,
+	onOpenChangeComplete,
+	className,
+	children,
 	...props
-}: SelectRootProps<T>): ReactNode => (
-	<SelectContext value={{ options }}>
-		<BaseSelect.Root<T>
-			items={options}
-			onValueChange={next => {
-				if (next !== null) {
-					onValueChange?.(next);
-				}
-			}}
-			{...props}
-		/>
-	</SelectContext>
-);
+}: SelectRootProps<T>): ReactNode => {
+	const ids = Field.useIds();
+	const open = useRef(false);
+	const focused = useRef(false);
+	const inside = useRef(false);
+	const field = useFieldState({
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		disabled,
+		readOnly,
+		filled:
+			props.value !== undefined &&
+			props.value !== null &&
+			props.value !== "",
+		state,
+	});
+	const leave = () => {
+		if (
+			inside.current &&
+			!open.current &&
+			!focused.current
+		) {
+			inside.current = false;
+			onBlur?.();
+		}
+	};
+
+	return (
+		<InputPartsContext
+			value={{
+				state: field.state,
+				errors,
+				phase: field.phase,
+			}}>
+			<SelectContext
+				value={{
+					options,
+					triggerFocused: () => {
+						focused.current = true;
+						inside.current = true;
+					},
+					triggerBlurred: () => {
+						focused.current = false;
+						leave();
+					},
+				}}>
+				<Field.Root
+					disabled={field.disabled}
+					invalid={field.invalid}
+					requiredness={field.state.requiredness}
+					dirty={dirty}
+					touched={touched}
+					className={className}
+					{...fieldStateAttributes(field.state)}>
+					<BaseSelect.Root<T>
+						items={options}
+						name={name ?? ids.controlId}
+						inputRef={detachHiddenInput}
+						disabled={field.disabled}
+						readOnly={readOnly}
+						required={requiredness === "required"}
+						onValueChange={next => {
+							if (next !== null) {
+								onValueChange?.(next);
+							}
+						}}
+						onOpenChange={(next, details) => {
+							open.current = next;
+							if (next) {
+								inside.current = true;
+							}
+							onOpenChange?.(next, details);
+						}}
+						onOpenChangeComplete={next => {
+							onOpenChangeComplete?.(next);
+							if (!next) {
+								requestAnimationFrame(leave);
+							}
+						}}
+						{...props}>
+						{children}
+					</BaseSelect.Root>
+				</Field.Root>
+			</SelectContext>
+		</InputPartsContext>
+	);
+};
 
 /** The label that names the trigger. */
 const SelectLabel = ({
@@ -76,14 +200,16 @@ const SelectLabel = ({
 
 export type SelectTriggerProps = BaseSelect.Trigger.Props &
 	Readonly<{
-		/** The states projected onto the trigger as `data-*` attributes. */
+		/** States the root does not own, projected over its own onto the trigger. */
 		state?: FieldState;
 	}>;
 
-const NO_STATE: FieldState = {};
+type TriggerFocusEvent = Parameters<
+	NonNullable<BaseSelect.Trigger.Props["onFocus"]>
+>[0];
 
 const TriggerStateContext: Context<FieldState> =
-	createContext<FieldState>(NO_STATE);
+	createContext<FieldState>({});
 
 /**
  * The chosen option's label on the trigger, or `placeholder` while nothing is
@@ -103,7 +229,7 @@ const SelectValue = ({
 );
 
 /**
- * What the trigger shows while its `state` is pending, such as a spinner.
+ * What the trigger shows while the field is pending, such as a spinner.
  * Renders nothing otherwise.
  *
  * @example
@@ -139,23 +265,38 @@ const SelectIcon = ({
 	);
 
 /**
- * The button that opens the list, projecting `state` onto itself and holding
- * what it is given: usually `Value`, `Pending` and `Icon`.
+ * The button that opens the list, projecting the root's state onto itself and
+ * holding what it is given: usually `Value`, `Pending` and `Icon`.
  *
  * @example
- * <Select.Trigger state={state}>
+ * <Select.Trigger>
  * 	<Select.Value placeholder="Pick a status" />
  * 	<Select.Pending><Spinner size={1} /></Select.Pending>
  * 	<Select.Icon><ExpandMoreIcon /></Select.Icon>
  * </Select.Trigger>
  */
 const SelectTrigger = ({
-	state = NO_STATE,
+	state: ownState,
 	className,
 	children,
+	onFocus,
+	onBlur,
 	...props
 }: SelectTriggerProps): ReactNode => {
-	const focus = useFieldFocus(props);
+	const root = useInputPartsContext();
+	const { triggerFocused, triggerBlurred } =
+		useSelectContext();
+	const state = { ...root.state, ...ownState };
+	const focus = useFieldFocus<TriggerFocusEvent>({
+		onFocus: event => {
+			onFocus?.(event);
+			triggerFocused();
+		},
+		onBlur: event => {
+			onBlur?.(event);
+			triggerBlurred();
+		},
+	});
 	return (
 		<BaseSelect.Trigger
 			aria-invalid={
@@ -318,13 +459,20 @@ export type SelectControlProps = Omit<
 const SelectControl = ({
 	placeholder,
 	load = OPTIONS_LOADED,
+	state,
 	...props
 }: SelectControlProps): ReactNode => {
 	const icons = useIcons();
 	const popupRef = useRef<HTMLDivElement>(null);
 	return (
 		<>
-			<SelectTrigger {...props}>
+			<SelectTrigger
+				state={
+					load.status === "pending"
+						? { ...state, pending: true }
+						: state
+				}
+				{...props}>
 				<SelectValue placeholder={placeholder} />
 				<SelectPending>
 					<Spinner size={1} />
@@ -372,20 +520,24 @@ export type SelectParts = Readonly<{
 	Control: typeof SelectControl;
 	Pending: typeof SelectPending;
 	Description: typeof Field.Description;
-	Error: typeof Field.Error;
+	Error: typeof InputError;
 	useIds: typeof Field.useIds;
 }>;
 
 /**
- * The styled parts of a base-ui Select: a trigger wearing the same treatment as
- * every text input, over the shared popup surface. `Root` holds the options, so
- * no part below it takes the list again. For a labelled field, use
- * `SelectField`; a control in a toolbar composes these directly.
+ * The styled parts of a base-ui Select: the field frame, a trigger wearing the
+ * same treatment as every text input, and the shared popup surface. `Root`
+ * holds the options and the field's states, so no part below it takes either
+ * again, and `Error` renders the errors `Root` was given. For the ordinary case,
+ * use the `SelectField` prefab, which is assembled from exactly these parts; a
+ * control in a toolbar composes them directly.
  *
  * @example
- * <Select.Root options={options} value={value} onValueChange={setValue}>
- * 	<Select.Label>Status</Select.Label>
+ * <Select.Root options={options} value={value} onValueChange={setValue} errors={errors} requiredness="required">
+ * 	<Select.Label>Status <Field.Requiredness /></Select.Label>
  * 	<Select.Control placeholder="Pick a status" />
+ * 	<Select.Description>The status the invoice is in now.</Select.Description>
+ * 	<Select.Error />
  * </Select.Root>
  */
 export const Select: SelectParts = {
@@ -408,6 +560,6 @@ export const Select: SelectParts = {
 	Control: SelectControl,
 	Pending: SelectPending,
 	Description: Field.Description,
-	Error: Field.Error,
+	Error: InputError,
 	useIds: Field.useIds,
 };

@@ -105,6 +105,7 @@ const PaginationPageSize = ({
 
 	return (
 		<Select.Root
+			className={style.pageSizeField}
 			options={sizes.map(size => ({
 				value: String(size),
 				label: format.format(size),

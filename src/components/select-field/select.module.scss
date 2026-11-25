@@ -3,17 +3,6 @@
 @use "../../style/popup.scss" as popup;
 
 @layer kit.components {
-	.field {
-		display: flex;
-		flex-direction: column;
-		gap: var(--kit-field-gap, var(--sys-unit-4));
-		inline-size: 100%;
-
-		&:has(.trigger[data-disabled]) {
-			opacity: var(--kit-field-disabled-opacity, 1);
-		}
-	}
-
 	.label {
 		@include form.label;
 	}

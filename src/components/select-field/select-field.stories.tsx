@@ -1,4 +1,6 @@
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -16,6 +18,9 @@ import {
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
+import { Field } from "../field/index.ts";
+import { Icon } from "../icon/index.ts";
+import { Select } from "./select.tsx";
 import {
 	SelectField,
 	type SelectFieldProps,
@@ -25,6 +30,9 @@ const LABEL = "Status";
 const OPEN_LABEL = "Open";
 const SENT_LABEL = "Sent";
 const PAID_LABEL = "Paid";
+const DESCRIPTION = "The status the invoice is in now.";
+const PAID_ERROR =
+	"A paid invoice cannot be reopened here.";
 
 const STATUS_OPTIONS = [
 	{ value: "open", label: OPEN_LABEL },
@@ -56,6 +64,40 @@ const ControlledSelectField = (
 const PlainSelectField = (
 	args: SelectFieldProps<string>,
 ) => <SelectField {...args} />;
+
+const ComposedSelect = () => {
+	const [value, setValue] = useState<string | null>(null);
+
+	return (
+		<Select.Root
+			options={STATUS_OPTIONS}
+			value={value}
+			onValueChange={setValue}
+			errors={value === "paid" ? [PAID_ERROR] : undefined}
+			requiredness="required">
+			<Select.Label>
+				{LABEL} <Field.Requiredness />
+			</Select.Label>
+			<Select.Trigger>
+				<Select.Value placeholder="Choose a status" />
+				<Select.Icon>
+					<Icon svg={ExpandMoreIcon} label="" />
+				</Select.Icon>
+			</Select.Trigger>
+			<Select.Portal>
+				<Select.Positioner>
+					<Select.Popup>
+						<Select.List>
+							<Select.Items />
+						</Select.List>
+					</Select.Popup>
+				</Select.Positioner>
+			</Select.Portal>
+			<Select.Description>{DESCRIPTION}</Select.Description>
+			<Select.Error />
+		</Select.Root>
+	);
+};
 
 const meta = {
 	parameters: {
@@ -142,7 +184,38 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The status the invoice is in now.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedSelect,
+	play: async ({ canvas }) => {
+		const control = trigger(canvas);
+
+		await expect(control).toHaveAccessibleName(LABEL);
+		await expect(control).toHaveAccessibleDescription(
+			DESCRIPTION,
+		);
+		await expect(control).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(control);
+		await userEvent.click(
+			await screen.findByRole("option", {
+				name: PAID_LABEL,
+			}),
+		);
+		await roleGone("listbox");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(PAID_ERROR);
+		await expect(
+			control.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 

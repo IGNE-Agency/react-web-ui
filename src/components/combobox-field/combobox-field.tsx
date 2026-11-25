@@ -10,11 +10,7 @@ import {
 	Field,
 	type FieldBlurHandler,
 	type FieldProps,
-	type FieldState,
-	fieldStateAttributes,
-	useFieldState,
 } from "../field/index.ts";
-import { detachHiddenInput } from "../field/hidden-input.ts";
 import { useCopy } from "../copy-provider/index.ts";
 import { useIcons } from "../icon-provider/index.ts";
 import { Spinner } from "../spinner/index.ts";
@@ -129,8 +125,9 @@ const FieldBody = <TItem,>({
 		requiredness,
 		dirty,
 		touched,
-		pending = false,
+		pending,
 		placeholder,
+		disabled,
 		readOnly,
 		name,
 		onBlur,
@@ -143,21 +140,9 @@ const FieldBody = <TItem,>({
 	const { itemKey, children: renderItem } = derivations;
 	const itemLabel =
 		derivations.itemToStringLabel ?? itemKey;
-	const ids = Field.useIds();
 	const anchorRef = useRef<HTMLDivElement>(null);
 	const items = itemsOf(source);
 	const load = loadOf(source, retryable);
-	const field = useFieldState({
-		errors,
-		requiredness,
-		dirty,
-		touched,
-		pending,
-		disabled: chrome.disabled,
-		readOnly,
-		filled: values.length > 0,
-	});
-	const { disabled } = field;
 	const [search, setSearch] = useState("");
 	const searchTimer = useRef<
 		ReturnType<typeof setTimeout> | undefined
@@ -180,12 +165,6 @@ const FieldBody = <TItem,>({
 		);
 	};
 
-	const fieldState: FieldState = {
-		...field.state,
-		pending:
-			field.state.pending === true ||
-			load.status === "pending",
-	};
 	const nameOf = (state: ValueState<TItem>) =>
 		valueStateName(
 			state,
@@ -209,12 +188,19 @@ const FieldBody = <TItem,>({
 		itemToStringValue: itemKey,
 		isItemEqualToValue: (item: TItem, value: TItem) =>
 			itemKey(item) === itemKey(value),
-		name: name ?? ids.controlId,
-		inputRef: detachHiddenInput,
+		errors,
+		requiredness,
+		dirty,
+		touched,
+		pending,
+		...(load.status === "pending" && {
+			state: { pending: true },
+		}),
+		name,
 		disabled,
 		readOnly,
-		...(readOnly === true && { open: false }),
-		required: requiredness === "required",
+		onBlur,
+		className,
 		onInputValueChange: (
 			next: string,
 			details: Readonly<{ reason: string }>,
@@ -234,15 +220,11 @@ const FieldBody = <TItem,>({
 
 	const parts = (
 		<>
-			<Field.Label>
-				{label}{" "}
-				<Field.Requiredness requiredness={requiredness} />
-			</Field.Label>
+			<Combobox.Label>
+				{label} <Field.Requiredness />
+			</Combobox.Label>
 
-			<Combobox.Control
-				ref={anchorRef}
-				state={fieldState}
-				onBlur={onBlur}>
+			<Combobox.Control ref={anchorRef}>
 				{mode.multiple === true && (
 					<Combobox.Chips>
 						{first === undefined ? (
@@ -252,8 +234,6 @@ const FieldBody = <TItem,>({
 								label={mode.selectedLabel}
 								items={states}
 								itemKey={state => state.key}
-								disabled={disabled}
-								readOnly={readOnly}
 								onRemove={remaining => {
 									const kept = new Set(
 										remaining.map(state => state.key),
@@ -325,38 +305,30 @@ const FieldBody = <TItem,>({
 			</Combobox.Portal>
 
 			{marked && <ValueStatesStatus states={states} />}
-			<Field.Description>{description}</Field.Description>
-			<Field.Error>{errors}</Field.Error>
+			<Combobox.Description>
+				{description}
+			</Combobox.Description>
+			<Combobox.Error />
 		</>
 	);
 
-	return (
-		<Field.Root
-			className={className}
-			disabled={disabled}
-			invalid={field.invalid}
-			dirty={dirty}
-			touched={touched}
-			{...fieldStateAttributes(fieldState)}>
-			{mode.multiple === true ? (
-				<Combobox.Root<TItem, true>
-					{...root}
-					multiple
-					value={[...values]}
-					onValueChange={next => onChange(next)}>
-					{parts}
-				</Combobox.Root>
-			) : (
-				<Combobox.Root<TItem>
-					{...root}
-					value={values.at(0) ?? null}
-					onValueChange={next =>
-						onChange(next === null ? [] : [next])
-					}>
-					{parts}
-				</Combobox.Root>
-			)}
-		</Field.Root>
+	return mode.multiple === true ? (
+		<Combobox.Root<TItem, true>
+			{...root}
+			multiple
+			value={[...values]}
+			onValueChange={next => onChange(next)}>
+			{parts}
+		</Combobox.Root>
+	) : (
+		<Combobox.Root<TItem>
+			{...root}
+			value={values.at(0) ?? null}
+			onValueChange={next =>
+				onChange(next === null ? [] : [next])
+			}>
+			{parts}
+		</Combobox.Root>
 	);
 };
 
@@ -366,7 +338,7 @@ const FieldBody = <TItem,>({
  * search box and the list. Static `items` are filtered on the client; a paged
  * `query` is searched on the server, debounced, and loads its next page as the
  * list nears its end. An `itemQuery` looks up chosen values the list does not
- * hold, and marks the ones it reports gone.
+ * hold, and marks the ones it reports gone. Assembled from `Combobox`'s parts.
  *
  * @example
  * <ComboboxField

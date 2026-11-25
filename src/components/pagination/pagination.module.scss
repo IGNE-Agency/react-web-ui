@@ -8,6 +8,10 @@
 		gap: var(--kit-pagination-gap, var(--sys-unit-8));
 	}
 
+	.pageSizeField {
+		--kit-field-inline-size: auto;
+	}
+
 	.pageSize {
 		display: flex;
 		align-items: center;

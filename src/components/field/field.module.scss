@@ -7,7 +7,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--kit-field-gap, var(--sys-unit-4));
-		inline-size: 100%;
+		inline-size: var(--kit-field-inline-size, 100%);
 
 		&[data-disabled] {
 			opacity: var(--kit-field-disabled-opacity, 1);

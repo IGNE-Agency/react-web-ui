@@ -1,9 +1,11 @@
+import CheckIcon from "@material-design-icons/svg/outlined/check.svg?react";
+import ExpandMoreIcon from "@material-design-icons/svg/outlined/expand_more.svg?react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
 	queryOptions,
 	useInfiniteQuery,
 } from "@tanstack/react-query";
-import { type ReactElement, useState } from "react";
+import { type ReactElement, useRef, useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import {
 	expect,
@@ -19,7 +21,10 @@ import {
 	optionHighlighted,
 	roleGone,
 } from "../../lib/storybook/waits.ts";
+import { Field } from "../field/index.ts";
+import { Icon } from "../icon/index.ts";
 import {
+	Combobox,
 	ComboboxField,
 	type ComboboxFieldProps,
 } from "./index.ts";
@@ -29,6 +34,9 @@ const LABEL = "Status";
 const MULTIPLE_LABEL = "Statuses";
 const SELECTED_LABEL = "Selected statuses";
 const PLACEHOLDER = "Choose…";
+const DESCRIPTION = "The status the invoice is in now.";
+const REJECTED_ERROR =
+	"A rejected invoice needs a new number.";
 
 const MULTIPLE_COPY = {
 	selectedLabel: SELECTED_LABEL,
@@ -70,6 +78,66 @@ const ControlledComboboxField = (
 const UncontrolledComboboxField = (
 	args: StatusComboboxProps,
 ): ReactElement => <ComboboxField {...args} />;
+
+const ComposedCombobox = (): ReactElement => {
+	const anchorRef = useRef<HTMLDivElement>(null);
+	const [value, setValue] = useState<string | null>(null);
+
+	return (
+		<Combobox.Root
+			items={STATUSES}
+			itemToStringLabel={statusLabel}
+			value={value}
+			onValueChange={next => {
+				setValue(next);
+			}}
+			errors={
+				value === "rejected" ? [REJECTED_ERROR] : undefined
+			}
+			requiredness="required">
+			<Combobox.Label>
+				{LABEL} <Field.Requiredness />
+			</Combobox.Label>
+			<Combobox.Control ref={anchorRef}>
+				<Combobox.Trigger>
+					<Combobox.TriggerValue>
+						{value === null
+							? PLACEHOLDER
+							: statusLabel(value)}
+					</Combobox.TriggerValue>
+					<Combobox.Icon>
+						<Icon svg={ExpandMoreIcon} label="" />
+					</Combobox.Icon>
+				</Combobox.Trigger>
+			</Combobox.Control>
+			<Combobox.Portal>
+				<Combobox.Positioner anchor={anchorRef}>
+					<Combobox.Popup aria-label={LABEL}>
+						<Combobox.Search />
+						<Combobox.List>
+							{(status: string) => (
+								<Combobox.Option
+									key={status}
+									value={status}>
+									<Combobox.OptionIndicator>
+										<Icon svg={CheckIcon} label="" />
+									</Combobox.OptionIndicator>
+									<Combobox.OptionText>
+										{statusLabel(status)}
+									</Combobox.OptionText>
+								</Combobox.Option>
+							)}
+						</Combobox.List>
+					</Combobox.Popup>
+				</Combobox.Positioner>
+			</Combobox.Portal>
+			<Combobox.Description>
+				{DESCRIPTION}
+			</Combobox.Description>
+			<Combobox.Error />
+		</Combobox.Root>
+	);
+};
 
 const tag = (name: string) =>
 	screen.getByRole("row", { name });
@@ -188,7 +256,40 @@ export const Pending: Story = {
 
 export const WithDescription: Story = {
 	args: {
-		description: "The status the invoice is in now.",
+		description: DESCRIPTION,
+	},
+};
+
+export const Composed: Story = {
+	tags: ["!dev", "!autodocs"],
+	render: ComposedCombobox,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole("combobox", {
+			name: LABEL,
+		});
+
+		await expect(trigger).toHaveAccessibleName(LABEL);
+		await expect(trigger).toHaveAccessibleDescription(
+			DESCRIPTION,
+		);
+		await expect(trigger).toHaveAttribute(
+			"aria-required",
+			"true",
+		);
+
+		await userEvent.click(trigger);
+		await userEvent.click(
+			await screen.findByRole("option", {
+				name: statusLabel("rejected"),
+			}),
+		);
+		await roleGone("listbox");
+
+		const error = await canvas.findByRole("alert");
+		await expect(error).toHaveTextContent(REJECTED_ERROR);
+		await expect(
+			trigger.getAttribute("aria-describedby")?.split(" "),
+		).toContain(error.id);
 	},
 };
 
